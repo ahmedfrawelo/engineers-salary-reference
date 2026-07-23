@@ -8,5 +8,8 @@ if (!apiBaseUrl || !apiBaseUrl.startsWith('https://')) {
 }
 
 const output = path.join(__dirname, '..', 'src', 'assets', 'runtime-config.json');
-fs.writeFileSync(output, `${JSON.stringify({ apiBaseUrl }, null, 2)}\n`, 'utf8');
-console.log('Generated runtime-config.json from API_BASE_URL.');
+const releaseId = String(
+  process.env.RELEASE_ID || process.env.GITHUB_SHA || new Date().toISOString()
+).trim();
+fs.writeFileSync(output, `${JSON.stringify({ apiBaseUrl, releaseId }, null, 2)}\n`, 'utf8');
+console.log(`Generated runtime-config.json for release ${releaseId}.`);

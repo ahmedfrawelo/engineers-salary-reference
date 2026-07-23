@@ -1,6 +1,8 @@
 type LooseValue = ReturnType<typeof JSON.parse>;
 export type RuntimeConfig = {
   apiBaseUrl?: string;
+  /** Public build identifier used to invalidate open tabs after deployment. */
+  releaseId?: string;
   withCredentials?: boolean;
   timeoutMs?: number;
   retries?: number;

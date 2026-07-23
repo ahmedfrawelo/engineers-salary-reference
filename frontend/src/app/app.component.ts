@@ -56,6 +56,8 @@ import {
   recoverLocalAppearanceState
 } from '@platform/angular/theme/theme-overrides.util';
 import { NetworkIndicatorComponent } from './shared/network-indicator/network-indicator.component';
+import { AppUpdateNoticeComponent } from './core/release/app-update-notice.component';
+import { ReleaseUpdateService } from './core/release/release-update.service';
 import { StatefulIconComponent } from './shared/icons/stateful-icon.component';
 import {
   resolveAppIconSpec,
@@ -163,7 +165,8 @@ interface CollapsedAreaFlyoutState {
     DeleteCodeDialogComponent,
     HugeiconsIconComponent,
     StatefulIconComponent,
-    NetworkIndicatorComponent
+    NetworkIndicatorComponent,
+    AppUpdateNoticeComponent
   ],
   templateUrl: './app.component.html'
 })
@@ -179,6 +182,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   private readonly notificationCenter = inject(NotificationCenterService);
   private readonly notificationsBridge = inject(NotificationsBridgeService);
   private readonly loadingService = inject(LoadingService);
+  private readonly releaseUpdates = inject(ReleaseUpdateService);
   private readonly injector = inject(Injector);
   private readonly debugEnabled = environment.enableDebugLogs === true;
   private readonly themeStorageKey = 'engineers-salary-reference.theme';
@@ -1665,6 +1669,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit(): void {
+    this.releaseUpdates.start();
     const initialUrl = this.getCurrentUrl();
     this.isLoginRoute = isAuthRoute(initialUrl);
     if (this.isBrowser) {
@@ -1810,6 +1815,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy(): void {
+    this.releaseUpdates.stop();
     this.notificationsPreviewLoadSubscription?.unsubscribe();
     if (this.systemThemeQuery) {
       if (this.systemThemeQuery.removeEventListener) {

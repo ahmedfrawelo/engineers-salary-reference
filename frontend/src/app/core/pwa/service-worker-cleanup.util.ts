@@ -33,3 +33,26 @@ export async function cleanupStaleServiceWorkers(): Promise<void> {
     // Ignore cache cleanup failures and let the app continue booting.
   }
 }
+
+/** Clears browser-managed app caches before a forced release reload. */
+export async function clearApplicationCacheState(): Promise<void> {
+  if (typeof window === 'undefined') return;
+
+  try {
+    if ('serviceWorker' in navigator) {
+      const registrations = await navigator.serviceWorker.getRegistrations();
+      await Promise.all(registrations.map(registration => registration.unregister()));
+    }
+  } catch {
+    // A reload is still safe if a browser blocks service-worker cleanup.
+  }
+
+  try {
+    if ('caches' in window) {
+      const names = await caches.keys();
+      await Promise.all(names.map(name => caches.delete(name)));
+    }
+  } catch {
+    // CacheStorage is optional and may be unavailable in private browsing.
+  }
+}

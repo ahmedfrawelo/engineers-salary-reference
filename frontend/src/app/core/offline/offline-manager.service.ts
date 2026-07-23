@@ -232,6 +232,21 @@ export class OfflineManagerService {
     });
   }
 
+  /** Clear only the application's offline database during a release refresh. */
+  async clearAllStoredData(): Promise<void> {
+    if (this.db) {
+      this.db.close();
+      this.db = undefined;
+    }
+    await new Promise<void>((resolve, reject) => {
+      const request = indexedDB.deleteDatabase(this.DB_NAME);
+      request.onsuccess = () => resolve();
+      request.onerror = () => reject(request.error);
+      request.onblocked = () => resolve();
+    });
+    this._queueSize.set(0);
+  }
+
   /**
    * Get queue statistics
    */
