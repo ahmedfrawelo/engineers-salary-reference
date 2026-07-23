@@ -130,7 +130,7 @@ export abstract class TenderProjectsComponentControlsBase extends TenderProjects
 
     if (this.projectAssigneeSelection.kind === 'unassigned') {
       filters.push({
-        field: 'assignTo',
+        field: this.isSalaryReportsGrid ? 'owner' : 'assignTo',
         operator: 'isEmpty',
         joinWithPrev: 'and'
       });
@@ -138,7 +138,7 @@ export abstract class TenderProjectsComponentControlsBase extends TenderProjects
       const currentUser = this.projectCurrentUserLabel().trim();
       if (currentUser) {
         filters.push({
-          field: 'assignTo',
+          field: this.isSalaryReportsGrid ? 'owner' : 'assignTo',
           operator: 'equals',
           value: currentUser,
           joinWithPrev: 'and'
@@ -148,7 +148,7 @@ export abstract class TenderProjectsComponentControlsBase extends TenderProjects
       const owner = this.projectAssigneeFilterValue(this.projectAssigneeSelection.owner);
       if (owner) {
         filters.push({
-          field: 'assignTo',
+          field: this.isSalaryReportsGrid ? 'owner' : 'assignTo',
           operator: 'equals',
           value: owner,
           joinWithPrev: 'and'
@@ -643,12 +643,14 @@ export abstract class TenderProjectsComponentControlsBase extends TenderProjects
       this.projectAssigneeOptionCache.set(key, { value, label });
     };
 
-    for (const setting of this.assignToSettings ?? []) {
-      upsert(setting.name, 0, resolveTenderProjectLookupDisplayLabel(setting) ?? setting.name);
+    if (!this.isSalaryReportsGrid) {
+      for (const setting of this.assignToSettings ?? []) {
+        upsert(setting.name, 0, resolveTenderProjectLookupDisplayLabel(setting) ?? setting.name);
+      }
     }
 
     for (const row of this.projectSourceRows()) {
-      upsert(this.projectNormalizedAssignee(row.assignTo), 1);
+      upsert(this.projectNormalizedAssignee(this.isSalaryReportsGrid ? row.owner : row.assignTo), 1);
     }
 
     if (this.projectAssigneeSelection.kind === 'owner') {
@@ -675,7 +677,9 @@ export abstract class TenderProjectsComponentControlsBase extends TenderProjects
 
   protected projectUnassignedCount(): number {
     return this.projectSourceRows().filter(
-      row => this.projectNormalizedAssignee(row.assignTo) === 'Unassigned'
+      row =>
+        this.projectNormalizedAssignee(this.isSalaryReportsGrid ? row.owner : row.assignTo) ===
+        'Unassigned'
     ).length;
   }
 
@@ -711,7 +715,11 @@ export abstract class TenderProjectsComponentControlsBase extends TenderProjects
     }
 
     if (selection.kind === 'unassigned') {
-      return rows.filter(row => this.projectNormalizedAssignee(row.assignTo) === 'Unassigned');
+      return rows.filter(
+        row =>
+          this.projectNormalizedAssignee(this.isSalaryReportsGrid ? row.owner : row.assignTo) ===
+          'Unassigned'
+      );
     }
 
     if (selection.kind === 'mine') {
@@ -724,7 +732,11 @@ export abstract class TenderProjectsComponentControlsBase extends TenderProjects
 
     const owner = this.projectAssigneeFilterValue(selection.owner).toLowerCase();
     if (!owner) return [...rows];
-    return rows.filter(row => this.projectAssigneeFilterValue(row.assignTo).toLowerCase() === owner);
+    return rows.filter(
+      row =>
+        this.projectAssigneeFilterValue(this.isSalaryReportsGrid ? row.owner : row.assignTo).toLowerCase() ===
+        owner
+    );
   }
 
   private projectNormalizedAssignee(value: unknown): string {

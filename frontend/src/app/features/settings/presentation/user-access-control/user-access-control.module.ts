@@ -9,7 +9,7 @@ import { CustomDropdownComponent } from '../../../../shared/custom-dropdown/cust
 import { StretchTabsIndicatorDirective } from '../../../../shared/directives/stretch-tabs-indicator.directive';
 import { OverlayPanelComponent } from '../../../../shared/ui/overlay-panel.component';
 import { PageDesignComponent } from '@shared/ui/page-design';
-import { SideDrawerComponent } from '../../../../shared/ui/side-drawer.component';
+import { SideDrawerComponent } from '@shared/ui/side-drawer';
 import { UserAccessControlComponent } from './user-access-control.component';
 import { UserAccessControlCreatePanelComponent } from './components/user-access-control-create-panel.component';
 import { UserAccessControlDialogsComponent } from './components/user-access-control-dialogs.component';

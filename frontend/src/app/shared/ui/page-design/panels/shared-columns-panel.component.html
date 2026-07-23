@@ -1,59 +1,39 @@
-<app-side-drawer
-  [open]="open"
-  [width]="width"
-  [zIndex]="zIndex"
-  [topInset]="topInset"
-  [backdropTint]="0"
-  [backdropBlur]="0"
-  [ignoreOutsideSelectors]="ignoreOutsideSelectors"
-  [motionPreset]="'instant'"
-  [panelClass]="panelClass"
-  (closed)="closePanel()"
->
-  <section
-    class="columns-drawer-surface"
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="sharedColumnsDrawerTitle"
+<ng-template #columnsDrawerActions>
+  @if (showBack) {
+    <button
+      class="columns-drawer-back"
+      type="button"
+      aria-label="Back to customize"
+      (click)="back.emit()"
+    >
+      <hugeicons-icon
+        class="columns-huge-icon"
+        [icon]="backIcon"
+        [size]="16"
+        [strokeWidth]="1.9"
+        aria-hidden="true"
+      ></hugeicons-icon>
+    </button>
+  }
+  <button
+    class="columns-drawer-close"
+    type="button"
+    aria-label="Close columns panel"
+    (click)="closePanel()"
   >
-    <div class="columns-drawer-head columns-drawer-head--clickup">
-      <div class="columns-drawer-head-main">
-        <div class="columns-drawer-title-wrap">
-          @if (showBack) {
-            <button
-              class="columns-drawer-back"
-              type="button"
-              aria-label="Back to customize"
-              (click)="back.emit()"
-            >
-              <hugeicons-icon
-                class="columns-huge-icon"
-                [icon]="backIcon"
-                [size]="16"
-                [strokeWidth]="1.9"
-                aria-hidden="true"
-              ></hugeicons-icon>
-            </button>
-          }
-          <div class="columns-drawer-title" id="sharedColumnsDrawerTitle">Fields</div>
-        </div>
-        <button
-          class="columns-drawer-close"
-          type="button"
-          aria-label="Close columns panel"
-          (click)="closePanel()"
-        >
-          <hugeicons-icon
-            class="columns-huge-icon"
-            [icon]="closeIcon"
-            [size]="16"
-            [strokeWidth]="1.9"
-            aria-hidden="true"
-          ></hugeicons-icon>
-        </button>
-      </div>
+    <hugeicons-icon
+      class="columns-huge-icon"
+      [icon]="closeIcon"
+      [size]="16"
+      [strokeWidth]="1.9"
+      aria-hidden="true"
+    ></hugeicons-icon>
+  </button>
+</ng-template>
 
-      <label class="columns-drawer-search columns-drawer-search--clickup">
+<ng-template #columnsDrawerToolbar>
+  <div class="columns-drawer-head columns-drawer-head--clickup">
+    <label class="columns-drawer-search columns-drawer-search--clickup">
         <hugeicons-icon
           class="columns-huge-icon"
           [icon]="searchIcon"
@@ -91,10 +71,12 @@
             Reset
           </button>
         </span>
-      </label>
-    </div>
+    </label>
+  </div>
+</ng-template>
 
-    <div class="columns-drawer-body columns-drawer-body--clickup" cdkDropListGroup>
+<ng-template #columnsDrawerContent>
+  <div class="columns-drawer-body columns-drawer-body--clickup" cdkDropListGroup>
       <section class="columns-clickup-section">
         <div class="columns-clickup-section-head">
           <button
@@ -298,6 +280,27 @@
           </div>
         }
       </section>
-    </div>
-  </section>
-</app-side-drawer>
+  </div>
+</ng-template>
+
+<app-side-drawer
+  [open]="open"
+  [mode]="drawerMode"
+  [width]="width"
+  [zIndex]="zIndex"
+  [topInset]="topInset"
+  [backdropTint]="0"
+  [backdropBlur]="0"
+  [ignoreOutsideSelectors]="ignoreOutsideSelectors"
+  [motionPreset]="'instant'"
+  [panelClass]="panelClass"
+  [showHeader]="true"
+  [showModeToggle]="true"
+  [title]="'Fields'"
+  [actionsTemplate]="columnsDrawerActions"
+  [toolbarTemplate]="columnsDrawerToolbar"
+  [contentTemplate]="columnsDrawerContent"
+  [overlayPanelClass]="'task-panel task-panel-clickup task-panel-ref-size'"
+  (modeChange)="onDrawerModeChange($event)"
+  (closed)="closePanel()"
+/>

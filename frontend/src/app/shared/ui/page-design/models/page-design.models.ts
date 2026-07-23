@@ -110,8 +110,12 @@ export type SharedToolbarAction = {
 };
 
 export type SharedAssigneeFilterConfig = {
+  triggerIcon?: string;
   triggerLabel?: string;
   title?: string;
+  sectionLabel?: string;
+  countLabel?: string;
+  allIcon?: string;
   searchPlaceholder?: string;
   allLabel?: string;
   mineLabel?: string;

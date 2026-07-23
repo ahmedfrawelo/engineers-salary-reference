@@ -8,7 +8,7 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import { AppIconDirective } from '@shared/icons/app-icon.directive';
-import { SideDrawerComponent } from '@shared/ui/side-drawer.component';
+import { SideDrawerComponent, type SideDrawerMode } from '@shared/ui/side-drawer';
 
 export type SharedCustomizePanelActionMenuItem = {
   id: string;
@@ -29,7 +29,8 @@ export type SharedCustomizePanelActionMenuItem = {
 })
 export class SharedCustomizePanelComponent {
   @Input() open = false;
-  @Input() width = 304;
+  /** Matches the compact reference drawer while keeping the shared shell responsive. */
+  @Input() width = 300;
   @Input() zIndex: number | null = null;
   @Input() topInset: number | null = null;
   @Input() ignoreOutsideSelectors = '';
@@ -40,6 +41,7 @@ export class SharedCustomizePanelComponent {
   @Input() actionLabel = '';
   @Input() actionDisabled = false;
   @Input() actionMenuItems: SharedCustomizePanelActionMenuItem[] = [];
+  drawerMode: SideDrawerMode = 'sidebar';
 
   @Input() viewLabel = 'List';
   @Input() viewIcon = 'list-task';
@@ -53,4 +55,8 @@ export class SharedCustomizePanelComponent {
   @Output() readonly openFields = new EventEmitter<void>();
   @Output() readonly openFilters = new EventEmitter<void>();
   @Output() readonly openGroup = new EventEmitter<void>();
+
+  onDrawerModeChange(mode: SideDrawerMode): void {
+    this.drawerMode = mode;
+  }
 }

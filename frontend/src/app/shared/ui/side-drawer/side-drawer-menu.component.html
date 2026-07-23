@@ -1,0 +1,40 @@
+<div
+  class="side-drawer-menu"
+  cdkOverlayOrigin
+  #menuOrigin="cdkOverlayOrigin"
+  [class.is-open]="open"
+  [class.is-disabled]="disabled"
+  [class.side-drawer-menu--field]="triggerVariant === 'field'"
+>
+  <button
+    type="button"
+    class="side-drawer-menu__trigger"
+    [ngClass]="triggerClass"
+    [class.side-drawer-menu__trigger--field]="triggerVariant === 'field'"
+    [class.is-active]="triggerActive"
+    [class.is-open]="open"
+    [disabled]="disabled"
+    [attr.aria-label]="triggerAriaLabel"
+    [appTip]="open ? '' : triggerTip"
+    [attr.aria-expanded]="open"
+    aria-haspopup="menu"
+    (click)="toggleMenu($event)"
+  >
+    <ng-content></ng-content>
+  </button>
+
+  <app-shared-context-menu
+    [open]="open"
+    placement="anchor"
+    [origin]="menuOrigin"
+    [title]="title"
+    [items]="items"
+    [footerItems]="footerItems"
+    [selectedItemId]="selectedItemId"
+    [searchable]="searchable"
+    [searchPlaceholder]="searchPlaceholder"
+    (openChange)="setOpen($event)"
+    (closed)="setOpen(false)"
+    (itemSelect)="onMenuSelect($event)"
+  ></app-shared-context-menu>
+</div>

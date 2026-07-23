@@ -1,0 +1,147 @@
+/* Icon toolbar usage: host stays out of the box model. */
+:host {
+  display: contents;
+}
+
+/* Select-like usage: host fills its grid/flex column. */
+:host(.side-drawer-menu-host--field) {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+.side-drawer-menu {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+}
+
+.side-drawer-menu--field {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+.side-drawer-menu__trigger {
+  --side-drawer-menu-trigger-size: 18px;
+  --side-drawer-menu-icon-size: 13px;
+
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: var(--side-drawer-menu-trigger-size);
+  height: var(--side-drawer-menu-trigger-size);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: rgb(var(--muted) / 0.86);
+  font: inherit;
+  cursor: pointer;
+  outline: none;
+  box-shadow: none;
+  transition:
+    color 0.14s ease,
+    background 0.14s ease;
+}
+
+.side-drawer-menu__trigger--field {
+  --side-drawer-menu-icon-size: 12px;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  height: 28px;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 0 8px 0 10px;
+  border: 1px solid rgb(var(--border) / 0.34);
+  border-radius: 7px;
+  background: color-mix(in oklab, rgb(var(--bg1)) 42%, transparent);
+  color: rgb(var(--fg) / 0.9);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.side-drawer-menu__trigger:hover,
+.side-drawer-menu__trigger:focus-visible,
+.side-drawer-menu__trigger.is-active,
+.side-drawer-menu__trigger.is-open {
+  color: rgb(var(--fg) / 0.92);
+  background: transparent;
+}
+
+.side-drawer-menu__trigger--field:hover,
+.side-drawer-menu__trigger--field:focus-visible,
+.side-drawer-menu__trigger--field.is-active,
+.side-drawer-menu__trigger--field.is-open {
+  background: color-mix(in oklab, rgb(var(--fg)) 8%, transparent);
+  color: rgb(var(--fg) / 0.96);
+}
+
+.side-drawer-menu__trigger.is-active::after {
+  content: '';
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  width: 4px;
+  height: 4px;
+  border-radius: 999px;
+  background: currentColor;
+}
+
+.side-drawer-menu__trigger--field.is-active::after {
+  display: none;
+}
+
+.side-drawer-menu__trigger svg,
+.side-drawer-menu__trigger .app-icon-host {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--side-drawer-menu-icon-size);
+  height: var(--side-drawer-menu-icon-size);
+  flex: 0 0 var(--side-drawer-menu-icon-size);
+  line-height: 0;
+  transform: none;
+}
+
+.side-drawer-menu__trigger .app-icon-host svg,
+.side-drawer-menu__trigger svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Projected select label (ng-content keeps parent encapsulation). */
+:host ::ng-deep .side-drawer-menu__field-label {
+  min-width: 0;
+  flex: 1 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: start;
+  line-height: 1.2;
+}
+
+:host ::ng-deep .side-drawer-menu__trigger--field .app-icon-host,
+:host ::ng-deep .side-drawer-menu__trigger--field > i {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--side-drawer-menu-icon-size);
+  height: var(--side-drawer-menu-icon-size);
+  flex: 0 0 var(--side-drawer-menu-icon-size);
+  line-height: 0;
+}
+
+.side-drawer-menu__trigger:disabled,
+.side-drawer-menu.is-disabled .side-drawer-menu__trigger {
+  cursor: not-allowed;
+  opacity: 0.46;
+}

@@ -1,7 +1,782 @@
-<div class="salary-reference-shell">
-  <header class="site-header">
-    <a class="brand" routerLink="/dashboard" aria-label="Engineers Salary Reference home"><span class="brand__mark" aria-hidden="true">ES</span><span><strong>Engineers Salary Reference</strong><small>Community salary intelligence</small></span></a>
-    <nav aria-label="Main navigation"><a routerLink="/dashboard" routerLinkActive="is-active">Overview</a><a routerLink="/salary-reports" routerLinkActive="is-active">Reports</a><a routerLink="/submit-report" routerLinkActive="is-active">Share a salary</a></nav>
-  </header>
-  <main><router-outlet /></main>
-</div>
+<!-- Network Status Indicator -->
+<app-network-indicator></app-network-indicator>
+
+<!-- Toast Notifications -->
+<app-toast-container />
+<app-delete-code-dialog />
+
+
+<!-- Application Shell -->
+@if (!isLoginRoute) {
+  <div
+    class="bg-app"
+    [class.sidebar-collapsed]="sideCollapsed"
+    [class.sidebar-collapsed-reveal]="collapsedSidebarReveal"
+    [class.sidebar-transitioning]="sidebarTransitioning"
+    style="min-height: 100dvh"
+  >
+    <!-- ===== Header ===== -->
+    <header class="bg-bar">
+      <div class="hdr">
+        <div class="hdr-left">
+          <button
+            type="button"
+            class="brand-hitbox"
+            aria-label="Open sidebar"
+            (click)="openCollapsedSidebarFromBrand($event)"
+          ></button>
+          <div
+            class="brand-shell"
+            [attr.role]="sideCollapsed ? null : 'link'"
+            [attr.tabindex]="sideCollapsed ? null : '0'"
+            [attr.aria-label]="sideCollapsed ? null : 'Go to dashboard'"
+            (click)="onBrandShellActivate($event)"
+            (keydown.enter)="onBrandShellActivate($event)"
+            (keydown.space)="onBrandShellActivate($event)"
+          >
+            <span class="brand-lockup" aria-hidden="true">
+              <img class="brand-lockup__wordmark" src="assets/brand/engineers-reference-wordmark.svg" alt="" />
+            </span>
+            <span class="brand-monogram" aria-hidden="true">
+              <img class="brand-monogram__mark" src="assets/brand/engineers-reference-mark.svg" alt="" />
+            </span>
+            <button
+              type="button"
+              class="brand-toggle"
+              aria-label="Open sidebar"
+              (click)="openCollapsedSidebarFromBrand($event)"
+            >
+              <hugeicons-icon
+                class="sidebar-toggle-icon"
+                [icon]="sidebarToggleIcon"
+                [size]="18"
+                [strokeWidth]="1.5"
+                aria-hidden="true"
+              ></hugeicons-icon>
+            </button>
+          </div>
+          <button
+            type="button"
+            class="side-fab"
+            [class.collapsed]="sideCollapsed"
+            (click)="$event.stopPropagation(); toggleCollapse()"
+            (mouseenter)="
+              showSidebarTooltip($event, sideCollapsed ? 'Open sidebar' : 'Collapse sidebar')
+            "
+            (mouseleave)="hideSidebarTooltip()"
+            (focus)="showSidebarTooltip($event, sideCollapsed ? 'Open sidebar' : 'Collapse sidebar')"
+            (blur)="hideSidebarTooltip()"
+            [attr.data-tooltip]="sideCollapsed ? 'Open sidebar' : 'Collapse sidebar'"
+            [attr.aria-label]="sideCollapsed ? 'Open sidebar' : 'Collapse sidebar'"
+          >
+            <div class="side-fab-icon">
+              <hugeicons-icon
+                class="sidebar-fab-icon-svg"
+                [icon]="sidebarCollapseIcon"
+                [size]="18"
+                [strokeWidth]="2.05"
+                aria-hidden="true"
+              ></hugeicons-icon>
+            </div>
+          </button>
+        </div>
+        @if (headerBreadcrumbs().length > 0) {
+          <nav class="header-route-trail" aria-label="Page navigation">
+            <button
+              type="button"
+              class="header-route-trail__back"
+              aria-label="Go back to the previous page"
+              [disabled]="!headerCanGoBack()"
+              (click)="goBackFromHeader()"
+            >
+              <hugeicons-icon [icon]="headerBackIcon" [size]="15" [strokeWidth]="2.1" aria-hidden="true" />
+            </button>
+            <span class="header-route-trail__items" aria-label="Current page path">
+              @for (crumb of headerBreadcrumbs(); track crumb.path; let last = $last) {
+                @if (crumb.current) {
+                  <span class="header-route-trail__current">{{ crumb.label }}</span>
+                } @else {
+                  <a class="header-route-trail__link" [routerLink]="'/' + crumb.path">{{ crumb.label }}</a>
+                }
+                @if (!last) {
+                  <span class="header-route-trail__separator" aria-hidden="true">/</span>
+                }
+              }
+            </span>
+          </nav>
+        }
+        <div class="hdr-center">
+          <div class="global-search-shell" (click)="$event.stopPropagation()">
+            <div class="search global-search" [class.is-open]="globalSearchPanelVisible()">
+              <hugeicons-icon
+                class="header-search-icon"
+                [icon]="headerSearchIcon"
+                [size]="15"
+                [strokeWidth]="2.05"
+                aria-hidden="true"
+              ></hugeicons-icon>
+              <input
+                #globalSearchInput
+                name="global-search"
+                type="search"
+                placeholder="Go to a page"
+                aria-label="Search pages"
+                autocomplete="off"
+                spellcheck="false"
+                role="combobox"
+                aria-autocomplete="list"
+                [attr.aria-expanded]="globalSearchPanelVisible()"
+                [attr.aria-controls]="'global-search-panel'"
+                [attr.aria-activedescendant]="activeGlobalSearchResultId()"
+                [value]="globalSearchTerm()"
+                (focus)="openGlobalSearch()"
+                (input)="updateGlobalSearchTerm($any($event.target).value || '')"
+                (keydown)="onGlobalSearchKeydown($event)"
+              />
+              @if (globalSearchTerm().trim()) {
+                <button
+                  class="search-clear"
+                  type="button"
+                  aria-label="Clear search"
+                  (click)="clearGlobalSearch()"
+                >
+                  <hugeicons-icon
+                    class="search-clear-icon"
+                    [icon]="headerClearSearchIcon"
+                    [size]="12"
+                    [strokeWidth]="2.15"
+                    aria-hidden="true"
+                  ></hugeicons-icon>
+                </button>
+              }
+            </div>
+            @if (globalSearchPanelVisible()) {
+              <div
+                #globalSearchPanel
+                id="global-search-panel"
+                class="global-search-panel animate-pop"
+                role="listbox"
+                aria-label="Global search results"
+              >
+                @if (globalSearchSections().length > 0) {
+                  @for (section of globalSearchSections(); track section.id) {
+                    <section class="global-search-section">
+                      <div class="global-search-section__header">{{ section.label }}</div>
+                      <div class="global-search-section__items">
+                        @for (result of section.items; track result.item.path) {
+                          <a
+                            class="global-search-option"
+                            [routerLink]="result.item.disabled ? null : '/' + result.item.path"
+                            [id]="'global-search-option-' + result.index"
+                            [attr.data-search-index]="result.index"
+                            role="option"
+                            [attr.aria-selected]="globalSearchActiveIndex() === result.index"
+                            [class.is-active]="globalSearchActiveIndex() === result.index"
+                            [class.is-disabled]="result.item.disabled"
+                            (mouseenter)="setGlobalSearchActiveIndex(result.index)"
+                            (click)="onGlobalSearchResultLinkClick(result.item, $event)"
+                          >
+                            <span class="global-search-option__body">
+                              <span class="global-search-option__title">
+                                @for (segment of result.labelSegments; track $index) {
+                                  <span [class.match]="segment.matched">{{ segment.text }}</span>
+                                }
+                              </span>
+                              <span class="global-search-option__meta">
+                                @for (segment of result.metaSegments; track $index) {
+                                  <span [class.match]="segment.matched">{{ segment.text }}</span>
+                                }
+                              </span>
+                              @if (result.item.disabled) {
+                                <span class="global-search-option__state">
+                                  {{ result.item.availabilityLabel || 'Soon' }}
+                                </span>
+                              }
+                            </span>
+                          </a>
+                        }
+                      </div>
+                    </section>
+                  }
+                  <div class="global-search-footer">
+                    <kbd>&uarr;</kbd>
+                    <kbd>&darr;</kbd>
+                    move
+                    <span class="global-search-footer__dot">&bull;</span>
+                    <kbd>Enter</kbd>
+                    open
+                  </div>
+                } @else {
+                  <div class="global-search-empty">
+                    <hugeicons-icon
+                      class="global-search-empty-icon"
+                      [icon]="headerSearchIcon"
+                      [size]="22"
+                      [strokeWidth]="2"
+                      aria-hidden="true"
+                    ></hugeicons-icon>
+                    <div>
+                      <div class="global-search-empty__title">No pages found</div>
+                      <div class="global-search-empty__text">
+                        Try module names like Tender, Suppliers, Tasks, or Settings.
+                      </div>
+                    </div>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        </div>
+        <div class="hdr-right" [class.hdr-right--ready]="headerRightReady()">
+          <div class="hdr-actions">
+            <div class="notif-anchor">
+              <button
+                class="btn sm notif-button hdr-icon"
+                type="button"
+                (click)="toggleNotificationsPanel($event)"
+              >
+                <hugeicons-icon
+                  class="hdr-icon-svg header-bell-icon"
+                  [icon]="headerNotificationsIcon"
+                  [size]="15"
+                  [strokeWidth]="2.05"
+                  aria-hidden="true"
+                ></hugeicons-icon>
+                @if (notificationBadgeCount() > 0) {
+                  <span class="notif-badge">{{ notificationBadgeCount() }}</span>
+                }
+              </button>
+              @if (notifOpen) {
+                <div
+                  class="menu-panel notifications-panel animate-pop"
+                  role="dialog"
+                  aria-label="Notifications"
+                  (click)="$event.stopPropagation()"
+                >
+                  <div class="menu-header notifications-header">
+                    <div class="notifications-header-copy">
+                      <div class="title">Notifications</div>
+                      <div class="notifications-header-subtitle">
+                        {{ notificationsFeedSummary() }}
+                      </div>
+                    </div>
+                    <div class="notifications-header-actions">
+                      <div
+                        class="notif-header-meta"
+                        [class.notif-header-meta--quiet]="notificationsHeaderMeta().quiet"
+                        [class.notif-header-meta--error]="notificationsHeaderMeta().error"
+                      >
+                        {{ notificationsHeaderMeta().label }}
+                      </div>
+                      <button
+                        class="notifications-settings-button"
+                        type="button"
+                        title="Open notification center"
+                        aria-label="Open notification center"
+                        (click)="openNotificationsInbox($event)"
+                      >
+                        <hugeicons-icon
+                          [icon]="headerSettingsIcon"
+                          [size]="18"
+                          [strokeWidth]="2.05"
+                          aria-hidden="true"
+                        ></hugeicons-icon>
+                      </button>
+                    </div>
+                  </div>
+                  <div
+                    class="menu-body notifications-body"
+                    role="feed"
+                    (scroll)="onNotificationsScroll($event)"
+                    [class.notifications-body--scrollable]="notificationsShouldShowScrollHint()"
+                  >
+                    @if (recentNotificationViews().length > 0) {
+                      @for (
+                        notificationView of recentNotificationViews();
+                        track notificationView.id
+                      ) {
+                        <button
+                          type="button"
+                          class="notif-row"
+                          [class.unread]="!notificationView.read"
+                          [attr.aria-label]="
+                            notificationView.title +
+                            (notificationView.summary ? ': ' + notificationView.summary : '') +
+                            (notificationView.timeLabel ? ', ' + notificationView.timeLabel : '')
+                          "
+                          (click)="openNotification(notificationView.notification, $event)"
+                          (auxclick)="
+                            openNotificationInNewContext(notificationView.notification, $event)
+                          "
+                        >
+                          <div class="notif-leading">
+                            @if (!notificationView.read) {
+                              <span class="notif-dot"></span>
+                            }
+                            <span
+                              class="notif-type"
+                              [class.notif-type--image]="notificationAvatarUrl(notificationView)"
+                              [attr.data-type]="notificationView.type"
+                              [attr.aria-label]="notificationView.avatarLabel"
+                            >
+                              @if (notificationAvatarUrl(notificationView); as avatarUrl) {
+                                <img
+                                  class="notif-avatar-image"
+                                  [src]="avatarUrl"
+                                  [alt]="notificationView.avatarLabel"
+                                  loading="lazy"
+                                  decoding="async"
+                                  (error)="markNotificationAvatarFailed(avatarUrl, $event)"
+                                />
+                              } @else {
+                                <span class="notif-avatar-initials" aria-hidden="true">
+                                  {{ notificationView.avatarInitials }}
+                                </span>
+                              }
+                            </span>
+                          </div>
+                          <div class="notif-copy">
+                            <div class="notif-eyebrow">
+                              <div class="notif-eyebrow-left">
+                                @if (notificationView.contextLabel; as context) {
+                                  <span class="notif-context">{{ context }}</span>
+                                }
+                                <span class="notif-source-pill">{{
+                                  notificationView.sourceLabel
+                                }}</span>
+                              </div>
+                              <div class="notif-eyebrow-right">
+                                @if (notificationView.timeLabel; as timeLabel) {
+                                  <time
+                                    class="notif-time-badge"
+                                    [attr.datetime]="notificationView.dateTime"
+                                    [attr.title]="notificationView.absoluteTimeLabel"
+                                  >
+                                    {{ timeLabel }}
+                                  </time>
+                                }
+                                @if (notificationView.showPriority) {
+                                  <span
+                                    class="notif-chip"
+                                    [attr.data-priority]="notificationView.priority"
+                                  >
+                                    {{ notificationView.priorityLabel }}
+                                  </span>
+                                }
+                              </div>
+                            </div>
+                            <div class="notif-headings">
+                              <div class="notif-title">
+                                {{ notificationView.title }}
+                              </div>
+                              @if (notificationView.summary; as summary) {
+                                <div class="notif-summary">{{ summary }}</div>
+                              }
+                            </div>
+                            @if (
+                              notificationView.message &&
+                              !notificationView.targetLabel &&
+                              !notificationView.referenceLabel &&
+                              !notificationView.actorLabel &&
+                              !notificationView.actionUrl;
+                              as message
+                            ) {
+                              <div class="notif-message">{{ message }}</div>
+                            }
+                            @if (
+                              notificationView.targetLabel ||
+                              notificationView.referenceLabel ||
+                              notificationView.actorLabel ||
+                              notificationView.actionUrl
+                            ) {
+                              <div
+                                class="notif-footer"
+                                [class.notif-footer--action-only]="
+                                  !notificationView.targetLabel &&
+                                  !notificationView.referenceLabel &&
+                                  !notificationView.actorLabel
+                                "
+                              >
+                                @if (
+                                  notificationView.targetLabel ||
+                                  notificationView.referenceLabel ||
+                                  notificationView.actorLabel
+                                ) {
+                                  <div class="notif-footer-copy notif-footer-copy--meta">
+                                    @if (
+                                      notificationView.targetLabel || notificationView.referenceLabel
+                                    ) {
+                                      <div class="notif-target notif-target--inline">
+                                        @if (notificationView.targetLabel; as targetLabel) {
+                                          <span>{{ targetLabel }}</span>
+                                        }
+                                        @if (notificationView.referenceLabel; as referenceLabel) {
+                                          <span>{{ referenceLabel }}</span>
+                                        }
+                                      </div>
+                                    }
+                                    @if (notificationView.actorLabel; as actor) {
+                                      <span class="notif-actor">{{ actor }}</span>
+                                    }
+                                  </div>
+                                }
+                                @if (notificationView.actionUrl) {
+                                  <span class="notif-action">
+                                    {{ notificationView.actionLabel }}
+                                    <span class="notif-action-arrow" aria-hidden="true"
+                                      >&rarr;</span
+                                    >
+                                  </span>
+                                }
+                              </div>
+                            } @else if (notificationView.actionUrl) {
+                              <div class="notif-footer notif-footer--action-only">
+                                <span class="notif-action">
+                                  {{ notificationView.actionLabel }}
+                                  <span class="notif-action-arrow" aria-hidden="true">&rarr;</span>
+                                </span>
+                              </div>
+                            }
+                          </div>
+                        </button>
+                      }
+                      @if (notificationsFeedState(); as feedState) {
+                        <div
+                          class="notifications-feed-state"
+                          [class.notifications-feed-state--loading]="notificationsLoadingMore()"
+                        >
+                          {{ feedState }}
+                        </div>
+                      }
+                    } @else {
+                      <div
+                        class="notif-empty"
+                        [class.notif-empty--loading]="notificationsEmptyState().state === 'loading'"
+                        [class.notif-empty--error]="notificationsEmptyState().state === 'error'"
+                        [class.notif-empty--ready]="notificationsEmptyState().state === 'ready'"
+                      >
+                        <hugeicons-icon
+                          class="notif-empty-icon"
+                          [icon]="headerNotificationsEmptyIcon"
+                          [size]="20"
+                          [strokeWidth]="2.05"
+                          aria-hidden="true"
+                        ></hugeicons-icon>
+                        <div class="notif-empty-copy">
+                          <div class="notif-empty-title">{{ notificationsEmptyState().title }}</div>
+                          <div class="notif-empty-text">{{ notificationsEmptyState().text }}</div>
+                          @if (notificationsCanRetry()) {
+                            <button
+                              class="btn sm notif-empty-action"
+                              type="button"
+                              (click)="retryNotificationsPreview($event)"
+                            >
+                              Retry
+                            </button>
+                          }
+                        </div>
+                      </div>
+                    }
+                  </div>
+                  <div class="menu-footer notifications-footer">
+                    <button class="btn sm" type="button" (click)="openNotificationsInbox($event)">
+                      View all
+                    </button>
+                    <button
+                      class="btn-accent sm"
+                      type="button"
+                      (click)="markAllNotificationsRead($event)"
+                      [disabled]="!hasUnread()"
+                    >
+                      Mark all as read
+                    </button>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+          <div class="theme-toggle-wrapper">
+            <label class="theme-toggle">
+              <input
+                name="theme-mode"
+                type="checkbox"
+                aria-label="Toggle light and dark theme"
+                [checked]="theme() === 'light' || (theme() === 'auto' && !prefersDark())"
+                (change)="
+                  setTheme(
+                    theme() === 'light' || (theme() === 'auto' && !prefersDark()) ? 'dark' : 'light'
+                  )
+                "
+                class="theme-toggle-input"
+              />
+              <span class="theme-toggle-slider">
+                <span class="theme-toggle-icon">
+                  <hugeicons-icon
+                    class="theme-toggle-svg"
+                    [icon]="
+                      theme() === 'light' || (theme() === 'auto' && !prefersDark())
+                        ? headerThemeSunIcon
+                        : headerThemeMoonIcon
+                    "
+                    [size]="12"
+                    [strokeWidth]="2.2"
+                    aria-hidden="true"
+                  ></hugeicons-icon>
+                </span>
+              </span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </header>
+    <!-- ===== Layout ===== -->
+    <div class="shell">
+      <!-- Sidebar -->
+      <aside
+        class="bg-bar sidebar"
+        [class.is-collapsed]="sideCollapsed"
+        (mouseenter)="setCollapsedSidebarReveal(true)"
+        (mouseleave)="setCollapsedSidebarReveal(false)"
+        (click)="onSidebarEmptySpaceClick($event)"
+      >
+        <div class="sidebar-collapsed-brand">
+          <img
+            class="sidebar-brand-mark sidebar-brand-mark--dark"
+            src="assets/brand/engineers-reference-mark.svg"
+            width="229"
+            height="229"
+            loading="lazy"
+            decoding="async"
+            alt="Engineers Reference"
+            onerror="this.style.display = 'none'"
+          />
+          <img
+            class="sidebar-brand-mark sidebar-brand-mark--light"
+            src="assets/brand/engineers-reference-mark.svg"
+            width="229"
+            height="229"
+            loading="lazy"
+            decoding="async"
+            alt="Engineers Reference"
+            onerror="this.style.display = 'none'"
+          />
+          <button
+            type="button"
+            class="sidebar-collapsed-brand__toggle"
+            aria-label="Open sidebar"
+            (click)="$event.stopPropagation(); toggleCollapse()"
+          >
+            <hugeicons-icon
+              class="sidebar-toggle-icon"
+              [icon]="sidebarOpenIcon"
+              [size]="18"
+              [strokeWidth]="2.1"
+              aria-hidden="true"
+            ></hugeicons-icon>
+          </button>
+        </div>
+        <div class="sidebar-inner">
+          <nav class="nav-list nav-list--areas" #navList>
+            <div class="indicator" aria-hidden="true"></div>
+            @for (item of shellMenuItems; track item.key) {
+              <a
+                class="area-trigger shell-primary-item"
+                [routerLink]="item.disabled ? null : '/' + item.path"
+                [class.is-current]="isShellItemActive(item)"
+                [attr.aria-current]="isShellItemActive(item) ? 'page' : null"
+                [attr.data-tooltip]="menuItemTooltip(item)"
+                (mouseenter)="showSidebarTooltip($event, menuItemTooltip(item))"
+                (mouseleave)="hideSidebarTooltip()"
+                (focus)="showSidebarTooltip($event, menuItemTooltip(item))"
+                (blur)="hideSidebarTooltip()"
+                (click)="onShellItemLinkClick(item, $event)"
+              >
+                <span class="area-trigger__lead">
+                  <app-stateful-icon
+                    class="area-trigger__icon sidebar-nav-icon sidebar-nav-icon--page"
+                    [attr.data-nav-icon]="item.key"
+                    [outlineIcon]="sidebarMenuIconSpecs[item.key].outline"
+                    [filledIcon]="sidebarMenuIconSpecs[item.key].filled"
+                    [active]="isShellItemActive(item)"
+                    [size]="sidebarMenuIconSpecs[item.key].size"
+                    [strokeWidth]="sidebarMenuIconSpecs[item.key].strokeWidth"
+                    aria-hidden="true"
+                  ></app-stateful-icon>
+                  <span class="area-trigger__label label">{{ item.label }}</span>
+                </span>
+              </a>
+            }
+            @for (area of areaOrder; track area) {
+              <section
+                class="area-section"
+                [class.is-expanded]="isAreaExpanded(area)"
+                [class.is-flat]="!sidebarGroupsVisible"
+              >
+                <button
+                  type="button"
+                  class="area-trigger area-group-trigger"
+                  [attr.data-area]="area"
+                  [class.has-active-page]="hasActivePageInArea(area)"
+                  [class.is-expanded]="isAreaExpanded(area)"
+                  [class.is-flyout-open]="sideCollapsed && isCollapsedAreaFlyoutOpen(area)"
+                  [attr.data-tooltip]="areaLabels[area]"
+                  [attr.aria-label]="areaLabels[area]"
+                  [attr.aria-expanded]="
+                    sideCollapsed ? isCollapsedAreaFlyoutOpen(area) : isAreaExpanded(area)
+                  "
+                  [attr.aria-controls]="'stage-panel-' + area"
+                  (mouseenter)="onAreaTriggerMouseEnter(area, $event)"
+                  (mouseleave)="onAreaTriggerMouseLeave()"
+                  (focus)="onAreaTriggerFocus(area, $event)"
+                  (blur)="onAreaTriggerBlur()"
+                  (click)="onAreaTriggerClick(area, $event)"
+                >
+                  <span class="area-trigger__lead">
+                    <hugeicons-icon
+                      class="area-trigger__icon sidebar-nav-icon sidebar-nav-icon--page"
+                      [icon]="sidebarAreaIcons[area]"
+                      [size]="18"
+                      [strokeWidth]="2.05"
+                      [absoluteStrokeWidth]="true"
+                      aria-hidden="true"
+                    ></hugeicons-icon>
+                    <span class="area-trigger__label label">
+                      {{ areaLabels[area] }}
+                    </span>
+                  </span>
+                  <span class="area-trigger__tail">
+                    <hugeicons-icon
+                      class="caret sidebar-caret-icon"
+                      [icon]="sidebarChevronDownIcon"
+                      [size]="13"
+                      [strokeWidth]="2.25"
+                      aria-hidden="true"
+                    ></hugeicons-icon>
+                  </span>
+                </button>
+                <div
+                  class="area-items"
+                  [class.is-open]="
+                    !sidebarGroupsVisible || (!sideCollapsed && isAreaExpanded(area))
+                  "
+                  [attr.id]="'stage-panel-' + area"
+                  [attr.aria-hidden]="
+                    sidebarGroupsVisible && (sideCollapsed || !isAreaExpanded(area))
+                  "
+                >
+                    @for (item of menus()[area]; track item.key) {
+                      <a
+                        class="area-page-item"
+                        [routerLink]="item.disabled ? null : '/' + item.path"
+                        [attr.tabindex]="
+                          sidebarGroupsVisible && (sideCollapsed || !isAreaExpanded(area))
+                            ? -1
+                            : null
+                        "
+                        [class.active]="activeKey === item.key"
+                        [class.is-disabled]="item.disabled"
+                        [attr.aria-current]="activeKey === item.key ? 'page' : null"
+                        [attr.aria-disabled]="item.disabled ? 'true' : 'false'"
+                        [attr.data-tooltip]="menuItemTooltip(item)"
+                        (mouseenter)="showSidebarTooltip($event, menuItemTooltip(item))"
+                        (mouseleave)="hideSidebarTooltip()"
+                        (focus)="showSidebarTooltip($event, menuItemTooltip(item))"
+                        (blur)="hideSidebarTooltip()"
+                        (click)="onAreaItemLinkClick(area, item, $event)"
+                      >
+                        <app-stateful-icon
+                          class="sidebar-nav-icon sidebar-nav-icon--page"
+                          [attr.data-nav-icon]="item.key"
+                          [outlineIcon]="sidebarMenuIconSpecs[item.key]?.outline || sidebarAreaIcons[area]"
+                          [filledIcon]="sidebarMenuIconSpecs[item.key]?.filled || sidebarAreaIcons[area]"
+                          [active]="activeKey === item.key"
+                          [size]="sidebarMenuIconSpecs[item.key]?.size || 18"
+                          [strokeWidth]="sidebarMenuIconSpecs[item.key]?.strokeWidth || 0.95"
+                          aria-hidden="true"
+                        ></app-stateful-icon>
+                        <span class="label">{{ item.label }}</span>
+                        @if (item.disabled && !sideCollapsed) {
+                          <span class="nav-item-status">{{
+                            item.availabilityLabel || 'Soon'
+                          }}</span>
+                        }
+                      </a>
+                    }
+                </div>
+              </section>
+            }
+          </nav>
+        </div>
+      </aside>
+      @if (collapsedAreaFlyout; as flyout) {
+        <div
+          class="collapsed-area-flyout menu-panel animate-pop"
+          [class.is-pinned]="flyout.pinned"
+          [style.left.px]="flyout.left"
+          [style.top.px]="flyout.top"
+          [style.width.px]="flyout.width"
+          [style.maxHeight.px]="flyout.maxHeight"
+          (mouseenter)="onCollapsedAreaFlyoutMouseEnter()"
+          (mouseleave)="onCollapsedAreaFlyoutMouseLeave()"
+          (click)="$event.stopPropagation()"
+        >
+          <div class="collapsed-area-flyout__header">
+            <div class="collapsed-area-flyout__title">
+              <hugeicons-icon
+                class="collapsed-area-flyout__area-icon"
+                [icon]="sidebarAreaIcons[flyout.area]"
+                [size]="17"
+                [strokeWidth]="2.05"
+                aria-hidden="true"
+              ></hugeicons-icon>
+              <span>{{ areaLabels[flyout.area] }}</span>
+            </div>
+          </div>
+          <div class="collapsed-area-flyout__list">
+            @for (item of menus()[flyout.area]; track item.key) {
+              <a
+                class="collapsed-area-flyout__item"
+                [routerLink]="item.disabled ? null : '/' + item.path"
+                [class.active]="activeKey === item.key"
+                [class.is-disabled]="item.disabled"
+                [attr.aria-current]="activeKey === item.key ? 'page' : null"
+                [attr.aria-disabled]="item.disabled ? 'true' : 'false'"
+                (click)="onAreaItemLinkClick(flyout.area, item, $event)"
+              >
+                <app-stateful-icon
+                  class="collapsed-area-flyout__item-icon"
+                  [attr.data-nav-icon]="item.key"
+                  [outlineIcon]="sidebarMenuIconSpecs[item.key]?.outline || sidebarAreaIcons[flyout.area]"
+                  [filledIcon]="sidebarMenuIconSpecs[item.key]?.filled || sidebarAreaIcons[flyout.area]"
+                  [active]="activeKey === item.key"
+                  [size]="sidebarMenuIconSpecs[item.key]?.size || 18"
+                  [strokeWidth]="sidebarMenuIconSpecs[item.key]?.strokeWidth || 0.95"
+                  aria-hidden="true"
+                ></app-stateful-icon>
+                <span class="collapsed-area-flyout__item-label">{{ item.label }}</span>
+                @if (item.disabled) {
+                  <span class="collapsed-area-flyout__item-status">
+                    {{ item.availabilityLabel || 'Soon' }}
+                  </span>
+                }
+              </a>
+            }
+          </div>
+        </div>
+      }
+      <main class="content">
+        <router-outlet class="card-enter" />
+      </main>
+    </div>
+    @if (sidebarTooltip; as tt) {
+      <div
+        class="sidebar-floating-tooltip"
+        [style.left.px]="tt.left"
+        [style.top.px]="tt.top"
+        [attr.data-tooltip]="tt.text"
+      ></div>
+    }
+  </div>
+} @else {
+  <router-outlet />
+}

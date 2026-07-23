@@ -27,7 +27,6 @@ type ReadRowDto = {
   workMode: string;
 };
 type ReadPageDto = { items: ReadRowDto[] };
-type AggregateResponseDto = { aggregates: Array<{ field: string; value: number | null }> };
 type SalaryOptionsDto = {
   disciplines: string[];
   workModes: string[];
@@ -46,21 +45,16 @@ export class SalaryDashboardApiAdapter extends SalaryDashboardPort {
       reports: this.api.get<ReadPageDto>('salary-reports/read-rows', {
         ...query,
         pageNumber: 1,
-        pageSize: 6,
+        pageSize: 100,
         sortBy: 'id',
         sortDirection: 'desc'
-      }),
-      median: this.api.post<AggregateResponseDto>('salary-reports/read-rows/aggregates', {
-        filters: query,
-        scope: 'filtered',
-        aggregates: [{ field: 'monthlyNetSalary', operation: 'median', resultKey: 'medianSalary' }]
       }),
       options: this.api.get<SalaryOptionsDto>('salary-reports/options')
     }).pipe(map(result => ({
       summary: {
         totalReports: result.summary.totalReports,
         averageSalary: result.summary.averageMonthlyNetSalary ?? 0,
-        medianSalary: result.median.aggregates.find(item => item.field === 'medianSalary')?.value ?? 0,
+        medianSalary: this.medianSalary(result.reports.items),
         minSalary: result.summary.minimumMonthlyNetSalary ?? 0,
         maxSalary: result.summary.maximumMonthlyNetSalary ?? 0,
         currency: 'EGP',
@@ -99,4 +93,14 @@ export class SalaryDashboardApiAdapter extends SalaryDashboardPort {
     count: item.count,
     averageSalary: item.averageMonthlyNetSalary
   });
+
+  private medianSalary(reports: ReadRowDto[]): number {
+    const values = reports
+      .map(report => report.monthlyNetSalary)
+      .filter((salary): salary is number => Number.isFinite(salary))
+      .sort((left, right) => left - right);
+    if (!values.length) return 0;
+    const middle = Math.floor(values.length / 2);
+    return values.length % 2 === 0 ? (values[middle - 1] + values[middle]) / 2 : values[middle];
+  }
 }

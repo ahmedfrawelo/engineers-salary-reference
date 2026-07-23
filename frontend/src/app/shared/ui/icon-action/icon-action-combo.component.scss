@@ -1,0 +1,99 @@
+@use './app-icon-action.styles' as action;
+
+:host {
+  display: inline-flex;
+  flex: 0 0 auto;
+}
+
+.app-icon-action-split {
+  --app-icon-action-expand-width: 88px;
+  --app-icon-action-label-max: 56px;
+  --app-icon-action-outline: rgb(var(--border) / 0.42);
+  --app-icon-action-outline-hover: rgb(var(--border) / 0.82);
+  --app-icon-action-hover-bg: color-mix(in oklab, rgb(var(--fg)) 10%, transparent);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+}
+
+.app-icon-action-split--wide {
+  --app-icon-action-expand-width: 112px;
+  --app-icon-action-label-max: 78px;
+}
+
+@include action.styles;
+
+.app-icon-action-split.has-menu {
+  border: 1px solid var(--app-icon-action-outline);
+  border-radius: 8px;
+  background: transparent;
+  overflow: visible;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease;
+}
+
+.app-icon-action-split.has-menu:hover,
+.app-icon-action-split.has-menu:focus-within,
+.app-icon-action-split.has-menu.is-menu-open {
+  border-color: var(--app-icon-action-outline-hover);
+  background: var(--app-icon-action-hover-bg);
+}
+
+.app-icon-action-split.has-menu .app-icon-action {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.app-icon-action-split.has-menu .app-icon-action:hover:not(:disabled),
+.app-icon-action-split.has-menu .app-icon-action:focus-visible,
+.app-icon-action-split.has-menu .app-icon-action:active:not(:disabled) {
+  background: color-mix(in oklab, rgb(var(--fg)) 8%, transparent);
+}
+
+.app-icon-action-split.has-menu .app-icon-action--main {
+  border-radius: 7px 0 0 7px;
+}
+
+.app-icon-action-split.has-menu.is-menu-open .app-icon-action--main {
+  width: var(--app-icon-action-expand-width);
+  gap: 6px;
+  padding: 0 8px;
+}
+
+.app-icon-action-split.has-menu.is-menu-open .app-icon-action--main .app-icon-action-label {
+  max-width: var(--app-icon-action-label-max);
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.app-icon-action-split.has-menu .app-icon-action--trigger {
+  width: 22px;
+  min-width: 22px;
+  border: 0;
+  border-left: 1px solid var(--app-icon-action-outline);
+  border-radius: 0 7px 7px 0;
+}
+
+.app-icon-action-split.has-menu:hover .app-icon-action--trigger,
+.app-icon-action-split.has-menu:focus-within .app-icon-action--trigger,
+.app-icon-action-split.has-menu.is-menu-open .app-icon-action--trigger {
+  border-left-color: var(--app-icon-action-outline-hover);
+}
+
+.app-icon-action-split.has-menu .app-icon-action--trigger:hover:not(:disabled),
+.app-icon-action-split.has-menu .app-icon-action--trigger:focus-visible {
+  width: 22px;
+  min-width: 22px;
+  gap: 0;
+  padding: 0;
+}
+
+.app-icon-action-split.has-menu .app-icon-action--main:hover:not(:disabled),
+.app-icon-action-split.has-menu .app-icon-action--main:focus-visible {
+  width: var(--app-icon-action-expand-width);
+  gap: 6px;
+  padding: 0 8px;
+}

@@ -1,0 +1,281 @@
+/* Independent icon-first action button (expand label on hover).
+   Tones use app theme semantics so callers don't invent local colors. */
+
+@mixin styles {
+  .app-icon-action {
+    --app-icon-action-expand-width: 88px;
+    --app-icon-action-label-max: 56px;
+    --app-icon-action-fg: rgb(var(--fg) / 0.92);
+    --app-icon-action-fg-hover: rgb(var(--fg) / 0.98);
+    --app-icon-action-outline: rgb(var(--border) / 0.42);
+    --app-icon-action-outline-hover: rgb(var(--border) / 0.82);
+    --app-icon-action-bg: transparent;
+    --app-icon-action-hover-bg: color-mix(in oklab, rgb(var(--fg)) 10%, transparent);
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    width: 30px;
+    height: 30px;
+    min-height: 30px;
+    padding: 0;
+    border: 1px solid var(--app-icon-action-outline);
+    border-radius: 8px;
+    background: var(--app-icon-action-bg);
+    color: var(--app-icon-action-fg);
+    font: inherit;
+    cursor: pointer;
+    overflow: visible;
+    flex: 0 0 auto;
+    transition:
+      width 170ms cubic-bezier(0.2, 0.82, 0.24, 1),
+      gap 170ms cubic-bezier(0.2, 0.82, 0.24, 1),
+      padding 170ms cubic-bezier(0.2, 0.82, 0.24, 1),
+      border-color 0.15s ease,
+      background 0.15s ease,
+      color 0.15s ease;
+  }
+
+  .app-icon-action--wide {
+    --app-icon-action-expand-width: 112px;
+    --app-icon-action-label-max: 78px;
+  }
+
+  .app-icon-action--xl {
+    --app-icon-action-expand-width: 148px;
+    --app-icon-action-label-max: 120px;
+  }
+
+  .app-icon-action--primary {
+    --app-icon-action-fg: var(--app-color-primary, rgb(var(--primary)));
+    --app-icon-action-fg-hover: var(--app-color-primary, rgb(var(--primary)));
+    --app-icon-action-outline: color-mix(
+      in oklab,
+      var(--app-color-primary, rgb(var(--primary))) 34%,
+      transparent
+    );
+    --app-icon-action-outline-hover: color-mix(
+      in oklab,
+      var(--app-color-primary, rgb(var(--primary))) 58%,
+      transparent
+    );
+    --app-icon-action-bg: var(
+      --app-color-primary-bg,
+      color-mix(in oklab, rgb(var(--primary)) 10%, transparent)
+    );
+    --app-icon-action-hover-bg: color-mix(
+      in oklab,
+      var(--app-color-primary, rgb(var(--primary))) 16%,
+      transparent
+    );
+  }
+
+  .app-icon-action--success {
+    --app-icon-action-fg: var(--app-color-success-text, var(--app-color-success, rgb(var(--success))));
+    --app-icon-action-fg-hover: var(
+      --app-color-success-text,
+      var(--app-color-success, rgb(var(--success)))
+    );
+    --app-icon-action-outline: var(
+      --app-color-success-border,
+      color-mix(in oklab, rgb(var(--success)) 48%, transparent)
+    );
+    --app-icon-action-outline-hover: color-mix(
+      in oklab,
+      var(--app-color-success, rgb(var(--success))) 62%,
+      transparent
+    );
+    --app-icon-action-bg: var(
+      --app-color-success-bg,
+      color-mix(in oklab, rgb(var(--success)) 14%, transparent)
+    );
+    --app-icon-action-hover-bg: var(
+      --app-color-success-bg-strong,
+      color-mix(in oklab, rgb(var(--success)) 22%, transparent)
+    );
+  }
+
+  .app-icon-action--warning {
+    --app-icon-action-fg: var(--app-color-warning-text, var(--app-color-warning, rgb(var(--warning))));
+    --app-icon-action-fg-hover: var(
+      --app-color-warning-text,
+      var(--app-color-warning, rgb(var(--warning)))
+    );
+    --app-icon-action-outline: var(
+      --app-color-warning-border,
+      color-mix(in oklab, rgb(var(--warning)) 55%, transparent)
+    );
+    --app-icon-action-outline-hover: color-mix(
+      in oklab,
+      var(--app-color-warning, rgb(var(--warning))) 68%,
+      transparent
+    );
+    --app-icon-action-bg: var(
+      --app-color-warning-bg,
+      color-mix(in oklab, rgb(var(--warning)) 14%, transparent)
+    );
+    --app-icon-action-hover-bg: var(
+      --app-color-warning-bg-strong,
+      color-mix(in oklab, rgb(var(--warning)) 22%, transparent)
+    );
+  }
+
+  .app-icon-action--danger {
+    --app-icon-action-fg: var(--app-color-danger-text, var(--app-color-danger, rgb(var(--danger))));
+    --app-icon-action-fg-hover: var(
+      --app-color-danger-text,
+      var(--app-color-danger, rgb(var(--danger)))
+    );
+    --app-icon-action-outline: var(
+      --app-color-danger-border,
+      color-mix(in oklab, rgb(var(--danger)) 40%, transparent)
+    );
+    --app-icon-action-outline-hover: color-mix(
+      in oklab,
+      var(--app-color-danger, rgb(var(--danger))) 58%,
+      transparent
+    );
+    --app-icon-action-bg: var(
+      --app-color-danger-bg,
+      color-mix(in oklab, rgb(var(--danger)) 12%, transparent)
+    );
+    --app-icon-action-hover-bg: var(
+      --app-color-danger-bg-strong,
+      color-mix(in oklab, rgb(var(--danger)) 18%, transparent)
+    );
+  }
+
+  .app-icon-action:hover:not(:disabled):not(.is-disabled),
+  .app-icon-action:focus-visible:not(:disabled):not(.is-disabled):not(.is-loading),
+  .app-icon-action:active:not(:disabled):not(.is-disabled),
+  .app-icon-action.is-pending {
+    width: var(--app-icon-action-expand-width);
+    gap: 6px;
+    padding: 0 8px;
+    border-color: var(--app-icon-action-outline-hover);
+    background: var(--app-icon-action-hover-bg);
+    color: var(--app-icon-action-fg-hover);
+    outline: none;
+  }
+
+  .app-icon-action:disabled,
+  .app-icon-action.is-disabled {
+    cursor: not-allowed;
+    opacity: 0.46;
+  }
+
+  .app-icon-action.is-disabled:hover,
+  .app-icon-action.is-disabled:focus-visible {
+    opacity: 0.62;
+  }
+
+  .app-icon-action .app-icon-host,
+  .app-icon-action > i {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 14px;
+    height: 14px;
+    margin: 0;
+    flex: 0 0 auto;
+    line-height: 0;
+    position: relative;
+  }
+
+  .app-icon-action.is-loading {
+    cursor: wait;
+  }
+
+  .app-icon-action.is-loading:disabled,
+  .app-icon-action.is-loading.is-disabled {
+    opacity: 1;
+  }
+
+  .app-icon-action.is-loading .app-icon-host,
+  .app-icon-action.is-loading > i {
+    overflow: visible;
+  }
+
+  .app-icon-action .app-icon-host > svg,
+  .app-icon-action > i > svg {
+    transform: scale(1);
+    transition: transform 140ms cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  .app-icon-action.is-loading .app-icon-host > svg,
+  .app-icon-action.is-loading > i > svg {
+    transform: scale(0.72);
+  }
+
+  .app-icon-action.is-loading .app-icon-host::after,
+  .app-icon-action.is-loading > i::after {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 18px;
+    height: 18px;
+    box-sizing: border-box;
+    border: 1.5px solid color-mix(in oklab, currentColor 28%, transparent);
+    border-block-start-color: currentColor;
+    border-radius: 50%;
+    content: '';
+    pointer-events: none;
+    transform: translate(-50%, -50%) rotate(0turn);
+    transform-origin: center;
+    animation: app-icon-action-spin 720ms linear infinite;
+  }
+
+  .app-icon-action-label {
+    display: block;
+    max-width: 0;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    overflow-x: clip;
+    overflow-y: visible;
+    opacity: 0;
+    color: inherit;
+    font-size: 11px;
+    font-weight: 800;
+    line-height: 1.25;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+    pointer-events: none;
+    transform: translateX(-3px);
+    transition:
+      max-width 170ms cubic-bezier(0.2, 0.82, 0.24, 1),
+      opacity 120ms ease,
+      transform 170ms cubic-bezier(0.2, 0.82, 0.24, 1);
+  }
+
+  .app-icon-action:hover:not(:disabled):not(.is-disabled) .app-icon-action-label,
+  .app-icon-action:focus-visible:not(:disabled):not(.is-disabled):not(.is-loading)
+    .app-icon-action-label,
+  .app-icon-action:active:not(:disabled):not(.is-disabled) .app-icon-action-label,
+  .app-icon-action.is-pending .app-icon-action-label {
+    max-width: var(--app-icon-action-label-max);
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .app-icon-action.is-loading .app-icon-host::after,
+    .app-icon-action.is-loading > i::after {
+      animation: none;
+      border-block-start-color: currentColor;
+      border-inline-end-color: currentColor;
+    }
+
+    .app-icon-action .app-icon-host > svg,
+    .app-icon-action > i > svg {
+      transition: none;
+    }
+  }
+}
+
+@keyframes app-icon-action-spin {
+  to {
+    transform: translate(-50%, -50%) rotate(1turn);
+  }
+}

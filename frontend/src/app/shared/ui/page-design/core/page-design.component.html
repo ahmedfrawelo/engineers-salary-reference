@@ -225,8 +225,12 @@
     }
     @if (sharedToolbarAssigneeFilter) {
       <app-assignee-filter-menu
+        [triggerIcon]="sharedToolbarAssigneeFilter.triggerIcon || 'people'"
         [triggerLabel]="sharedToolbarAssigneeFilter.triggerLabel || 'Assignee'"
         [title]="sharedToolbarAssigneeFilter.title || 'Assignees'"
+        [sectionLabel]="sharedToolbarAssigneeFilter.sectionLabel || 'People'"
+        [countLabel]="sharedToolbarAssigneeFilter.countLabel || ''"
+        [allIcon]="sharedToolbarAssigneeFilter.allIcon || 'people'"
         [searchPlaceholder]="
           sharedToolbarAssigneeFilter.searchPlaceholder || 'Search by user or team'
         "

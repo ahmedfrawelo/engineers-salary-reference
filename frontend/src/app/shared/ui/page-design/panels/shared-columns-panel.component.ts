@@ -25,7 +25,7 @@ import {
   Cancel01Icon,
   Search01Icon
 } from '@shared/icons/app-icon.registry';
-import { SideDrawerComponent } from '@shared/ui/side-drawer.component';
+import { SideDrawerComponent, type SideDrawerMode } from '@shared/ui/side-drawer';
 import { AppIconDirective } from '@shared/icons/app-icon.directive';
 import { getAppScale } from '../../../utils/app-shell.util';
 
@@ -78,6 +78,7 @@ export class SharedColumnsPanelComponent implements OnChanges {
   @Input() ignoreOutsideSelectors = '';
   @Input() panelClass =
     'columns-drawer columns-drawer--clickup columns-drawer--sidebar page-design-columns-drawer';
+  drawerMode: SideDrawerMode = 'sidebar';
 
   @Output() closed = new EventEmitter<void>();
   @Output() back = new EventEmitter<void>();
@@ -141,6 +142,10 @@ export class SharedColumnsPanelComponent implements OnChanges {
   closePanel(): void {
     this.searchTerm = '';
     this.closed.emit();
+  }
+
+  onDrawerModeChange(mode: SideDrawerMode): void {
+    this.drawerMode = mode;
   }
 
   clearSearch(): void {

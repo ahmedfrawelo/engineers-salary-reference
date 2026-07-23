@@ -4501,6 +4501,12 @@ body.tender-projects-page tender-projects .proj-page {
 }
 
 /* Salary Reports uses the projects grid, but it is its own full-page surface. */
+body.salary-reports-page
+  engineers-salary-reference-page-design.tender-projects-page-design
+  .wsh__header {
+  display: none !important;
+}
+
 body.salary-reports-page main.content,
 body.salary-reports-page .content {
   padding: 0 !important;

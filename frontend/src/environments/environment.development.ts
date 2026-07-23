@@ -4,7 +4,7 @@
  */
 export const environment = {
   production: false,
-  // Use '/api' to route through proxy.conf.json during local development.
+  // The local dev proxy forwards /api to the public Worker API, avoiding browser CORS.
   API_BASE_URL: '/api',
   authHeaderScheme: 'bearer',
 

@@ -1,26 +1,7 @@
-<app-side-drawer
-  [open]="open"
-  [width]="width"
-  [zIndex]="zIndex"
-  [topInset]="topInset"
-  [backdropTint]="0"
-  [backdropBlur]="0"
-  [ignoreOutsideSelectors]="ignoreOutsideSelectors"
-  [motionPreset]="'instant'"
-  [panelClass]="panelClass"
-  (closed)="closed.emit()"
->
-  <section
-    class="customize-drawer-surface"
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="sharedCustomizeDrawerTitle"
-  >
-    <div class="customize-drawer-head">
-      <div class="customize-drawer-title" id="sharedCustomizeDrawerTitle">{{ title }}</div>
-      <ng-content select="[customize-panel-header-actions]"></ng-content>
-      @if (actionIcon) {
-        <div class="customize-drawer-action-split">
+<ng-template #customizeDrawerActions>
+  <ng-content select="[customize-panel-header-actions]"></ng-content>
+  @if (actionIcon) {
+    <div class="customize-drawer-action-split">
           <button
             class="customize-drawer-action customize-drawer-action--main"
             type="button"
@@ -58,11 +39,20 @@
               </div>
             </details>
           }
-        </div>
-      }
     </div>
+  }
+  <button
+    class="customize-drawer-close"
+    type="button"
+    aria-label="Close customize panel"
+    (click)="closed.emit()"
+  >
+    <i appIcon="x-lg" aria-hidden="true"></i>
+  </button>
+</ng-template>
 
-    <div class="customize-drawer-body">
+<ng-template #customizeDrawerContent>
+  <div class="customize-drawer-body">
       @if (showDefaultContent) {
         <section class="customize-drawer-section customize-drawer-section--first">
           <div class="customize-drawer-view-pill" aria-label="Current view">
@@ -110,6 +100,26 @@
       }
 
       <ng-content></ng-content>
-    </div>
-  </section>
-</app-side-drawer>
+  </div>
+</ng-template>
+
+<app-side-drawer
+  [open]="open"
+  [mode]="drawerMode"
+  [width]="width"
+  [zIndex]="zIndex"
+  [topInset]="topInset"
+  [backdropTint]="0"
+  [backdropBlur]="0"
+  [ignoreOutsideSelectors]="ignoreOutsideSelectors"
+  [motionPreset]="'instant'"
+  [panelClass]="panelClass"
+  [showHeader]="true"
+  [showModeToggle]="true"
+  [title]="title"
+  [actionsTemplate]="customizeDrawerActions"
+  [contentTemplate]="customizeDrawerContent"
+  [overlayPanelClass]="'task-panel task-panel-clickup task-panel-ref-size'"
+  (modeChange)="onDrawerModeChange($event)"
+  (closed)="closed.emit()"
+/>

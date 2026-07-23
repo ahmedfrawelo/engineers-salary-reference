@@ -213,10 +213,24 @@ export abstract class TenderProjectsComponentUiBase extends TenderProjectsCompon
     const nextConfig: SharedAssigneeFilterConfig = {
       options: this.projectAssigneeMenuOptions(),
       selection: this.projectAssigneeSelection,
-      showMine: this.projectMineCount() > 0,
+      showMine: !this.isSalaryReportsGrid && this.projectMineCount() > 0,
       allCount: source.length,
       mineCount: this.projectMineCount(),
-      unassignedCount: this.projectUnassignedCount()
+      unassignedCount: this.projectUnassignedCount(),
+      ...(this.isSalaryReportsGrid
+        ? {
+            triggerIcon: 'globe',
+            triggerLabel: 'Country',
+            title: 'Countries',
+            sectionLabel: 'Countries',
+            countLabel: 'Reports',
+            allIcon: 'globe',
+            searchPlaceholder: 'Search countries',
+            allLabel: 'All countries',
+            unassignedLabel: 'Not specified',
+            emptyLabel: 'No countries found.'
+          }
+        : {})
     };
 
     this.sharedToolbarAssigneeFilterConfigCacheSource = source;

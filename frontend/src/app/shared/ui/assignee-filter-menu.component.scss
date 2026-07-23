@@ -153,10 +153,14 @@
 }
 
 .assignee-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   padding: 0 4px 6px;
 }
 
-.assignee-section-label {
+.assignee-section-label,
+.assignee-section-count-label {
   display: inline-flex;
   align-items: center;
   gap: 4px;

@@ -13,13 +13,7 @@
     (pointerdown)="onTriggerPointerDown($event)"
     (click)="onTriggerClick($event)"
   >
-    <hugeicons-icon
-      class="assignee-trigger-icon"
-      [icon]="triggerIcon"
-      [size]="14"
-      [strokeWidth]="1.9"
-      aria-hidden="true"
-    ></hugeicons-icon>
+    <i class="assignee-trigger-icon" [appIcon]="triggerIcon" aria-hidden="true"></i>
     <span class="assignee-trigger-label">{{ effectiveTriggerLabel() }}</span>
   </button>
 
@@ -39,33 +33,19 @@
 </span>
 
 @if (drawerOpen()) {
-  <app-side-drawer
-    [open]="true"
-    [width]="drawerWidth"
-    [zIndex]="drawerZIndex"
-    [positionMode]="'fixed'"
-    [topInset]="drawerTopInset ?? drawerTop()"
-    [backdropTint]="0"
-    [backdropBlur]="0"
-    [ignoreOutsideSelectors]="'[data-assignee-panel-toggle]'"
-    [motionPreset]="'instant'"
-    [panelClass]="drawerPanelClass"
-    (closed)="closePanel()"
-  >
-    <section class="customize-drawer-surface" aria-labelledby="assigneeDrawerTitle">
-      <div class="customize-drawer-head">
-        <div class="customize-drawer-title" id="assigneeDrawerTitle">{{ title }}</div>
-        <button
-          class="customize-drawer-close"
-          type="button"
-          aria-label="Close assignees panel"
-          (click)="closePanel()"
-        >
-          <i appIcon="x-lg" aria-hidden="true"></i>
-        </button>
-      </div>
+  <ng-template #assigneeDrawerActions>
+    <button
+      class="customize-drawer-close"
+      type="button"
+      aria-label="Close filter panel"
+      (click)="closePanel()"
+    >
+      <i appIcon="x-lg" aria-hidden="true"></i>
+    </button>
+  </ng-template>
 
-      <div class="customize-drawer-body">
+  <ng-template #assigneeDrawerContent>
+    <div class="customize-drawer-body">
         <section class="customize-drawer-section customize-drawer-section--first">
           <label class="customize-drawer-view-pill assignee-search">
             <span class="customize-drawer-view-icon">
@@ -84,9 +64,12 @@
         <section class="customize-drawer-section">
           <div class="assignee-section-head">
             <div class="assignee-section-label">
-              <span>People</span>
+              <span>{{ sectionLabel }}</span>
               <span>{{ peopleCount() }}</span>
             </div>
+            @if (countLabel) {
+              <span class="assignee-section-count-label">{{ countLabel }}</span>
+            }
           </div>
 
           <div class="assignee-group assignee-group-people">
@@ -98,7 +81,7 @@
             >
               <span class="customize-row-main">
                 <span class="customize-drawer-view-icon">
-                  <i appIcon="people" aria-hidden="true"></i>
+                  <i [appIcon]="allIcon" aria-hidden="true"></i>
                 </span>
                 <span class="assignee-option-text">{{ allLabel }}</span>
               </span>
@@ -173,7 +156,28 @@
         @if (!filteredOptions().length && !showMineRow() && !showUnassignedRow()) {
           <p class="assignee-empty">{{ emptyLabel }}</p>
         }
-      </div>
-    </section>
-  </app-side-drawer>
+    </div>
+  </ng-template>
+
+  <app-side-drawer
+    [open]="true"
+    [mode]="drawerMode"
+    [width]="drawerWidth"
+    [zIndex]="drawerZIndex"
+    [positionMode]="'fixed'"
+    [topInset]="drawerTopInset ?? drawerTop()"
+    [backdropTint]="0"
+    [backdropBlur]="0"
+    [ignoreOutsideSelectors]="'[data-assignee-panel-toggle]'"
+    [motionPreset]="'instant'"
+    [panelClass]="drawerPanelClass"
+    [showHeader]="true"
+    [showModeToggle]="true"
+    [title]="title"
+    [actionsTemplate]="assigneeDrawerActions"
+    [contentTemplate]="assigneeDrawerContent"
+    [overlayPanelClass]="'task-panel task-panel-clickup task-panel-ref-size'"
+    (modeChange)="onDrawerModeChange($event)"
+    (closed)="closePanel()"
+  />
 }

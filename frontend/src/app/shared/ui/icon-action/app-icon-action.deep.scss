@@ -1,0 +1,5 @@
+@use './app-icon-action.styles' as action;
+
+:host ::ng-deep {
+  @include action.styles;
+}

@@ -11,10 +11,8 @@ import {
   signal
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HugeiconsIconComponent } from '@hugeicons/angular';
-import { UserMultipleIcon } from '@shared/icons/app-icon.registry';
 import { AppIconDirective } from '@shared/icons/app-icon.directive';
-import { SideDrawerComponent } from '@shared/ui/side-drawer.component';
+import { SideDrawerComponent, type SideDrawerMode } from '@shared/ui/side-drawer';
 
 export interface AssigneeFilterOption {
   value: string;
@@ -36,7 +34,6 @@ export type AssigneeFilterSelection =
   imports: [
     CommonModule,
     FormsModule,
-    HugeiconsIconComponent,
     AppIconDirective,
     SideDrawerComponent
   ],
@@ -45,9 +42,12 @@ export type AssigneeFilterSelection =
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AssigneeFilterMenuComponent implements OnDestroy {
-  readonly triggerIcon = UserMultipleIcon;
+  @Input() triggerIcon = 'people';
   @Input() triggerLabel = 'Assignee';
   @Input() title = 'Assignees';
+  @Input() sectionLabel = 'People';
+  @Input() countLabel = '';
+  @Input() allIcon = 'people';
   @Input() searchPlaceholder = 'Search by user or team';
   @Input() allLabel = 'All assignees';
   @Input() mineLabel = 'Assigned to me';
@@ -61,6 +61,7 @@ export class AssigneeFilterMenuComponent implements OnDestroy {
   @Input() drawerZIndex: number | null = 140;
   @Input() drawerTopInset: number | null = null;
   @Input() drawerPanelClass = 'customize-drawer customize-drawer--tasks page-design-customize-drawer';
+  drawerMode: SideDrawerMode = 'sidebar';
 
   @Input() set options(value: AssigneeFilterOption[] | null | undefined) {
     this.optionsState.set(value ?? []);
@@ -191,6 +192,10 @@ export class AssigneeFilterMenuComponent implements OnDestroy {
     this.drawerOpen.set(false);
     this.searchQuery.set('');
     this.detachWindowListeners();
+  }
+
+  onDrawerModeChange(mode: SideDrawerMode): void {
+    this.drawerMode = mode;
   }
 
   isAllSelected(): boolean {

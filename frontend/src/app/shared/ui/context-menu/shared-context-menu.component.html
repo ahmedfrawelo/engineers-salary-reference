@@ -1,0 +1,253 @@
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOpen]="open"
+  [cdkConnectedOverlayOrigin]="connectedOrigin!"
+  [cdkConnectedOverlayPositions]="resolvedAnchorPositions"
+  [cdkConnectedOverlayHasBackdrop]="hasBackdrop"
+  [cdkConnectedOverlayWidth]="overlayPanelSize"
+  [cdkConnectedOverlayMinWidth]="overlayPanelSize"
+  cdkConnectedOverlayBackdropClass="scm-cdk-backdrop"
+  [cdkConnectedOverlayPanelClass]="overlayPanelClasses"
+  [cdkConnectedOverlayPush]="true"
+  [cdkConnectedOverlayViewportMargin]="10"
+  (backdropClick)="close()"
+  (detach)="close()"
+>
+  <div
+    #panel
+    class="scm-panel"
+    [ngClass]="panelHostClasses"
+    role="menu"
+    tabindex="-1"
+    [attr.aria-label]="title || 'Context menu'"
+    [style.width.px]="resolvedPanelWidth"
+    [style.min-width.px]="resolvedPanelWidth"
+    (click)="$event.stopPropagation()"
+    (pointerdown)="$event.stopPropagation()"
+    (keydown.escape)="close()"
+    (mouseleave)="onPanelMouseLeave()"
+  >
+    <ng-container *ngTemplateOutlet="bodyTpl" />
+  </div>
+</ng-template>
+
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOpen]="open && !!openSubmenuParent && !!submenuOrigin"
+  [cdkConnectedOverlayOrigin]="submenuOrigin!"
+  [cdkConnectedOverlayPositions]="submenuPositions"
+  [cdkConnectedOverlayHasBackdrop]="false"
+  cdkConnectedOverlayPanelClass="scm-submenu-overlay-pane"
+  [cdkConnectedOverlayPush]="true"
+  [cdkConnectedOverlayViewportMargin]="10"
+>
+  @if (openSubmenuParent; as parent) {
+    <div
+      class="scm-submenu"
+      role="menu"
+      [attr.aria-label]="parent.label"
+      (click)="$event.stopPropagation()"
+      (pointerdown)="$event.stopPropagation()"
+    >
+      <div class="scm-submenu__title">{{ parent.label }}</div>
+      @if (parent.searchable) {
+        <div class="scm-search scm-submenu__search">
+          <i appIcon="search" aria-hidden="true"></i>
+          <input #submenuSearchInput type="search" [placeholder]="parent.searchPlaceholder || 'Search...'"
+            [ngModel]="submenuQuery" (ngModelChange)="onSubmenuQueryChange($event)"
+            (click)="$event.stopPropagation()" (pointerdown)="$event.stopPropagation()"
+            (keydown)="onSearchKeydown($event)" />
+        </div>
+      }
+      <div class="scm-submenu__list">
+        @for (child of filteredSubmenuChildren; track trackItem($index, child)) {
+          <button type="button" role="menuitem" [class.is-danger]="child.danger"
+            [class.is-active]="activeItemId === child.id" [class.is-selected]="selectedItemId === child.id"
+            [class.is-selected-quiet]="selectedItemId === child.id && !showSelectedCheck"
+            [attr.aria-checked]="selectedItemId ? selectedItemId === child.id : null"
+            [disabled]="!!child.disabled" (click)="select(child)"
+            (mouseenter)="onSubmenuChildMouseEnter(child)">
+            @if (child.icon) { <i [appIcon]="child.icon" aria-hidden="true"></i> }
+            <span>{{ child.label }}</span>
+            @if (child.badge) { <span class="scm-badge">{{ child.badge }}</span> }
+            @if (showSelectedCheck && selectedItemId === child.id) {
+              <i class="scm-selected-check" appIcon="check2" aria-hidden="true"></i>
+            }
+          </button>
+        } @empty { <div class="scm-empty">No matches</div> }
+      </div>
+    </div>
+  }
+</ng-template>
+
+<ng-template #bodyTpl>
+  @if (title || subtitle) {
+    <div class="scm-panel__head">
+      @if (title) {
+        <span class="scm-panel__eyebrow">{{ title }}</span>
+      }
+      @if (subtitle) {
+        <strong>{{ subtitle }}</strong>
+      }
+    </div>
+  }
+
+  @if (searchable) {
+    <div class="scm-search scm-search--panel">
+      <i appIcon="search" aria-hidden="true"></i>
+      <input
+        #rootSearchInput
+        type="search"
+        [placeholder]="searchPlaceholder || 'Search…'"
+        [ngModel]="rootQuery"
+        (ngModelChange)="onRootQueryChange($event)"
+        (click)="$event.stopPropagation()"
+        (pointerdown)="$event.stopPropagation()"
+        (keydown)="onSearchKeydown($event)"
+      />
+    </div>
+  }
+
+  <div class="scm-panel__list">
+    @for (item of filteredItems; track trackItem($index, item)) {
+      @if (item.sectionLabel) {
+        <div class="scm-section-label">{{ item.sectionLabel }}</div>
+      }
+      @if (item.separator) {
+        <div class="scm-separator" role="separator"></div>
+      } @else {
+        <div
+          class="scm-item"
+          [class.has-submenu]="!!item.children?.length"
+          [class.is-open]="openSubmenuId === item.id"
+        >
+          <button
+            type="button"
+            role="menuitem"
+            [class.is-danger]="item.danger"
+            [class.is-active]="activeItemId === item.id"
+            [class.is-selected]="selectedItemId === item.id"
+            [class.is-selected-quiet]="selectedItemId === item.id && !showSelectedCheck"
+            [attr.aria-checked]="selectedItemId ? selectedItemId === item.id : null"
+            [disabled]="!!item.disabled"
+            (click)="item.children?.length ? onSubmenuParentClick(item.id, $event) : select(item)"
+            (mouseenter)="onItemMouseEnter(item, $event)"
+          >
+            @if (item.icon) {
+              <i [appIcon]="item.icon" aria-hidden="true"></i>
+            }
+            <span>{{ item.label }}</span>
+            @if (item.badge) {
+              <span class="scm-badge">{{ item.badge }}</span>
+            }
+            @if (item.children?.length) {
+              <i class="scm-chevron" appIcon="chevron-right" aria-hidden="true"></i>
+            } @else if (showSelectedCheck && selectedItemId === item.id) {
+              <i class="scm-selected-check" appIcon="check2" aria-hidden="true"></i>
+            }
+          </button>
+
+          @if (false && openSubmenuId === item.id && item.children?.length) {
+            <div
+              class="scm-submenu"
+              role="menu"
+            >
+              <div class="scm-submenu__title">{{ item.label }}</div>
+
+              @if (item.searchable) {
+                <div class="scm-search scm-submenu__search">
+                  <i appIcon="search" aria-hidden="true"></i>
+                  <input
+                    #submenuSearchInput
+                    type="search"
+                    [placeholder]="item.searchPlaceholder || 'Search…'"
+                    [ngModel]="submenuQuery"
+                    (ngModelChange)="onSubmenuQueryChange($event)"
+                    (click)="$event.stopPropagation()"
+                    (pointerdown)="$event.stopPropagation()"
+                    (keydown)="onSearchKeydown($event)"
+                  />
+                </div>
+              }
+
+              <div class="scm-submenu__list">
+                @for (child of filteredSubmenuChildren; track trackItem($index, child)) {
+                  <button
+                    type="button"
+                    role="menuitem"
+                    [class.is-danger]="child.danger"
+                    [class.is-active]="activeItemId === child.id"
+                    [class.is-selected]="selectedItemId === child.id"
+                    [class.is-selected-quiet]="selectedItemId === child.id && !showSelectedCheck"
+                    [attr.aria-checked]="selectedItemId ? selectedItemId === child.id : null"
+                    [disabled]="!!child.disabled"
+                    (click)="select(child)"
+                    (mouseenter)="onSubmenuChildMouseEnter(child)"
+                  >
+                    @if (child.icon) {
+                      <i [appIcon]="child.icon" aria-hidden="true"></i>
+                    }
+                    <span>{{ child.label }}</span>
+                    @if (child.badge) {
+                      <span class="scm-badge">{{ child.badge }}</span>
+                    }
+                    @if (showSelectedCheck && selectedItemId === child.id) {
+                      <i class="scm-selected-check" appIcon="check2" aria-hidden="true"></i>
+                    }
+                  </button>
+                } @empty {
+                  <div class="scm-empty">No matches</div>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      }
+    } @empty {
+      <div class="scm-empty">No matches</div>
+    }
+  </div>
+
+  @if (middleTemplate) {
+    <div class="scm-middle" (pointerdown)="$event.stopPropagation()">
+      <ng-container *ngTemplateOutlet="middleTemplate" />
+    </div>
+  }
+
+  @if (footerItems.length) {
+    <div class="scm-panel__list scm-panel__list--footer">
+      @for (item of footerItems; track trackItem($index, item)) {
+        @if (item.sectionLabel) {
+          <div class="scm-section-label">{{ item.sectionLabel }}</div>
+        }
+        @if (item.separator) {
+          <div class="scm-separator" role="separator"></div>
+        } @else {
+          <button
+            type="button"
+            role="menuitem"
+            [class.is-danger]="item.danger"
+            [class.is-active]="activeItemId === item.id"
+            [disabled]="!!item.disabled"
+            (click)="select(item)"
+            (mouseenter)="activeItemId = item.disabled ? activeItemId : item.id"
+          >
+            @if (item.icon) {
+              <i [appIcon]="item.icon" aria-hidden="true"></i>
+            }
+            <span>{{ item.label }}</span>
+            @if (item.badge) {
+              <span class="scm-badge">{{ item.badge }}</span>
+            }
+          </button>
+        }
+      }
+    </div>
+  }
+
+  @if (footerTemplate) {
+    <div class="scm-footer" (pointerdown)="$event.stopPropagation()">
+      <ng-container *ngTemplateOutlet="footerTemplate" />
+    </div>
+  }
+</ng-template>

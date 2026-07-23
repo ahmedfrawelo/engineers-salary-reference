@@ -17,8 +17,15 @@ if (!environment.enableDebugLogs) {
 
 installFocusModality(document);
 
+const revealApplication = (): void => {
+  document.querySelector('app-root')?.classList.add('app-shell-ready');
+  document.getElementById('app-startup')?.remove();
+};
+
 const bootstrap = () =>
-  bootstrapApplication(AppComponent, appConfig).catch((err: unknown) => console.error(err));
+  bootstrapApplication(AppComponent, appConfig)
+    .then(revealApplication)
+    .catch((err: unknown) => console.error(err));
 
 const loadRuntimeConfig = async (): Promise<void> => {
   try {

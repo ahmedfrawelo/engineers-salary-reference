@@ -1,0 +1,55 @@
+<div
+  class="app-icon-action-split"
+  cdkOverlayOrigin
+  #menuOrigin="cdkOverlayOrigin"
+  [class.app-icon-action-split--wide]="wide"
+  [class.has-menu]="menuItems.length > 0"
+  [class.is-menu-open]="menuOpen"
+>
+  <button
+    type="button"
+    class="app-icon-action app-icon-action--main"
+    [class.app-icon-action--primary]="tone === 'primary'"
+    [class.app-icon-action--success]="tone === 'success'"
+    [class.app-icon-action--warning]="tone === 'warning'"
+    [class.app-icon-action--danger]="tone === 'danger'"
+    [class.app-icon-action--wide]="wide"
+    [class.is-loading]="loading"
+    [disabled]="disabled || loading"
+    [attr.aria-busy]="loading"
+    [appTip]="menuOpen ? '' : actionTip"
+    [attr.aria-label]="label"
+    (click)="emitAction()"
+  >
+    @if (icon) {
+      <i [appIcon]="icon" aria-hidden="true"></i>
+    }
+    <span class="app-icon-action-label">{{ label }}</span>
+  </button>
+
+  @if (menuItems.length) {
+    <button
+      type="button"
+      class="app-icon-action app-icon-action--trigger"
+      [attr.aria-label]="label + ' options'"
+      [appTip]="menuOpen ? '' : menuTip"
+      [attr.aria-expanded]="menuOpen"
+      [attr.aria-haspopup]="'menu'"
+      [disabled]="disabled || loading"
+      (click)="toggleMenu($event)"
+    >
+      <i appIcon="chevron-down" aria-hidden="true"></i>
+    </button>
+
+    <app-shared-context-menu
+      [open]="menuOpen"
+      placement="anchor"
+      [origin]="menuOrigin"
+      [items]="menuItems"
+      [title]="menuTitle"
+      (openChange)="menuOpen = $event"
+      (closed)="menuOpen = false"
+      (itemSelect)="onMenuSelect($event)"
+    ></app-shared-context-menu>
+  }
+</div>

@@ -1,4 +1,4 @@
-const target = process.env.API_TARGET || 'http://localhost:5145';
+const target = process.env.API_TARGET || 'https://engineers-salary-api.engref-cloud.workers.dev';
 
 module.exports = {
   '/api': {

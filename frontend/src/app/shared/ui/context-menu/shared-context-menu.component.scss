@@ -1,0 +1,435 @@
+:host {
+  display: contents;
+}
+
+.scm-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  background: transparent;
+}
+
+.scm-panel {
+  --scm-outline: rgb(var(--border) / 0.42);
+  --scm-hover-bg: color-mix(in oklab, rgb(var(--fg)) 10%, transparent);
+  position: fixed;
+  z-index: 1201;
+  box-sizing: border-box;
+  min-width: 220px;
+  max-width: min(300px, 80vw);
+  overflow: visible;
+  padding: 6px;
+  border: 1px solid var(--scm-outline);
+  border-radius: 8px;
+  background: rgb(var(--bg0));
+  color: rgb(var(--fg) / 0.92);
+  box-shadow: none;
+}
+
+.scm-panel--anchored {
+  position: relative;
+}
+
+.scm-panel--sized {
+  max-width: none;
+}
+
+.scm-panel--rich {
+  min-width: 280px;
+  max-width: min(340px, 88vw);
+  max-height: min(72vh, 640px);
+  overflow: auto;
+}
+
+.scm-panel--sized.scm-panel--rich {
+  max-width: none;
+}
+
+.scm-panel__head {
+  display: grid;
+  gap: 2px;
+  margin: 0 -6px 4px;
+  padding: 4px 14px 8px;
+  border-bottom: 1px solid var(--scm-outline);
+}
+
+.scm-panel__eyebrow {
+  color: rgb(var(--muted) / 0.86);
+  font-size: 10.5px;
+  font-weight: 750;
+  line-height: 1.2;
+}
+
+.scm-panel__head strong {
+  color: rgb(var(--fg) / 0.94);
+  font-size: 12px;
+  font-weight: 850;
+  line-height: 1.2;
+}
+
+.scm-panel__list {
+  display: grid;
+  gap: 2px;
+  overflow: visible;
+}
+
+.scm-section-label {
+  padding: 7px 8px 2px;
+  color: rgb(var(--muted) / 0.86);
+  font-size: 10px;
+  font-weight: 750;
+  letter-spacing: 0.06em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.scm-panel__list--footer {
+  margin-top: 2px;
+  padding-top: 4px;
+  border-top: 1px solid var(--scm-outline);
+}
+
+.scm-separator {
+  height: 1px;
+  margin: 4px 6px;
+  background: var(--scm-outline);
+}
+
+.scm-item.has-submenu {
+  position: relative;
+  overflow: visible;
+}
+
+.scm-panel button,
+.scm-submenu button {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px 0 10px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: start;
+  cursor: pointer;
+  overflow: visible;
+  transition:
+    background 0.14s ease,
+    color 0.14s ease;
+}
+
+.scm-panel button::before,
+.scm-submenu button::before {
+  content: '';
+  position: absolute;
+  top: 6px;
+  bottom: 6px;
+  left: 0;
+  width: 2px;
+  border-radius: 999px;
+  background: transparent;
+  transition: background 0.14s ease;
+}
+
+.scm-panel button > span:not(.scm-badge),
+.scm-submenu button > span:not(.scm-badge) {
+  min-width: 0;
+  flex: 1 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.scm-panel button .app-icon-host,
+.scm-panel button > i,
+.scm-submenu button .app-icon-host,
+.scm-submenu button > i {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 15px;
+  height: 15px;
+  overflow: visible;
+  line-height: 0;
+  flex: 0 0 auto;
+}
+
+.scm-panel button .app-icon-host svg,
+.scm-panel button > i svg,
+.scm-submenu button .app-icon-host svg,
+.scm-submenu button > i svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.scm-panel button:hover:not(:disabled),
+.scm-panel button:focus-visible,
+.scm-submenu button:hover:not(:disabled),
+.scm-submenu button:focus-visible,
+.scm-item.has-submenu.is-open > button:hover,
+.scm-item.has-submenu:hover > button {
+  background: var(--scm-hover-bg);
+  color: rgb(var(--fg) / 0.98);
+  outline: none;
+}
+
+.scm-panel button.is-selected:not(:disabled),
+.scm-submenu button.is-selected:not(:disabled) {
+  background: transparent;
+  color: rgb(var(--fg) / 0.98);
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, rgb(var(--fg)) 22%, transparent);
+}
+
+/* Select dropdowns: selected row looks like any other row until hover. */
+.scm-panel button.is-selected-quiet:not(:disabled),
+.scm-submenu button.is-selected-quiet:not(:disabled) {
+  background: transparent;
+  box-shadow: none;
+  color: inherit;
+}
+
+.scm-panel button.is-selected-quiet:not(:disabled)::before,
+.scm-submenu button.is-selected-quiet:not(:disabled)::before {
+  background: transparent;
+}
+
+.scm-panel button.is-selected:not(:disabled):hover,
+.scm-submenu button.is-selected:not(:disabled):hover,
+.scm-panel button.is-selected:not(:disabled):focus-visible,
+.scm-submenu button.is-selected:not(:disabled):focus-visible,
+.scm-panel button.is-selected-quiet:not(:disabled):hover,
+.scm-submenu button.is-selected-quiet:not(:disabled):hover {
+  background: var(--scm-hover-bg);
+}
+
+.scm-panel button.is-selected:not(:disabled):not(.is-selected-quiet)::before,
+.scm-submenu button.is-selected:not(:disabled):not(.is-selected-quiet)::before {
+  background: rgb(var(--fg) / 0.72);
+}
+
+.scm-selected-check.app-icon-host,
+.scm-selected-check {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 14px !important;
+  height: 14px !important;
+  min-width: 14px;
+  margin-left: auto;
+  color: rgb(var(--fg) / 0.88);
+  opacity: 1;
+  flex: 0 0 14px;
+}
+
+.scm-panel button:hover:not(:disabled)::before,
+.scm-panel button:focus-visible::before,
+.scm-submenu button:hover:not(:disabled)::before,
+.scm-submenu button:focus-visible::before,
+.scm-item.has-submenu.is-open > button:hover::before,
+.scm-item.has-submenu:hover > button::before {
+  background: rgb(var(--fg) / 0.72);
+}
+
+/* Keyboard highlight only — not the same as mouse hover. */
+.scm-panel button.is-active:not(:disabled):not(:hover),
+.scm-submenu button.is-active:not(:disabled):not(:hover) {
+  background: transparent;
+}
+
+.scm-panel button.is-active:not(:disabled):not(:hover)::before,
+.scm-submenu button.is-active:not(:disabled):not(:hover)::before {
+  background: rgb(var(--fg) / 0.45);
+}
+
+.scm-panel button.is-danger,
+.scm-submenu button.is-danger {
+  color: rgb(var(--danger, 220 70 70) / 0.92);
+}
+
+.scm-panel button:disabled,
+.scm-submenu button:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+}
+
+.scm-badge {
+  flex: 0 0 auto !important;
+  margin-left: 4px;
+  padding: 1px 6px;
+  border: 1px solid var(--scm-outline);
+  border-radius: 999px;
+  color: rgb(var(--muted) / 0.92);
+  font-size: 10px;
+  font-weight: 750;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+.scm-chevron.app-icon-host,
+.scm-chevron {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 14px !important;
+  height: 14px !important;
+  min-width: 14px;
+  min-height: 14px;
+  margin-left: auto;
+  margin-right: 0;
+  padding: 0;
+  overflow: visible !important;
+  opacity: 0.78;
+  line-height: 0;
+  flex: 0 0 14px;
+}
+
+.scm-chevron svg {
+  display: block;
+  width: 14px;
+  height: 14px;
+  overflow: visible;
+}
+
+.scm-submenu {
+  position: relative;
+  display: grid;
+  gap: 2px;
+  box-sizing: border-box;
+  min-width: 188px;
+  max-width: min(260px, 60vw);
+  max-height: calc(100dvh - 20px);
+  overflow: auto;
+  padding: 6px;
+  border: 1px solid var(--scm-outline);
+  border-radius: 8px;
+  background: rgb(var(--bg0));
+}
+
+.scm-submenu__title {
+  margin: 0 -6px 2px;
+  padding: 4px 12px 6px;
+  border-bottom: 1px solid var(--scm-outline);
+  color: rgb(var(--muted) / 0.9);
+  font-size: 10.5px;
+  font-weight: 750;
+  line-height: 1.2;
+}
+
+.scm-search,
+.scm-submenu__search {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 30px;
+  margin-bottom: 2px;
+  padding: 0 8px;
+  border: 1px solid var(--scm-outline);
+  border-radius: 6px;
+  background: color-mix(in oklab, rgb(var(--fg)) 4%, transparent);
+}
+
+/* Full panel width (cancels panel padding). */
+.scm-search--panel {
+  width: calc(100% + 12px);
+  margin: -6px -6px 6px;
+  padding: 0 12px;
+  border-radius: 7px 7px 0 0;
+  border-left: 0;
+  border-right: 0;
+  border-top: 0;
+  border-bottom: 1px solid var(--scm-outline);
+  background: color-mix(in oklab, rgb(var(--fg)) 3%, transparent);
+}
+
+.scm-search .app-icon-host,
+.scm-search > i,
+.scm-submenu__search .app-icon-host,
+.scm-submenu__search > i {
+  display: inline-flex;
+  width: 13px;
+  height: 13px;
+  opacity: 0.62;
+  flex: 0 0 auto;
+}
+
+.scm-search input,
+.scm-submenu__search input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.scm-submenu__list {
+  display: grid;
+  gap: 2px;
+  max-height: min(220px, 36vh);
+  overflow: auto;
+}
+
+.scm-empty {
+  padding: 10px 8px;
+  color: rgb(var(--muted) / 0.86);
+  font-size: 11.5px;
+  font-weight: 650;
+  text-align: center;
+}
+
+.scm-middle,
+.scm-footer {
+  margin-top: 4px;
+}
+
+.scm-footer .scm-footer-action,
+.scm-footer button[role='menuitem'] {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px 0 10px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: start;
+  cursor: pointer;
+}
+
+.scm-footer .scm-footer-action:hover,
+.scm-footer button[role='menuitem']:hover {
+  background: var(--scm-hover-bg);
+}
+
+::ng-deep .cdk-overlay-backdrop.scm-cdk-backdrop {
+  background: transparent !important;
+}
+
+::ng-deep .cdk-overlay-pane.scm-overlay-pane {
+  overflow: visible !important;
+}
+
+::ng-deep .cdk-overlay-pane.scm-submenu-overlay-pane {
+  overflow: visible !important;
+}
