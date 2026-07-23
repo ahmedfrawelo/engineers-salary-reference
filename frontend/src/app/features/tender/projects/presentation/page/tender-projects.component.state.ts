@@ -158,7 +158,9 @@ export abstract class TenderProjectsComponentState {
   protected snapshotMenuRaf: number | null = null;
   protected snapshotOutsideClickHandler: ((event: Event) => void) | null = null;
 
-  loading = false;
+  // Salary Reports starts with a remote request; keep the grid in its loading
+  // state during the first change-detection pass instead of showing fake Page 1 of 1.
+  loading = this.isSalaryReportsGrid;
   pageSkeletonLoading = false;
   error: string | null = null;
 

@@ -500,6 +500,12 @@ export function ngOnChangesHelper(ctx: HelperContext, ...args: LooseValue[]): Lo
           totalPages: Math.max(1, Math.ceil(nextTotalRecords / nextPageSize))
         };
       });
+      // Remote totals can arrive in the same change-detection turn as the page
+      // rows. Re-sync once the resolved config is visible to the grid so a
+      // clean session cannot remain stuck at the initial Page 1 of 1 state.
+      if (ctx.config.remoteData && typeof ctx.config.remoteTotalRecords === 'number') {
+        queueMicrotask(() => ctx.updatePaginationState(ctx.config.remoteTotalRecords as number));
+      }
       shouldRefreshLayoutBindings = true;
     }
   }
