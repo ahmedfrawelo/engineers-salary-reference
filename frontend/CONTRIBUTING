@@ -1,0 +1,28 @@
+# Contributing
+
+ENGINEERS_SALARY_REFERENCE Portal Frontend expects contributions to preserve architecture boundaries,
+validation quality, and repository hygiene.
+
+## Before Opening A PR
+
+1. Run `npm run verify:quick`.
+2. Confirm `npm run architecture:check` passes.
+3. Follow the existing linting and formatting rules.
+4. Update `README.md` and the relevant files in `docs/` when architecture,
+   routing, build, or deployment behavior changes.
+
+## Repository Rules
+
+- Keep business code inside `src/app/features/<feature>/` using the existing
+  layered structure.
+- Do not reintroduce blocked runtime paths such as `src/app/pages/**`.
+- Do not commit generated folders such as `dist/`, `documentation/`,
+  `storybook-static/`, or local tool artifacts.
+
+## Recommended Full Validation
+
+Use the full validation pipeline when the change is broad or release-facing:
+
+```bash
+npm run verify:all
+```

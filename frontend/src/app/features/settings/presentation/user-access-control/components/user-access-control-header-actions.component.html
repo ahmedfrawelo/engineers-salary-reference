@@ -1,0 +1,57 @@
+﻿<div header-actions class="access-header-actions tasks-page-header-actions">
+  <div class="cu-view-row access-view-row" role="tablist" aria-label="Access views">
+    <button
+      class="view-tab"
+      type="button"
+      [class.active]="tab() === 'profile'"
+      (click)="setTab('profile')"
+      role="tab"
+      [attr.aria-selected]="tab() === 'profile'"
+    >
+      <hugeicons-icon
+        class="access-huge-icon"
+        [icon]="hugeIcons.profile"
+        [size]="16"
+        [strokeWidth]="1.9"
+        aria-hidden="true"
+      ></hugeicons-icon>
+      <span>Profile status</span>
+    </button>
+    @if (canOpenAccessControlPermissionsWorkspace()) {
+      <button
+        class="view-tab"
+        type="button"
+        [class.active]="tab() === 'permissions'"
+        (click)="setTab('permissions')"
+        role="tab"
+        [attr.aria-selected]="tab() === 'permissions'"
+      >
+        <hugeicons-icon
+          class="access-huge-icon"
+          [icon]="hugeIcons.permissions"
+          [size]="16"
+          [strokeWidth]="1.9"
+          aria-hidden="true"
+        ></hugeicons-icon>
+        <span>Permissions</span>
+      </button>
+    }
+    <button
+      class="view-tab"
+      type="button"
+      [class.active]="tab() === 'audit'"
+      (click)="setTab('audit')"
+      role="tab"
+      [attr.aria-selected]="tab() === 'audit'"
+    >
+      <hugeicons-icon
+        class="access-huge-icon"
+        [icon]="hugeIcons.audit"
+        [size]="16"
+        [strokeWidth]="1.9"
+        aria-hidden="true"
+      ></hugeicons-icon>
+      <span>Audit</span>
+    </button>
+  </div>
+</div>

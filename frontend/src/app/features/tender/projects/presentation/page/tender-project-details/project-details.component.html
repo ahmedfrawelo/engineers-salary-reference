@@ -1,0 +1,1059 @@
+<div class="details-root" [class.is-editing]="canEdit && canViewProjectField('Name')">
+  <overlay-panel
+    [title]="''"
+    [open]="open"
+    [variant]="'panel'"
+    [minWidth]="760"
+    [minHeight]="640"
+    [maxWidth]="1720"
+    [maxHeight]="1120"
+    [fitRatioWDesktop]="0.96"
+    [fitRatioHDesktop]="0.94"
+    [fitRatioWMobile]="0.995"
+    [fitRatioHMobile]="0.968"
+    [boundsSelector]="'.tender-projects-page-design'"
+    [backdropBlur]="2"
+    [backdropTint]="0"
+    [draggable]="false"
+    [autoFitContent]="false"
+    [bodyPadding]="0"
+    [lockPosition]="true"
+    [showSave]="false"
+    [showDelete]="false"
+    [closeDanger]="false"
+    [panelClass]="'project-details-panel project-details-clickup'"
+    (closed)="onClosePanel()"
+    (delete)="onDelete()"
+  >
+    <div panel-actions class="project-detail-header">
+      <div class="project-detail-header-left">
+        <div class="project-detail-header-controls">
+          <button
+            type="button"
+            aria-label="Toggle project sidebar"
+            [class.active]="projectSidebarOpen"
+            [attr.aria-expanded]="projectSidebarOpen"
+            (click)="toggleProjectSidebar()"
+          >
+            <i appIcon="layout-sidebar-reverse" aria-hidden="true"></i>
+          </button>
+          <button type="button" disabled aria-label="Previous project">
+            <i appIcon="caret-up-fill" aria-hidden="true"></i>
+          </button>
+          <button type="button" disabled aria-label="Next project">
+            <i appIcon="caret-down-fill" aria-hidden="true"></i>
+          </button>
+        </div>
+
+        <div class="project-detail-breadcrumb" aria-label="Project path">
+          <span class="project-detail-crumb team">
+            <i appIcon="folder2-open" aria-hidden="true"></i>
+            <span>Tender Projects</span>
+          </span>
+          <span class="project-detail-crumb-sep">/</span>
+          <span class="project-detail-crumb project">{{ projectHeaderCode }}</span>
+          <button class="project-detail-crumb-icon" type="button" disabled aria-label="Add">
+            <i appIcon="plus-lg" aria-hidden="true"></i>
+          </button>
+          <span class="project-detail-crumb-sep">|</span>
+          <button
+            class="project-detail-crumb-icon"
+            type="button"
+            disabled
+            aria-label="Open project"
+          >
+            <i appIcon="box-arrow-up-right" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="project-detail-header-meta">
+        <span class="project-detail-created">{{ projectCreatedLabel }}</span>
+        <button class="project-detail-head-link" type="button" disabled>
+          <i appIcon="share" aria-hidden="true"></i>
+          <span>Share</span>
+        </button>
+        <button class="project-detail-head-icon" type="button" disabled aria-label="More actions">
+          <i appIcon="three-dots" aria-hidden="true"></i>
+        </button>
+        @if (canDelete) {
+          <button
+            class="project-detail-head-icon danger"
+            type="button"
+            aria-label="Delete project"
+            (click)="delete.emit()"
+          >
+            <i appIcon="trash" aria-hidden="true"></i>
+          </button>
+        }
+      </div>
+    </div>
+
+    <div class="panel-fill" [attr.aria-busy]="saveBusy || detailsLoading ? 'true' : 'false'">
+      <div class="sr-only" aria-live="polite">{{ statusAnnouncement }}</div>
+      <div class="sr-only" aria-live="polite">{{ validationAnnouncement }}</div>
+
+      <div class="project-detail-shell">
+        <div
+          class="project-detail-content"
+          [class.sidebar-open]="projectSidebarOpen"
+          [class.mobile-details-active]="mobileSection === 'details'"
+          [class.mobile-activity-active]="mobileSection === 'activity'"
+        >
+          @if (projectSidebarOpen) {
+            <aside class="project-detail-sidebar-pane" aria-label="Project sections">
+              <div class="project-detail-sidebar-head">
+                <div class="project-detail-sidebar-head-title">
+                  <i appIcon="link-45deg" aria-hidden="true"></i>
+                  <h4>Sections</h4>
+                </div>
+              </div>
+
+              <div class="project-detail-sidebar-list">
+                @for (item of projectSidebarItems; track item.id) {
+                  <button
+                    class="project-detail-sidebar-item"
+                    type="button"
+                    [class.active]="activeProjectSidebarSection === item.id"
+                    (click)="openProjectSidebarSection(item.id)"
+                  >
+                    <span class="project-detail-sidebar-main">
+                      <i class="project-detail-sidebar-dot" appIcon="circle" aria-hidden="true"></i>
+                      <span class="project-detail-sidebar-label">{{ item.label }}</span>
+                    </span>
+                    <span class="project-detail-sidebar-actions" aria-hidden="true">
+                      @if (activeProjectSidebarSection === item.id) {
+                        <i class="project-detail-sidebar-action-dot" appIcon="three-dots"></i>
+                        <i
+                          class="project-detail-sidebar-action-plus"
+                          appIcon="plus-square-fill"
+                        ></i>
+                      } @else {
+                        <i class="project-detail-sidebar-go" appIcon="chevron-right"></i>
+                      }
+                    </span>
+                  </button>
+                }
+              </div>
+            </aside>
+          }
+
+          <section class="project-detail-main">
+            <div class="project-detail-main-inner">
+              <div class="project-detail-context">
+                <button class="project-detail-pill project-detail-pill-type" type="button" disabled>
+                  <i appIcon="record-circle" aria-hidden="true"></i>
+                  <span>Project</span>
+                  <i appIcon="chevron-down" aria-hidden="true"></i>
+                </button>
+                <span class="project-detail-pill project-detail-pill-code">{{
+                  projectReferenceLabel
+                }}</span>
+                <span
+                  class="project-detail-pill project-detail-pill-save"
+                  [class.is-saving]="saveStateKind === 'saving'"
+                  [class.is-dirty]="saveStateKind === 'dirty'"
+                  [class.is-failed]="saveStateKind === 'failed'"
+                  [class.is-deferred]="saveStateKind === 'deferred'"
+                  [class.is-saved]="saveStateKind === 'saved'"
+                >
+                  <span class="project-detail-pill-dot" aria-hidden="true"></span>
+                  <span>{{ saveStateLabel }}</span>
+                </span>
+                @if (hasValidationIssues) {
+                  <button
+                    class="project-detail-pill project-detail-pill-attention"
+                    type="button"
+                    (click)="focusFirstValidationIssue()"
+                  >
+                    <i appIcon="exclamation-circle" aria-hidden="true"></i>
+                    <span>{{ projectAttentionCount }} need attention</span>
+                  </button>
+                }
+                @if (canRetrySave) {
+                  <button
+                    class="project-detail-pill project-detail-pill-action"
+                    type="button"
+                    (click)="retrySave()"
+                  >
+                    @if (saveStateKind === 'failed') {
+                      Retry save
+                    } @else {
+                      Save now
+                    }
+                  </button>
+                }
+              </div>
+
+              @if (canEdit && canViewProjectField('Name')) {
+                <label class="project-detail-title project-title-slot">
+                  <search-select
+                    [options]="projectList"
+                    [value]="buffer"
+                    [displayFn]="projectLabel"
+                    placeholder="Project title"
+                    [allowClear]="false"
+                    [allowInlineSearch]="true"
+                    [allowEdit]="canEditProjectField('Name')"
+                    renameLabel="Rename to"
+                    (valueChange)="onProjectSwitch($event)"
+                    (rename)="onProjectRename($event)"
+                  >
+                  </search-select>
+                </label>
+              } @else {
+                <div class="project-detail-title project-detail-title--static">
+                  {{ buffer.title || 'Project' }}
+                </div>
+              }
+
+              @if (hasValidationIssues) {
+                <div
+                  class="project-detail-validation"
+                  [class.has-errors]="validationSummary.errorCount > 0"
+                  [attr.role]="validationSummary.errorCount > 0 ? 'alert' : 'status'"
+                  [attr.aria-live]="validationSummary.errorCount > 0 ? 'assertive' : 'polite'"
+                >
+                  <div class="project-detail-validation-title">
+                    <div class="project-detail-validation-summary">
+                      @if (validationSummary.errorCount > 0) {
+                        <span>{{ validationSummary.errorCount }} critical</span>
+                      }
+                      @if (validationSummary.warningCount > 0) {
+                        <span>{{ validationSummary.warningCount }} recommended</span>
+                      }
+                    </div>
+                    <button
+                      type="button"
+                      class="project-detail-validation-action"
+                      (click)="focusFirstValidationIssue()"
+                    >
+                      Review first issue
+                    </button>
+                  </div>
+                  <div class="project-detail-validation-list">
+                    @for (issue of validationPreview; track trackValidationIssue($index, issue)) {
+                      <button
+                        type="button"
+                        class="project-detail-validation-pill"
+                        [class.is-warning]="issue.severity === 'warning'"
+                        [class.is-error]="issue.severity === 'error'"
+                        (click)="focusValidationField(issue.field)"
+                      >
+                        {{ issue.message }}
+                      </button>
+                    }
+                    @if (validationOverflowCount > 0) {
+                      <span class="project-detail-validation-pill is-more"
+                        >+{{ validationOverflowCount }} more</span
+                      >
+                    }
+                  </div>
+                </div>
+              }
+
+              <div class="mobile-sections" role="tablist" aria-label="Project details sections">
+                <button
+                  type="button"
+                  class="mobile-section-btn"
+                  role="tab"
+                  [attr.aria-selected]="mobileSection === 'details'"
+                  [class.is-active]="mobileSection === 'details'"
+                  (click)="setMobileSection('details')"
+                >
+                  Details
+                </button>
+                <button
+                  type="button"
+                  class="mobile-section-btn"
+                  role="tab"
+                  [attr.aria-selected]="mobileSection === 'activity'"
+                  [class.is-active]="mobileSection === 'activity'"
+                  (click)="setMobileSection('activity')"
+                >
+                  Activity
+                </button>
+              </div>
+
+              <div class="project-detail-body">
+                <div
+                  class="clickup-detail-fields clickup-project-fields"
+                  data-project-section="overview"
+                >
+                  @if (canViewProjectField('Owner')) {
+                    <div
+                      class="clickup-detail-field"
+                      data-project-field="owner"
+                      [class.has-error]="hasFieldError('owner')"
+                      [class.has-warning]="!hasFieldError('owner') && hasFieldWarning('owner')"
+                    >
+                      <span class="clickup-detail-label">
+                        <i appIcon="person" aria-hidden="true"></i>
+                        <span>Owner</span>
+                      </span>
+                      @if (canEdit && canEditProjectField('Owner')) {
+                        <div class="clickup-detail-control clickup-detail-control-select">
+                          <search-select
+                            [options]="projectOwnerOptions()"
+                            [value]="buffer.owner"
+                            (valueChange)="setProjectOwner($event ?? '')"
+                            [allowInlineSearch]="true"
+                            [allowEdit]="canRenameOwnerLookup()"
+                            [allowCreate]="canCreateOwner()"
+                            createLabel="Add Owner"
+                            (create)="onCreateOwner($event)"
+                            (rename)="onRenameOwner($event)"
+                            placeholder="Select Owner"
+                            [allowClear]="false"
+                          >
+                          </search-select>
+                        </div>
+                      } @else {
+                        <span
+                          class="clickup-detail-empty"
+                          [class.is-placeholder]="isProjectPlaceholder(buffer.owner, 'No owner')"
+                        >
+                          {{ displayProjectText(buffer.owner, 'No owner') }}
+                        </span>
+                      }
+                    </div>
+                  }
+
+                  @if (canViewProjectField('OwnerType')) {
+                    <div
+                      class="clickup-detail-field"
+                      data-project-field="ownerType"
+                      [class.has-error]="hasFieldError('ownerType')"
+                      [class.has-warning]="
+                        !hasFieldError('ownerType') && hasFieldWarning('ownerType')
+                      "
+                    >
+                      <span class="clickup-detail-label">
+                        <i appIcon="briefcase" aria-hidden="true"></i>
+                        <span>Owner Type</span>
+                      </span>
+                      @if (canEdit && canEditProjectField('OwnerType')) {
+                        <div class="clickup-detail-control clickup-detail-control-select">
+                          <search-select
+                            [options]="projectOwnerTypeOptions()"
+                            [value]="buffer.ownerType"
+                            (valueChange)="setProjectOwnerType($event ?? '')"
+                            [allowInlineSearch]="true"
+                            [allowEdit]="canRenameOwnerTypeLookup()"
+                            [allowCreate]="canCreateOwnerType()"
+                            createLabel="Add Owner Type"
+                            (create)="onCreateOwnerType($event)"
+                            (rename)="onRenameOwnerType($event)"
+                            placeholder="Select Owner Type"
+                            [allowClear]="false"
+                          >
+                          </search-select>
+                        </div>
+                      } @else {
+                        <span
+                          class="clickup-detail-empty"
+                          [class.is-placeholder]="
+                            isProjectPlaceholder(buffer.ownerType, 'No owner type')
+                          "
+                        >
+                          {{ displayProjectText(buffer.ownerType, 'No owner type') }}
+                        </span>
+                      }
+                    </div>
+                  }
+
+                  @if (canViewProjectField('Country')) {
+                    <div
+                      class="clickup-detail-field"
+                      data-project-field="country"
+                      [class.has-error]="hasFieldError('country')"
+                      [class.has-warning]="!hasFieldError('country') && hasFieldWarning('country')"
+                    >
+                      <span class="clickup-detail-label">
+                        <i appIcon="geo-alt" aria-hidden="true"></i>
+                        <span>Country</span>
+                      </span>
+                      @if (canEdit && canEditProjectField('Country')) {
+                        <div class="clickup-detail-control clickup-detail-control-select">
+                          <search-select
+                            [options]="projectCountryOptions()"
+                            [value]="buffer.country"
+                            (valueChange)="setProjectCountry($event ?? '')"
+                            [allowInlineSearch]="true"
+                            [allowEdit]="canRenameCountryLookup()"
+                            [allowCreate]="canCreateCountry()"
+                            createLabel="Add Country"
+                            (create)="onCreateCountry($event)"
+                            (rename)="onRenameCountry($event)"
+                            placeholder="Select Country"
+                            [allowClear]="false"
+                          >
+                          </search-select>
+                        </div>
+                      } @else {
+                        <span
+                          class="clickup-detail-empty"
+                          [class.is-placeholder]="
+                            isProjectPlaceholder(buffer.country, 'No country')
+                          "
+                        >
+                          {{ displayProjectText(buffer.country, 'No country') }}
+                        </span>
+                      }
+                    </div>
+                  }
+
+                  @if (canViewProjectField('Deadline')) {
+                    <div
+                      class="clickup-detail-field"
+                      data-project-field="deadline"
+                      [class.has-error]="hasFieldError('deadline')"
+                    >
+                      <span class="clickup-detail-label">
+                        <i appIcon="calendar3" aria-hidden="true"></i>
+                        <span>Deadline</span>
+                      </span>
+                      @if (canEdit && canEditProjectField('Deadline')) {
+                        <div class="clickup-detail-control clickup-detail-control-date">
+                          <date-input [(value)]="buffer.deadline"></date-input>
+                        </div>
+                      } @else {
+                        <span
+                          class="clickup-detail-empty"
+                          [class.is-placeholder]="
+                            isProjectPlaceholder(formatProjectDate(buffer.deadline), 'No deadline')
+                          "
+                        >
+                          {{
+                            displayProjectText(formatProjectDate(buffer.deadline), 'No deadline')
+                          }}
+                        </span>
+                      }
+                    </div>
+                  }
+
+                  @if (canViewProjectField('AssignTo')) {
+                    <div
+                      class="clickup-detail-field"
+                      data-project-field="assignTo"
+                      [class.has-error]="hasFieldError('assignTo')"
+                      [class.has-warning]="
+                        !hasFieldError('assignTo') && hasFieldWarning('assignTo')
+                      "
+                    >
+                      <span class="clickup-detail-label">
+                        <i appIcon="person-plus" aria-hidden="true"></i>
+                        <span>Assignees</span>
+                      </span>
+                      @if (canEdit && canEditProjectField('AssignTo')) {
+                        <div class="clickup-detail-control clickup-detail-control-select">
+                          <search-select
+                            [options]="peopleOptions"
+                            [value]="buffer.assignTo"
+                            (valueChange)="buffer.assignTo = ($event ?? '').trim()"
+                            [allowInlineSearch]="true"
+                            [allowEdit]="false"
+                            [allowCreate]="false"
+                            placeholder="Select"
+                            [allowClear]="false"
+                          >
+                          </search-select>
+                        </div>
+                      } @else {
+                        <span
+                          class="clickup-detail-empty"
+                          [class.is-placeholder]="
+                            isProjectPlaceholder(buffer.assignTo, 'Unassigned')
+                          "
+                        >
+                          {{ displayProjectText(buffer.assignTo, 'Unassigned') }}
+                        </span>
+                      }
+                    </div>
+                  }
+
+                  @if (canViewProjectField('InCharge')) {
+                    <div
+                      class="clickup-detail-field"
+                      data-project-field="inCharge"
+                      [class.has-error]="hasFieldError('inCharge')"
+                      [class.has-warning]="
+                        !hasFieldError('inCharge') && hasFieldWarning('inCharge')
+                      "
+                    >
+                      <span class="clickup-detail-label">
+                        <i appIcon="person-badge" aria-hidden="true"></i>
+                        <span>In Charge</span>
+                      </span>
+                      @if (canEdit && canEditProjectField('InCharge')) {
+                        <div class="clickup-detail-control clickup-detail-control-select">
+                          <search-select
+                            [options]="peopleOptions"
+                            [value]="buffer.inCharge"
+                            (valueChange)="buffer.inCharge = ($event ?? '').trim()"
+                            [allowInlineSearch]="true"
+                            [allowEdit]="false"
+                            [allowCreate]="false"
+                            placeholder="Select"
+                            [allowClear]="false"
+                          >
+                          </search-select>
+                        </div>
+                      } @else {
+                        <span
+                          class="clickup-detail-empty"
+                          [class.is-placeholder]="
+                            isProjectPlaceholder(buffer.inCharge, 'Unassigned')
+                          "
+                        >
+                          {{ displayProjectText(buffer.inCharge, 'Unassigned') }}
+                        </span>
+                      }
+                    </div>
+                  }
+
+                  @if (canViewProjectField('StartDate')) {
+                    <div
+                      class="clickup-detail-field"
+                      data-project-field="startDate"
+                      [class.has-error]="hasFieldError('startDate')"
+                    >
+                      <span class="clickup-detail-label">
+                        <i appIcon="calendar-event" aria-hidden="true"></i>
+                        <span>Start Date</span>
+                      </span>
+                      @if (canEdit && canEditProjectField('StartDate')) {
+                        <div class="clickup-detail-control clickup-detail-control-date">
+                          <date-input [(value)]="buffer.startDate"></date-input>
+                        </div>
+                      } @else {
+                        <span
+                          class="clickup-detail-empty"
+                          [class.is-placeholder]="
+                            isProjectPlaceholder(
+                              formatProjectDate(buffer.startDate),
+                              'No start date'
+                            )
+                          "
+                        >
+                          {{
+                            displayProjectText(formatProjectDate(buffer.startDate), 'No start date')
+                          }}
+                        </span>
+                      }
+                    </div>
+                  }
+
+                  @if (canViewProjectField('AcceptDate')) {
+                    <div class="clickup-detail-field">
+                      <span class="clickup-detail-label">
+                        <i appIcon="calendar-check" aria-hidden="true"></i>
+                        <span>Accept Date</span>
+                      </span>
+                      @if (canEdit && canEditProjectField('AcceptDate')) {
+                        <div class="clickup-detail-control clickup-detail-control-date">
+                          <date-input [(value)]="buffer.acceptDate"></date-input>
+                        </div>
+                      } @else {
+                        <span
+                          class="clickup-detail-empty"
+                          [class.is-placeholder]="
+                            isProjectPlaceholder(
+                              formatProjectDate(buffer.acceptDate),
+                              'Not accepted'
+                            )
+                          "
+                        >
+                          {{
+                            displayProjectText(formatProjectDate(buffer.acceptDate), 'Not accepted')
+                          }}
+                        </span>
+                      }
+                    </div>
+                  }
+
+                  @if (canViewProjectField('EndDate')) {
+                    <div
+                      class="clickup-detail-field"
+                      data-project-field="endDate"
+                      [class.has-error]="hasFieldError('endDate')"
+                    >
+                      <span class="clickup-detail-label">
+                        <i appIcon="calendar2-x" aria-hidden="true"></i>
+                        <span>End Date</span>
+                      </span>
+                      @if (canEdit && canEditProjectField('EndDate')) {
+                        <div class="clickup-detail-control clickup-detail-control-date">
+                          <date-input [(value)]="buffer.endDate"></date-input>
+                        </div>
+                      } @else {
+                        <span
+                          class="clickup-detail-empty"
+                          [class.is-placeholder]="
+                            isProjectPlaceholder(formatProjectDate(buffer.endDate), 'No end date')
+                          "
+                        >
+                          {{ displayProjectText(formatProjectDate(buffer.endDate), 'No end date') }}
+                        </span>
+                      }
+                    </div>
+                  }
+
+                  @if (canViewProjectField('Price')) {
+                    <div
+                      class="clickup-detail-field"
+                      data-project-field="price"
+                      [class.has-error]="hasFieldError('price')"
+                    >
+                      <span class="clickup-detail-label">
+                        <i appIcon="cash-stack" aria-hidden="true"></i>
+                        <span>Pricing</span>
+                      </span>
+                      @if (canEdit && canEditProjectField('Price')) {
+                        <label class="clickup-detail-control clickup-detail-control-input">
+                          <input
+                            [value]="buffer.price ?? ''"
+                            (input)="onProjectPriceInput($event)"
+                            inputmode="decimal"
+                          />
+                        </label>
+                      } @else {
+                        <span
+                          class="clickup-detail-empty"
+                          [class.is-placeholder]="
+                            isProjectMoneyPlaceholder(buffer.price, 'No price')
+                          "
+                        >
+                          {{ displayProjectMoney(buffer.price, 'No price') }}
+                        </span>
+                      }
+                    </div>
+                  }
+
+                  @if (canViewProjectField('Status')) {
+                    <div
+                      class="clickup-detail-field"
+                      data-project-field="status"
+                      [class.has-error]="hasFieldError('status')"
+                      [class.has-warning]="!hasFieldError('status') && hasFieldWarning('status')"
+                    >
+                      <span class="clickup-detail-label">
+                        <i appIcon="circle" aria-hidden="true"></i>
+                        <span>Status</span>
+                      </span>
+                      @if (canEdit && canEditProjectField('Status')) {
+                        <div
+                          class="clickup-detail-control status-chip clickup-detail-control-select"
+                        >
+                          <search-select
+                            [options]="statuses"
+                            [value]="buffer.status"
+                            (valueChange)="setProjectStatus($event ?? '')"
+                            [allowInlineSearch]="true"
+                            [allowEdit]="canRenameStatusLookup()"
+                            [allowCreate]="canCreateStatus()"
+                            createLabel="Add Status"
+                            (create)="onCreateStatus($event)"
+                            (rename)="onRenameStatus($event)"
+                            placeholder="Select Status"
+                            [allowClear]="false"
+                          >
+                          </search-select>
+                        </div>
+                      } @else {
+                        <span
+                          class="clickup-detail-empty"
+                          [class.is-placeholder]="isProjectPlaceholder(buffer.status, 'No status')"
+                        >
+                          {{ displayProjectText(buffer.status, 'No status') }}
+                        </span>
+                      }
+                    </div>
+                  }
+
+                  @if (canViewProjectField('TenderStage')) {
+                    <div
+                      class="clickup-detail-field"
+                      data-project-field="ts"
+                      [class.has-error]="hasFieldError('ts')"
+                      [class.has-warning]="!hasFieldError('ts') && hasFieldWarning('ts')"
+                    >
+                      <span class="clickup-detail-label">
+                        <i appIcon="diagram-3" aria-hidden="true"></i>
+                        <span>Tender Stage</span>
+                      </span>
+                      @if (canEdit && canEditProjectField('TenderStage')) {
+                        <div class="clickup-detail-control clickup-detail-control-select">
+                          <search-select
+                            [options]="stages"
+                            [value]="buffer.ts"
+                            (valueChange)="setProjectStage($event ?? '')"
+                            [allowInlineSearch]="true"
+                            [allowEdit]="canRenameStageLookup()"
+                            [allowCreate]="canCreateStage()"
+                            createLabel="Add Stage"
+                            (create)="onCreateStage($event)"
+                            (rename)="onRenameStage($event)"
+                            placeholder="Select Stage"
+                            [allowClear]="false"
+                          >
+                          </search-select>
+                        </div>
+                      } @else {
+                        <span
+                          class="clickup-detail-empty"
+                          [class.is-placeholder]="isProjectPlaceholder(buffer.ts, 'No stage')"
+                        >
+                          {{ displayProjectText(buffer.ts, 'No stage') }}
+                        </span>
+                      }
+                    </div>
+                  }
+
+                  @if (canViewProjectField('DegreeOfImportance')) {
+                    <div class="clickup-detail-field">
+                      <span class="clickup-detail-label">
+                        <i appIcon="flag" aria-hidden="true"></i>
+                        <span>Degree of Importance</span>
+                      </span>
+                      @if (canEdit && canEditProjectField('DegreeOfImportance')) {
+                        <div class="clickup-detail-control clickup-detail-control-select">
+                          <search-select
+                            [options]="importances"
+                            [value]="buffer.doi"
+                            (valueChange)="setProjectImportance($event ?? '')"
+                            [allowInlineSearch]="true"
+                            [allowEdit]="canRenameImportanceLookup()"
+                            [allowCreate]="canCreateImportance()"
+                            createLabel="Add Importance"
+                            (create)="onCreateImportance($event)"
+                            (rename)="onRenameImportance($event)"
+                            placeholder="Select Importance"
+                            [allowClear]="false"
+                          >
+                          </search-select>
+                        </div>
+                      } @else {
+                        <span
+                          class="clickup-detail-empty"
+                          [class.is-placeholder]="isProjectPlaceholder(buffer.doi, 'No importance')"
+                        >
+                          {{ displayProjectText(buffer.doi, 'No importance') }}
+                        </span>
+                      }
+                    </div>
+                  }
+
+                  @if (canViewProjectField('TypeOfProject')) {
+                    <div
+                      class="clickup-detail-field"
+                      data-project-field="top"
+                      [class.has-error]="hasFieldError('top')"
+                      [class.has-warning]="!hasFieldError('top') && hasFieldWarning('top')"
+                    >
+                      <span class="clickup-detail-label">
+                        <i appIcon="tags" aria-hidden="true"></i>
+                        <span>TOP</span>
+                      </span>
+                      @if (canEdit && canEditProjectField('TypeOfProject')) {
+                        <div class="clickup-detail-control clickup-detail-control-select">
+                          <search-select
+                            [options]="types"
+                            [value]="buffer.top"
+                            (valueChange)="setProjectType($event ?? '')"
+                            [allowInlineSearch]="true"
+                            [allowEdit]="canRenameTypeLookup()"
+                            [allowCreate]="canCreateType()"
+                            createLabel="Add Type"
+                            (create)="onCreateType($event)"
+                            (rename)="onRenameType($event)"
+                            placeholder="Select TOP"
+                            [allowClear]="false"
+                          >
+                          </search-select>
+                        </div>
+                      } @else {
+                        <span
+                          class="clickup-detail-empty"
+                          [class.is-placeholder]="isProjectPlaceholder(buffer.top, 'No type')"
+                        >
+                          {{ displayProjectText(buffer.top, 'No type') }}
+                        </span>
+                      }
+                    </div>
+                  }
+
+                  @if (canViewProjectField('Consultant')) {
+                    <div class="clickup-detail-field">
+                      <span class="clickup-detail-label">
+                        <i appIcon="briefcase" aria-hidden="true"></i>
+                        <span>Consultant</span>
+                      </span>
+                      @if (canEdit && canEditProjectField('Consultant')) {
+                        <label class="clickup-detail-control clickup-detail-control-input">
+                          <input [(ngModel)]="buffer.consultant" />
+                        </label>
+                      } @else {
+                        <span
+                          class="clickup-detail-empty"
+                          [class.is-placeholder]="
+                            isProjectPlaceholder(buffer.consultant, 'No consultant')
+                          "
+                        >
+                          {{ displayProjectText(buffer.consultant, 'No consultant') }}
+                        </span>
+                      }
+                    </div>
+                  }
+
+                  @if (canViewProjectField('PRB')) {
+                    <div
+                      class="clickup-detail-field"
+                      data-project-field="prb"
+                      [class.has-error]="hasFieldError('prb')"
+                    >
+                      <span class="clickup-detail-label">
+                        <i appIcon="percent" aria-hidden="true"></i>
+                        <span>Project Repeatability Percent</span>
+                      </span>
+                      @if (canEdit && canEditProjectField('PRB')) {
+                        <label class="clickup-detail-control clickup-detail-control-input">
+                          <input type="number" min="0" step="0.01" [(ngModel)]="buffer.prb" />
+                        </label>
+                      } @else {
+                        <span
+                          class="clickup-detail-empty"
+                          [class.is-placeholder]="isProjectPercentPlaceholder(buffer.prb, 'N/A')"
+                        >
+                          {{ displayProjectPercent(buffer.prb, 'N/A') }}
+                        </span>
+                      }
+                    </div>
+                  }
+                </div>
+
+                @if (canViewProjectField('Description')) {
+                  <details
+                    class="clickup-detail-description"
+                    data-project-section="description"
+                    [attr.open]="buffer.description ? '' : null"
+                  >
+                    <summary>
+                      <i appIcon="file-earmark-text" aria-hidden="true"></i>
+                      <span>Add description</span>
+                    </summary>
+                    @if (canEdit && canEditProjectField('Description')) {
+                      <textarea
+                        rows="4"
+                        [(ngModel)]="buffer.description"
+                        (input)="autoGrowTextarea($event)"
+                        placeholder="Describe the project"
+                      ></textarea>
+                    } @else {
+                      <textarea
+                        rows="4"
+                        [value]="displayProjectText(buffer.description, 'No description')"
+                        [readOnly]="true"
+                      ></textarea>
+                    }
+                  </details>
+                }
+
+                @if (canViewProjectField('DelayReasons')) {
+                  <details
+                    class="clickup-detail-description clickup-detail-description-secondary"
+                    data-project-section="delay-reason"
+                    [attr.open]="buffer.delayReasons ? '' : null"
+                  >
+                    <summary>
+                      <i appIcon="hourglass-split" aria-hidden="true"></i>
+                      <span>Add delay reason</span>
+                    </summary>
+                    @if (canEdit && canEditProjectField('DelayReasons')) {
+                      <textarea
+                        rows="4"
+                        [(ngModel)]="buffer.delayReasons"
+                        (input)="autoGrowTextarea($event)"
+                        placeholder="Capture delay details"
+                      ></textarea>
+                    } @else {
+                      <textarea
+                        rows="4"
+                        [value]="displayProjectText(buffer.delayReasons, 'No delay reason')"
+                        [readOnly]="true"
+                      ></textarea>
+                    }
+                  </details>
+                }
+
+                @if (canViewChecklist()) {
+                  <section
+                    class="clickup-detail-block clickup-detail-project-checklists"
+                    data-project-section="checklists"
+                  >
+                    <h4>Checklists</h4>
+                    <div class="project-detail-checklists-wrap">
+                      <overview-tab
+                        [row]="buffer"
+                        [editing]="canEdit"
+                        [renderMode]="'checklists'"
+                        [externalValidationIssues]="saveValidationIssues"
+                        [checklistBusy]="checklistCreateInFlight"
+                        [checklistLoading]="checklistLoadInFlight || detailsLoading"
+                        [notificationChecklistFocusId]="notificationFocus?.checklistId ?? null"
+                        [owners]="ownersSignal"
+                        [countries]="countriesSignal"
+                        [peopleOptions]="peopleOptions"
+                        [statuses]="statuses"
+                        [stages]="stages"
+                        [types]="types"
+                        [importances]="importances"
+                        (requestCreateChecklist)="onCreateChecklist($event)"
+                        (requestToggleChecklist)="onToggleChecklist($event)"
+                        (requestUpdateChecklist)="onUpdateChecklist($event)"
+                        (requestDeleteChecklist)="onDeleteChecklist($event)"
+                        (requestCreateOwner)="onCreateOwner($event)"
+                        (requestCreateCountry)="onCreateCountry($event)"
+                        (requestCreateStage)="onCreateStage($event)"
+                        (requestCreateType)="onCreateType($event)"
+                        (requestCreateStatus)="onCreateStatus($event)"
+                        (requestCreateImportance)="onCreateImportance($event)"
+                        (requestCreateAssignee)="onCreateAssignee($event)"
+                        (requestCreateInCharge)="onCreateInCharge($event)"
+                        (requestRenameOwner)="onRenameOwner($event)"
+                        (requestRenameCountry)="onRenameCountry($event)"
+                        (requestRenameStage)="onRenameStage($event)"
+                        (requestRenameType)="onRenameType($event)"
+                        (requestRenameStatus)="onRenameStatus($event)"
+                        (requestRenameImportance)="onRenameImportance($event)"
+                        (requestRenameAssignee)="onRenameAssignee($event)"
+                        (requestRenameInCharge)="onRenameInCharge($event)"
+                      >
+                      </overview-tab>
+                    </div>
+                  </section>
+                }
+
+                <section
+                  class="clickup-detail-block clickup-detail-block-attachments"
+                  data-project-section="attachments"
+                >
+                  <h4>Attachments</h4>
+                  <div
+                    class="clickup-detail-attachments-drop"
+                    role="region"
+                    aria-label="Project attachments"
+                  >
+                    <span>Drop your files here to</span>
+                    <button type="button" disabled>upload</button>
+                  </div>
+                </section>
+              </div>
+            </div>
+          </section>
+
+          <aside class="project-detail-activity" data-project-section="activity">
+            <div class="project-detail-activity-main">
+              <div class="project-detail-activity-head">
+                <h3>Activity</h3>
+                <div class="project-detail-activity-tools">
+                  <button type="button" disabled aria-label="Search activity">
+                    <i appIcon="search" aria-hidden="true"></i>
+                  </button>
+                  <button type="button" disabled aria-label="Notifications">
+                    <i appIcon="bell" aria-hidden="true"></i>
+                  </button>
+                  <button type="button" disabled aria-label="Filter activity">
+                    <i appIcon="funnel" aria-hidden="true"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div class="project-detail-activity-list">
+                @if (activityLoading && !activities.length) {
+                  <div class="project-detail-empty-activity">Loading activity...</div>
+                } @else if (activities.length) {
+                  @for (activity of activities; track trackProjectActivity($index, activity)) {
+                    <article
+                      class="project-detail-activity-item"
+                      [class.notification-focus-target]="isNotificationFocusedActivity(activity)"
+                      [attr.data-project-activity-id]="activityNotificationTargetId(activity)"
+                    >
+                      <span class="project-detail-activity-dot" aria-hidden="true"></span>
+                      <div class="project-detail-activity-entry">
+                        <div class="project-detail-activity-line">
+                          <p>{{ projectActivityBody(activity) }}</p>
+                          @if (projectActivityTime(activity); as activityTime) {
+                            <span class="project-detail-activity-time">{{ activityTime }}</span>
+                          }
+                        </div>
+                      </div>
+                    </article>
+                  }
+                } @else {
+                  <div class="project-detail-empty-activity">No activity yet</div>
+                }
+              </div>
+
+              <footer class="project-detail-compose">
+                <div class="project-detail-compose-box">
+                  <input
+                    type="text"
+                    [value]="projectCommentDraft"
+                    (focus)="ensurePeopleOptionsLoaded()"
+                    (input)="onProjectCommentInput($event)"
+                    (keydown)="onProjectCommentKeydown($event)"
+                    placeholder="Write a comment..."
+                    aria-label="Write a comment"
+                  />
+                  <div class="project-detail-compose-tools">
+                    <button type="button" disabled aria-label="Add item">
+                      <i appIcon="plus-lg" aria-hidden="true"></i>
+                    </button>
+                    <button class="project-detail-compose-chip" type="button" disabled>
+                      Comment
+                    </button>
+                    <button type="button" disabled aria-label="AI tools">
+                      <i appIcon="stars" aria-hidden="true"></i>
+                    </button>
+                    <button type="button" disabled aria-label="Mention someone">
+                      <i appIcon="at" aria-hidden="true"></i>
+                    </button>
+                    <button type="button" disabled aria-label="Attach file">
+                      <i appIcon="paperclip" aria-hidden="true"></i>
+                    </button>
+                    <button type="button" disabled aria-label="Checklist">
+                      <i appIcon="ui-checks-grid" aria-hidden="true"></i>
+                    </button>
+                    <button
+                      class="project-detail-compose-send"
+                      type="button"
+                      [disabled]="!projectCommentDraft.trim()"
+                      (click)="submitProjectComment()"
+                      aria-label="Post comment"
+                    >
+                      <i appIcon="send-fill" aria-hidden="true"></i>
+                    </button>
+                  </div>
+                </div>
+              </footer>
+            </div>
+
+            <nav class="project-detail-activity-rail" aria-label="Activity sections">
+              <button class="active" type="button" disabled aria-label="Activity">
+                <i appIcon="chat-square-text" aria-hidden="true"></i>
+              </button>
+              <button type="button" disabled aria-label="Links">
+                <i appIcon="link-45deg" aria-hidden="true"></i>
+              </button>
+              <button type="button" disabled aria-label="More actions">
+                <i appIcon="plus-lg" aria-hidden="true"></i>
+              </button>
+              <span>More</span>
+            </nav>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </overlay-panel>
+</div>

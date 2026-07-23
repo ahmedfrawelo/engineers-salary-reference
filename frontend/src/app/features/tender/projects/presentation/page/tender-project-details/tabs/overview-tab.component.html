@@ -1,0 +1,863 @@
+<section class="overview" [style.height]="heightStyle">
+  <div class="ov-scroll">
+    @if (renderMode !== 'checklists') {
+      <div class="form">
+        <div class="grid">
+          @if (
+            canShowProjectSection([
+              'Owner',
+              'Country',
+              'Deadline',
+              'AssignTo',
+              'InCharge',
+              'StartDate',
+              'AcceptDate',
+              'EndDate'
+            ])
+          ) {
+            <div class="section-heading full">
+              <span class="section-kicker">Core</span>
+              <div class="section-title">Ownership & Schedule</div>
+              <p class="section-copy">
+                Keep ownership, market, and key dates visible together while the project is active.
+              </p>
+            </div>
+          }
+          @if (canViewProjectField('Owner')) {
+            <label
+              class="field"
+              [class.field-error]="hasFieldError('owner')"
+              [class.field-warning]="!hasFieldError('owner') && hasFieldWarning('owner')"
+              data-project-field="owner"
+            >
+              <span class="field-label">Owner</span>
+              @if (editing && canEditProjectField('Owner')) {
+                <search-select
+                  [options]="ownerOptions()"
+                  [value]="row.owner"
+                  (valueChange)="setOwner($event ?? '')"
+                  [allowInlineSearch]="true"
+                  [allowEdit]="canRenameOwnerLookup()"
+                  [allowCreate]="canCreateOwner()"
+                  createLabel="Add Owner"
+                  (create)="onCreateOwner($event)"
+                  (rename)="onRenameOwner($event)"
+                  placeholder="Select Owner"
+                  [allowClear]="false"
+                >
+                </search-select>
+              } @else {
+                <input
+                  [value]="displayText(row.owner, 'No owner')"
+                  [class.is-placeholder]="isPlaceholder(row.owner, 'No owner')"
+                  [readOnly]="true"
+                />
+              }
+              @if (fieldMessage('owner'); as ownerMessage) {
+                <span class="field-help" [class.warning]="hasFieldWarning('owner')">
+                  {{ ownerMessage }}
+                </span>
+              }
+            </label>
+          }
+          @if (canViewProjectField('Country')) {
+            <label
+              class="field"
+              [class.field-error]="hasFieldError('country')"
+              [class.field-warning]="!hasFieldError('country') && hasFieldWarning('country')"
+              data-project-field="country"
+            >
+              <span class="field-label">Country</span>
+              @if (editing && canEditProjectField('Country')) {
+                <search-select
+                  [options]="countryOptions()"
+                  [value]="row.country"
+                  (valueChange)="setCountry($event ?? '')"
+                  [allowInlineSearch]="true"
+                  [allowEdit]="canRenameCountryLookup()"
+                  [allowCreate]="canCreateCountry()"
+                  createLabel="Add Country"
+                  (create)="onCreateCountry($event)"
+                  (rename)="onRenameCountry($event)"
+                  placeholder="Select Country"
+                  [allowClear]="false"
+                >
+                </search-select>
+              } @else {
+                <input
+                  [value]="displayText(row.country, 'No country')"
+                  [class.is-placeholder]="isPlaceholder(row.country, 'No country')"
+                  [readOnly]="true"
+                />
+              }
+              @if (fieldMessage('country'); as countryMessage) {
+                <span class="field-help" [class.warning]="hasFieldWarning('country')">
+                  {{ countryMessage }}
+                </span>
+              }
+            </label>
+          }
+
+          @if (canViewProjectField('Deadline')) {
+            <label
+              class="field"
+              [class.field-error]="hasFieldError('deadline')"
+              data-project-field="deadline"
+            >
+              <span class="field-label">Deadline</span>
+              @if (editing && canEditProjectField('Deadline')) {
+                <date-input [(value)]="row.deadline"></date-input>
+              } @else {
+                <input
+                  [value]="displayText(formatDate(row.deadline), 'No deadline')"
+                  [class.is-placeholder]="isPlaceholder(formatDate(row.deadline), 'No deadline')"
+                  [readOnly]="true"
+                />
+              }
+              @if (fieldMessage('deadline'); as deadlineMessage) {
+                <span class="field-help">{{ deadlineMessage }}</span>
+              }
+            </label>
+          }
+          @if (canViewProjectField('AssignTo')) {
+            <label
+              class="field"
+              [class.field-error]="hasFieldError('assignTo')"
+              [class.field-warning]="!hasFieldError('assignTo') && hasFieldWarning('assignTo')"
+              data-project-field="assignTo"
+            >
+              <span class="field-label">Assign to</span>
+              @if (editing && canEditProjectField('AssignTo')) {
+                <search-select
+                  [options]="peopleOptions"
+                  [value]="row.assignTo"
+                  (valueChange)="row.assignTo = $event ?? ''"
+                  [allowInlineSearch]="true"
+                  [allowEdit]="false"
+                  [allowCreate]="false"
+                  placeholder="Select"
+                  [allowClear]="false"
+                >
+                </search-select>
+              } @else {
+                <input
+                  [value]="displayText(row.assignTo, 'Unassigned')"
+                  [class.is-placeholder]="isPlaceholder(row.assignTo, 'Unassigned')"
+                  [readOnly]="true"
+                />
+              }
+              @if (fieldMessage('assignTo'); as assignToMessage) {
+                <span class="field-help" [class.warning]="hasFieldWarning('assignTo')">
+                  {{ assignToMessage }}
+                </span>
+              }
+            </label>
+          }
+
+          @if (canViewProjectField('InCharge')) {
+            <label
+              class="field"
+              [class.field-error]="hasFieldError('inCharge')"
+              [class.field-warning]="!hasFieldError('inCharge') && hasFieldWarning('inCharge')"
+              data-project-field="inCharge"
+            >
+              <span class="field-label">In Charge</span>
+              @if (editing && canEditProjectField('InCharge')) {
+                <search-select
+                  [options]="peopleOptions"
+                  [value]="row.inCharge"
+                  (valueChange)="row.inCharge = $event ?? ''"
+                  [allowInlineSearch]="true"
+                  [allowEdit]="false"
+                  [allowCreate]="false"
+                  placeholder="Select"
+                  [allowClear]="false"
+                >
+                </search-select>
+              } @else {
+                <input
+                  [value]="displayText(row.inCharge, 'Unassigned')"
+                  [class.is-placeholder]="isPlaceholder(row.inCharge, 'Unassigned')"
+                  [readOnly]="true"
+                />
+              }
+              @if (fieldMessage('inCharge'); as inChargeMessage) {
+                <span class="field-help" [class.warning]="hasFieldWarning('inCharge')">
+                  {{ inChargeMessage }}
+                </span>
+              }
+            </label>
+          }
+          @if (canViewProjectField('StartDate')) {
+            <label
+              class="field"
+              [class.field-error]="hasFieldError('startDate')"
+              data-project-field="startDate"
+            >
+              <span class="field-label">Start Date</span>
+              @if (editing && canEditProjectField('StartDate')) {
+                <date-input [(value)]="row.startDate"></date-input>
+              } @else {
+                <input
+                  [value]="displayText(formatDate(row.startDate), 'No start date')"
+                  [class.is-placeholder]="isPlaceholder(formatDate(row.startDate), 'No start date')"
+                  [readOnly]="true"
+                />
+              }
+              @if (fieldMessage('startDate'); as startDateMessage) {
+                <span class="field-help">{{ startDateMessage }}</span>
+              }
+            </label>
+          }
+          @if (canViewProjectField('AcceptDate')) {
+            <label class="field">
+              <span class="field-label">Accept Date</span>
+              @if (editing && canEditProjectField('AcceptDate')) {
+                <date-input [(value)]="row.acceptDate"></date-input>
+              } @else {
+                <input
+                  [value]="displayText(formatDate(row.acceptDate), 'Not accepted')"
+                  [class.is-placeholder]="isPlaceholder(formatDate(row.acceptDate), 'Not accepted')"
+                  [readOnly]="true"
+                />
+              }
+            </label>
+          }
+          @if (canViewProjectField('EndDate')) {
+            <label
+              class="field"
+              [class.field-error]="hasFieldError('endDate')"
+              data-project-field="endDate"
+            >
+              <span class="field-label">End Date</span>
+              @if (editing && canEditProjectField('EndDate')) {
+                <date-input [(value)]="row.endDate"></date-input>
+              } @else {
+                <input
+                  [value]="displayText(formatDate(row.endDate), 'No end date')"
+                  [class.is-placeholder]="isPlaceholder(formatDate(row.endDate), 'No end date')"
+                  [readOnly]="true"
+                />
+              }
+              @if (fieldMessage('endDate'); as endDateMessage) {
+                <span class="field-help">{{ endDateMessage }}</span>
+              }
+            </label>
+          }
+
+          @if (
+            canShowProjectSection([
+              'Price',
+              'Status',
+              'TenderStage',
+              'DegreeOfImportance',
+              'TypeOfProject',
+              'Consultant',
+              'PRB'
+            ])
+          ) {
+            <div class="section-heading full">
+              <span class="section-kicker">Delivery</span>
+              <div class="section-title">Commercial & Delivery</div>
+              <p class="section-copy">
+                Track pricing, stage, importance, and the delivery indicators that drive decisions.
+              </p>
+            </div>
+          }
+          @if (canViewProjectField('Price')) {
+            <label
+              class="field"
+              [class.field-error]="hasFieldError('price')"
+              data-project-field="price"
+            >
+              <span class="field-label">Pricing</span>
+              @if (editing && canEditProjectField('Price')) {
+                <input
+                  [value]="row.price ?? ''"
+                  (input)="onMoneyInput($event)"
+                  inputmode="decimal"
+                />
+              } @else {
+                <input
+                  [value]="displayMoney(row.price, 'No price')"
+                  [class.is-placeholder]="isMoneyPlaceholder(row.price, 'No price')"
+                  [readOnly]="true"
+                />
+              }
+              @if (fieldMessage('price'); as priceMessage) {
+                <span class="field-help">{{ priceMessage }}</span>
+              }
+            </label>
+          }
+          @if (canViewProjectField('Status')) {
+            <label
+              class="field"
+              [class.field-error]="hasFieldError('status')"
+              [class.field-warning]="!hasFieldError('status') && hasFieldWarning('status')"
+              data-project-field="status"
+            >
+              <span class="field-label">Status</span>
+              @if (editing && canEditProjectField('Status')) {
+                <search-select
+                  [options]="statuses"
+                  [value]="row.status"
+                  (valueChange)="setStatus($event ?? '')"
+                  [allowInlineSearch]="true"
+                  [allowEdit]="canRenameStatusLookup()"
+                  [allowCreate]="canCreateStatus()"
+                  createLabel="Add Status"
+                  (create)="onCreateStatus($event)"
+                  (rename)="onRenameStatus($event)"
+                  placeholder="Select Status"
+                  [allowClear]="false"
+                >
+                </search-select>
+              } @else {
+                <input
+                  [value]="displayText(row.status, 'No status')"
+                  [class.is-placeholder]="isPlaceholder(row.status, 'No status')"
+                  [readOnly]="true"
+                />
+              }
+              @if (fieldMessage('status'); as statusMessage) {
+                <span class="field-help" [class.warning]="hasFieldWarning('status')">
+                  {{ statusMessage }}
+                </span>
+              }
+            </label>
+          }
+          @if (canViewProjectField('TenderStage')) {
+            <label
+              class="field"
+              [class.field-error]="hasFieldError('ts')"
+              [class.field-warning]="!hasFieldError('ts') && hasFieldWarning('ts')"
+              data-project-field="ts"
+            >
+              <span class="field-label">Tender Stage (TS)</span>
+              @if (editing && canEditProjectField('TenderStage')) {
+                <search-select
+                  [options]="stages"
+                  [value]="row.ts"
+                  (valueChange)="setStage($event ?? '')"
+                  [allowInlineSearch]="true"
+                  [allowEdit]="canRenameStageLookup()"
+                  [allowCreate]="canCreateStage()"
+                  createLabel="Add Stage"
+                  (create)="onCreateStage($event)"
+                  (rename)="onRenameStage($event)"
+                  placeholder="Select Stage"
+                  [allowClear]="false"
+                >
+                </search-select>
+              } @else {
+                <input
+                  [value]="displayText(row.ts, 'No stage')"
+                  [class.is-placeholder]="isPlaceholder(row.ts, 'No stage')"
+                  [readOnly]="true"
+                />
+              }
+              @if (fieldMessage('ts'); as stageMessage) {
+                <span class="field-help" [class.warning]="hasFieldWarning('ts')">
+                  {{ stageMessage }}
+                </span>
+              }
+            </label>
+          }
+          @if (canViewProjectField('DegreeOfImportance')) {
+            <label class="field">
+              <span class="field-label">Degree of Importance</span>
+              @if (editing && canEditProjectField('DegreeOfImportance')) {
+                <search-select
+                  [options]="importances"
+                  [value]="row.doi"
+                  (valueChange)="setImportance($event ?? '')"
+                  [allowInlineSearch]="true"
+                  [allowEdit]="canRenameImportanceLookup()"
+                  [allowCreate]="canCreateImportance()"
+                  createLabel="Add Importance"
+                  (create)="onCreateImportance($event)"
+                  (rename)="onRenameImportance($event)"
+                  placeholder="Select Importance"
+                  [allowClear]="false"
+                >
+                </search-select>
+              } @else {
+                <input
+                  [value]="displayText(row.doi, 'No importance')"
+                  [class.is-placeholder]="isPlaceholder(row.doi, 'No importance')"
+                  [readOnly]="true"
+                />
+              }
+            </label>
+          }
+
+          @if (canViewProjectField('TypeOfProject')) {
+            <label
+              class="field"
+              [class.field-error]="hasFieldError('top')"
+              [class.field-warning]="!hasFieldError('top') && hasFieldWarning('top')"
+              data-project-field="top"
+            >
+              <span class="field-label">TOP</span>
+              @if (editing && canEditProjectField('TypeOfProject')) {
+                <search-select
+                  [options]="types"
+                  [value]="row.top"
+                  (valueChange)="setType($event ?? '')"
+                  [allowInlineSearch]="true"
+                  [allowEdit]="canRenameTypeLookup()"
+                  [allowCreate]="canCreateType()"
+                  createLabel="Add Type"
+                  (create)="onCreateType($event)"
+                  (rename)="onRenameType($event)"
+                  placeholder="Select TOP"
+                  [allowClear]="false"
+                >
+                </search-select>
+              } @else {
+                <input
+                  [value]="displayText(row.top, 'No type')"
+                  [class.is-placeholder]="isPlaceholder(row.top, 'No type')"
+                  [readOnly]="true"
+                />
+              }
+              @if (fieldMessage('top'); as topMessage) {
+                <span class="field-help" [class.warning]="hasFieldWarning('top')">
+                  {{ topMessage }}
+                </span>
+              }
+            </label>
+          }
+          @if (canViewProjectField('Consultant')) {
+            <label class="field">
+              <span class="field-label">Consultant</span>
+              @if (editing && canEditProjectField('Consultant')) {
+                <input [(ngModel)]="row.consultant" />
+              } @else {
+                <input
+                  [value]="displayText(row.consultant, 'No consultant')"
+                  [class.is-placeholder]="isPlaceholder(row.consultant, 'No consultant')"
+                  [readOnly]="true"
+                />
+              }
+            </label>
+          }
+          @if (canViewProjectField('PRB')) {
+            <label
+              class="field"
+              [class.field-error]="hasFieldError('prb')"
+              data-project-field="prb"
+            >
+              <span class="field-label">Project Repeatability Percent</span>
+              @if (editing && canEditProjectField('PRB')) {
+                <input type="number" min="0" step="0.01" [(ngModel)]="row.prb" />
+              } @else {
+                <input
+                  [value]="displayPercent(row.prb, 'N/A')"
+                  [class.is-placeholder]="isPercentPlaceholder(row.prb, 'N/A')"
+                  [readOnly]="true"
+                />
+              }
+              @if (fieldMessage('prb'); as prbMessage) {
+                <span class="field-help">{{ prbMessage }}</span>
+              }
+            </label>
+          }
+
+          @if (canShowProjectSection(['Description', 'DelayReasons'])) {
+            <div class="section-heading full">
+              <span class="section-kicker">Notes</span>
+              <div class="section-title">Context & Notes</div>
+              <p class="section-copy">
+                Capture the current context and any delay reasons so the next update stays
+                actionable.
+              </p>
+            </div>
+          }
+          @if (canViewProjectField('Description')) {
+            <label class="field full">
+              <span class="field-label">Description</span>
+              @if (editing && canEditProjectField('Description')) {
+                <textarea
+                  rows="1"
+                  [(ngModel)]="row.description"
+                  (input)="autoGrow($event)"
+                ></textarea>
+              } @else {
+                <textarea
+                  rows="1"
+                  [value]="displayText(row.description, 'No description')"
+                  [class.is-placeholder]="isPlaceholder(row.description, 'No description')"
+                  [readOnly]="true"
+                ></textarea>
+              }
+            </label>
+          }
+
+          @if (canViewProjectField('DelayReasons')) {
+            <label class="field full">
+              <span class="field-label">Delay Reason</span>
+              @if (editing && canEditProjectField('DelayReasons')) {
+                <textarea
+                  #delayReasonArea
+                  rows="1"
+                  [(ngModel)]="row.delayReasons"
+                  (input)="autoGrow($event)"
+                ></textarea>
+              } @else {
+                <textarea
+                  #delayReasonArea
+                  rows="1"
+                  [value]="displayText(row.delayReasons, 'No delay reason')"
+                  [class.is-placeholder]="isPlaceholder(row.delayReasons, 'No delay reason')"
+                  [readOnly]="true"
+                ></textarea>
+              }
+            </label>
+          }
+        </div>
+      </div>
+    }
+
+    @if (renderMode !== 'fields' && canViewChecklist()) {
+      <div
+        class="checklists"
+        [class.is-busy]="checklistBusy || checklistLoading"
+        [class.is-loading]="checklistLoading"
+      >
+        <div class="row-head">
+          <div class="head-left">
+            <div class="head-icon">
+              <i appIcon="clipboard-check" aria-hidden="true"></i>
+            </div>
+            <div class="head-block">
+              <div class="h">Checklists</div>
+              @if (checklistTotal) {
+                <div class="summary compact" [class.done]="checklistProgress === 100">
+                  <div class="summary-left">
+                    <span class="summary-count"
+                      >{{ checklistDone }}/{{ checklistTotal }} items</span
+                    >
+                  </div>
+                  <div
+                    class="summary-bar"
+                    role="progressbar"
+                    [attr.aria-valuenow]="checklistProgress"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                  >
+                    <div class="summary-fill" [style.width.%]="checklistProgress"></div>
+                  </div>
+                  <span class="summary-pct">{{ checklistProgress }}%</span>
+                </div>
+              }
+            </div>
+          </div>
+          <div class="head-right">
+            @if (canCreateChecklist()) {
+              <button
+                class="btn add-chk"
+                type="button"
+                (click)="toggleChecklistAdd($event)"
+                [disabled]="checklistBusy || checklistLoading"
+              >
+                <i appIcon="plus" aria-hidden="true"></i>
+                <span>Create checklist</span>
+              </button>
+            }
+          </div>
+        </div>
+
+        @if (checklistAddOpen && canCreateChecklist()) {
+          <div class="quick-add">
+            <i appIcon="plus" aria-hidden="true"></i>
+            <input
+              #checklistAddInput
+              class="quick-input"
+              [(ngModel)]="quickAddText"
+              (keydown.enter)="submitQuickAdd(); $event.preventDefault()"
+              (keydown.escape)="closeChecklistAdd(); $event.preventDefault()"
+              placeholder="Add checklist item"
+              [disabled]="checklistBusy || checklistLoading"
+            />
+            <button
+              class="btn sm primary"
+              type="button"
+              (click)="submitQuickAdd()"
+              [disabled]="checklistBusy || checklistLoading || !quickAddHasValue"
+            >
+              {{ quickAddHasValue ? 'Save' : 'Add' }}
+            </button>
+          </div>
+        }
+        @if (checklistLoading) {
+          <div class="checklist-skeleton" aria-hidden="true">
+            @for (placeholder of checklistSkeletonRows; track placeholder) {
+              <div class="checklist-skeleton__row">
+                <span class="checklist-skeleton__toggle"></span>
+                <div class="checklist-skeleton__body">
+                  <span class="checklist-skeleton__line short"></span>
+                  <span class="checklist-skeleton__line"></span>
+                </div>
+              </div>
+            }
+          </div>
+        } @else if (row.checklists?.length) {
+          <div
+            class="items"
+            cdkDropList
+            cdkDropListOrientation="vertical"
+            [cdkDropListData]="row.checklists ?? []"
+            [cdkDropListDisabled]="!checklistEditable"
+            (cdkDropListDropped)="onChecklistDrop($event)"
+          >
+            @for (it of row.checklists; track trackChecklist(i, it); let i = $index) {
+              <div
+                class="chk-group"
+                [class.done]="it.done"
+                [class.collapsed]="isChecklistCollapsed(it)"
+                [class.notification-focus-target]="isNotificationFocusedChecklist(it)"
+                [attr.data-project-checklist-id]="it.id ?? null"
+                cdkDrag
+                [cdkDragDisabled]="!checklistEditable"
+                cdkDragLockAxis="y"
+              >
+                <div class="chk" [class.done]="it.done">
+                  <span
+                    class="drag-handle"
+                    [class.disabled]="!checklistEditable"
+                    aria-hidden="true"
+                    cdkDragHandle
+                  >
+                    <i appIcon="grip-vertical" aria-hidden="true"></i>
+                  </span>
+                  <label class="chk-toggle" [class.disabled]="!checklistEditable">
+                    <input
+                      class="chkbox"
+                      type="checkbox"
+                      [(ngModel)]="it.done"
+                      (ngModelChange)="onChecklistToggle(it, $event)"
+                      [disabled]="!checklistEditable"
+                      aria-label="Toggle checklist item"
+                    />
+                    <span class="chkbox-ui" aria-hidden="true"></span>
+                  </label>
+                  <div class="chk-body">
+                    <input
+                      class="txt"
+                      [(ngModel)]="it.text"
+                      (ngModelChange)="onChecklistTextChange(it, $event)"
+                      (blur)="onChecklistCommit(it)"
+                      (keydown.enter)="onChecklistCommit(it); $event.preventDefault()"
+                      [readOnly]="!checklistEditable"
+                    />
+                  </div>
+                  <div class="chk-actions">
+                    <span class="state-pill" [class.done]="it.done">{{
+                      it.done ? 'Done' : 'In progress'
+                    }}</span>
+                    @if (canDeleteChecklist()) {
+                      <button
+                        class="icon-btn fx-pop del"
+                        type="button"
+                        (click)="remove(i)"
+                        [disabled]="!checklistEditable"
+                        aria-label="Remove checklist item"
+                      >
+                        <i appIcon="x" aria-hidden="true"></i>
+                      </button>
+                    }
+                  </div>
+                </div>
+                @if (it.subItems?.length || checklistEditable) {
+                  <div
+                    class="sub"
+                    [class.has-items]="it.subItems?.length"
+                    [class.add-open]="isSubAddOpen(it)"
+                    [class.collapsed]="isChecklistCollapsed(it)"
+                  >
+                    <div class="sub-head">
+                      <div class="sub-title">
+                        <span>Sub items</span>
+                        @if (it.subItems?.length) {
+                          <span class="sub-count">
+                            <i appIcon="list-check" aria-hidden="true"></i>
+                            <span>{{ subDone(it) }}/{{ it.subItems?.length }}</span>
+                          </span>
+                        }
+                      </div>
+                      @if (it.subItems?.length) {
+                        <div class="sub-meta">
+                          <div
+                            class="sub-progress"
+                            role="progressbar"
+                            [class.done]="subProgress(it) === 100"
+                            [attr.aria-valuenow]="subProgress(it)"
+                            aria-valuemin="0"
+                            aria-valuemax="100"
+                          >
+                            <div class="sub-progress-bar">
+                              <div
+                                class="sub-progress-fill"
+                                [style.width.%]="subProgress(it)"
+                              ></div>
+                            </div>
+                            <span class="sub-progress-pct">{{ subProgress(it) }}%</span>
+                          </div>
+                        </div>
+                      }
+                      <div class="sub-actions">
+                        @if (!isSubAddOpen(it)) {
+                          @if (canCreateChecklist()) {
+                            <button
+                              class="btn sm ghost link sub-add"
+                              type="button"
+                              (click)="openSubAdd(it, i)"
+                              [disabled]="!checklistEditable"
+                            >
+                              <i appIcon="plus" aria-hidden="true"></i>
+                              <span>New subtask</span>
+                            </button>
+                          }
+                        }
+                        @if (checklistEditable && isSubAddOpen(it)) {
+                          <div class="sub-add-inline">
+                            <i appIcon="plus" aria-hidden="true"></i>
+                            <input
+                              #subAddInput
+                              class="sub-input"
+                              [id]="subAddInputId(it, i)"
+                              [ngModel]="getSubDraft(it)"
+                              (ngModelChange)="setSubDraft(it, $event)"
+                              (keydown.enter)="submitSubAdd(it); $event.preventDefault()"
+                              (keydown.escape)="closeSubAdd(it); $event.preventDefault()"
+                              placeholder="New subtask"
+                              [disabled]="!checklistEditable"
+                            />
+                            <button
+                              class="btn sm primary"
+                              type="button"
+                              (click)="submitSubAdd(it)"
+                              [disabled]="!checklistEditable || !subDraftHasValue(it)"
+                            >
+                              {{ subDraftHasValue(it) ? 'Save' : 'Add' }}
+                            </button>
+                            <button
+                              class="icon-btn ghost"
+                              type="button"
+                              (click)="closeSubAdd(it)"
+                              [disabled]="!checklistEditable"
+                              aria-label="Cancel subtask"
+                            >
+                              <i appIcon="x" aria-hidden="true"></i>
+                            </button>
+                          </div>
+                        }
+                        @if (it.subItems?.length) {
+                          <button
+                            class="icon-btn fx-pop collapse-btn chk-collapse"
+                            type="button"
+                            (click)="toggleChecklistCollapse(it, $event)"
+                            [attr.aria-expanded]="!isChecklistCollapsed(it)"
+                            [attr.aria-label]="
+                              isChecklistCollapsed(it) ? 'Expand sub items' : 'Collapse sub items'
+                            "
+                          >
+                            <i
+                              [appIcon]="
+                                isChecklistCollapsed(it) ? 'chevron-right' : 'chevron-down'
+                              "
+                              aria-hidden="true"
+                            ></i>
+                          </button>
+                        }
+                      </div>
+                    </div>
+                    <div
+                      class="sub-items"
+                      cdkDropList
+                      cdkDropListOrientation="vertical"
+                      [cdkDropListData]="getSubItems(it)"
+                      [cdkDropListConnectedTo]="subDropListIds"
+                      [cdkDropListDisabled]="!checklistEditable"
+                      [id]="subDropId(it, i)"
+                      (cdkDropListDropped)="onSubDrop(it, $event)"
+                    >
+                      @for (sub of getSubItems(it); track trackSubItem(s, sub); let s = $index) {
+                        <div
+                          class="sub-row"
+                          [class.done]="sub.done"
+                          cdkDrag
+                          [cdkDragDisabled]="!checklistEditable"
+                          cdkDragLockAxis="y"
+                        >
+                          <span
+                            class="drag-handle small"
+                            [class.disabled]="!checklistEditable"
+                            aria-hidden="true"
+                            cdkDragHandle
+                          >
+                            <i appIcon="grip-vertical" aria-hidden="true"></i>
+                          </span>
+                          <label class="chk-toggle small" [class.disabled]="!checklistEditable">
+                            <input
+                              class="chkbox"
+                              type="checkbox"
+                              [(ngModel)]="sub.done"
+                              (ngModelChange)="onSubToggle(it, sub, $event)"
+                              [disabled]="!checklistEditable"
+                              aria-label="Toggle sub item"
+                            />
+                            <span class="chkbox-ui" aria-hidden="true"></span>
+                          </label>
+                          <input
+                            class="txt"
+                            [(ngModel)]="sub.text"
+                            (ngModelChange)="onSubTextChange(it, sub, $event)"
+                            (blur)="onSubCommit(it, sub)"
+                            (keydown.enter)="onSubCommit(it, sub); $event.preventDefault()"
+                            [readOnly]="!checklistEditable"
+                          />
+                          @if (canDeleteChecklist()) {
+                            <button
+                              class="icon-btn fx-pop del"
+                              type="button"
+                              (click)="removeSubItem(it, s)"
+                              [disabled]="!checklistEditable"
+                              aria-label="Remove sub item"
+                            >
+                              <i appIcon="x" aria-hidden="true"></i>
+                            </button>
+                          }
+                        </div>
+                      }
+                    </div>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        } @else {
+          <div class="empty-state">
+            <div class="empty-icon">
+              <i appIcon="card-checklist" aria-hidden="true"></i>
+            </div>
+            <div class="empty-title">No checklist yet</div>
+            <div class="empty-sub">Create your first checklist to track progress.</div>
+            @if (canCreateChecklist()) {
+              <button
+                class="btn sm ghost link empty-cta"
+                type="button"
+                (click)="toggleChecklistAdd($event)"
+                [disabled]="checklistBusy || checklistLoading"
+              >
+                <i appIcon="plus" aria-hidden="true"></i>
+                <span>Create checklist</span>
+              </button>
+            }
+          </div>
+        }
+      </div>
+    }
+  </div>
+</section>

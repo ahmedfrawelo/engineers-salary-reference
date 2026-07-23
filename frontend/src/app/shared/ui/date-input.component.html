@@ -1,0 +1,141 @@
+<div class="date-field" [class.open]="open" [class.disabled]="disabled">
+  <button
+    #triggerOrigin="cdkOverlayOrigin"
+    cdkOverlayOrigin
+    type="button"
+    class="date-trigger"
+    (click)="toggle($event)"
+    [disabled]="disabled"
+  >
+    <span class="date-text" [class.placeholder]="!displayValue">{{
+      displayValue || placeholder
+    }}</span>
+    <span class="date-icon"><i appIcon="calendar3"></i></span>
+  </button>
+
+  <ng-template
+    cdkConnectedOverlay
+    [cdkConnectedOverlayOrigin]="triggerOrigin"
+    [cdkConnectedOverlayOpen]="open"
+    [cdkConnectedOverlayPositions]="positions"
+    [cdkConnectedOverlayWidth]="overlayWidth"
+    cdkConnectedOverlayPanelClass="date-input-overlay"
+    (detach)="close()"
+    (positionChange)="onPositionChange($event)"
+  >
+    <div class="date-panel" [class.drop-up]="dropUp">
+      <div class="date-panel-hdr">
+        <button
+          type="button"
+          class="nav-btn"
+          (click)="prevMonth()"
+          [disabled]="viewMode !== 'days'"
+        >
+          <i appIcon="chevron-left" aria-hidden="true"></i>
+        </button>
+        <button
+          type="button"
+          class="month-label"
+          (click)="toggleViewMode()"
+          [attr.aria-expanded]="viewMode === 'monthYear'"
+        >
+          {{ monthLabel }}
+        </button>
+        @if (viewMode === 'days') {
+          <button type="button" class="nav-btn" (click)="nextMonth()">
+            <i appIcon="chevron-right" aria-hidden="true"></i>
+          </button>
+        }
+        @if (viewMode === 'monthYear') {
+          <button
+            type="button"
+            class="nav-btn done-btn"
+            aria-label="Back to days"
+            (click)="setViewMode('days')"
+          >
+            <i appIcon="check-lg" aria-hidden="true"></i>
+          </button>
+        }
+      </div>
+
+      <div class="picker-body">
+        @switch (viewMode) {
+          @case ('days') {
+            <div class="weekdays">
+              @for (d of weekdays; track d) {
+                <span class="weekday">{{ d }}</span>
+              }
+            </div>
+            <div class="days">
+              @for (day of days; track trackDay($index, day)) {
+                <button
+                  type="button"
+                  class="day-btn"
+                  [class.outside]="!day.current"
+                  [class.selected]="day.selected"
+                  [class.today]="day.today"
+                  [class.disabled]="day.disabled"
+                  (click)="selectDay(day)"
+                >
+                  {{ day.label }}
+                </button>
+              }
+            </div>
+          }
+          @case ('monthYear') {
+            <div class="month-year">
+              <div class="column">
+                <div class="column-title">Month</div>
+                <div class="roller months-roller">
+                  @for (m of monthLabels; track trackMonth(i, m); let i = $index) {
+                    <button
+                      type="button"
+                      class="roller-item"
+                      [class.selected]="isMonthSelected(i)"
+                      [class.today]="isMonthToday(i)"
+                      [class.disabled]="isMonthDisabled(i)"
+                      (click)="selectMonth(i)"
+                    >
+                      {{ m }}
+                    </button>
+                  }
+                </div>
+              </div>
+              <div class="column">
+                <div class="column-title">Year</div>
+                <div class="roller years-roller" #yearsScroller>
+                  @for (y of yearOptions; track trackYear($index, y)) {
+                    <button
+                      type="button"
+                      class="roller-item"
+                      [class.selected]="isYearSelected(y)"
+                      [class.today]="isYearToday(y)"
+                      [class.disabled]="isYearDisabled(y)"
+                      (click)="selectYear(y)"
+                    >
+                      {{ y }}
+                    </button>
+                  }
+                </div>
+              </div>
+            </div>
+          }
+        }
+      </div>
+
+      <div class="panel-actions">
+        <button
+          type="button"
+          class="action-btn"
+          (click)="clear()"
+          [disabled]="!allowClear || !selectedIso"
+        >
+          Clear
+        </button>
+        <button type="button" class="action-btn" (click)="selectToday()" [disabled]="!showToday">
+          Today
+        </button>
+      </div>
+    </div>
+  </ng-template>
+</div>

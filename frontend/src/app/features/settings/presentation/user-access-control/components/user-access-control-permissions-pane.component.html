@@ -1,0 +1,485 @@
+﻿<div class="access-pane access-pane--permissions">
+  <div class="access-content-tools access-content-tools--permissions">
+    <div class="access-scope-toggle" role="tablist" aria-label="Permission scope">
+      <button
+        class="tool-chip"
+        type="button"
+        [class.active]="permissionScope() === 'role'"
+        (click)="setPermissionScope('role')"
+        role="tab"
+        [attr.aria-selected]="permissionScope() === 'role'"
+      >
+        <hugeicons-icon
+          class="access-huge-icon"
+          [icon]="hugeIcons.scopeRole"
+          [size]="16"
+          [strokeWidth]="1.9"
+          aria-hidden="true"
+        ></hugeicons-icon>
+        <span>Role permissions</span>
+      </button>
+      @if (canManageAccessControlUserOverrides()) {
+        <button
+          class="tool-chip"
+          type="button"
+          [class.active]="permissionScope() === 'user'"
+          (click)="setPermissionScope('user')"
+          role="tab"
+          [attr.aria-selected]="permissionScope() === 'user'"
+        >
+          <hugeicons-icon
+            class="access-huge-icon"
+            [icon]="hugeIcons.scopeUser"
+            [size]="16"
+            [strokeWidth]="1.9"
+            aria-hidden="true"
+          ></hugeicons-icon>
+          <span>User overrides</span>
+        </button>
+      }
+    </div>
+
+    <div class="access-content-tools__meta">
+      @if (hasPermissionTarget()) {
+        <span class="tool-chip access-permission-target">
+          {{
+            permissionScope() === 'role'
+              ? selectedRole()?.name
+              : selectedUser()?.name || selectedUser()?.email
+          }}
+        </span>
+      }
+      @if (hasPermissionTarget() && hasPermissionSelectionChanges()) {
+        <span class="tool-chip access-permission-status-chip active">
+          {{ permissionSelectionChangeCount() }} unsaved
+        </span>
+      }
+      @if (permissionScope() === 'role' && selectedRole() && canAssignAccessControlRoles()) {
+        <button
+          type="button"
+          class="btn-sm btn-ghost perm-head__action-btn"
+          (click)="openRoleMembersDrawer()"
+        >
+          <hugeicons-icon
+            class="access-huge-icon"
+            [icon]="hugeIcons.scopeRole"
+            [size]="16"
+            [strokeWidth]="1.9"
+            aria-hidden="true"
+          ></hugeicons-icon>
+          <span>Members</span>
+          @if (usersInRole().length) {
+            <span class="role-row-count">{{ usersInRole().length }}</span>
+          }
+        </button>
+      }
+      @if (
+        canManageAccessControlPermissions() &&
+        hasPermissionTarget() &&
+        hasPermissionSelectionChanges()
+      ) {
+        <button
+          type="button"
+          class="btn-sm btn-ghost perm-head__action-btn"
+          (click)="resetPermissionSelection()"
+          [disabled]="permissionsLoading()"
+        >
+          Reset changes
+        </button>
+      }
+      @if (permissionScope() === 'role' && canManageAccessControlPermissions()) {
+        <button
+          type="button"
+          class="btn-sm btn-primary"
+          (click)="saveRolePermissions()"
+          [disabled]="!selectedRole() || permissionsLoading() || !hasPermissionSelectionChanges()"
+        >
+          {{ permissionsLoading() ? 'Saving...' : 'Save permissions' }}
+        </button>
+      }
+      @if (permissionScope() === 'user' && canManageAccessControlPermissions()) {
+        <button
+          type="button"
+          class="btn-sm btn-primary"
+          (click)="saveUserPermissions()"
+          [disabled]="!selectedUser() || permissionsLoading() || !hasPermissionSelectionChanges()"
+        >
+          {{ permissionsLoading() ? 'Saving...' : 'Save overrides' }}
+        </button>
+      }
+    </div>
+  </div>
+
+  <div class="permissions-layout">
+    <aside class="role-column access-panel">
+      @if (permissionScope() === 'role') {
+        <div class="role-form role-form--directory">
+          <div class="role-form__head">
+            <div class="role-form__copy">
+              <p class="access-section-kicker">Access target</p>
+              <h3>Roles</h3>
+              <p class="muted">Pick one role, then open only the module you need.</p>
+            </div>
+            @if (roles().length) {
+              <span class="tool-chip role-form__count">{{ roles().length }} roles</span>
+            }
+          </div>
+          @if (canManageAccessControlRoles()) {
+            <div class="role-create">
+              <input
+                type="text"
+                placeholder="New role name"
+                [(ngModel)]="newRoleName"
+                [disabled]="rolesLoading()"
+              />
+              <button
+                type="button"
+                class="btn-sm btn-primary"
+                (click)="createRole()"
+                [disabled]="rolesLoading()"
+              >
+                Create
+              </button>
+            </div>
+            <p class="muted">New roles start with view-only access. Expand from there as needed.</p>
+          }
+          @if (rolesError()) {
+            <p class="role-form__error">{{ rolesError() }}</p>
+          }
+        </div>
+
+        @if (roles().length) {
+          <div class="role-list">
+            @for (role of roles(); track role.id) {
+              <div class="role-item" [class.active]="selectedRole()?.id === role.id">
+                @if (!role.isEditing) {
+                  <div class="role-row">
+                    <button type="button" class="role-select" (click)="selectRole(role)">
+                      {{ role.name }}
+                    </button>
+                    @if (selectedRole()?.id === role.id && usersInRole().length) {
+                      <span class="role-row-count">{{ usersInRole().length }}</span>
+                    }
+                    @if (canManageAccessControlRoles()) {
+                      <div class="role-actions">
+                        <button
+                          type="button"
+                          class="btn-icon"
+                          (click)="startEditRole(role)"
+                          [disabled]="rolesLoading()"
+                          title="Edit role"
+                        >
+                          <hugeicons-icon
+                            class="access-huge-icon"
+                            [icon]="hugeIcons.edit"
+                            [size]="16"
+                            [strokeWidth]="1.9"
+                            aria-hidden="true"
+                          ></hugeicons-icon>
+                        </button>
+                        <button
+                          type="button"
+                          class="btn-icon danger"
+                          (click)="deleteRole(role)"
+                          [disabled]="rolesLoading()"
+                          title="Delete role"
+                        >
+                          <hugeicons-icon
+                            class="access-huge-icon"
+                            [icon]="hugeIcons.delete"
+                            [size]="16"
+                            [strokeWidth]="1.9"
+                            aria-hidden="true"
+                          ></hugeicons-icon>
+                        </button>
+                      </div>
+                    }
+                  </div>
+                } @else {
+                  <div class="role-edit">
+                    <input type="text" [(ngModel)]="role.editName" [disabled]="rolesLoading()" />
+                    @if (canManageAccessControlRoles()) {
+                      <button
+                        type="button"
+                        class="btn-sm btn-primary"
+                        (click)="saveRoleName(role)"
+                        [disabled]="rolesLoading()"
+                      >
+                        Save
+                      </button>
+                    }
+                    <button
+                      type="button"
+                      class="btn-sm btn-ghost"
+                      (click)="cancelRoleEdit(role)"
+                      [disabled]="rolesLoading()"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        } @else if (!rolesLoading()) {
+          <div class="empty-state access-empty-state">
+            <div class="empty-title">No roles yet</div>
+            <p class="muted">Create the first role to start shaping access rules.</p>
+          </div>
+        }
+      }
+
+      @if (permissionScope() === 'user') {
+        <div class="role-form role-form--directory">
+          <div class="role-form__head">
+            <div class="role-form__copy">
+              <p class="access-section-kicker">Access target</p>
+              <h3>Users</h3>
+              <p class="muted">Direct overrides sit on top of the selected user roles.</p>
+            </div>
+            @if (permissionUsers().length) {
+              <span class="tool-chip role-form__count"> {{ permissionUsers().length }} users </span>
+            }
+          </div>
+          <div class="user-search">
+            <input type="text" placeholder="Search users" [(ngModel)]="permissionUserQuery" />
+          </div>
+        </div>
+
+        @if (permissionUsers().length) {
+          <div class="role-list">
+            @for (user of permissionUsers(); track trackByUser($index, user)) {
+              <div class="role-item" [class.active]="isSelectedUser(user)">
+                <div class="role-row">
+                  <button type="button" class="role-select user-select" (click)="selectUser(user)">
+                    <span class="user-name">{{ user.name || user.email }}</span>
+                    @if (user.email) {
+                      <span class="user-email">{{ user.email }}</span>
+                    }
+                  </button>
+                  <span class="user-role">{{ formatRoles(user) }}</span>
+                </div>
+              </div>
+            }
+          </div>
+        } @else if (!loading() && !error()) {
+          <div class="empty-state access-empty-state">
+            <div class="empty-title">
+              {{
+                hasPermissionUserSearchMiss() ? 'No users match the search' : 'No users loaded yet'
+              }}
+            </div>
+            <p class="muted">
+              {{
+                hasPermissionUserSearchMiss()
+                  ? 'Clear the search or try a different name or email.'
+                  : 'Refresh the roster to attach direct user overrides.'
+              }}
+            </p>
+            <div class="access-empty-state__actions">
+              @if (hasPermissionUserSearchMiss()) {
+                <button
+                  type="button"
+                  class="btn-sm btn-ghost"
+                  (click)="clearPermissionUserSearch()"
+                >
+                  Clear search
+                </button>
+              } @else {
+                <button type="button" class="btn-sm btn-ghost" (click)="loadRoster()">
+                  <hugeicons-icon
+                    class="access-huge-icon"
+                    [icon]="hugeIcons.refresh"
+                    [size]="16"
+                    [strokeWidth]="1.9"
+                    aria-hidden="true"
+                  ></hugeicons-icon>
+                  <span>Refresh users</span>
+                </button>
+              }
+            </div>
+          </div>
+        } @else if (error()) {
+          <div class="error-state access-error-state">
+            <div class="error-icon">
+              <hugeicons-icon
+                class="access-huge-icon"
+                [icon]="hugeIcons.alert"
+                [size]="20"
+                [strokeWidth]="1.9"
+                aria-hidden="true"
+              ></hugeicons-icon>
+            </div>
+            <p class="error-message">{{ error() }}</p>
+            <div class="error-actions">
+              @if (needsAuth()) {
+                <button type="button" class="btn-sm btn-primary" (click)="goToLogin()">
+                  <hugeicons-icon
+                    class="access-huge-icon"
+                    [icon]="hugeIcons.login"
+                    [size]="16"
+                    [strokeWidth]="1.9"
+                    aria-hidden="true"
+                  ></hugeicons-icon>
+                  <span>Sign In</span>
+                </button>
+              }
+              <button type="button" class="btn-sm btn-ghost" (click)="loadRoster()">
+                <hugeicons-icon
+                  class="access-huge-icon"
+                  [icon]="hugeIcons.refresh"
+                  [size]="16"
+                  [strokeWidth]="1.9"
+                  aria-hidden="true"
+                ></hugeicons-icon>
+                <span>Retry</span>
+              </button>
+            </div>
+          </div>
+        }
+      }
+    </aside>
+
+    <section class="permission-column access-panel">
+      <div class="perm-head">
+        <div class="perm-head__copy">
+          <p class="access-section-kicker">Permission list</p>
+          <h3>
+            {{
+              permissionScope() === 'role'
+                ? selectedRole()?.name || 'Choose a role'
+                : selectedUser()?.name || selectedUser()?.email || 'Choose a user'
+            }}
+          </h3>
+          <p class="muted">
+            {{
+              permissionScope() === 'role'
+                ? 'Browse the shared list, then open one page to edit its toggles in a focused drawer.'
+                : 'Open one page from the shared list to adjust user-specific overrides.'
+            }}
+          </p>
+          @if (permissionScope() === 'user' && selectedUser()) {
+            <p class="perm-head__hint">Roles: {{ formatRoles(selectedUser()) }}</p>
+          }
+        </div>
+
+        @if (
+          canManageAccessControlPermissions() && hasPermissionTarget() && permissionTree().length
+        ) {
+          <div class="perm-head__actions">
+            <label class="perm-item perm-select-all perm-select-all--soft">
+              <input
+                type="checkbox"
+                [checked]="areAllPermissionsSelected()"
+                [indeterminate]="areSomePermissionsSelected()"
+                (change)="toggleAllPermissions()"
+                [disabled]="permissionsLoading()"
+              />
+              <span>Select all</span>
+            </label>
+          </div>
+        }
+      </div>
+
+      @if (permissionsError()) {
+        <div class="error-inline">{{ permissionsError() }}</div>
+      }
+
+      @if (!canManageAccessControlPermissions()) {
+        <div class="empty-state access-empty-state">
+          <div class="empty-title">Permission editing is not available</div>
+          <p class="muted">
+            Your access can reach this workspace, but it cannot change permission toggles.
+          </p>
+        </div>
+      } @else {
+        @if (!hasPermissionTarget()) {
+          <div class="empty-state access-empty-state">
+            <div class="empty-title">Choose a target first</div>
+            <p class="muted">
+              {{
+                permissionScope() === 'role'
+                  ? 'Pick a role from the left to view and edit its permissions.'
+                  : 'Pick a user from the left to assign direct overrides.'
+              }}
+            </p>
+          </div>
+        }
+
+        @if (hasPermissionTarget()) {
+          <div class="perm-body">
+            @if (permissionsLoading()) {
+              <span class="pill inline ghost">
+                {{
+                  permissionScope() === 'role'
+                    ? 'Loading role access...'
+                    : 'Loading user overrides...'
+                }}
+              </span>
+            } @else if (permissionTreeLoading() && !permissionListGroups().length) {
+              <span class="pill inline ghost">Loading permission catalog...</span>
+            }
+            @if (permissionListGroups().length) {
+              <div class="permission-list-shell">
+                <section
+                  class="register-shell cu-list-shell permission-list-view"
+                  #permissionListShell
+                >
+                  <app-status-list
+                    [groups]="permissionListGroups()"
+                    [collapsedGroupIds]="collapsedPermissionListGroupIds()"
+                    [visibleColumns]="permissionListColumns()"
+                    [columnWidths]="permissionListColumnWidths()"
+                    [columnLabels]="permissionListColumnLabels"
+                    [stickyHorizontalRail]="true"
+                    [selectionEnabled]="false"
+                    [rowMenuEnabled]="false"
+                    [rowDragEnabled]="false"
+                    [groupActionsEnabled]="false"
+                    [addRowEnabled]="false"
+                    [columnManagementEnabled]="false"
+                    itemLabel="permission page"
+                    (columnWidthsChange)="onPermissionColumnWidthsChange($event)"
+                    (groupToggle)="onPermissionListGroupToggle($event)"
+                    (rowClick)="onPermissionListRowClick($event)"
+                  ></app-status-list>
+                </section>
+              </div>
+            } @else if (!permissionsLoading() && !permissionTreeLoading()) {
+              <div class="empty-state access-empty-state">
+                <div class="empty-title">
+                  {{
+                    permissionQuery
+                      ? 'No permission pages match the search'
+                      : 'No permission pages found'
+                  }}
+                </div>
+                <p class="muted">
+                  {{
+                    permissionQuery
+                      ? 'Try a broader query to bring modules and pages back into the shared list.'
+                      : 'The permission registry has not returned any grouped pages yet.'
+                  }}
+                </p>
+                @if (hasPermissionSearchQuery()) {
+                  <div class="access-empty-state__actions">
+                    <button
+                      type="button"
+                      class="btn-sm btn-ghost"
+                      (click)="clearPermissionSearch()"
+                    >
+                      Clear search
+                    </button>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        }
+      }
+    </section>
+  </div>
+
+  <user-access-control-permission-drawer [host]="host"></user-access-control-permission-drawer>
+  <user-access-control-role-members-drawer [host]="host"></user-access-control-role-members-drawer>
+</div>

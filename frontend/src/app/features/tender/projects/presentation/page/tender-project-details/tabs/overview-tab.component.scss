@@ -1,0 +1,1680 @@
+:host {
+  display: block;
+  min-height: 100%;
+  height: auto;
+  --ov-text: var(--pd-text, rgb(var(--fg)));
+  --ov-text-strong: var(--pd-text-strong, color-mix(in oklab, rgb(var(--fg)) 95%, white 5%));
+  --ov-muted: var(--pd-muted, rgb(var(--muted)));
+  --ov-border-soft: color-mix(in oklab, rgb(var(--border)) 44%, transparent);
+  --ov-border-strong: color-mix(in oklab, rgb(var(--border-strong)) 58%, transparent);
+  --ov-control-bg: color-mix(in oklab, rgb(var(--surface)) 84%, rgb(var(--bg0)) 16%);
+  --ov-control-border: color-mix(in oklab, rgb(var(--border-strong)) 56%, transparent);
+  --ov-note-bg: color-mix(in oklab, var(--ov-control-bg) 76%, transparent);
+  --ov-label-icon-bg: color-mix(in oklab, rgb(var(--primary)) 14%, transparent);
+  --ov-label-icon-border: color-mix(in oklab, rgb(var(--primary)) 34%, transparent);
+}
+
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: translateY(4px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.overview {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  flex: 0 0 auto;
+  height: auto;
+  width: 100%;
+  max-width: 100%;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  overflow: visible;
+}
+
+.ov-scroll {
+  flex: 0 0 auto;
+  min-height: 100%;
+  overflow: visible;
+  padding: 0 0 16px;
+  background: transparent;
+}
+
+.form {
+  border: none;
+  border-radius: 0;
+  padding: 2px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background: transparent;
+  width: 100%;
+}
+
+.grid {
+  display: grid;
+  gap: 12px 28px;
+  width: 100%;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.section-heading {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 4px 0 2px;
+  padding: 14px 0 0;
+  border: 0;
+  border-top: 1px solid color-mix(in oklab, var(--ov-border-soft) 88%, transparent);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.section-heading.full {
+  grid-column: 1 / -1;
+}
+
+.section-kicker {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 22px;
+  padding: 0 10px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in oklab, rgb(var(--primary)) 34%, transparent);
+  background: color-mix(in oklab, rgb(var(--primary)) 9%, transparent);
+  color: color-mix(in oklab, rgb(var(--primary)) 82%, rgb(var(--fg)));
+  font-size: 0.67rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.section-title {
+  font-size: 0.83rem;
+  font-weight: 700;
+  color: color-mix(in oklab, var(--ov-text) 86%, var(--ov-muted) 14%);
+  line-height: 1.2;
+}
+
+.section-copy {
+  display: none;
+}
+
+.field {
+  display: grid;
+  grid-template-columns: 148px minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  animation: pop 0.18s ease-out;
+}
+
+.field.full {
+  grid-column: 1 / -1;
+  align-items: flex-start;
+}
+
+.field.full .field-label {
+  padding-top: 10px;
+}
+
+.field-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  color: color-mix(in oklab, var(--ov-text) 88%, var(--ov-muted) 12%);
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+}
+
+.field-label::before {
+  content: '';
+  width: 14px;
+  height: 14px;
+  flex: 0 0 14px;
+  border-radius: 50%;
+  border: 1px solid var(--ov-label-icon-border);
+  background: radial-gradient(circle at center, var(--ov-label-icon-bg) 0 42%, transparent 44%);
+}
+
+.field input,
+.field select,
+.field textarea {
+  appearance: none;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--ov-text);
+  font-size: 0.82rem;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+  box-shadow: none;
+}
+
+.field input,
+.field select {
+  min-height: 28px;
+  padding: 0 0 8px;
+  border: 0;
+  border-radius: 0;
+  border-bottom: 1px solid color-mix(in oklab, var(--ov-border-soft) 92%, transparent);
+}
+
+.field textarea {
+  min-height: 84px;
+  padding: 10px 12px;
+  border: 1px solid color-mix(in oklab, var(--ov-border-soft) 92%, transparent);
+  border-radius: 10px;
+  background: var(--ov-note-bg);
+  resize: vertical;
+  line-height: 1.45;
+}
+
+.field input[readonly],
+.field textarea[readonly] {
+  cursor: default;
+}
+
+.field input.is-placeholder,
+.field textarea.is-placeholder {
+  color: color-mix(in oklab, var(--ov-muted) 90%, var(--ov-text) 10%);
+}
+
+.field.field-error .field-label {
+  color: color-mix(in oklab, rgb(var(--danger)) 82%, var(--ov-text));
+}
+
+.field.field-warning .field-label {
+  color: color-mix(in oklab, rgb(var(--warning)) 78%, var(--ov-text));
+}
+
+.field.field-error input,
+.field.field-error textarea {
+  border-color: color-mix(in oklab, rgb(var(--danger)) 48%, transparent);
+}
+
+.field.field-warning input,
+.field.field-warning textarea {
+  border-color: color-mix(in oklab, rgb(var(--warning)) 42%, transparent);
+}
+
+:host ::ng-deep .field.field-error search-select .ss-inline-trigger,
+:host ::ng-deep .field.field-error search-select .ss-trigger,
+:host ::ng-deep .field.field-error date-input .date-trigger {
+  border-bottom-color: color-mix(in oklab, rgb(var(--danger)) 48%, transparent) !important;
+}
+
+:host ::ng-deep .field.field-warning search-select .ss-inline-trigger,
+:host ::ng-deep .field.field-warning search-select .ss-trigger,
+:host ::ng-deep .field.field-warning date-input .date-trigger {
+  border-bottom-color: color-mix(in oklab, rgb(var(--warning)) 42%, transparent) !important;
+}
+
+.field-help {
+  grid-column: 2;
+  min-height: 1rem;
+  margin-top: -4px;
+  font-size: 0.68rem;
+  line-height: 1.35;
+  color: color-mix(in oklab, rgb(var(--danger)) 82%, var(--ov-text));
+}
+
+.field-help.warning {
+  color: color-mix(in oklab, rgb(var(--warning)) 80%, var(--ov-text));
+}
+
+:host ::ng-deep search-select,
+:host ::ng-deep date-input {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+:host ::ng-deep .field search-select .ss-inline-trigger,
+:host ::ng-deep .field search-select .ss-trigger,
+:host ::ng-deep .field date-input .date-trigger {
+  width: 100%;
+  min-height: 28px !important;
+  height: auto !important;
+  padding: 0 0 8px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  border-bottom: 1px solid color-mix(in oklab, var(--ov-border-soft) 92%, transparent) !important;
+}
+
+:host ::ng-deep .field search-select .ss-inline-input,
+:host ::ng-deep .field search-select .ss-label,
+:host ::ng-deep .field date-input .date-text {
+  min-height: 28px !important;
+  padding: 0 !important;
+  color: var(--ov-text) !important;
+  font-size: 0.82rem !important;
+  font-weight: 600 !important;
+  line-height: 1.4 !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+}
+
+:host ::ng-deep .field search-select .ss-label.placeholder,
+:host ::ng-deep .field date-input .date-text.placeholder {
+  color: color-mix(in oklab, var(--ov-muted) 90%, var(--ov-text) 10%) !important;
+}
+
+:host ::ng-deep .field search-select .ss-inline-input::placeholder {
+  color: color-mix(in oklab, var(--ov-muted) 90%, var(--ov-text) 10%) !important;
+}
+
+:host ::ng-deep .field search-select .ss-caret-trigger,
+:host ::ng-deep .field search-select .ss-caret-box,
+:host ::ng-deep .field date-input .date-icon {
+  color: var(--ov-muted) !important;
+  background: transparent !important;
+  border: 0 !important;
+}
+
+@media (max-width: 1120px) {
+  .grid {
+    gap: 10px 18px;
+  }
+
+  .field {
+    grid-template-columns: 132px minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 880px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .field {
+    grid-template-columns: 118px minmax(0, 1fr);
+    gap: 8px;
+  }
+}
+
+@media (max-width: 640px) {
+  .field,
+  .field.full {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .field.full .field-label,
+  .field-label {
+    padding-top: 0;
+  }
+
+  .field-help {
+    grid-column: 1;
+    margin-top: -2px;
+  }
+}
+
+.checklists {
+  --chk-accent: rgb(var(--primary, 0 145 234));
+  --chk-success: rgb(var(--success, var(--primary, 0 145 234)));
+  --line-soft: color-mix(in oklab, rgb(var(--border-strong)) 45%, transparent);
+  --line-strong: color-mix(in oklab, rgb(var(--border-strong)) 75%, transparent);
+  --accent-soft: color-mix(in oklab, rgb(var(--primary, 0 145 234)) 10%, transparent);
+  --accent-line: color-mix(in oklab, rgb(var(--primary, 0 145 234)) 65%, transparent);
+  --checklists-pad-y: 5px;
+  --checklists-pad-left: var(--details-main-pad-inline, 12px);
+  --checklists-pad-right: var(--details-main-scroll-inline-end, 18px);
+  --space-1: 4px;
+  --space-2: 6px;
+  --space-3: 8px;
+  --ease-soft: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --ease-pop: cubic-bezier(0.2, 0.9, 0.2, 1);
+  --motion-fast: 0.16s;
+  --motion-mid: 0.22s;
+  width: 100%;
+  max-width: 100%;
+  margin: 10px 0 0;
+  border-top: 1px solid var(--line-soft);
+  border-bottom: 0;
+  border-left: 0;
+  border-right: 0;
+  border-radius: 0;
+  background: transparent;
+  padding: var(--checklists-pad-y) 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  animation: pop var(--motion-mid) var(--ease-pop);
+  box-shadow: none;
+  isolation: isolate;
+}
+.checklists::before {
+  content: none;
+}
+.checklists .btn {
+  height: 20px;
+  padding: 0 8px;
+  font-size: 0.7rem;
+}
+.checklists .btn.sm {
+  height: 18px;
+  padding: 0 6px;
+  font-size: 0.66rem;
+}
+.checklists .btn i {
+  font-size: 0.78rem;
+  line-height: 1;
+}
+.checklists .icon-btn i {
+  font-size: 0.78rem;
+  line-height: 1;
+}
+.checklists .head-icon i {
+  font-size: 0.9rem;
+}
+.checklists > * {
+  position: relative;
+  z-index: 1;
+}
+.checklists > :not(.row-head) {
+  padding-left: var(--checklists-pad-left);
+  padding-right: var(--checklists-pad-right);
+}
+.checklists.is-busy::after {
+  content: none;
+}
+.checklists.is-busy > * {
+  pointer-events: auto;
+}
+.checklists.is-busy .row-head,
+.checklists.is-busy .sync-pill {
+  pointer-events: auto;
+  position: relative;
+  z-index: 1;
+}
+.row-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: auto auto;
+  column-gap: 10px;
+  row-gap: 3px;
+  align-items: center;
+  min-height: 28px;
+  margin: 0;
+  padding: 8px var(--checklists-pad-right) 9px var(--checklists-pad-left);
+  border-bottom: 1px solid var(--line-soft);
+  background: color-mix(in oklab, rgb(var(--bg1)) 92%, transparent);
+  border-radius: 0;
+}
+.head-left {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  min-width: 0;
+}
+.head-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  border: 0;
+  color: rgb(var(--primary));
+}
+.head-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+.head-right {
+  display: flex;
+  align-items: stretch;
+  gap: 6px;
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: stretch;
+}
+.undo-toast {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  border-radius: 8px;
+  border: 1px solid var(--line-soft);
+  background: color-mix(in oklab, rgb(var(--bg1)) 86%, transparent);
+  font-size: 0.7rem;
+  color: color-mix(in oklab, rgb(var(--fg)) 75%, transparent);
+  align-self: flex-start;
+  animation: fade-in-up var(--motion-fast) var(--ease-pop);
+}
+.h {
+  font-weight: 700;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: color-mix(in oklab, rgb(var(--fg)) 88%, transparent);
+  line-height: 1.1;
+}
+.meta {
+  font-size: 0.64rem;
+  color: color-mix(in oklab, rgb(var(--fg)) 65%, transparent);
+  border: 1px solid var(--line-soft);
+  border-radius: 999px;
+  padding: 2px 7px;
+  background: color-mix(in oklab, rgb(var(--bg1)) 70%, transparent);
+  line-height: 1;
+  min-height: 18px;
+  display: inline-flex;
+  align-items: center;
+}
+.summary {
+  display: grid;
+  grid-template-columns: auto minmax(120px, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  padding: 0;
+  border-radius: 0;
+  border: 0;
+  background: transparent;
+  min-height: 0;
+  width: min(360px, 100%);
+}
+.summary-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  line-height: 1;
+  white-space: nowrap;
+  min-width: 0;
+}
+.summary-nums {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+.summary-items {
+  font-size: 0.62rem;
+  font-weight: 600;
+  color: color-mix(in oklab, rgb(var(--fg)) 70%, transparent);
+}
+.summary-divider {
+  width: 1px;
+  height: 12px;
+  background: var(--line-soft);
+}
+.summary.done {
+  color: color-mix(in oklab, var(--chk-success) 75%, rgb(var(--fg)));
+}
+.summary.compact .summary-count,
+.summary.compact .summary-pct {
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: color-mix(in oklab, rgb(var(--fg)) 75%, transparent);
+  line-height: 1;
+}
+.summary.compact .summary-pct {
+  color: color-mix(in oklab, rgb(var(--fg)) 60%, transparent);
+}
+.ring {
+  --p: 0;
+  position: relative;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: conic-gradient(
+    var(--chk-accent) calc(var(--p) * 1%),
+    color-mix(in oklab, rgb(var(--bg1)) 82%, transparent) 0
+  );
+  display: grid;
+  place-items: center;
+  border: 1px solid color-mix(in oklab, rgb(var(--border-strong)) 40%, transparent);
+}
+.ring.done {
+  background: conic-gradient(
+    var(--chk-success) calc(var(--p) * 1%),
+    color-mix(in oklab, rgb(var(--bg1)) 82%, transparent) 0
+  );
+  border-color: color-mix(in oklab, var(--chk-success) 45%, transparent);
+}
+.ring::after {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  border-radius: 50%;
+  background: rgb(var(--surface));
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, rgb(var(--border-strong)) 40%, transparent);
+}
+.ring-label {
+  position: relative;
+  z-index: 1;
+  font-size: 0.46rem;
+  font-weight: 700;
+  color: color-mix(in oklab, rgb(var(--fg)) 75%, transparent);
+}
+.summary-stats {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  min-width: 0;
+}
+.stat {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 2px;
+  line-height: 1;
+}
+.stat-label {
+  font-size: 0.42rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, rgb(var(--fg)) 55%, transparent);
+  font-weight: 600;
+}
+.stat-val {
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: color-mix(in oklab, rgb(var(--fg)) 85%, transparent);
+}
+.summary-bar {
+  width: 100%;
+  height: 4px;
+  border-radius: 999px;
+  background: color-mix(in oklab, rgb(var(--bg1)) 65%, rgb(var(--fg)) 8%);
+  border: 0;
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, rgb(var(--border-strong)) 55%, transparent);
+  overflow: hidden;
+}
+.summary-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(
+    90deg,
+    color-mix(in oklab, var(--chk-accent) 75%, rgb(var(--surface)) 25%),
+    var(--chk-accent)
+  );
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--chk-accent) 70%, transparent);
+  transition: width var(--motion-mid) var(--ease-soft);
+}
+.summary.done .summary-fill {
+  background: linear-gradient(
+    90deg,
+    color-mix(in oklab, var(--chk-success) 75%, rgb(var(--surface)) 25%),
+    var(--chk-success)
+  );
+}
+.sync-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 6px;
+  height: 18px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in oklab, var(--chk-accent) 45%, transparent);
+  background: color-mix(in oklab, var(--chk-accent) 10%, transparent);
+  color: color-mix(in oklab, var(--chk-accent) 70%, rgb(var(--fg)));
+  font-size: 0.68rem;
+  font-weight: 600;
+}
+.sync-pill i {
+  animation: spin 0.9s linear infinite;
+}
+.sync-pill span {
+  display: inline;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (max-width: 620px) {
+  .summary {
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  .summary .summary-bar {
+    flex: 1 1 100%;
+    width: 100%;
+  }
+}
+@media (max-width: 900px) {
+  .row-head {
+    flex-wrap: wrap;
+  }
+  .head-right {
+    flex-wrap: wrap;
+  }
+  .head-block {
+    flex-wrap: wrap;
+  }
+  .sub-head {
+    flex-wrap: nowrap;
+  }
+}
+.btn {
+  border-radius: 6px;
+  border: 1px solid color-mix(in oklab, rgb(var(--fg)) 14%, transparent);
+  background: rgb(var(--surface));
+  color: rgb(var(--fg));
+  padding: 0 10px;
+  height: 24px;
+  font-weight: 600;
+  font-size: 0.74rem;
+  cursor: pointer;
+  transition: all var(--motion-fast, 0.2s) var(--ease-soft, ease);
+  white-space: nowrap;
+}
+.btn:focus-visible {
+  outline: 2px solid color-mix(in oklab, var(--chk-accent) 45%, transparent);
+  outline-offset: 2px;
+}
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.btn.sm {
+  height: 22px;
+  padding: 0 8px;
+  font-size: 0.7rem;
+}
+.btn.primary {
+  background: linear-gradient(
+    135deg,
+    color-mix(in oklab, var(--chk-accent) 22%, rgb(var(--surface)) 78%),
+    color-mix(in oklab, var(--chk-accent) 12%, rgb(var(--surface)) 88%)
+  );
+  border-color: color-mix(in oklab, var(--chk-accent) 50%, transparent);
+  color: color-mix(in oklab, var(--chk-accent) 80%, rgb(var(--fg)));
+}
+.btn.primary:hover {
+  background: linear-gradient(
+    135deg,
+    color-mix(in oklab, var(--chk-accent) 28%, rgb(var(--surface)) 72%),
+    color-mix(in oklab, var(--chk-accent) 16%, rgb(var(--surface)) 84%)
+  );
+}
+.btn.ghost {
+  background: transparent;
+  border-color: transparent;
+}
+.btn.link {
+  color: color-mix(in oklab, rgb(var(--fg)) 75%, transparent);
+}
+.btn.link:hover {
+  color: rgb(var(--fg));
+}
+.add-chk {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 12px;
+  height: 100%;
+  min-height: 28px;
+  min-width: 0;
+  justify-content: center;
+  border-radius: 7px;
+  background: rgb(var(--surface));
+  border-color: color-mix(in oklab, rgb(var(--border-strong)) 65%, transparent);
+  color: color-mix(in oklab, var(--chk-accent) 75%, rgb(var(--fg)));
+  font-size: 0.72rem;
+  font-weight: 600;
+  box-shadow: none;
+  line-height: 1;
+  transition:
+    background-color 0.2s var(--ease-soft),
+    border-color 0.2s var(--ease-soft),
+    color 0.2s var(--ease-soft);
+}
+.add-chk:hover {
+  background: color-mix(in oklab, var(--chk-accent) 10%, rgb(var(--surface)) 90%);
+  border-color: color-mix(in oklab, var(--chk-accent) 55%, rgb(var(--border-strong)));
+  color: color-mix(in oklab, var(--chk-accent) 88%, rgb(var(--fg)));
+  box-shadow: none;
+}
+.add-chk:active {
+  transform: none;
+  background: color-mix(in oklab, var(--chk-accent) 16%, rgb(var(--surface)) 84%);
+}
+.add-chk:focus-visible {
+  outline: 1px solid color-mix(in oklab, var(--chk-accent) 50%, transparent);
+  outline-offset: 2px;
+}
+.add-chk i {
+  font-size: 0.74rem;
+}
+@media (max-width: 620px) {
+  .row-head {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+  }
+  .head-right {
+    grid-column: 1;
+    grid-row: 3;
+    justify-self: start;
+  }
+  .add-chk {
+    height: auto;
+  }
+}
+.checklist-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px var(--checklists-pad-right) 12px var(--checklists-pad-left);
+}
+
+.checklist-skeleton__row {
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+  min-height: 54px;
+  padding: 0 12px;
+  border-radius: 12px;
+  border: 1px solid color-mix(in oklab, rgb(var(--border-strong)) 42%, transparent);
+  background: color-mix(in oklab, rgb(var(--bg1)) 88%, transparent);
+}
+
+.checklist-skeleton__toggle,
+.checklist-skeleton__line {
+  position: relative;
+  overflow: hidden;
+  background: color-mix(in oklab, rgb(var(--fg)) 10%, transparent);
+}
+
+.checklist-skeleton__toggle::after,
+.checklist-skeleton__line::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in oklab, rgb(var(--fg)) 14%, transparent),
+    transparent
+  );
+  animation: checklist-skeleton-shimmer 1.1s linear infinite;
+}
+
+.checklist-skeleton__toggle {
+  width: 14px;
+  height: 14px;
+  border-radius: 5px;
+}
+
+.checklist-skeleton__body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.checklist-skeleton__line {
+  height: 10px;
+  border-radius: 999px;
+}
+
+.checklist-skeleton__line.short {
+  width: 42%;
+}
+
+@keyframes checklist-skeleton-shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .field,
+  .checklists,
+  .checklist-skeleton__toggle::after,
+  .checklist-skeleton__line::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+.add-chk span {
+  display: inline;
+}
+.sub-add {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 7px;
+  height: 18px;
+  border-radius: 999px;
+  border: 1px solid var(--line-soft);
+  background: color-mix(in oklab, rgb(var(--bg1)) 82%, transparent);
+  font-size: 0.66rem;
+}
+.sub-add i {
+  font-size: 0.64rem;
+}
+.sub-add:hover {
+  border-color: color-mix(in oklab, var(--chk-accent) 45%, transparent);
+  background: color-mix(in oklab, var(--chk-accent) 14%, transparent);
+}
+.sub-add span {
+  display: inline;
+}
+.quick-add {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 6px;
+  border-radius: 8px;
+  border: 1px solid var(--line-soft);
+  background: color-mix(in oklab, rgb(var(--bg1)) 84%, transparent);
+  transition:
+    border-color var(--motion-fast) var(--ease-soft),
+    box-shadow var(--motion-fast) var(--ease-soft),
+    background var(--motion-fast) var(--ease-soft);
+  animation: fade-in-up var(--motion-fast) var(--ease-pop);
+}
+.quick-add:focus-within {
+  border-color: color-mix(in oklab, var(--chk-accent) 55%, transparent);
+  box-shadow: 0 0 0 2px color-mix(in oklab, var(--chk-accent) 16%, transparent);
+  background: color-mix(in oklab, rgb(var(--bg1)) 68%, transparent);
+}
+.quick-add i {
+  color: var(--accent-line);
+}
+.quick-input {
+  flex: 1;
+  min-width: 0;
+  height: 20px;
+  border-radius: 6px;
+  border: 1px solid color-mix(in oklab, rgb(var(--border-strong)) 55%, transparent);
+  background: rgb(var(--surface));
+  color: rgb(var(--fg));
+  padding: 0 6px;
+  font-size: 0.74rem;
+}
+.quick-input:focus {
+  outline: none;
+  border-color: color-mix(in oklab, var(--chk-accent) 55%, transparent);
+  box-shadow: 0 0 0 2px color-mix(in oklab, var(--chk-accent) 18%, transparent);
+}
+.quick-input::placeholder {
+  color: color-mix(in oklab, rgb(var(--fg)) 45%, transparent);
+}
+.quick-input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: color-mix(in oklab, rgb(var(--bg1)) 80%, transparent);
+}
+.sub-actions {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: nowrap;
+  margin-left: auto;
+  min-width: 0;
+}
+.sub-add-inline {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  border: 1px solid var(--line-soft);
+  background: color-mix(in oklab, rgb(var(--bg1)) 82%, transparent);
+  transition:
+    border-color var(--motion-fast) var(--ease-soft),
+    box-shadow var(--motion-fast) var(--ease-soft),
+    background var(--motion-fast) var(--ease-soft);
+  animation: fade-in-up var(--motion-fast) var(--ease-pop);
+}
+.sub-add-inline:focus-within {
+  border-color: color-mix(in oklab, var(--chk-accent) 55%, transparent);
+  box-shadow: 0 0 0 2px color-mix(in oklab, var(--chk-accent) 16%, transparent);
+  background: color-mix(in oklab, rgb(var(--bg1)) 70%, transparent);
+}
+.sub-add-inline i {
+  color: var(--accent-line);
+}
+.sub-add-inline .sub-input {
+  flex: 1;
+  min-width: 110px;
+  height: 18px;
+  border-radius: 999px;
+  border: 0;
+  background: transparent;
+  color: rgb(var(--fg));
+  padding: 0 4px;
+  font-size: 0.72rem;
+}
+.sub-add-inline .sub-input:focus {
+  outline: none;
+}
+.sub-add-inline .sub-input::placeholder {
+  color: color-mix(in oklab, rgb(var(--fg)) 45%, transparent);
+}
+.sub-add-inline .btn {
+  height: 18px;
+  padding: 0 7px;
+  border-radius: 999px;
+  font-size: 0.66rem;
+}
+.sub-add-inline .icon-btn {
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+}
+
+.items {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.chk-group {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 3px;
+  border-radius: 7px;
+  border: 1px solid var(--line-soft);
+  background: color-mix(in oklab, rgb(var(--bg1)) 95%, transparent);
+  box-shadow: none;
+  transition:
+    border-color var(--motion-fast) var(--ease-soft),
+    background var(--motion-fast) var(--ease-soft),
+    box-shadow var(--motion-fast) var(--ease-soft);
+  --sub-tree-x: 0px;
+  --state-line: var(--accent-line);
+}
+.chk-group:focus-within {
+  border-color: color-mix(in oklab, var(--chk-accent) 25%, var(--line-strong));
+  box-shadow: none;
+}
+.chk-group.notification-focus-target,
+.chk-group.notification-focus-pulse {
+  border-color: color-mix(in oklab, var(--chk-accent) 52%, var(--line-strong));
+  background: color-mix(in oklab, var(--chk-accent) 10%, rgb(var(--bg1)));
+  box-shadow:
+    inset 0 0 0 1px color-mix(in oklab, var(--chk-accent) 26%, transparent),
+    0 8px 22px color-mix(in oklab, var(--chk-accent) 12%, transparent);
+}
+.chk-group.notification-focus-pulse {
+  animation: checklistNotificationFocusPulse 1.2s ease-out 1;
+}
+@keyframes checklistNotificationFocusPulse {
+  0% {
+    box-shadow:
+      inset 0 0 0 1px color-mix(in oklab, var(--chk-accent) 44%, transparent),
+      0 0 0 0 color-mix(in oklab, var(--chk-accent) 24%, transparent);
+  }
+  100% {
+    box-shadow:
+      inset 0 0 0 1px color-mix(in oklab, var(--chk-accent) 16%, transparent),
+      0 0 0 12px transparent;
+  }
+}
+.chk-group:hover {
+  border-color: var(--line-strong);
+  background: color-mix(in oklab, rgb(var(--bg1)) 93%, transparent);
+}
+.chk-group.done {
+  border-color: var(--line-soft);
+  background: color-mix(in oklab, rgb(var(--bg1)) 95%, transparent);
+  --state-line: color-mix(in oklab, var(--chk-success) 55%, transparent);
+}
+.chk-group.collapsed {
+  background: color-mix(in oklab, rgb(var(--bg1)) 90%, transparent);
+}
+.chk {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr) auto;
+  grid-template-rows: auto;
+  column-gap: 6px;
+  row-gap: 0;
+  align-items: center;
+  padding: 3px 6px;
+  min-height: 28px;
+  box-sizing: border-box;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  background: transparent;
+  animation: nav-enter var(--motion-mid) var(--ease-pop);
+  transition:
+    border-color var(--motion-fast) var(--ease-soft),
+    box-shadow var(--motion-fast) var(--ease-soft),
+    background var(--motion-fast) var(--ease-soft);
+}
+.chk:hover {
+  border-color: color-mix(in oklab, rgb(var(--border-strong)) 16%, transparent);
+  background: color-mix(in oklab, rgb(var(--bg1)) 94%, transparent);
+}
+.chk:focus-within {
+  border-color: transparent;
+  background: color-mix(in oklab, rgb(var(--bg1)) 94%, transparent);
+  box-shadow: none;
+}
+.chk > .drag-handle {
+  grid-column: 1;
+  grid-row: 1;
+  align-self: center;
+}
+.chk > .chk-toggle {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: center;
+}
+.chk-body {
+  grid-column: 3;
+  grid-row: 1;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+.chk .txt {
+  width: 100%;
+  min-width: 0;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  padding: 2px 6px;
+  min-height: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: rgb(var(--fg));
+}
+.chk .txt:focus {
+  outline: none;
+  background: rgb(var(--surface));
+  border-color: color-mix(in oklab, var(--chk-accent) 25%, transparent);
+  box-shadow: none;
+}
+.chk .txt[readonly] {
+  background: transparent;
+  border-color: transparent;
+}
+.chk.done .txt {
+  color: color-mix(in oklab, rgb(var(--fg)) 55%, transparent);
+  text-decoration: line-through;
+  font-weight: 500;
+}
+.chk.done {
+  background: transparent;
+  border-color: transparent;
+}
+.sub-progress {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.sub-progress-bar {
+  width: clamp(44px, 7vw, 72px);
+  height: 4px;
+  border-radius: 999px;
+  background: color-mix(in oklab, rgb(var(--bg1)) 78%, transparent);
+  border: 0;
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, rgb(var(--border-strong)) 40%, transparent);
+  overflow: hidden;
+}
+.sub-progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(
+    90deg,
+    color-mix(in oklab, var(--chk-success) 75%, rgb(var(--surface)) 25%),
+    var(--chk-success)
+  );
+  transition: width var(--motion-mid) var(--ease-soft);
+}
+.sub-progress.done .sub-progress-fill {
+  background: linear-gradient(
+    90deg,
+    color-mix(in oklab, var(--chk-success) 85%, rgb(var(--surface)) 15%),
+    var(--chk-success)
+  );
+}
+.sub-progress-pct {
+  font-size: 0.6rem;
+  color: color-mix(in oklab, rgb(var(--fg)) 60%, transparent);
+  font-weight: 600;
+}
+.sub-progress.done .sub-progress-pct {
+  color: color-mix(in oklab, var(--chk-success) 70%, rgb(var(--fg)));
+}
+.chk-actions {
+  grid-column: 4;
+  grid-row: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  justify-content: flex-end;
+  margin-top: 0;
+  opacity: 1;
+  transition: opacity var(--motion-fast) var(--ease-soft);
+  white-space: nowrap;
+}
+.chk-actions .icon-btn {
+  opacity: 0;
+  pointer-events: none;
+}
+.chk:hover .chk-actions .icon-btn,
+.chk:focus-within .chk-actions .icon-btn {
+  opacity: 1;
+  pointer-events: auto;
+}
+.chk:hover .chk-actions {
+  opacity: 1;
+}
+.icon-btn {
+  width: 18px;
+  height: 18px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: color-mix(in oklab, rgb(var(--fg)) 70%, transparent);
+  display: grid;
+  place-items: center;
+  padding: 0;
+  cursor: pointer;
+  transition:
+    border-color var(--motion-fast) var(--ease-soft),
+    background var(--motion-fast) var(--ease-soft),
+    color var(--motion-fast) var(--ease-soft);
+}
+.icon-btn:focus-visible {
+  outline: 2px solid color-mix(in oklab, var(--chk-accent) 40%, transparent);
+  outline-offset: 2px;
+}
+.icon-btn.ghost {
+  border-color: transparent;
+  background: transparent;
+}
+.icon-btn:hover {
+  border-color: color-mix(in oklab, rgb(var(--border-strong)) 65%, transparent);
+  background: color-mix(in oklab, rgb(var(--bg1)) 75%, transparent);
+  color: rgb(var(--fg));
+}
+.icon-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.chk-collapse {
+  width: 16px;
+  height: 16px;
+  border-radius: 6px;
+  opacity: 0.85;
+  pointer-events: auto;
+  margin-left: 4px;
+}
+.del {
+  color: color-mix(in oklab, rgb(var(--danger, 231 76 60)) 80%, rgb(var(--fg)));
+}
+.del:hover {
+  border-color: color-mix(in oklab, rgb(var(--danger, 231 76 60)) 65%, transparent);
+  background: color-mix(in oklab, rgb(var(--danger, 231 76 60)) 12%, transparent);
+  color: rgb(var(--danger, 231 76 60));
+}
+.state-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 7px;
+  border-radius: 999px;
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border: 1px solid color-mix(in oklab, var(--chk-accent) 35%, transparent);
+  color: color-mix(in oklab, var(--chk-accent) 65%, rgb(var(--fg)));
+  background: color-mix(in oklab, var(--chk-accent) 10%, transparent);
+  white-space: nowrap;
+  line-height: 1;
+}
+.state-pill::before {
+  content: '';
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: color-mix(in oklab, var(--chk-accent) 65%, rgb(var(--fg)));
+  box-shadow: 0 0 0 2px color-mix(in oklab, var(--chk-accent) 18%, transparent);
+  margin-right: 4px;
+}
+.state-pill.done {
+  border-color: color-mix(in oklab, var(--chk-success) 45%, transparent);
+  color: color-mix(in oklab, var(--chk-success) 75%, rgb(var(--fg)));
+  background: color-mix(in oklab, var(--chk-success) 12%, transparent);
+}
+.state-pill.done::before {
+  background: var(--chk-success);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--chk-success) 18%, transparent);
+}
+
+.chk-toggle {
+  position: relative;
+  inline-size: 12px;
+  block-size: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0;
+  cursor: pointer;
+}
+.chk-toggle.small {
+  inline-size: 10px;
+  block-size: 10px;
+  margin-top: 0;
+}
+.chk-toggle.disabled {
+  cursor: default;
+}
+.chk-toggle .chkbox {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.chk-toggle.disabled .chkbox {
+  cursor: default;
+}
+.chkbox-ui {
+  width: 100%;
+  height: 100%;
+  border-radius: 4px;
+  border: 1px solid color-mix(in oklab, rgb(var(--border-strong)) 70%, transparent);
+  background: transparent;
+  display: grid;
+  place-items: center;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+  box-shadow: none;
+}
+.chk-toggle.small .chkbox-ui {
+  border-radius: 3px;
+}
+.chkbox:checked + .chkbox-ui {
+  background: transparent;
+  border-color: var(--chk-success);
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--chk-success) 45%, transparent);
+}
+.chkbox:checked + .chkbox-ui::after {
+  content: '';
+  width: 3px;
+  height: 6px;
+  border-right: 2px solid var(--chk-success);
+  border-bottom: 2px solid var(--chk-success);
+  transform: rotate(45deg);
+  margin-top: -1px;
+}
+.chkbox:focus-visible + .chkbox-ui {
+  outline: 2px solid color-mix(in oklab, var(--chk-accent) 40%, transparent);
+  outline-offset: 2px;
+}
+.chkbox:disabled + .chkbox-ui {
+  opacity: 0.55;
+}
+.drag-handle {
+  width: 12px;
+  height: 12px;
+  display: grid;
+  place-items: center;
+  color: color-mix(in oklab, rgb(var(--fg)) 55%, transparent);
+  opacity: 0;
+  cursor: grab;
+  transition:
+    opacity var(--motion-fast) var(--ease-soft),
+    color var(--motion-fast) var(--ease-soft);
+  margin-top: 0;
+}
+.drag-handle.small {
+  width: 10px;
+  height: 10px;
+  margin-top: 0;
+}
+.drag-handle i {
+  font-size: 0.66rem;
+}
+.drag-handle.small i {
+  font-size: 0.58rem;
+}
+.drag-handle.disabled {
+  opacity: 0;
+  cursor: default;
+  pointer-events: none;
+}
+.checklists .cdk-drag-preview {
+  border-radius: 8px;
+  background: rgb(var(--surface));
+  border: 1px solid color-mix(in oklab, rgb(var(--border-strong)) 55%, transparent);
+  box-shadow: 0 10px 24px color-mix(in oklab, rgb(var(--fg)) 16%, transparent);
+}
+.checklists .cdk-drag-placeholder {
+  opacity: 0;
+}
+.checklists .cdk-drag-animating {
+  transition: transform 0.12s ease;
+}
+.checklists .cdk-drop-list-dragging .chk-group,
+.checklists .cdk-drop-list-dragging .sub-row {
+  transition: transform 0.12s ease;
+}
+.items.cdk-drop-list-dragging .chk-group {
+  border-color: color-mix(in oklab, var(--chk-accent) 35%, transparent);
+}
+.sub-items.cdk-drop-list-receiving {
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--chk-accent) 45%, transparent);
+  border-radius: 6px;
+}
+.checklists .cdk-drag-dragging .drag-handle {
+  opacity: 1;
+  cursor: grabbing;
+}
+.chk:hover .drag-handle:not(.disabled) {
+  opacity: 0.7;
+  color: color-mix(in oklab, rgb(var(--fg)) 70%, transparent);
+}
+.sub-row:hover .drag-handle:not(.disabled) {
+  opacity: 0.7;
+  color: color-mix(in oklab, rgb(var(--fg)) 70%, transparent);
+}
+@media (prefers-reduced-motion: reduce) {
+  .checklists,
+  .chk,
+  .chk-group,
+  .quick-add,
+  .sub,
+  .sub-row,
+  .sub-add-inline,
+  .undo-toast,
+  .summary-fill,
+  .sub-progress-fill,
+  .sync-pill i {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+.sub {
+  margin-left: 0;
+  padding-left: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sub-gap);
+  position: relative;
+  --sub-line: color-mix(in oklab, var(--chk-accent) 72%, rgb(var(--fg)) 28%);
+  --sub-trunk-x: 2px;
+  --sub-branch: 6px;
+  --sub-gap: 5px;
+  --sub-bridge: 6px;
+  --sub-row-height: 26px;
+  overflow: visible;
+}
+.sub.add-open {
+  --sub-line: color-mix(in oklab, rgb(var(--primary)) 75%, rgb(var(--border-strong)) 25%);
+}
+.sub.collapsed {
+  gap: 0;
+}
+.sub-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: nowrap;
+  padding-left: calc(var(--sub-trunk-x) + var(--sub-branch));
+  min-height: 16px;
+  position: relative;
+}
+.sub.has-items .sub-head::before {
+  content: '';
+  position: absolute;
+  left: var(--sub-trunk-x);
+  top: 50%;
+  bottom: calc(-1 * (var(--sub-gap) + (var(--sub-row-height) / 2)));
+  width: 1px;
+  background: var(--sub-line);
+  border-radius: 2px;
+  opacity: 0.9;
+  pointer-events: none;
+}
+.sub-title {
+  font-size: 0.56rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: color-mix(in oklab, rgb(var(--fg)) 65%, transparent);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  line-height: 1;
+  white-space: nowrap;
+}
+.sub-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+.sub-count {
+  font-size: 0.52rem;
+  font-weight: 700;
+  padding: 0;
+  border-radius: 0;
+  border: 0;
+  color: color-mix(in oklab, rgb(var(--fg)) 65%, transparent);
+  line-height: 1;
+  white-space: nowrap;
+  min-height: 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.sub-count i {
+  font-size: 0.58rem;
+  color: color-mix(in oklab, var(--chk-accent) 70%, rgb(var(--fg)));
+}
+.sub-items {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  padding-left: calc(var(--sub-trunk-x) + var(--sub-branch));
+  gap: var(--sub-gap);
+  max-height: 2000px;
+  overflow: visible;
+  opacity: 1;
+  transform: translateY(0);
+  visibility: visible;
+  transition:
+    max-height var(--motion-mid) var(--ease-soft),
+    opacity var(--motion-fast) var(--ease-soft),
+    transform var(--motion-fast) var(--ease-soft),
+    visibility 0s linear 0s;
+}
+.sub.collapsed .sub-items {
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(-4px);
+  pointer-events: none;
+  visibility: hidden;
+  overflow: hidden;
+  transition:
+    max-height var(--motion-mid) var(--ease-soft),
+    opacity var(--motion-fast) var(--ease-soft),
+    transform var(--motion-fast) var(--ease-soft),
+    visibility 0s linear var(--motion-mid);
+}
+.sub.has-items .sub-items::before {
+  content: '';
+  position: absolute;
+  left: var(--sub-trunk-x);
+  top: calc(var(--sub-row-height) / 2);
+  bottom: calc(var(--sub-row-height) / 2);
+  width: 1px;
+  background: var(--sub-line);
+  border-radius: 2px;
+  opacity: 0.9;
+  pointer-events: none;
+}
+.sub-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto auto 1fr auto;
+  gap: 5px;
+  align-items: center;
+  padding: 2px 5px;
+  min-height: calc(var(--sub-row-height) - 2px);
+  box-sizing: border-box;
+  border-radius: 6px;
+  border: 1px solid color-mix(in oklab, rgb(var(--border-strong)) 6%, transparent);
+  background: transparent;
+  transition:
+    border-color var(--motion-fast) var(--ease-soft),
+    background var(--motion-fast) var(--ease-soft),
+    box-shadow var(--motion-fast) var(--ease-soft);
+}
+.sub-row::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: calc(-1 * var(--sub-branch));
+  width: var(--sub-branch);
+  height: 1px;
+  transform: translateY(-50%);
+  background: var(--sub-line);
+  pointer-events: none;
+}
+.sub-row::after {
+  content: '';
+  position: absolute;
+  left: calc(-1 * var(--sub-branch));
+  top: 50%;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--sub-line);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.sub-row:hover {
+  border-color: color-mix(in oklab, rgb(var(--border-strong)) 14%, transparent);
+  background: color-mix(in oklab, rgb(var(--bg1)) 97%, transparent);
+}
+.sub-row:focus-within {
+  border-color: color-mix(in oklab, var(--chk-accent) 14%, transparent);
+  box-shadow: none;
+}
+.sub-row .txt {
+  width: 100%;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  padding: 2px 4px;
+  min-height: 18px;
+  font-size: 0.74rem;
+  color: rgb(var(--fg));
+  line-height: 1.2;
+}
+.sub-row .txt:focus {
+  outline: none;
+  background: rgb(var(--surface));
+  border-color: color-mix(in oklab, var(--chk-accent) 16%, transparent);
+  box-shadow: none;
+}
+.sub-row .txt[readonly] {
+  background: transparent;
+  border-color: transparent;
+}
+.sub-row .icon-btn {
+  opacity: 0;
+  pointer-events: none;
+}
+.sub-row:hover .icon-btn,
+.sub-row:focus-within .icon-btn {
+  opacity: 1;
+  pointer-events: auto;
+}
+.sub-row.done {
+  border-color: color-mix(in oklab, rgb(var(--border-strong)) 4%, transparent);
+  background: transparent;
+  --sub-line: color-mix(in oklab, var(--chk-success) 50%, transparent);
+}
+.sub-row.done .txt {
+  color: color-mix(in oklab, rgb(var(--fg)) 55%, transparent);
+  text-decoration: line-through;
+}
+
+.checklists .muted {
+  padding: 8px;
+  text-align: center;
+  border: 1px dashed color-mix(in oklab, rgb(var(--border-strong)) 50%, transparent);
+  border-radius: 8px;
+  color: color-mix(in oklab, rgb(var(--fg)) 55%, transparent);
+  font-size: 0.72rem;
+}
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 12px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  text-align: center;
+}
+.empty-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  background: color-mix(in oklab, var(--chk-accent) 16%, transparent);
+  color: color-mix(in oklab, var(--chk-accent) 70%, rgb(var(--fg)));
+}
+.empty-title {
+  font-weight: 700;
+  font-size: 0.84rem;
+  color: color-mix(in oklab, rgb(var(--fg)) 85%, transparent);
+}
+.empty-sub {
+  font-size: 0.72rem;
+  color: color-mix(in oklab, rgb(var(--fg)) 60%, transparent);
+}
+.empty-cta {
+  margin-top: 0;
+}

@@ -1,0 +1,45 @@
+@if (searchable) {
+  <label class="lce-search">
+    <i appIcon="search" aria-hidden="true"></i>
+    <input
+      type="search"
+      [placeholder]="placeholder || 'Search...'"
+      [(ngModel)]="searchTerm"
+      autocomplete="off"
+    />
+  </label>
+}
+
+<div class="lce-options">
+  @for (section of optionSections(); track trackSection($index, section)) {
+    @if (section.key) {
+      <div class="lce-section-title">{{ section.key }}</div>
+    }
+    <div class="lce-option-list">
+      @for (option of section.options; track trackOption($index, option)) {
+        <button
+          class="lce-option"
+          type="button"
+          [class.active]="isOptionActive(option)"
+          (click)="onPick(option.value)"
+        >
+          <span class="lce-option-main">
+            @if (option.icon) {
+              <i [appIcon]="option.icon" aria-hidden="true"></i>
+            }
+            <span class="lce-option-label">{{ option.label }}</span>
+          </span>
+          @if (option.meta) {
+            <span class="lce-option-meta">{{ option.meta }}</span>
+          }
+          @if (isOptionActive(option)) {
+            <i appIcon="check2" class="lce-check" aria-hidden="true"></i>
+          }
+        </button>
+      }
+    </div>
+  }
+  @if (!visibleOptions().length) {
+    <div class="lce-empty">No matches</div>
+  }
+</div>

@@ -1,0 +1,99 @@
+@use '../../styles/reporting-design' as reporting;
+
+:host {
+  display: block;
+  min-width: 0;
+}
+
+.chart-grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.chart-card {
+  grid-column: span 6;
+  min-width: 0;
+  @include reporting.surface(12px);
+  overflow: hidden;
+}
+
+.chart-card--wide {
+  grid-column: 1 / -1;
+}
+
+.chart-empty {
+  @include reporting.surface(24px);
+  display: grid;
+  place-items: center;
+  min-height: 220px;
+  text-align: center;
+  color: rgb(var(--fg) / 0.68);
+}
+
+.chart-empty i {
+  margin-bottom: 8px;
+  font-size: 28px;
+}
+
+.chart-empty h3 {
+  margin: 0;
+  color: rgb(var(--fg));
+  font-size: 16px;
+}
+
+.chart-empty p {
+  margin: 6px 0 0;
+  font-size: 12px;
+}
+
+.chart-card__head {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: flex-start;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgb(var(--border) / 0.14);
+}
+
+.chart-card__head h3 {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.chart-card__head p {
+  margin: 4px 0 0;
+  color: rgb(var(--fg) / 0.66);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.chart-card__body {
+  margin-top: 12px;
+  min-height: 180px;
+}
+
+.chart-kind {
+  @include reporting.pill;
+  text-transform: capitalize;
+}
+
+@media (max-width: 1180px) {
+  .chart-card,
+  .chart-card--wide {
+    grid-column: 1 / -1;
+  }
+}
+
+@media print {
+  .chart-grid {
+    display: block;
+  }
+
+  .chart-card {
+    break-inside: avoid;
+    margin-bottom: 12px;
+    @include reporting.print-surface;
+  }
+}

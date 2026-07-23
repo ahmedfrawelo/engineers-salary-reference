@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title></title>
+    <base href="/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; base-uri 'self'; object-src 'none'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self' https://*.workers.dev; font-src 'self' data:; manifest-src 'self'; worker-src 'self' blob:; form-action 'self'"
+    />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <style>
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+        background: #101010;
+      }
+
+      app-root:not(.app-shell-ready) {
+        display: none;
+      }
+
+      #app-startup {
+        position: fixed;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        background: #101010;
+      }
+
+      #app-startup img {
+        width: min(250px, 56vw);
+        height: auto;
+        animation: app-startup-logo-in 220ms ease-out both;
+      }
+
+      @keyframes app-startup-logo-in {
+        from {
+          opacity: 0;
+          transform: translateY(6px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        #app-startup img {
+          animation: none;
+        }
+      }
+    </style>
+    <link rel="icon" type="image/svg+xml" sizes="any" href="assets/brand/engref-favicon-v6.svg" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <meta name="theme-color" content="#84c718" />
+    <script src="assets/runtime/cache-recovery.js"></script>
+    <script src="assets/runtime/theme-init.js"></script>
+  </head>
+  <body>
+    <div id="app-startup" role="status" aria-label="Loading ENGREF">
+      <img
+        src="assets/brand/engineers-reference-wordmark.svg"
+        width="250"
+        height="84"
+        alt="ENGREF"
+      />
+    </div>
+    <app-root></app-root>
+    <noscript>Please enable JavaScript to continue using this application.</noscript>
+  </body>
+</html>

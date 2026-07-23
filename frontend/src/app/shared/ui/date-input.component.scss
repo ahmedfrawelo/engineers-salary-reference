@@ -1,0 +1,366 @@
+:host {
+  display: block;
+  width: 100%;
+}
+.date-field {
+  position: relative;
+  width: 100%;
+}
+.date-field.disabled {
+  opacity: 0.7;
+}
+.date-trigger {
+  width: 100%;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid color-mix(in oklab, rgb(var(--border-strong)) 65%, transparent);
+  background: rgb(var(--bg1));
+  color: rgb(var(--fg));
+  padding: 0 0 0 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+  cursor: pointer;
+}
+.date-trigger:hover {
+  border-color: color-mix(in oklab, rgb(var(--border-strong)) 82%, transparent);
+  background: color-mix(in oklab, rgb(var(--bg1)) 92%, transparent);
+}
+.date-trigger:focus-visible {
+  outline: none;
+  border-color: color-mix(in oklab, rgb(var(--primary)) 58%, transparent);
+  box-shadow: 0 0 0 2px color-mix(in oklab, rgb(var(--primary)) 18%, transparent);
+}
+.date-field.open .date-trigger {
+  border-color: color-mix(in oklab, rgb(var(--primary)) 55%, transparent);
+  box-shadow: 0 0 0 2px color-mix(in oklab, rgb(var(--primary)) 14%, transparent);
+}
+.date-text {
+  flex: 1;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 0.9rem;
+  letter-spacing: 0.01em;
+}
+.date-text.placeholder {
+  color: color-mix(in oklab, rgb(var(--fg)) 45%, transparent);
+}
+.date-icon {
+  width: 30px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-left: 1px solid color-mix(in oklab, rgb(var(--border-strong)) 45%, transparent);
+  color: rgb(var(--muted));
+  background: color-mix(in oklab, rgb(var(--surface)) 6%, transparent);
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+.date-field.open .date-icon {
+  color: rgb(var(--primary));
+}
+
+@keyframes date-pop {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.date-panel {
+  min-width: 270px;
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklab, rgb(var(--surface)) 96%, rgb(var(--bg1))) 0%,
+    rgb(var(--surface)) 100%
+  );
+  border: 1px solid color-mix(in oklab, rgb(var(--border-strong)) 72%, transparent);
+  border-radius: 14px;
+  box-shadow:
+    0 20px 40px rgba(0, 0, 0, 0.42),
+    0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  animation: date-pop 0.16s ease-out;
+  backdrop-filter: blur(8px);
+}
+.date-panel.drop-up {
+  transform-origin: bottom center;
+}
+
+.date-panel-hdr {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 6px;
+  border-radius: 10px;
+  background: color-mix(in oklab, rgb(var(--bg1)) 80%, transparent);
+  border: 1px solid color-mix(in oklab, rgb(var(--border)) 60%, transparent);
+}
+.month-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 10px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  flex: 1;
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, rgb(var(--fg)) 88%, transparent);
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    color 0.2s ease;
+}
+.month-label:hover {
+  border-color: color-mix(in oklab, rgb(var(--primary)) 40%, transparent);
+  background: color-mix(in oklab, rgb(var(--primary)) 10%, transparent);
+  color: rgb(var(--primary));
+}
+.nav-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  border: 1px solid color-mix(in oklab, rgb(var(--border-strong)) 55%, transparent);
+  background: linear-gradient(
+    180deg,
+    rgb(var(--bg1)),
+    color-mix(in oklab, rgb(var(--surface)) 70%, rgb(var(--bg1)))
+  );
+  color: rgb(var(--fg));
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    transform 0.15s ease;
+}
+.nav-btn:hover {
+  border-color: color-mix(in oklab, rgb(var(--primary)) 45%, transparent);
+  background: color-mix(in oklab, rgb(var(--primary)) 10%, rgb(var(--surface)));
+  transform: translateY(-1px);
+}
+.nav-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.picker-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  padding: 0 2px;
+}
+.weekday {
+  text-align: center;
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: color-mix(in oklab, rgb(var(--fg)) 55%, transparent);
+  padding: 2px 0;
+}
+
+.days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+.day-btn {
+  position: relative;
+  height: 32px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: rgb(var(--fg));
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.12s ease,
+    box-shadow 0.2s ease;
+}
+.day-btn:hover {
+  background: color-mix(in oklab, rgb(var(--primary)) 14%, rgb(var(--surface)));
+  border-color: color-mix(in oklab, rgb(var(--primary)) 38%, transparent);
+  color: rgb(var(--primary));
+  transform: translateY(-1px);
+}
+.day-btn.outside {
+  color: color-mix(in oklab, rgb(var(--fg)) 38%, transparent);
+}
+.day-btn.today:not(.selected) {
+  border-color: color-mix(in oklab, rgb(var(--primary)) 45%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in oklab, rgb(var(--primary)) 35%, transparent) inset;
+}
+.day-btn.today:not(.selected)::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 5px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgb(var(--primary));
+  transform: translateX(-50%);
+  opacity: 0.85;
+}
+.day-btn.selected {
+  background: linear-gradient(135deg, rgba(var(--primary), 0.35), rgba(var(--primary), 0.16));
+  border-color: color-mix(in oklab, rgb(var(--primary)) 70%, transparent);
+  color: rgb(var(--primary));
+  font-weight: 700;
+  box-shadow: 0 8px 18px rgba(var(--primary), 0.24);
+}
+.day-btn.disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.month-year {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+.column-title {
+  text-align: center;
+  font-size: 0.6rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, rgb(var(--fg)) 55%, transparent);
+}
+.roller {
+  position: relative;
+  max-height: 190px;
+  overflow-y: auto;
+  padding: 6px;
+  border-radius: 12px;
+  border: 1px solid color-mix(in oklab, rgb(var(--border)) 60%, transparent);
+  background: color-mix(in oklab, rgb(var(--bg1)) 80%, transparent);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  scroll-snap-type: y proximity;
+  mask-image: linear-gradient(to bottom, transparent, black 12%, black 88%, transparent);
+}
+.roller-item {
+  height: 32px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: rgb(var(--fg));
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.12s ease,
+    box-shadow 0.2s ease;
+  scroll-snap-align: center;
+  text-align: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+.months-roller .roller-item {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.roller-item:hover {
+  background: color-mix(in oklab, rgb(var(--primary)) 14%, rgb(var(--surface)));
+  border-color: color-mix(in oklab, rgb(var(--primary)) 38%, transparent);
+  color: rgb(var(--primary));
+  transform: translateY(-1px);
+}
+.roller-item.today:not(.selected) {
+  border-color: color-mix(in oklab, rgb(var(--primary)) 45%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in oklab, rgb(var(--primary)) 35%, transparent) inset;
+}
+.roller-item.selected {
+  background: linear-gradient(135deg, rgba(var(--primary), 0.35), rgba(var(--primary), 0.16));
+  border-color: color-mix(in oklab, rgb(var(--primary)) 70%, transparent);
+  color: rgb(var(--primary));
+  font-weight: 700;
+  box-shadow: 0 8px 18px rgba(var(--primary), 0.24);
+}
+.roller-item.disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.panel-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px;
+  border-radius: 10px;
+  border: 1px solid color-mix(in oklab, rgb(var(--border)) 55%, transparent);
+  background: color-mix(in oklab, rgb(var(--bg1)) 78%, transparent);
+}
+.action-btn {
+  border: 1px solid transparent;
+  background: transparent;
+  color: color-mix(in oklab, rgb(var(--fg)) 78%, transparent);
+  font-size: 0.76rem;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 4px 10px;
+  border-radius: 999px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition:
+    color 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+.action-btn:hover {
+  color: rgb(var(--primary));
+  background: color-mix(in oklab, rgb(var(--primary)) 12%, transparent);
+  border-color: color-mix(in oklab, rgb(var(--primary)) 35%, transparent);
+}
+.action-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+:host ::ng-deep .date-input-overlay {
+  z-index: 200010 !important;
+  pointer-events: auto !important;
+}

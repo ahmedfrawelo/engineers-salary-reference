@@ -1,0 +1,137 @@
+$radius: 8px;
+$control-height: 38px;
+$print-bg: rgb(250 252 251);
+$print-ink: rgb(17 24 39);
+$print-line: rgb(209 213 219);
+
+@mixin surface($padding: 16px) {
+  background:
+    linear-gradient(180deg, oklch(100% 0.006 172 / 3%), transparent 72%),
+    color-mix(in srgb, rgb(var(--surface)) 92%, rgb(var(--bg0)) 8%);
+  border: 1px solid rgb(var(--border) / 0.24);
+  border-radius: $radius;
+  padding: $padding;
+  box-shadow: 0 1px 0 oklch(100% 0.006 172 / 4%) inset;
+}
+
+@mixin inset-surface($padding: 14px) {
+  padding: $padding;
+  border-radius: $radius;
+  border: 1px solid rgb(var(--border) / 0.2);
+  background: color-mix(in srgb, rgb(var(--bg1)) 82%, rgb(var(--surface)) 18%);
+  box-shadow: 0 1px 0 oklch(100% 0.006 172 / 4%) inset;
+}
+
+@mixin section-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgb(var(--border) / 0.14);
+}
+
+@mixin eyebrow {
+  display: inline-flex;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgb(var(--fg) / 0.58);
+}
+
+@mixin field-label {
+  color: rgb(var(--fg) / 0.62);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+@mixin control {
+  min-height: $control-height;
+  border-radius: $radius;
+  border: 1px solid rgb(var(--border) / 0.28);
+  background: color-mix(in srgb, rgb(var(--bg1)) 88%, rgb(var(--surface)) 12%);
+  color: rgb(var(--fg));
+}
+
+@mixin pill {
+  min-height: 30px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 10px;
+  border-radius: var(--app-pill-radius);
+  border: 1px solid var(--app-color-pill-border);
+  background: var(--app-color-pill-surface);
+  color: var(--app-color-pill-text);
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+@mixin icon-button($size: 34px) {
+  width: $size;
+  height: $size;
+  border-radius: $radius;
+  border: 1px solid rgb(var(--border) / 0.28);
+  background: color-mix(in srgb, rgb(var(--bg1)) 88%, rgb(var(--surface)) 12%);
+  color: rgb(var(--fg));
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  text-decoration: none;
+  @include interactive;
+}
+
+@mixin focus-ring {
+  outline: none;
+  border-color: rgb(var(--primary) / 0.38);
+  box-shadow: 0 0 0 3px rgb(var(--primary) / 0.08);
+}
+
+@mixin interactive {
+  transition:
+    border-color 160ms ease,
+    background 160ms ease,
+    color 160ms ease,
+    transform 160ms ease;
+
+  &:hover {
+    border-color: rgb(var(--primary) / 0.34);
+    background: rgb(var(--primary) / 0.1);
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+}
+
+@mixin print-surface {
+  background: $print-bg;
+  color: $print-ink;
+  border-color: $print-line;
+  box-shadow: none;
+}
+
+@mixin print-table {
+  overflow: visible;
+  border-color: $print-line;
+
+  table {
+    min-width: 0;
+  }
+
+  th,
+  td {
+    color: $print-ink;
+    border-color: rgb(229 231 235);
+    background: $print-bg !important;
+  }
+}

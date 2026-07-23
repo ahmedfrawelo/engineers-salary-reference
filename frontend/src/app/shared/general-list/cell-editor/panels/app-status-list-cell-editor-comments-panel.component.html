@@ -1,0 +1,14 @@
+<div class="lce-comment">
+  <label class="lce-comment-input">
+    <input
+      type="text"
+      [placeholder]="placeholder || 'Comment or type / for commands and actions'"
+      [(ngModel)]="commentDraft"
+      (keydown.enter)="submitComment(); $event.preventDefault()"
+    />
+  </label>
+  <button class="lce-primary" type="button" (click)="submitComment()">
+    <i appIcon="send" aria-hidden="true"></i>
+    <span>Add comment</span>
+  </button>
+</div>

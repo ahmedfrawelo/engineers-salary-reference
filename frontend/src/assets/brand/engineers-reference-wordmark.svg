@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 120" role="img" aria-labelledby="title description">
+  <title id="title">ENGREF</title>
+  <desc id="description">ENGREF platform wordmark with an animated two-color baseline.</desc>
+  <defs>
+    <style>@media (prefers-reduced-motion: reduce) { animate { display: none; } }</style>
+    <linearGradient id="baseline-motion" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#8bd21b"/>
+      <stop offset="50%" stop-color="#8bd21b"><animate attributeName="offset" values="0%;0%;100%;100%;50%;72%;28%;50%;0%;0%" keyTimes="0;0.12;0.24;0.36;0.5;0.62;0.74;0.84;0.92;1" dur="2.8s" repeatCount="indefinite"/></stop>
+      <stop offset="50%" stop-color="#f2f5ec"><animate attributeName="offset" values="0%;0%;100%;100%;50%;72%;28%;50%;0%;0%" keyTimes="0;0.12;0.24;0.36;0.5;0.62;0.74;0.84;0.92;1" dur="2.8s" repeatCount="indefinite"/></stop>
+      <stop offset="100%" stop-color="#f2f5ec"/>
+    </linearGradient>
+  </defs>
+  <text x="8" y="78" font-family="Arial Black, Arial, Helvetica, sans-serif" font-size="76" font-weight="900" letter-spacing="1"><tspan fill="#f2f5ec">ENG</tspan><tspan fill="#8bd21b">REF</tspan></text>
+  <rect x="356" y="24" width="42" height="10" fill="#8bd21b"/><rect x="372" y="8" width="10" height="42" fill="#8bd21b"/><rect x="11" y="94" width="341" height="8" fill="url(#baseline-motion)"/>
+</svg>

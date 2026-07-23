@@ -1,0 +1,138 @@
+@mixin tender-project-pill-surface($selector) {
+  #{$selector} {
+    --tp-pill-bg: var(--app-color-grid-pill-surface, transparent);
+    --tp-pill-border: var(--app-color-grid-pill-border, rgb(var(--border-strong)));
+    --tp-pill-fg: var(--app-color-grid-pill-text, rgb(var(--fg)));
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: var(--app-grid-pill-gap, 4px);
+    height: var(--app-grid-pill-height, 21px);
+    min-height: var(--app-grid-pill-height, 21px);
+    max-height: var(--app-grid-pill-height, 21px);
+    padding: 0 var(--app-grid-pill-padding-inline, 7px);
+    border-radius: var(--app-grid-pill-radius, 6px);
+    border: 1px solid var(--tp-pill-border);
+    background: var(--tp-pill-bg);
+    box-shadow: none !important;
+    outline: none !important;
+    color: var(--tp-pill-fg);
+    -webkit-text-fill-color: var(--tp-pill-fg);
+    font-size: var(--app-grid-pill-font-size, 10px);
+    font-weight: var(--app-grid-pill-font-weight, 600);
+    line-height: 1;
+    letter-spacing: 0;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    overflow: hidden;
+    vertical-align: middle;
+  }
+
+  #{$selector} .pill__label {
+    display: block;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: inherit !important;
+    -webkit-text-fill-color: currentColor !important;
+  }
+
+  #{$selector}.custom {
+    --tp-pill-bg: color-mix(
+      in oklab,
+      var(--tp-pill-fg, var(--app-color-grid-pill-text)) 10%,
+      var(--app-color-grid-pill-surface)
+    );
+    --tp-pill-border: color-mix(
+      in oklab,
+      var(--tp-pill-fg, var(--app-color-grid-pill-text)) 22%,
+      transparent
+    );
+  }
+
+  #{$selector}.tone-green {
+    --tp-pill-fg: var(--app-color-grid-pill-tone-green);
+    --tp-pill-border: var(--app-color-grid-pill-tone-border);
+    --tp-pill-bg: var(--app-color-grid-pill-tone-bg);
+  }
+
+  #{$selector}.tone-yellow {
+    --tp-pill-fg: var(--app-color-grid-pill-tone-yellow);
+    --tp-pill-border: var(--app-color-grid-pill-tone-border);
+    --tp-pill-bg: var(--app-color-grid-pill-tone-bg);
+  }
+
+  #{$selector}.tone-red {
+    --tp-pill-fg: var(--app-color-grid-pill-tone-red);
+    --tp-pill-border: var(--app-color-grid-pill-tone-border);
+    --tp-pill-bg: var(--app-color-grid-pill-tone-bg);
+  }
+
+  #{$selector}.tone-blue {
+    --tp-pill-fg: var(--app-color-grid-pill-tone-blue);
+    --tp-pill-border: var(--app-color-grid-pill-tone-border);
+    --tp-pill-bg: var(--app-color-grid-pill-tone-bg);
+  }
+
+  #{$selector}.tone-purple {
+    --tp-pill-fg: var(--app-color-grid-pill-tone-purple);
+    --tp-pill-border: var(--app-color-grid-pill-tone-border);
+    --tp-pill-bg: var(--app-color-grid-pill-tone-bg);
+  }
+
+  #{$selector}.tone-teal {
+    --tp-pill-fg: var(--app-color-grid-pill-tone-teal);
+    --tp-pill-border: var(--app-color-grid-pill-tone-border);
+    --tp-pill-bg: var(--app-color-grid-pill-tone-bg);
+  }
+
+  #{$selector}.tone-orange {
+    --tp-pill-fg: var(--app-color-grid-pill-tone-orange);
+    --tp-pill-border: var(--app-color-grid-pill-tone-border);
+    --tp-pill-bg: var(--app-color-grid-pill-tone-bg);
+  }
+
+  #{$selector}.tone-gray {
+    --tp-pill-fg: var(--app-color-grid-pill-tone-gray);
+    --tp-pill-border: var(--app-color-grid-pill-border);
+    --tp-pill-bg: var(--app-color-grid-pill-surface);
+  }
+}
+
+@mixin tender-project-tone-dot-surface($selector) {
+  #{$selector}.tone-green {
+    background: var(--app-color-grid-pill-tone-green);
+  }
+
+  #{$selector}.tone-yellow {
+    background: var(--app-color-grid-pill-tone-yellow);
+  }
+
+  #{$selector}.tone-red {
+    background: var(--app-color-grid-pill-tone-red);
+  }
+
+  #{$selector}.tone-blue {
+    background: var(--app-color-grid-pill-tone-blue);
+  }
+
+  #{$selector}.tone-purple {
+    background: var(--app-color-grid-pill-tone-purple);
+  }
+
+  #{$selector}.tone-teal {
+    background: var(--app-color-grid-pill-tone-teal);
+  }
+
+  #{$selector}.tone-orange {
+    background: var(--app-color-grid-pill-tone-orange);
+  }
+
+  #{$selector}.tone-gray {
+    background: var(--app-color-grid-pill-tone-gray);
+  }
+}

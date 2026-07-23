@@ -1,0 +1,14 @@
+<div class="lce-inline-edit">
+  <label class="lce-text-input">
+    <input
+      type="text"
+      [placeholder]="placeholder || 'Type value...'"
+      [(ngModel)]="draftValue"
+      (keydown.enter)="applyDraft(); $event.preventDefault()"
+    />
+  </label>
+  <div class="lce-actions">
+    <button class="lce-ghost" type="button" (click)="clearDraft()">Clear</button>
+    <button class="lce-primary" type="button" (click)="applyDraft()">Apply</button>
+  </div>
+</div>

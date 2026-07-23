@@ -1,0 +1,3888 @@
+<ng-template #gridColumnGroupTemplate>
+  <colgroup>
+    @if (config.selectable) {
+      <col [style.width.px]="getSelectionColumnWidth()" />
+    }
+    @for (column of visibleColumns(); track trackByField($index, column)) {
+      <col [style.width.px]="getRenderedColumnWidth(column)" />
+    }
+    @if (config.rowActions?.length) {
+      <col class="row-actions-col" />
+    }
+  </colgroup>
+</ng-template>
+<ng-template
+  #gridHeaderCellContentTemplate
+  let-column="column"
+  let-headerMode="headerMode"
+  let-renderHeaderEnd="renderHeaderEnd"
+  let-isLast="isLast"
+  let-hasFilter="hasFilter"
+  let-isSortable="isSortable"
+  let-sortDirection="sortDirection"
+>
+  <div class="header-content" [class.header-focus-reset]="headerMode === 'body'">
+    @if (column.headerSelect && headerMode === 'fixed') {
+      <search-select
+        class="grid-header-select"
+        (click)="$event.stopPropagation()"
+        (pointerdown)="$event.stopPropagation()"
+        [options]="$any(column.headerSelect.options)"
+        [value]="$any(column.headerSelect.value ?? null)"
+        [displayFn]="$any(column.headerSelect.displayFn)"
+        [placeholder]="column.headerSelect.placeholder || column.header"
+        [disabled]="column.headerSelect.disabled ?? false"
+        [allowClear]="column.headerSelect.allowClear ?? false"
+        [allowInlineSearch]="column.headerSelect.allowInlineSearch ?? false"
+        [searchPlaceholder]="column.headerSelect.searchPlaceholder || 'Type to filter'"
+        [overlayPanelClass]="column.headerSelect.overlayPanelClass || 'grid-header-select-overlay'"
+        [overlayWidthAnchorSelector]="column.headerSelect.overlayWidthAnchorSelector || ''"
+        (valueChange)="onHeaderSelectValueChange(column, $event)"
+      >
+      </search-select>
+    } @else if (!isHeaderEditing(column) || column.headerSelect) {
+      <span
+        class="header-text"
+        [class]="getHeaderClass(column)"
+        [attr.data-align]="column.align || 'left'"
+        [attr.title]="column.headerTooltip || column.header"
+        (click)="onSort(column, $event)"
+        >{{ getHeaderDisplayText(column) }}</span
+      >
+    } @else {
+      <input
+        class="header-text-input"
+        type="text"
+        [value]="editingHeaderValue()"
+        (click)="$event.stopPropagation()"
+        (input)="onHeaderEditInput($any($event.target).value || '')"
+        (blur)="commitHeaderEdit(column, $event)"
+        (keydown)="onHeaderEditKeydown($event, column)"
+      />
+    }
+    <div class="header-icons" [class.header-focus-reset]="headerMode === 'body'">
+      @if (isSortable) {
+        <button
+          type="button"
+          class="header-sort-btn"
+          [class.active]="sortDirection"
+          [class.visible]="isSortable && sortDirection"
+          (click)="onSort(column, $event); $event.stopPropagation()"
+          aria-label="Sort"
+        >
+          @if (sortDirection === 'asc') {
+            <i appIcon="caret-up-fill" aria-hidden="true"></i>
+          }
+          @if (sortDirection === 'desc') {
+            <i appIcon="caret-down-fill" aria-hidden="true"></i>
+          }
+        </button>
+      }
+      @if (column.filterable !== false) {
+        <button
+          type="button"
+          class="header-filter-btn"
+          [class.filtered]="hasFilter"
+          [class.active]="hasFilter || activeFilterColumn === column"
+          [disabled]="config.disableFilters"
+          (click)="openFilterMenu(column, $event); $event.stopPropagation()"
+          aria-label="Filter"
+          [attr.title]="config.disableFilters ? 'Filters disabled - data loading' : 'Filter'"
+        >
+          <i appIcon="funnel" aria-hidden="true"></i>
+        </button>
+      }
+      @if (renderHeaderEnd && isLast) {
+        <ng-content select="[grid-header-end]"></ng-content>
+      }
+    </div>
+  </div>
+  @if (column.resizable !== false) {
+    <span
+      class="resize-handle"
+      (mousedown)="onColumnResizeStart($event, column)"
+      (dblclick)="onColumnResizeHandleDoubleClick($event, column)"
+    ></span>
+  }
+</ng-template>
+<ng-template
+  #groupSelectionControlTemplate
+  let-groupScope="groupScope"
+  let-selectionState="selectionState"
+>
+  @if (config.selectable) {
+    @let groupSelectionState = selectionState || getGroupSelectionViewState(groupScope);
+    <label
+      class="group-row-selection"
+      [attr.title]="groupSelectionState.title"
+      (click)="$event.stopPropagation()"
+    >
+      <input
+        type="checkbox"
+        class="grid-checkbox"
+        [checked]="groupSelectionState.checked"
+        [indeterminate]="groupSelectionState.partial"
+        aria-label="Select group rows"
+        (click)="toggleGroupSelection(groupScope, $event); $event.stopPropagation()"
+      />
+    </label>
+  }
+</ng-template>
+<ng-template
+  #gridTableHeadTemplate
+  let-headerMode="headerMode"
+  let-renderHeaderEnd="renderHeaderEnd"
+>
+  <thead>
+    <tr class="header-row">
+      @if (config.selectable) {
+        <th class="selection-cell" [class.pinned-left]="shouldPinSelection()">
+          <input
+            type="checkbox"
+            class="grid-checkbox"
+            [checked]="allSelected()"
+            [indeterminate]="someSelected()"
+            aria-label="Select visible rows"
+            (change)="toggleSelectAll()"
+          />
+        </th>
+      }
+      @let bindHeaderHoverState = shouldBindHeaderHoverState();
+      @for (column of visibleColumns(); track trackByField($index, column); let isLast = $last) {
+        @let isSortable = column.sortable ?? true;
+        @let sortDirection = getSortDirection(column);
+        @let hasFilter = hasActiveFilter(column.field);
+        @if (bindHeaderHoverState) {
+          <th
+            [style.width.px]="getColumnPixelWidth(column)"
+            [ngStyle]="getHeaderStyle(column)"
+            [class.sortable]="isSortable"
+            [class.is-sorted]="!!sortDirection"
+            [class.is-filtered]="hasFilter"
+            [class.dragging-column]="isDraggingColumn(column)"
+            [class.drop-target]="isDropTarget(column)"
+            [class.is-resizing-column]="resizingColumnField === getColumnField(column)"
+            [class.pinned-left]="column.pinned === 'left'"
+            [class.pinned-right]="column.pinned === 'right'"
+            [class.text-left]="column.align === 'left'"
+            [class.text-center]="column.align === 'center'"
+            [class.text-right]="column.align === 'right'"
+            [class.has-header-select]="!!column.headerSelect"
+            [attr.data-column-field]="getColumnField(column)"
+            [attr.data-drop-edge]="getDropTargetEdge(column)"
+            [class.header-focus-reset]="headerMode === 'body'"
+            [attr.tabindex]="headerMode === 'body' ? -1 : null"
+            (contextmenu)="onColumnHeaderContextMenu($event, column)"
+            draggable="false"
+            (pointerdown)="onHeaderPointerDown($event, column)"
+            (dragstart)="onHeaderDragStart($event, column)"
+            (dragover)="onHeaderDragOver($event, column)"
+            (drop)="onHeaderDrop($event, column)"
+            (dragend)="onHeaderDragEnd()"
+            (mouseenter)="handleHeaderMouseEnter($event, column)"
+            (mousemove)="handleHeaderMouseMove($event)"
+            (mouseleave)="handleHeaderMouseLeave()"
+          >
+            <ng-container
+              [ngTemplateOutlet]="gridHeaderCellContentTemplate"
+              [ngTemplateOutletContext]="{
+                column: column,
+                headerMode: headerMode,
+                renderHeaderEnd: renderHeaderEnd,
+                isLast: isLast,
+                hasFilter: hasFilter,
+                isSortable: isSortable,
+                sortDirection: sortDirection
+              }"
+            ></ng-container>
+          </th>
+        } @else {
+          <th
+            [style.width.px]="getColumnPixelWidth(column)"
+            [ngStyle]="getHeaderStyle(column)"
+            [class.sortable]="isSortable"
+            [class.is-sorted]="!!sortDirection"
+            [class.is-filtered]="hasFilter"
+            [class.dragging-column]="isDraggingColumn(column)"
+            [class.drop-target]="isDropTarget(column)"
+            [class.is-resizing-column]="resizingColumnField === getColumnField(column)"
+            [class.pinned-left]="column.pinned === 'left'"
+            [class.pinned-right]="column.pinned === 'right'"
+            [class.text-left]="column.align === 'left'"
+            [class.text-center]="column.align === 'center'"
+            [class.text-right]="column.align === 'right'"
+            [class.has-header-select]="!!column.headerSelect"
+            [attr.data-column-field]="getColumnField(column)"
+            [attr.data-drop-edge]="getDropTargetEdge(column)"
+            [class.header-focus-reset]="headerMode === 'body'"
+            [attr.tabindex]="headerMode === 'body' ? -1 : null"
+            (contextmenu)="onColumnHeaderContextMenu($event, column)"
+            draggable="false"
+            (pointerdown)="onHeaderPointerDown($event, column)"
+            (dragstart)="onHeaderDragStart($event, column)"
+            (dragover)="onHeaderDragOver($event, column)"
+            (drop)="onHeaderDrop($event, column)"
+            (dragend)="onHeaderDragEnd()"
+          >
+            <ng-container
+              [ngTemplateOutlet]="gridHeaderCellContentTemplate"
+              [ngTemplateOutletContext]="{
+                column: column,
+                headerMode: headerMode,
+                renderHeaderEnd: renderHeaderEnd,
+                isLast: isLast,
+                hasFilter: hasFilter,
+                isSortable: isSortable,
+                sortDirection: sortDirection
+              }"
+            ></ng-container>
+          </th>
+        }
+      }
+      @if (config.rowActions?.length) {
+        <th
+          [class.actions-cell]="headerMode !== 'body'"
+          [class.row-actions-cell]="headerMode === 'body'"
+          [class.header-actions]="headerMode === 'body'"
+        >
+          Actions
+        </th>
+      }
+    </tr>
+    @if (config.enableQuickFilter) {
+      <tr class="quick-filter-row">
+        @if (config.selectable) {
+          <th class="selection-cell" [class.pinned-left]="shouldPinSelection()"></th>
+        }
+        @for (column of visibleColumns(); track trackByField($index, column)) {
+          <th
+            [style.width.px]="getColumnPixelWidth(column)"
+            [ngStyle]="getHeaderStyle(column)"
+            [class.dragging-column]="isDraggingColumn(column)"
+            [class.pinned-left]="column.pinned === 'left'"
+            [class.pinned-right]="column.pinned === 'right'"
+            [class.text-left]="column.align === 'left'"
+            [class.text-center]="column.align === 'center'"
+            [class.text-right]="column.align === 'right'"
+          >
+            @if (column.filterable !== false) {
+              <div class="quick-filter-cell">
+                <input
+                  type="text"
+                  class="quick-filter-input"
+                  [placeholder]="config.quickFilterPlaceholder || 'Search...'"
+                  [value]="getQuickFilterValue(column)"
+                  (input)="onQuickFilterChange(column, $any($event.target).value)"
+                  (click)="$event.stopPropagation()"
+                  [attr.aria-label]="'Quick filter for ' + column.header"
+                />
+                @if (hasQuickFilter(column)) {
+                  <button
+                    type="button"
+                    class="quick-filter-clear"
+                    (click)="clearQuickFilter(column); $event.stopPropagation()"
+                    aria-label="Clear filter"
+                  >
+                    <i appIcon="x-lg" aria-hidden="true"></i>
+                  </button>
+                }
+              </div>
+            }
+          </th>
+        }
+        @if (config.rowActions?.length) {
+          <th class="actions-cell"></th>
+        }
+      </tr>
+    }
+  </thead>
+</ng-template>
+<div
+  class="engineers-salary-reference-data-grid"
+  [class.rtl]="config.rtl"
+  [class.loading]="loading"
+  [class.focus-mode]="focusModeEnabled()"
+  [class.color-scale-active]="colorScaleEnabled()"
+  [class.high-contrast]="highContrastMode()"
+  [class.is-resizing]="isResizingColumn"
+  [class.grouping-mode-active]="groupColumns().length > 0"
+  [class.has-pinned-data-columns]="hasPinnedDataColumns()"
+  [class.layout-preset-default]="usesDefaultGridLayout()"
+  [attr.dir]="config.rtl ? 'rtl' : 'ltr'"
+>
+  <!-- Combined Header Section: grouping + table headers -->
+  @if (!config.simpleMode) {
+    <div class="grid-header-section">
+      <!-- Header: grouping + search -->
+      <div class="grid-header-bar" (dragover)="preventHeaderBackgroundChange($event)">
+        <div class="groupbar-slot" (dragover)="preventHeaderBackgroundChange($event)">
+          <div
+            class="group-panel"
+            [class.active]="groupColumns().length > 0"
+            tabindex="-1"
+            (dragover)="onGroupPanelDragOver($event)"
+            (drop)="onGroupPanelDrop($event)"
+            (contextmenu)="onGroupPanelContextMenu($event)"
+          >
+            @if (groupColumns().length === 0) {
+              <div class="group-placeholder">
+                <i appIcon="grid" class="group-panel-icon" aria-hidden="true"></i>
+                <span class="group-panel-text"
+                  >Drag a column header here to group by that column</span
+                >
+              </div>
+            }
+            @if (groupColumns().length > 0) {
+              <div class="group-chips">
+                @for (field of groupColumns(); track trackByFieldName(i, field); let i = $index) {
+                  <div
+                    class="group-chip"
+                    draggable="true"
+                    (dragstart)="onGroupChipDragStart($event, field)"
+                    (dragend)="onGroupChipDragEnd($event)"
+                    (dragover)="onGroupPanelDragOver($event)"
+                    (drop)="onGroupChipDrop($event, field)"
+                  >
+                    <i appIcon="link-dots" class="chip-group-icon" aria-hidden="true"></i>
+                    <i appIcon="grip-vertical" class="chip-drag-handle" aria-hidden="true"></i>
+                    <span class="chip-label">{{ getGroupLabel(field) }}</span>
+                    <button
+                      type="button"
+                      class="chip-remove"
+                      (click)="removeGroupColumn(field)"
+                      aria-label="Remove grouping"
+                    >
+                      <i appIcon="x-lg" class="chip-remove-icon" aria-hidden="true"></i>
+                    </button>
+                  </div>
+                  <!-- Arrow separator between chips -->
+                  @if (i < groupColumns().length - 1) {
+                    <div class="group-chip-separator">
+                      <i
+                        appIcon="chevron-right"
+                        class="group-chip-separator-icon"
+                        aria-hidden="true"
+                      ></i>
+                    </div>
+                  }
+                }
+              </div>
+            }
+          </div>
+          <!-- Group Actions -->
+          @if (groupColumns().length > 0) {
+            <div class="group-actions">
+              <button
+                type="button"
+                class="group-action-btn"
+                (click)="expandAllGroups()"
+                aria-label="Expand all groups"
+              >
+                <i appIcon="chevron-down" class="group-action-icon" aria-hidden="true"></i>
+              </button>
+              <button
+                type="button"
+                class="group-action-btn"
+                (click)="collapseAllGroups()"
+                aria-label="Collapse all groups"
+              >
+                <i appIcon="chevron-up" class="group-action-icon" aria-hidden="true"></i>
+              </button>
+              <button
+                type="button"
+                class="group-action-btn danger"
+                (click)="clearAllGrouping()"
+                aria-label="Clear all grouping"
+              >
+                <i appIcon="x-lg" class="group-action-icon" aria-hidden="true"></i>
+              </button>
+            </div>
+          }
+        </div>
+        <!-- Group Panel Context Menu -->
+        @if (showGroupContextMenu()) {
+          <div
+            class="group-context-menu"
+            [style.left.px]="groupContextMenuPosition().x"
+            [style.top.px]="groupContextMenuPosition().y"
+            (click)="$event.stopPropagation()"
+            (pointerdown)="$event.stopPropagation()"
+          >
+            <div class="context-menu-item" (click)="clearAllGrouping()">
+              <i appIcon="x-lg" class="menu-icon" aria-hidden="true"></i>
+              <span>Ungroup All</span>
+            </div>
+            <div class="context-menu-divider"></div>
+            <div class="context-menu-item" (click)="expandAllGroups()">
+              <i appIcon="chevron-down" class="menu-icon" aria-hidden="true"></i>
+              <span>Expand All Groups</span>
+            </div>
+            <div class="context-menu-item" (click)="collapseAllGroups()">
+              <i appIcon="chevron-up" class="menu-icon" aria-hidden="true"></i>
+              <span>Collapse All Groups</span>
+            </div>
+            @if (groupColumns().length > 1 && !config.virtualScroll) {
+              <div class="context-menu-divider"></div>
+              @for (field of groupColumns(); track field; let i = $index) {
+                <div class="context-menu-item" (click)="expandGroupsAtLevel(i)">
+                  <i appIcon="chevron-down" class="menu-icon" aria-hidden="true"></i>
+                  <span>Expand Level {{ i + 1 }}</span>
+                </div>
+              }
+              @for (field of groupColumns(); track field; let i = $index) {
+                <div class="context-menu-item" (click)="collapseGroupsAtLevel(i)">
+                  <i appIcon="chevron-up" class="menu-icon" aria-hidden="true"></i>
+                  <span>Collapse Level {{ i + 1 }}</span>
+                </div>
+              }
+            }
+            <div class="context-menu-divider"></div>
+            <div class="context-menu-item" (click)="reverseGroupOrder()">
+              <i appIcon="arrow-down-up" class="menu-icon" aria-hidden="true"></i>
+              <span>Reverse Group Order</span>
+            </div>
+          </div>
+        }
+        <!-- Empty Group Panel Context Menu -->
+        @if (showEmptyGroupMenu()) {
+          <div
+            class="empty-group-context-menu"
+            [style.left.px]="emptyGroupMenuPosition().x"
+            [style.top.px]="emptyGroupMenuPosition().y"
+            (click)="$event.stopPropagation()"
+            (pointerdown)="$event.stopPropagation()"
+          >
+            <div
+              class="context-menu-item has-submenu"
+              (click)="toggleColumnSelectionSubmenu(); $event.stopPropagation()"
+            >
+              <i appIcon="grid" class="menu-icon" aria-hidden="true"></i>
+              <span>Select Columns to Group</span>
+              <i appIcon="chevron-right" class="submenu-arrow" aria-hidden="true"></i>
+            </div>
+            <!-- Submenu for column selection -->
+            @if (showColumnSelectionSubmenu()) {
+              <div class="context-submenu" (click)="$event.stopPropagation()">
+                @for (column of visibleColumns(); track trackByField($index, column)) {
+                  <div class="context-menu-item" (click)="groupByColumnFromSubmenu(column)">
+                    <i appIcon="layout-three-columns" class="menu-icon" aria-hidden="true"></i>
+                    <span>{{ column.header }}</span>
+                  </div>
+                }
+              </div>
+            }
+            <div class="context-menu-divider"></div>
+            <div class="context-menu-item" (click)="showGroupingHelp()">
+              <i appIcon="question-circle" class="menu-icon" aria-hidden="true"></i>
+              <span>How to Group</span>
+            </div>
+          </div>
+        }
+        <!-- Grouping Help Dialog -->
+        @if (showGroupingHelpDialog()) {
+          <div class="grouping-help-dialog" (click)="showGroupingHelp()">
+            <div class="help-dialog-content" (click)="$event.stopPropagation()">
+              <div class="help-header">
+                <h3>How to Group Data</h3>
+                <button type="button" class="close-btn" (click)="showGroupingHelp()">
+                  <i appIcon="x-lg" aria-hidden="true"></i>
+                </button>
+              </div>
+              <div class="help-body">
+                <div class="help-step">
+                  <div class="step-number">1</div>
+                  <div class="step-content">
+                    <h4>Drag Column Header</h4>
+                    <p>Drag any column header to the grouping area above</p>
+                  </div>
+                </div>
+                <div class="help-step">
+                  <div class="step-number">2</div>
+                  <div class="step-content">
+                    <h4>Right-Click Column</h4>
+                    <p>Right-click a column header and select "Group by [Column]"</p>
+                  </div>
+                </div>
+                <div class="help-tip">
+                  <i appIcon="info-circle" aria-hidden="true"></i>
+                  <p>You can group by multiple columns to create nested groups</p>
+                </div>
+              </div>
+              <div class="help-footer">
+                <button type="button" class="ok-btn" (click)="showGroupingHelp()">Got it</button>
+              </div>
+            </div>
+          </div>
+        }
+        <!-- Column Header Context Menu -->
+        @if (showColumnContextMenu()) {
+          <div
+            class="column-context-backdrop"
+            (mousedown)="$event.preventDefault(); closeColumnContextMenu()"
+            (contextmenu)="$event.preventDefault(); closeColumnContextMenu()"
+          ></div>
+        }
+        @if (showColumnContextMenu() && selectedColumnForMenu()) {
+          <div
+            class="column-context-menu"
+            [style.left.px]="columnContextMenuPosition().x"
+            [style.top.px]="columnContextMenuPosition().y"
+            (click)="$event.stopPropagation()"
+            (pointerdown)="$event.stopPropagation()"
+          >
+            <!-- Group by / Ungroup -->
+            @if (!isColumnGrouped(getColumnField(selectedColumnForMenu()!))) {
+              <div class="context-menu-item" (click)="groupByColumn(selectedColumnForMenu()!)">
+                <i appIcon="grid" class="menu-icon" aria-hidden="true"></i>
+                <span
+                  >Group by
+                  {{
+                    selectedColumnForMenu()!.header || getColumnField(selectedColumnForMenu()!)
+                  }}</span
+                >
+              </div>
+            }
+            @if (isColumnGrouped(getColumnField(selectedColumnForMenu()!))) {
+              <div
+                class="context-menu-item"
+                (click)="
+                  $event.stopPropagation();
+                  removeGroupColumn(getColumnField(selectedColumnForMenu()!));
+                  closeColumnContextMenu()
+                "
+              >
+                <i appIcon="x-lg" class="menu-icon" aria-hidden="true"></i>
+                <span
+                  >Ungroup
+                  {{
+                    selectedColumnForMenu()!.header || getColumnField(selectedColumnForMenu()!)
+                  }}</span
+                >
+              </div>
+            }
+            <div class="context-menu-divider"></div>
+            <!-- Sort submenu -->
+            <div
+              class="context-menu-item has-submenu"
+              [class.disabled]="!isMenuColumnSortable()"
+              [attr.aria-disabled]="!isMenuColumnSortable()"
+              [attr.title]="!isMenuColumnSortable() ? 'Sorting disabled for this column' : null"
+              (click)="
+                $event.stopPropagation(); isMenuColumnSortable() && showSubmenu('sort', $event)
+              "
+              (mouseenter)="isMenuColumnSortable() && showSubmenu('sort', $event)"
+            >
+              <i appIcon="arrow-up" class="menu-icon" aria-hidden="true"></i>
+              <span>Sort</span>
+              <i appIcon="chevron-right" class="submenu-arrow" aria-hidden="true"></i>
+              <!-- Sort submenu items -->
+              @if (showSortSubmenu()) {
+                <div
+                  class="context-submenu column-context-submenu"
+                  [class.open-left]="columnSubmenuOpenLeft()"
+                  [class.open-up]="columnSubmenuOpenUp()"
+                  data-submenu="sort"
+                  (click)="$event.stopPropagation()"
+                  (pointerdown)="$event.stopPropagation()"
+                  (mouseenter)="showSubmenu('sort')"
+                >
+                  <div
+                    class="context-menu-item"
+                    [class.active]="getSortDirection(selectedColumnForMenu()!) === 'asc'"
+                    (click)="$event.stopPropagation(); sortColumnAsc(selectedColumnForMenu()!)"
+                  >
+                    <i appIcon="arrow-up" class="menu-icon" aria-hidden="true"></i>
+                    <span>Ascending</span>
+                    <span class="menu-shortcut">Alt+Up</span>
+                  </div>
+                  <div
+                    class="context-menu-item"
+                    [class.active]="getSortDirection(selectedColumnForMenu()!) === 'desc'"
+                    (click)="$event.stopPropagation(); sortColumnDesc(selectedColumnForMenu()!)"
+                  >
+                    <i appIcon="arrow-down" class="menu-icon" aria-hidden="true"></i>
+                    <span>Descending</span>
+                    <span class="menu-shortcut">Alt+Down</span>
+                  </div>
+                  <div class="context-menu-divider"></div>
+                  <div
+                    class="context-menu-item"
+                    [class.disabled]="!getSortDirection(selectedColumnForMenu()!)"
+                    [attr.aria-disabled]="!getSortDirection(selectedColumnForMenu()!)"
+                    [attr.title]="
+                      !getSortDirection(selectedColumnForMenu()!) ? 'No sort applied' : null
+                    "
+                    (click)="
+                      $event.stopPropagation();
+                      getSortDirection(selectedColumnForMenu()!) &&
+                        clearSortForColumn(selectedColumnForMenu()!)
+                    "
+                  >
+                    <i appIcon="x-lg" class="menu-icon" aria-hidden="true"></i>
+                    <span>Clear Sort</span>
+                    <span class="menu-shortcut">Alt+0</span>
+                  </div>
+                </div>
+              }
+            </div>
+            <!-- Filter submenu -->
+            <div
+              class="context-menu-item has-submenu"
+              [class.disabled]="!isMenuColumnFilterable()"
+              [attr.aria-disabled]="!isMenuColumnFilterable()"
+              [attr.title]="!isMenuColumnFilterable() ? 'Filtering disabled for this column' : null"
+              (click)="
+                $event.stopPropagation(); isMenuColumnFilterable() && showSubmenu('filter', $event)
+              "
+              (mouseenter)="isMenuColumnFilterable() && showSubmenu('filter', $event)"
+            >
+              <i appIcon="funnel" class="menu-icon" aria-hidden="true"></i>
+              <span>Filter</span>
+              <i appIcon="chevron-right" class="submenu-arrow" aria-hidden="true"></i>
+              @if (showFilterSubmenu()) {
+                <div
+                  class="context-submenu column-context-submenu"
+                  [class.open-left]="columnSubmenuOpenLeft()"
+                  [class.open-up]="columnSubmenuOpenUp()"
+                  data-submenu="filter"
+                  (click)="$event.stopPropagation()"
+                  (pointerdown)="$event.stopPropagation()"
+                  (mouseenter)="showSubmenu('filter')"
+                >
+                  <div
+                    class="context-menu-item"
+                    (click)="
+                      $event.stopPropagation();
+                      openFilterMenuFromColumnContextMenu(selectedColumnForMenu()!)
+                    "
+                  >
+                    <span>Open Filter Panel</span>
+                    <span class="menu-shortcut">Alt+F</span>
+                  </div>
+                  <div class="context-menu-divider"></div>
+                  <div
+                    class="context-menu-item"
+                    (click)="$event.stopPropagation(); applyIsEmptyFilter(selectedColumnForMenu()!)"
+                  >
+                    <span>Is Empty</span>
+                  </div>
+                  <div
+                    class="context-menu-item"
+                    (click)="
+                      $event.stopPropagation(); applyNotEmptyFilter(selectedColumnForMenu()!)
+                    "
+                  >
+                    <span>Is Not Empty</span>
+                  </div>
+                  <div
+                    class="context-menu-item"
+                    [class.disabled]="!isNumericColumn(selectedColumnForMenu()!)"
+                    [attr.aria-disabled]="!isNumericColumn(selectedColumnForMenu()!)"
+                    [attr.title]="
+                      !isNumericColumn(selectedColumnForMenu()!) ? 'Numeric columns only' : null
+                    "
+                    (click)="
+                      $event.stopPropagation();
+                      isNumericColumn(selectedColumnForMenu()!) &&
+                        applyTopBottomFilter(selectedColumnForMenu()!, 'top')
+                    "
+                  >
+                    <span>Top 10</span>
+                  </div>
+                  <div
+                    class="context-menu-item"
+                    [class.disabled]="!isNumericColumn(selectedColumnForMenu()!)"
+                    [attr.aria-disabled]="!isNumericColumn(selectedColumnForMenu()!)"
+                    [attr.title]="
+                      !isNumericColumn(selectedColumnForMenu()!) ? 'Numeric columns only' : null
+                    "
+                    (click)="
+                      $event.stopPropagation();
+                      isNumericColumn(selectedColumnForMenu()!) &&
+                        applyTopBottomFilter(selectedColumnForMenu()!, 'bottom')
+                    "
+                  >
+                    <span>Bottom 10</span>
+                  </div>
+                  <div class="context-menu-divider"></div>
+                  <div
+                    class="context-menu-item"
+                    [class.disabled]="!hasActiveFilter(selectedColumnForMenu()!)"
+                    [attr.aria-disabled]="!hasActiveFilter(selectedColumnForMenu()!)"
+                    [attr.title]="
+                      !hasActiveFilter(selectedColumnForMenu()!) ? 'No filter applied' : null
+                    "
+                    (click)="
+                      $event.stopPropagation();
+                      hasActiveFilter(selectedColumnForMenu()!) &&
+                        clearColumnFilter(selectedColumnForMenu()!)
+                    "
+                  >
+                    <span>Clear Column Filter</span>
+                    <span class="menu-shortcut">Alt+X</span>
+                  </div>
+                </div>
+              }
+            </div>
+            <!-- Pin submenu -->
+            <div
+              class="context-menu-item has-submenu"
+              (click)="showSubmenu('pin', $event); $event.stopPropagation()"
+              (mouseenter)="showSubmenu('pin', $event)"
+            >
+              <i appIcon="pin-angle" class="menu-icon" aria-hidden="true"></i>
+              <span>Pin</span>
+              <i appIcon="chevron-right" class="submenu-arrow" aria-hidden="true"></i>
+              <!-- Pin submenu items -->
+              @if (showPinSubmenu()) {
+                <div
+                  class="context-submenu column-context-submenu"
+                  [class.open-left]="columnSubmenuOpenLeft()"
+                  [class.open-up]="columnSubmenuOpenUp()"
+                  data-submenu="pin"
+                  (click)="$event.stopPropagation()"
+                  (pointerdown)="$event.stopPropagation()"
+                  (mouseenter)="showSubmenu('pin')"
+                >
+                  <div
+                    class="context-menu-item"
+                    [class.active]="selectedColumnForMenu()!.pinned === 'left'"
+                    [class.disabled]="selectedColumnForMenu()!.pinned === 'left'"
+                    [attr.aria-disabled]="selectedColumnForMenu()!.pinned === 'left'"
+                    [attr.title]="
+                      selectedColumnForMenu()!.pinned === 'left' ? 'Already pinned left' : null
+                    "
+                    (click)="
+                      $event.stopPropagation();
+                      selectedColumnForMenu()!.pinned !== 'left' &&
+                        pinColumnLeft(selectedColumnForMenu()!)
+                    "
+                  >
+                    <i appIcon="arrow-left" class="menu-icon" aria-hidden="true"></i>
+                    <span>Pin Left</span>
+                    <span class="menu-shortcut">Alt+Shift+Left</span>
+                  </div>
+                  <div
+                    class="context-menu-item"
+                    [class.active]="selectedColumnForMenu()!.pinned === 'right'"
+                    [class.disabled]="selectedColumnForMenu()!.pinned === 'right'"
+                    [attr.aria-disabled]="selectedColumnForMenu()!.pinned === 'right'"
+                    [attr.title]="
+                      selectedColumnForMenu()!.pinned === 'right' ? 'Already pinned right' : null
+                    "
+                    (click)="
+                      $event.stopPropagation();
+                      selectedColumnForMenu()!.pinned !== 'right' &&
+                        pinColumnRight(selectedColumnForMenu()!)
+                    "
+                  >
+                    <i appIcon="arrow-right" class="menu-icon" aria-hidden="true"></i>
+                    <span>Pin Right</span>
+                    <span class="menu-shortcut">Alt+Shift+Right</span>
+                  </div>
+                  <div
+                    class="context-menu-item"
+                    [class.disabled]="!selectedColumnForMenu()!.pinned"
+                    [attr.aria-disabled]="!selectedColumnForMenu()!.pinned"
+                    [attr.title]="!selectedColumnForMenu()!.pinned ? 'Column is not pinned' : null"
+                    (click)="
+                      $event.stopPropagation();
+                      selectedColumnForMenu()!.pinned && unpinColumn(selectedColumnForMenu()!)
+                    "
+                  >
+                    <i appIcon="x-lg" class="menu-icon" aria-hidden="true"></i>
+                    <span>Unpin</span>
+                    <span class="menu-shortcut">Alt+Shift+U</span>
+                  </div>
+                </div>
+              }
+            </div>
+            <!-- Align submenu -->
+            <div
+              class="context-menu-item has-submenu"
+              (click)="showSubmenu('align', $event); $event.stopPropagation()"
+              (mouseenter)="showSubmenu('align', $event)"
+            >
+              <i appIcon="text-left" class="menu-icon" aria-hidden="true"></i>
+              <span>Align</span>
+              <i appIcon="chevron-right" class="submenu-arrow" aria-hidden="true"></i>
+              <!-- Align submenu items -->
+              @if (showAlignSubmenu()) {
+                <div
+                  class="context-submenu column-context-submenu"
+                  [class.open-left]="columnSubmenuOpenLeft()"
+                  [class.open-up]="columnSubmenuOpenUp()"
+                  data-submenu="align"
+                  (click)="$event.stopPropagation()"
+                  (pointerdown)="$event.stopPropagation()"
+                  (mouseenter)="showSubmenu('align')"
+                >
+                  <div
+                    class="context-menu-item"
+                    [class.active]="selectedColumnForMenu()!.align === 'left'"
+                    (click)="
+                      $event.stopPropagation(); setColumnAlignment(selectedColumnForMenu()!, 'left')
+                    "
+                  >
+                    <i appIcon="text-left" class="menu-icon" aria-hidden="true"></i>
+                    <span>Align Left</span>
+                    <span class="menu-shortcut">Alt+L</span>
+                  </div>
+                  <div
+                    class="context-menu-item"
+                    [class.active]="selectedColumnForMenu()!.align === 'center'"
+                    (click)="
+                      $event.stopPropagation();
+                      setColumnAlignment(selectedColumnForMenu()!, 'center')
+                    "
+                  >
+                    <i appIcon="text-center" class="menu-icon" aria-hidden="true"></i>
+                    <span>Align Center</span>
+                    <span class="menu-shortcut">Alt+C</span>
+                  </div>
+                  <div
+                    class="context-menu-item"
+                    [class.active]="selectedColumnForMenu()!.align === 'right'"
+                    (click)="
+                      $event.stopPropagation();
+                      setColumnAlignment(selectedColumnForMenu()!, 'right')
+                    "
+                  >
+                    <i appIcon="arrow-right" class="menu-icon" aria-hidden="true"></i>
+                    <span>Align Right</span>
+                    <span class="menu-shortcut">Alt+R</span>
+                  </div>
+                </div>
+              }
+            </div>
+            <!-- Aggregate submenu -->
+            <div
+              class="context-menu-item has-submenu"
+              (click)="showSubmenu('aggregate', $event); $event.stopPropagation()"
+              (mouseenter)="showSubmenu('aggregate', $event)"
+            >
+              <i appIcon="bar-chart" class="menu-icon" aria-hidden="true"></i>
+              <span>Aggregate</span>
+              <i appIcon="chevron-right" class="submenu-arrow" aria-hidden="true"></i>
+              @if (showAggregateSubmenu()) {
+                <div
+                  class="context-submenu column-context-submenu"
+                  [class.open-left]="columnSubmenuOpenLeft()"
+                  [class.open-up]="columnSubmenuOpenUp()"
+                  data-submenu="aggregate"
+                  (click)="$event.stopPropagation()"
+                  (pointerdown)="$event.stopPropagation()"
+                  (mouseenter)="showSubmenu('aggregate')"
+                >
+                  <div
+                    class="context-menu-item aggregate-option"
+                    [class.active]="!getMenuAggregateValue()"
+                    (click)="
+                      $event.stopPropagation(); setColumnAggregate(selectedColumnForMenu()!, null)
+                    "
+                  >
+                    <span>None</span>
+                  </div>
+                  <div
+                    class="context-menu-item aggregate-option"
+                    [class.active]="getMenuAggregateValue() === 'count'"
+                    (click)="
+                      $event.stopPropagation();
+                      setColumnAggregate(selectedColumnForMenu()!, 'count')
+                    "
+                  >
+                    <span>Count</span>
+                  </div>
+                  <div
+                    class="context-menu-item aggregate-option"
+                    [class.active]="getMenuAggregateValue() === 'distinct'"
+                    (click)="
+                      $event.stopPropagation();
+                      setColumnAggregate(selectedColumnForMenu()!, 'distinct')
+                    "
+                  >
+                    <span>Distinct Count</span>
+                  </div>
+                  <div
+                    class="context-menu-item aggregate-option"
+                    [class.active]="getMenuAggregateValue() === 'percent'"
+                    (click)="
+                      $event.stopPropagation();
+                      setColumnAggregate(selectedColumnForMenu()!, 'percent')
+                    "
+                  >
+                    <span>Percent</span>
+                  </div>
+                  <div
+                    class="context-menu-item aggregate-option"
+                    [class.active]="getMenuAggregateValue() === 'sum'"
+                    [class.disabled]="!isNumericColumn(selectedColumnForMenu()!)"
+                    [attr.aria-disabled]="!isNumericColumn(selectedColumnForMenu()!)"
+                    [attr.title]="
+                      !isNumericColumn(selectedColumnForMenu()!) ? 'Numeric columns only' : null
+                    "
+                    (click)="
+                      $event.stopPropagation();
+                      isNumericColumn(selectedColumnForMenu()!) &&
+                        setColumnAggregate(selectedColumnForMenu()!, 'sum')
+                    "
+                  >
+                    <span>Sum</span>
+                  </div>
+                  <div
+                    class="context-menu-item aggregate-option"
+                    [class.active]="getMenuAggregateValue() === 'avg'"
+                    [class.disabled]="!isNumericColumn(selectedColumnForMenu()!)"
+                    [attr.aria-disabled]="!isNumericColumn(selectedColumnForMenu()!)"
+                    [attr.title]="
+                      !isNumericColumn(selectedColumnForMenu()!) ? 'Numeric columns only' : null
+                    "
+                    (click)="
+                      $event.stopPropagation();
+                      isNumericColumn(selectedColumnForMenu()!) &&
+                        setColumnAggregate(selectedColumnForMenu()!, 'avg')
+                    "
+                  >
+                    <span>Average</span>
+                  </div>
+                  <div
+                    class="context-menu-item aggregate-option"
+                    [class.active]="getMenuAggregateValue() === 'median'"
+                    [class.disabled]="!isNumericColumn(selectedColumnForMenu()!)"
+                    [attr.aria-disabled]="!isNumericColumn(selectedColumnForMenu()!)"
+                    [attr.title]="
+                      !isNumericColumn(selectedColumnForMenu()!) ? 'Numeric columns only' : null
+                    "
+                    (click)="
+                      $event.stopPropagation();
+                      isNumericColumn(selectedColumnForMenu()!) &&
+                        setColumnAggregate(selectedColumnForMenu()!, 'median')
+                    "
+                  >
+                    <span>Median</span>
+                  </div>
+                  <div
+                    class="context-menu-item aggregate-option"
+                    [class.active]="getMenuAggregateValue() === 'min'"
+                    [class.disabled]="!isNumericColumn(selectedColumnForMenu()!)"
+                    [attr.aria-disabled]="!isNumericColumn(selectedColumnForMenu()!)"
+                    [attr.title]="
+                      !isNumericColumn(selectedColumnForMenu()!) ? 'Numeric columns only' : null
+                    "
+                    (click)="
+                      $event.stopPropagation();
+                      isNumericColumn(selectedColumnForMenu()!) &&
+                        setColumnAggregate(selectedColumnForMenu()!, 'min')
+                    "
+                  >
+                    <span>Min</span>
+                  </div>
+                  <div
+                    class="context-menu-item aggregate-option"
+                    [class.active]="getMenuAggregateValue() === 'max'"
+                    [class.disabled]="!isNumericColumn(selectedColumnForMenu()!)"
+                    [attr.aria-disabled]="!isNumericColumn(selectedColumnForMenu()!)"
+                    [attr.title]="
+                      !isNumericColumn(selectedColumnForMenu()!) ? 'Numeric columns only' : null
+                    "
+                    (click)="
+                      $event.stopPropagation();
+                      isNumericColumn(selectedColumnForMenu()!) &&
+                        setColumnAggregate(selectedColumnForMenu()!, 'max')
+                    "
+                  >
+                    <span>Max</span>
+                  </div>
+                  <div class="context-menu-divider"></div>
+                  <div
+                    class="context-menu-item"
+                    (click)="$event.stopPropagation(); applyAggregateToAllNumericColumnsFromMenu()"
+                  >
+                    <span>Apply to All Numeric</span>
+                  </div>
+                  <div
+                    class="context-menu-item"
+                    (click)="$event.stopPropagation(); clearAllColumnAggregatesFromMenu()"
+                  >
+                    <span>Clear All Aggregates</span>
+                  </div>
+                </div>
+              }
+            </div>
+            <!-- Column Stats submenu -->
+            <div
+              class="context-menu-item has-submenu"
+              (click)="showSubmenu('stats', $event); $event.stopPropagation()"
+              (mouseenter)="showSubmenu('stats', $event)"
+            >
+              <i appIcon="bar-chart" class="menu-icon" aria-hidden="true"></i>
+              <span>Column Stats</span>
+              <i appIcon="caret-right-fill" class="submenu-arrow" aria-hidden="true"></i>
+              @if (showStatsSubmenu()) {
+                <div
+                  class="context-submenu column-context-submenu column-stats-submenu"
+                  [class.open-left]="columnSubmenuOpenLeft()"
+                  [class.open-up]="columnSubmenuOpenUp()"
+                  data-submenu="stats"
+                  (click)="$event.stopPropagation()"
+                  (pointerdown)="$event.stopPropagation()"
+                  (mouseenter)="showSubmenu('stats')"
+                >
+                  <div class="context-menu-item column-stat column-stats-title">
+                    <span>Column Stats</span>
+                  </div>
+                  @if (getColumnStatsSummary(selectedColumnForMenu()!); as stats) {
+                    <div class="context-menu-item column-stat">
+                      <span>Non-empty</span>
+                      <strong>{{ stats.nonEmpty }}</strong>
+                    </div>
+                    <div class="context-menu-item column-stat">
+                      <span>Empty</span>
+                      <strong>{{ stats.empty }}</strong>
+                    </div>
+                    <div class="context-menu-item column-stat">
+                      <span>Unique</span>
+                      <strong>{{ stats.unique }}</strong>
+                    </div>
+                    <div class="context-menu-item column-stat">
+                      <span>Min</span>
+                      <strong>{{ formatStatValue(stats.min, 2) }}</strong>
+                    </div>
+                    <div class="context-menu-item column-stat">
+                      <span>Max</span>
+                      <strong>{{ formatStatValue(stats.max, 2) }}</strong>
+                    </div>
+                    <div class="context-menu-item column-stat">
+                      <span>Avg</span>
+                      <strong>{{ formatStatValue(stats.avg, 2) }}</strong>
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+            <div class="context-menu-divider"></div>
+            <!-- Auto-size Column -->
+            <div
+              class="context-menu-item"
+              (click)="autoSizeColumnFromMenu(selectedColumnForMenu()!)"
+            >
+              <i appIcon="arrow-left-right" class="menu-icon" aria-hidden="true"></i>
+              <span>Auto-size Column</span>
+              <span class="menu-shortcut">Alt+A</span>
+            </div>
+            <!-- Columns submenu -->
+            <div
+              class="context-menu-item has-submenu"
+              (click)="showSubmenu('visibility', $event); $event.stopPropagation()"
+              (mouseenter)="showSubmenu('visibility', $event)"
+            >
+              <i appIcon="layout-three-columns" class="menu-icon" aria-hidden="true"></i>
+              <span>Columns</span>
+              <i appIcon="caret-right-fill" class="submenu-arrow" aria-hidden="true"></i>
+              @if (showColumnVisibilitySubmenu()) {
+                <div
+                  class="context-submenu column-context-submenu column-visibility-submenu"
+                  [class.open-left]="columnSubmenuOpenLeft()"
+                  [class.open-up]="columnSubmenuOpenUp()"
+                  data-submenu="visibility"
+                  (click)="$event.stopPropagation()"
+                  (pointerdown)="$event.stopPropagation()"
+                  (mouseenter)="showSubmenu('visibility')"
+                >
+                  <div
+                    class="context-menu-item has-submenu"
+                    (mousedown)="showSubmenu('choose', $event); $event.stopPropagation()"
+                    (click)="showSubmenu('choose', $event); $event.stopPropagation()"
+                    (mouseenter)="showSubmenu('choose', $event)"
+                  >
+                    <i appIcon="layout-three-columns" class="menu-icon" aria-hidden="true"></i>
+                    <span>Choose Columns</span>
+                    <i appIcon="caret-right-fill" class="submenu-arrow" aria-hidden="true"></i>
+                    @if (showChooseColumnsSubmenu()) {
+                      <div
+                        class="context-submenu column-context-submenu column-chooser-submenu"
+                        [class.search-active]="columnVisibilitySearch().trim().length"
+                        [class.open-left]="columnChooseSubmenuOpenLeft()"
+                        [class.open-up]="columnChooseSubmenuOpenUp()"
+                        data-submenu="choose"
+                        (click)="$event.stopPropagation()"
+                        (pointerdown)="$event.stopPropagation()"
+                      >
+                        <div
+                          class="column-chooser-header"
+                          (click)="$event.stopPropagation()"
+                          (pointerdown)="$event.stopPropagation()"
+                          [class.search-active]="columnVisibilitySearch().trim().length"
+                        >
+                          <div class="chooser-search">
+                            <div
+                              class="chooser-search-box"
+                              [class.active]="columnVisibilitySearch().trim().length"
+                              [class.search-active]="columnVisibilitySearch().trim().length"
+                            >
+                              <span class="search-icon" aria-hidden="true">
+                                <i appIcon="search" aria-hidden="true"></i>
+                              </span>
+                              <input
+                                type="text"
+                                class="chooser-search-input"
+                                [value]="columnVisibilitySearch()"
+                                (input)="columnVisibilitySearch.set($any($event.target).value)"
+                                placeholder="Search columns..."
+                                aria-label="Search columns"
+                              />
+                              @if (columnVisibilitySearch().trim().length) {
+                                <button
+                                  type="button"
+                                  class="clear-search"
+                                  (click)="columnVisibilitySearch.set(''); $event.stopPropagation()"
+                                  aria-label="Clear search"
+                                >
+                                  ✕
+                                </button>
+                              }
+                            </div>
+                          </div>
+                          <div class="chooser-info">
+                            <span class="selected-count"
+                              >{{ visibleColumns().length }} / {{ columnsSignal().length }}</span
+                            >
+                          </div>
+                        </div>
+                        <div class="column-chooser-list">
+                          @if (filteredColumnsForMenu().length === 0) {
+                            <div class="context-menu-item menu-empty">
+                              <span>No columns found</span>
+                            </div>
+                          }
+                          @for (
+                            column of filteredColumnsForMenu();
+                            track trackByField($index, column)
+                          ) {
+                            <div
+                              class="context-menu-item column-toggle"
+                              (click)="
+                                $event.stopPropagation(); toggleColumnVisibilityFromMenu(column)
+                              "
+                            >
+                              <label class="round-check">
+                                <input
+                                  type="checkbox"
+                                  [checked]="!column.hidden"
+                                  (click)="
+                                    $event.stopPropagation(); toggleColumnVisibilityFromMenu(column)
+                                  "
+                                />
+                                <span class="round-check__dot" aria-hidden="true"></span>
+                              </label>
+                              <span>{{ column.header || getColumnField(column) }}</span>
+                            </div>
+                          }
+                        </div>
+                      </div>
+                    }
+                  </div>
+                  <div class="context-menu-divider"></div>
+                  <div
+                    class="context-menu-item caution"
+                    (click)="$event.stopPropagation(); showOnlyColumn(selectedColumnForMenu()!)"
+                  >
+                    <i appIcon="eye" class="menu-icon" aria-hidden="true"></i>
+                    <span>Show Only This Column</span>
+                  </div>
+                  <div
+                    class="context-menu-item danger"
+                    (click)="$event.stopPropagation(); hideColumn(selectedColumnForMenu()!)"
+                  >
+                    <i appIcon="eye-slash" class="menu-icon" aria-hidden="true"></i>
+                    <span>Hide Column</span>
+                  </div>
+                  <div class="context-menu-divider"></div>
+                  <div class="column-visibility-list">
+                    <div
+                      class="context-menu-item"
+                      (click)="$event.stopPropagation(); showAllColumnsFromMenu()"
+                    >
+                      <i appIcon="layout-three-columns" class="menu-icon" aria-hidden="true"></i>
+                      <span>Show All Columns</span>
+                    </div>
+                    <div
+                      class="context-menu-item danger"
+                      (click)="$event.stopPropagation(); hideAllColumnsFromMenu()"
+                    >
+                      <i appIcon="eye-slash" class="menu-icon" aria-hidden="true"></i>
+                      <span>Hide All Columns</span>
+                    </div>
+                    <div
+                      class="context-menu-item danger"
+                      (click)="
+                        $event.stopPropagation(); resetColumnFromMenu(selectedColumnForMenu()!)
+                      "
+                    >
+                      <i appIcon="arrow-repeat" class="menu-icon" aria-hidden="true"></i>
+                      <span>Reset Columns</span>
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+            <div
+              class="context-menu-item has-submenu"
+              (click)="showSubmenu('type', $event); $event.stopPropagation()"
+              (mouseenter)="showSubmenu('type', $event)"
+            >
+              <i appIcon="list-task" class="menu-icon" aria-hidden="true"></i>
+              <span>Column Type</span>
+              <span class="menu-meta">{{
+                getColumnDataTypeDisplay(selectedColumnForMenu()!)
+              }}</span>
+              <i appIcon="caret-right-fill" class="submenu-arrow" aria-hidden="true"></i>
+              @if (showTypeSubmenu()) {
+                <div
+                  class="context-submenu column-context-submenu column-type-submenu"
+                  [class.open-left]="columnSubmenuOpenLeft()"
+                  [class.open-up]="columnSubmenuOpenUp()"
+                  data-submenu="type"
+                  (click)="$event.stopPropagation()"
+                  (pointerdown)="$event.stopPropagation()"
+                  (mouseenter)="showSubmenu('type')"
+                >
+                  <div class="column-type-current">
+                    <div class="column-type-current__mark">
+                      {{
+                        getColumnTypeChoiceMark($any(getColumnDataType(selectedColumnForMenu()!)))
+                      }}
+                    </div>
+                    <div class="column-type-current__copy">
+                      <strong>{{ getColumnDataTypeDisplay(selectedColumnForMenu()!) }}</strong>
+                      <span>{{ getColumnDataTypeDescription(selectedColumnForMenu()!) }}</span>
+                    </div>
+                  </div>
+                  @if (isManagedColumnType(selectedColumnForMenu()!)) {
+                    <div class="column-type-managed-note">
+                      This column has a configured editor. The grid reports its real behavior here
+                      and keeps its source wiring intact.
+                    </div>
+                  }
+                  <div class="context-menu-label">Choose Data Type</div>
+                  @for (type of ['text', 'number', 'date', 'dropdown']; track type) {
+                    <button
+                      type="button"
+                      class="column-type-choice"
+                      [class.active]="getColumnDataType(selectedColumnForMenu()!) === type"
+                      [disabled]="isColumnTypeChoiceDisabled(selectedColumnForMenu()!, $any(type))"
+                      [attr.title]="
+                        isColumnTypeChoiceDisabled(selectedColumnForMenu()!, $any(type))
+                          ? 'This column is managed by its source configuration.'
+                          : null
+                      "
+                      (click)="
+                        $event.stopPropagation();
+                        setColumnDataType(selectedColumnForMenu()!, $any(type))
+                      "
+                    >
+                      <span class="column-type-choice__mark">{{
+                        getColumnTypeChoiceMark($any(type))
+                      }}</span>
+                      <span class="column-type-choice__copy">
+                        <strong>{{ getColumnTypeChoiceLabel($any(type)) }}</strong>
+                        <small>{{ getColumnTypeChoiceHint($any(type)) }}</small>
+                      </span>
+                      @if (getColumnDataType(selectedColumnForMenu()!) === type) {
+                        <i
+                          appIcon="check-lg"
+                          class="column-type-choice__check"
+                          aria-hidden="true"
+                        ></i>
+                      }
+                    </button>
+                  }
+                  @if (shouldShowDropdownOptionsEditor(selectedColumnForMenu()!)) {
+                    <div class="context-menu-divider"></div>
+                    <label class="column-type-options-editor">
+                      <span>Dropdown options</span>
+                      <textarea
+                        rows="6"
+                        [value]="columnDropdownOptionsDraft"
+                        (input)="columnDropdownOptionsDraft = $any($event.target).value"
+                        placeholder="One option per line"
+                      ></textarea>
+                    </label>
+                    <button
+                      type="button"
+                      class="context-menu-item column-type-save"
+                      (click)="
+                        $event.stopPropagation();
+                        saveColumnDropdownOptions(selectedColumnForMenu()!)
+                      "
+                    >
+                      <i appIcon="check-lg" class="menu-icon" aria-hidden="true"></i>
+                      <span>Apply Options</span>
+                    </button>
+                  }
+                </div>
+              }
+            </div>
+            <div
+              class="context-menu-item"
+              (click)="$event.stopPropagation(); renameColumnFromMenu(selectedColumnForMenu()!)"
+            >
+              <i appIcon="pencil" class="menu-icon" aria-hidden="true"></i>
+              <span>Rename Column</span>
+            </div>
+            <div
+              class="context-menu-item"
+              (click)="$event.stopPropagation(); insertColumnLeft(selectedColumnForMenu()!)"
+            >
+              <i appIcon="layout-three-columns" class="menu-icon" aria-hidden="true"></i>
+              <span>Insert Column Left</span>
+            </div>
+            <div
+              class="context-menu-item"
+              (click)="$event.stopPropagation(); insertColumnRight(selectedColumnForMenu()!)"
+            >
+              <i appIcon="layout-three-columns" class="menu-icon" aria-hidden="true"></i>
+              <span>Insert Column Right</span>
+            </div>
+            <div
+              class="context-menu-item danger"
+              (click)="$event.stopPropagation(); deleteColumn(selectedColumnForMenu()!)"
+            >
+              <i appIcon="trash" class="menu-icon" aria-hidden="true"></i>
+              <span>Delete Column</span>
+            </div>
+            <div class="context-menu-divider"></div>
+            <!-- More submenu -->
+            <div
+              class="context-menu-item has-submenu"
+              (click)="showSubmenu('more', $event); $event.stopPropagation()"
+              (mouseenter)="showSubmenu('more', $event)"
+            >
+              <i appIcon="three-dots" class="menu-icon" aria-hidden="true"></i>
+              <span>More</span>
+              <i appIcon="caret-right-fill" class="submenu-arrow" aria-hidden="true"></i>
+              @if (showMoreSubmenu()) {
+                <div
+                  class="context-submenu column-context-submenu column-more-submenu"
+                  [class.open-left]="columnSubmenuOpenLeft()"
+                  [class.open-up]="columnSubmenuOpenUp()"
+                  data-submenu="more"
+                  (click)="$event.stopPropagation()"
+                  (pointerdown)="$event.stopPropagation()"
+                  (mouseenter)="showSubmenu('more')"
+                >
+                  <div
+                    class="context-menu-item"
+                    (click)="$event.stopPropagation(); moveColumnLeft(selectedColumnForMenu()!)"
+                  >
+                    <i appIcon="arrow-left" class="menu-icon" aria-hidden="true"></i>
+                    <span>Move Left</span>
+                  </div>
+                  <div
+                    class="context-menu-item"
+                    (click)="$event.stopPropagation(); moveColumnRight(selectedColumnForMenu()!)"
+                  >
+                    <i appIcon="arrow-right" class="menu-icon" aria-hidden="true"></i>
+                    <span>Move Right</span>
+                  </div>
+                  <div class="context-menu-divider"></div>
+                  @if (!isColumnWidthLocked(selectedColumnForMenu()!)) {
+                    <div
+                      class="context-menu-item"
+                      (click)="$event.stopPropagation(); lockColumnWidth(selectedColumnForMenu()!)"
+                    >
+                      <i appIcon="lock" class="menu-icon" aria-hidden="true"></i>
+                      <span>Lock Width</span>
+                    </div>
+                  }
+                  @if (isColumnWidthLocked(selectedColumnForMenu()!)) {
+                    <div
+                      class="context-menu-item"
+                      (click)="
+                        $event.stopPropagation(); unlockColumnWidth(selectedColumnForMenu()!)
+                      "
+                    >
+                      <i appIcon="unlock" class="menu-icon" aria-hidden="true"></i>
+                      <span>Unlock Width</span>
+                    </div>
+                  }
+                  <div class="context-menu-divider"></div>
+                  <div
+                    class="context-menu-item"
+                    (click)="
+                      $event.stopPropagation();
+                      isWrapEnabled(selectedColumnForMenu()!)
+                        ? disableWrap(selectedColumnForMenu()!)
+                        : enableWrap(selectedColumnForMenu()!)
+                    "
+                  >
+                    <i appIcon="text-left" class="menu-icon" aria-hidden="true"></i>
+                    <span>Wrap Text</span>
+                    <span
+                      class="menu-meta"
+                      [class.active]="isWrapEnabled(selectedColumnForMenu()!)"
+                      >{{ isWrapEnabled(selectedColumnForMenu()!) ? 'On' : 'Off' }}</span
+                    >
+                  </div>
+                  <div
+                    class="context-menu-item"
+                    (click)="
+                      $event.stopPropagation(); toggleDuplicateHighlight(selectedColumnForMenu()!)
+                    "
+                  >
+                    <i appIcon="files" class="menu-icon" aria-hidden="true"></i>
+                    <span>Highlight Duplicates</span>
+                    <span
+                      class="menu-meta"
+                      [class.active]="isDuplicateHighlightEnabled(selectedColumnForMenu()!)"
+                      >{{
+                        isDuplicateHighlightEnabled(selectedColumnForMenu()!) ? 'On' : 'Off'
+                      }}</span
+                    >
+                  </div>
+                  <div class="context-menu-divider"></div>
+                  <div
+                    class="context-menu-item has-submenu"
+                    (click)="showSubmenu('copy', $event); $event.stopPropagation()"
+                    (mouseenter)="showSubmenu('copy', $event)"
+                  >
+                    <i appIcon="files" class="menu-icon" aria-hidden="true"></i>
+                    <span>Copy</span>
+                    <i appIcon="caret-right-fill" class="submenu-arrow" aria-hidden="true"></i>
+                    @if (showCopySubmenu()) {
+                      <div
+                        class="context-submenu column-context-submenu"
+                        [class.open-left]="columnCopySubmenuOpenLeft()"
+                        [class.open-up]="columnCopySubmenuOpenUp()"
+                        data-submenu="copy"
+                        (click)="$event.stopPropagation()"
+                        (pointerdown)="$event.stopPropagation()"
+                        (mouseenter)="showSubmenu('copy')"
+                      >
+                        <div
+                          class="context-menu-item"
+                          (click)="
+                            $event.stopPropagation();
+                            copyColumnValuesFromMenu(selectedColumnForMenu()!, false)
+                          "
+                        >
+                          <i appIcon="files" class="menu-icon" aria-hidden="true"></i>
+                          <span>Copy Column Values</span>
+                        </div>
+                        <div
+                          class="context-menu-item"
+                          (click)="
+                            $event.stopPropagation();
+                            copyColumnValuesFromMenu(selectedColumnForMenu()!, true)
+                          "
+                        >
+                          <i appIcon="files" class="menu-icon" aria-hidden="true"></i>
+                          <span>Copy Values + Header</span>
+                        </div>
+                        <div
+                          class="context-menu-item"
+                          (click)="
+                            $event.stopPropagation();
+                            copyColumnNameFromMenu(selectedColumnForMenu()!)
+                          "
+                        >
+                          <i appIcon="file-earmark-text" class="menu-icon" aria-hidden="true"></i>
+                          <span>Copy Column Name</span>
+                        </div>
+                        <div
+                          class="context-menu-item"
+                          (click)="
+                            $event.stopPropagation();
+                            copyColumnFieldFromMenu(selectedColumnForMenu()!)
+                          "
+                        >
+                          <i appIcon="bullseye" class="menu-icon" aria-hidden="true"></i>
+                          <span>Copy Column ID</span>
+                        </div>
+                      </div>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        }
+        <div class="header-actions">
+          <div class="grid-action-slot">
+            <ng-content select="[grid-actions-header]"></ng-content>
+          </div>
+          @if (config.showFilter) {
+            <div
+              class="header-search-box search"
+              [class.search-active]="globalSearchTerm.trim().length > 0"
+            >
+              <i appIcon="search" aria-hidden="true"></i>
+              <input
+                type="search"
+                class="search-input"
+                placeholder="Search..."
+                [value]="globalSearchTerm"
+                (input)="onGlobalSearch($any($event.target)?.value || '')"
+                aria-label="Search grid"
+              />
+            </div>
+          }
+        </div>
+      </div>
+      <div class="fixed-table-header" #fixedHeader>
+        <table class="header-table" [style.minWidth.px]="getTotalTableWidth()">
+          <ng-container [ngTemplateOutlet]="gridColumnGroupTemplate"></ng-container>
+          <ng-container
+            [ngTemplateOutlet]="gridTableHeadTemplate"
+            [ngTemplateOutletContext]="{ headerMode: 'fixed', renderHeaderEnd: true }"
+          ></ng-container>
+        </table>
+        <div class="grid-filler grid-filler-header" aria-hidden="true"></div>
+      </div>
+    </div>
+  }
+
+  <!-- Mega Menu (Command Center) -->
+  @if (showActionLauncher()) {
+    <div class="mega-menu-overlay">
+      <div class="mega-menu" (click)="$event.stopPropagation()">
+        <div class="mega-header">
+          <div>
+            <div class="mega-title">Grid Command Center</div>
+            <div class="mega-subtitle">All power tools in one place</div>
+          </div>
+          <button type="button" class="icon-btn" (click)="closeActionLauncher($event)">
+            &times;
+          </button>
+        </div>
+        <div class="mega-summary">
+          <div class="summary-chip">
+            <span class="label">Total</span>
+            <span class="value">{{ data.length | number }}</span>
+          </div>
+          <div class="summary-chip">
+            <span class="label">Visible</span>
+            <span class="value">{{ filteredDataCount() | number }}</span>
+          </div>
+          <div class="summary-chip">
+            <span class="label">Selected</span>
+            <span class="value">{{ selectedRowCount() }}</span>
+          </div>
+          <div class="summary-chip">
+            <span class="label">Pinned</span>
+            <span class="value">{{ pinnedRows().length }}</span>
+          </div>
+        </div>
+        <div class="mega-grid">
+          <div class="mega-section">
+            <h4>Density</h4>
+            <div class="toggle-grid">
+              <button
+                type="button"
+                class="toggle-btn"
+                [class.active]="currentDensity() === 'compact'"
+                (click)="changeDensity('compact')"
+              >
+                Compact
+              </button>
+              <button
+                type="button"
+                class="toggle-btn"
+                [class.active]="currentDensity() === 'comfortable'"
+                (click)="changeDensity('comfortable')"
+              >
+                Comfortable
+              </button>
+              <button
+                type="button"
+                class="toggle-btn"
+                [class.active]="currentDensity() === 'spacious'"
+                (click)="changeDensity('spacious')"
+              >
+                Spacious
+              </button>
+            </div>
+          </div>
+          <div class="mega-section">
+            <h4>Visual modes</h4>
+            <div class="toggle-grid">
+              <button
+                type="button"
+                class="toggle-btn"
+                [class.active]="focusModeEnabled()"
+                (click)="toggleFocusMode()"
+              >
+                Focus
+              </button>
+              <button
+                type="button"
+                class="toggle-btn"
+                [class.active]="colorScaleEnabled()"
+                (click)="toggleColorScale()"
+              >
+                Heat map
+              </button>
+              <button
+                type="button"
+                class="toggle-btn"
+                [class.active]="showColumnInsights()"
+                (click)="toggleColumnInsights()"
+              >
+                Insights
+              </button>
+              <button
+                type="button"
+                class="toggle-btn"
+                [class.active]="showAnomalyAlerts()"
+                (click)="toggleAnomalyAlerts()"
+              >
+                Anomalies
+              </button>
+              <button
+                type="button"
+                class="toggle-btn"
+                [class.active]="highContrastMode()"
+                (click)="toggleHighContrast()"
+              >
+                High contrast
+              </button>
+              <button
+                type="button"
+                class="toggle-btn"
+                [class.active]="showForecastSparklines()"
+                (click)="toggleForecastSparklines()"
+              >
+                Sparklines
+              </button>
+            </div>
+          </div>
+          <div class="mega-section">
+            <h4>Panels & actions</h4>
+            <div class="toggle-grid primary">
+              <button type="button" class="primary-action" (click)="toggleSnapshotManager()">
+                Snapshots
+              </button>
+              <button type="button" class="primary-action" (click)="toggleQualityPanel()">
+                Quality
+              </button>
+              <button type="button" class="primary-action" (click)="toggleAuditTrail()">
+                Audit log
+              </button>
+              <button type="button" class="primary-action" (click)="toggleKeyboardShortcuts()">
+                Shortcuts
+              </button>
+              <button
+                type="button"
+                class="primary-action"
+                (click)="toggleColumnVisibilityPanel($event)"
+              >
+                Column visibility
+              </button>
+              <button type="button" class="primary-action" (click)="toggleFullScreen()">
+                Fullscreen
+              </button>
+            </div>
+          </div>
+          <div class="mega-section">
+            <h4>Export & share</h4>
+            <div class="export-grid">
+              <div class="export-row">
+                <span class="export-label">Scope</span>
+                <div class="toggle-grid">
+                  <button
+                    type="button"
+                    class="toggle-btn"
+                    [class.active]="exportScope() === 'all'"
+                    (click)="setExportScope('all')"
+                  >
+                    All
+                  </button>
+                  <button
+                    type="button"
+                    class="toggle-btn"
+                    [class.active]="exportScope() === 'selected'"
+                    (click)="setExportScope('selected')"
+                  >
+                    Selected
+                  </button>
+                  <button
+                    type="button"
+                    class="toggle-btn"
+                    [class.active]="exportScope() === 'filtered'"
+                    (click)="setExportScope('filtered')"
+                  >
+                    Filtered
+                  </button>
+                </div>
+              </div>
+              <div class="export-row">
+                <span class="export-label">Format</span>
+                <div class="toggle-grid">
+                  <button
+                    type="button"
+                    class="toggle-btn"
+                    [class.active]="exportFormat() === 'excel'"
+                    (click)="setExportFormat('excel')"
+                  >
+                    Excel
+                  </button>
+                  <button
+                    type="button"
+                    class="toggle-btn"
+                    [class.active]="exportFormat() === 'csv'"
+                    (click)="setExportFormat('csv')"
+                  >
+                    CSV
+                  </button>
+                  <button
+                    type="button"
+                    class="toggle-btn"
+                    [class.active]="exportFormat() === 'pdf'"
+                    (click)="setExportFormat('pdf')"
+                  >
+                    PDF
+                  </button>
+                </div>
+              </div>
+              <div class="export-actions">
+                <button type="button" class="primary-action" (click)="exportDataAdvanced()">
+                  Export now
+                </button>
+                <button
+                  type="button"
+                  class="primary-action ghost"
+                  (click)="generateShareableLink()"
+                >
+                  Share link
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Save preset dialog -->
+  @if (showSavePresetDialog()) {
+    <div class="preset-dialog-overlay" (click)="closeSavePresetDialog()">
+      <div class="preset-dialog" (click)="$event.stopPropagation()">
+        <div class="preset-dialog-header">
+          <h3>Save filter preset</h3>
+          <button type="button" class="preset-dialog-close" (click)="closeSavePresetDialog()">
+            &times;
+          </button>
+        </div>
+        <div class="preset-dialog-body">
+          <label for="preset-name">Preset name</label>
+          <input
+            id="preset-name"
+            type="text"
+            [(ngModel)]="newPresetName"
+            placeholder="Enter preset name"
+            (keydown.enter)="saveCurrentFiltersAsPreset()"
+            (keydown.escape)="closeSavePresetDialog()"
+            autofocus
+          />
+          <div class="preset-preview">
+            <strong>Filters to save</strong>
+            <ul>
+              @for (filter of filterStates(); track filter) {
+                <li>{{ getFilterLabel(filter.field) }}: {{ filter.value }}</li>
+              }
+              @if (globalSearchTerm) {
+                <li>Search: "{{ globalSearchTerm }}"</li>
+              }
+            </ul>
+          </div>
+        </div>
+        <div class="preset-dialog-footer">
+          <button type="button" class="btn-cancel" (click)="closeSavePresetDialog()">Cancel</button>
+          <button type="button" class="btn-save" (click)="saveCurrentFiltersAsPreset()">
+            Save preset
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Snapshot manager -->
+  @if (snapshotManagerOpen()) {
+    <div class="snapshot-manager-panel">
+      <div class="snapshot-header">
+        <div>
+          <div class="title">Scenario snapshots</div>
+          <div class="subtitle">Save &amp; restore full setups</div>
+        </div>
+        <button type="button" class="close-btn" (click)="toggleSnapshotManager()">&times;</button>
+      </div>
+      <div class="snapshot-create">
+        <input type="text" placeholder="Name this snapshot" [(ngModel)]="newSnapshotName" />
+        <button type="button" (click)="saveSnapshotFromUI()">Save</button>
+      </div>
+      @if (savedSnapshots().length) {
+        <div class="snapshot-list">
+          @for (snapshot of savedSnapshots(); track snapshot) {
+            <div class="snapshot-card" (click)="applySnapshot(snapshot.id)">
+              <div class="snapshot-name">{{ snapshot.name }}</div>
+              <div class="snapshot-meta">{{ snapshot.createdAt | date: 'short' }}</div>
+              <button
+                type="button"
+                class="snapshot-delete"
+                (click)="deleteSnapshot(snapshot.id, $event)"
+              >
+                &times;
+              </button>
+            </div>
+          }
+        </div>
+      } @else {
+        <div class="snapshot-empty">No snapshots yet.</div>
+      }
+    </div>
+  }
+
+  @let currentSelectedCount = selectedRowCount();
+
+  <!-- Main grid container -->
+  <div class="grid-container" [class.virtual-scroll]="shouldUseVirtualScroll()">
+    <ng-template #rowSelectionCellTemplate let-dataRow="dataRow" let-rowIndex="rowIndex">
+      @if (config.selectable) {
+        @let appendRow = isAppendRow(dataRow);
+        @let rowSelectionNumber = appendRow ? null : getRowSelectionNumber(dataRow, rowIndex);
+        @let rowSelected = !appendRow && isRowSelected(dataRow);
+        <td
+          class="selection-cell"
+          [class.pinned-left]="shouldPinSelection()"
+          [class.is-selected]="rowSelected"
+          [class.is-row-hovered]="!appendRow && isRowHovered(rowIndex)"
+          [class.is-append-row]="appendRow"
+          (click)="
+            !appendRow && toggleRowSelection(dataRow, $event, rowIndex); $event.stopPropagation()
+          "
+        >
+          <span class="selection-cell-layout">
+            <span class="selection-row-index" aria-hidden="true">{{
+              rowSelectionNumber ?? ''
+            }}</span>
+            <span class="selection-row-checkbox">
+              @if (!appendRow) {
+                <input
+                  type="checkbox"
+                  class="grid-checkbox"
+                  [checked]="rowSelected"
+                  [attr.aria-label]="
+                    rowSelectionNumber !== null ? 'Select row ' + rowSelectionNumber : 'Select row'
+                  "
+                  (click)="toggleRowSelection(dataRow, $event, rowIndex); $event.stopPropagation()"
+                />
+              }
+            </span>
+          </span>
+          @if (appendRow && getAppendRowSelectionHint(); as appendRowHint) {
+            <span class="append-row-hint append-row-selection-hint">{{ appendRowHint }}</span>
+          }
+        </td>
+      }
+    </ng-template>
+
+    <ng-template
+      #rowCellContentTemplate
+      let-dataRow="dataRow"
+      let-column="column"
+      let-rowIndex="rowIndex"
+    >
+      @let cellEditing = isEditing(rowIndex, column);
+      <div class="cell-content" [class.editable]="column.editable" [class.is-editing]="cellEditing">
+        @if (isAppendRow(dataRow) && !cellEditing) {
+          @if (getAppendRowHint(column); as appendRowHint) {
+            <span class="append-row-hint">{{ appendRowHint }}</span>
+          }
+        } @else if (isSearchSelectColumn(column)) {
+          <search-select
+            class="grid-cell-search-select"
+            (click)="activateSearchSelectCell(dataRow, column); $event.stopPropagation()"
+            (focusin)="activateSearchSelectCell(dataRow, column)"
+            (mousedown)="activateSearchSelectCell(dataRow, column); $event.stopPropagation()"
+            (pointerdown)="activateSearchSelectCell(dataRow, column); $event.stopPropagation()"
+            [options]="$any(getSearchSelectOptions(dataRow, column))"
+            [value]="$any(getSearchSelectValue(dataRow, column))"
+            [displayFn]="$any(getSearchSelectDisplayFn(column))"
+            [optionPresentationFn]="$any(getSearchSelectOptionPresentationFn(dataRow, column))"
+            [optionHierarchyFn]="$any(getSearchSelectOptionHierarchyFn(dataRow, column))"
+            [showOptionPresentation]="column.searchSelect?.showOptionPresentation ?? true"
+            [placeholder]="getSearchSelectPlaceholder(dataRow, column)"
+            [disabled]="isSearchSelectDisabled(dataRow, column)"
+            [allowClear]="column.searchSelect?.allowClear ?? column.type === 'dropdown'"
+            [allowInlineSearch]="column.searchSelect?.allowInlineSearch ?? true"
+            [inlineTextValue]="getSearchSelectInlineTextValue(dataRow, column)"
+            [inlineInputMode]="getSearchSelectInlineInputMode(column)"
+            [inlineSuffix]="getSearchSelectInlineSuffix(dataRow, column)"
+            [searchPlaceholder]="column.searchSelect?.searchPlaceholder || 'Type to filter'"
+            [noResultsText]="column.searchSelect?.noResultsText || 'No results'"
+            [overlayPanelClass]="getSearchSelectOverlayPanelClass(column)"
+            [overlayWidthAnchorSelector]="column.searchSelect?.overlayWidthAnchorSelector || ''"
+            [overlayMinWidth]="column.searchSelect?.overlayMinWidth ?? 286"
+            [optionFiltersEnabled]="column.searchSelect?.optionFiltersEnabled ?? false"
+            [optionFilterTitle]="column.searchSelect?.optionFilterTitle || 'Service Items'"
+            (search)="onSearchSelectSearch(dataRow, column, $event)"
+            (valueChange)="onSearchSelectValueChange(dataRow, column, $event)"
+            (inlineTextCommit)="onSearchSelectInlineTextCommit(dataRow, column, $event)"
+          >
+          </search-select>
+        } @else if (isDatePickerCell(dataRow, column)) {
+          <div
+            class="cell-editor-wrap date-editor-wrap"
+            (click)="activateDatePickerCell(dataRow, column); $event.stopPropagation()"
+            (focusin)="activateDatePickerCell(dataRow, column)"
+            (mousedown)="activateDatePickerCell(dataRow, column); $event.stopPropagation()"
+            (pointerdown)="activateDatePickerCell(dataRow, column); $event.stopPropagation()"
+          >
+            <date-input
+              class="grid-cell-date-input"
+              [value]="getCellEditorValue(dataRow, column, rowIndex)"
+              placeholder="DD-MM-YYYY"
+              [allowClear]="true"
+              displayFormat="dmy"
+              [disabled]="isDatePickerDisabled(dataRow, column)"
+              (valueChange)="onDateCellValueChange(dataRow, column, rowIndex, $event)"
+            ></date-input>
+          </div>
+        } @else if (cellEditing) {
+          <div
+            class="cell-editor-wrap"
+            [class.wrap-editor]="isMultilineCellEditor(column)"
+            [class.formula-capable]="supportsCellFormulaInput(column)"
+            [class.formula-panel-open]="hasFormulaSuggestions()"
+          >
+            @if (isMultilineCellEditor(column)) {
+              <textarea
+                class="cell-editor-input cell-editor-input--multiline"
+                rows="1"
+                [attr.data-edit-row]="rowIndex"
+                [attr.data-edit-field]="getColumnField(column)"
+                [value]="getCellEditorValue(dataRow, column, rowIndex)"
+                [attr.placeholder]="getCellEditorPlaceholder(rowIndex, column)"
+                (input)="onCellEditorInput(rowIndex, column, $any($event.target))"
+                (keydown)="onCellEditorKeydown($event, dataRow, column, rowIndex)"
+                (blur)="onCellEditorBlur(dataRow, column, $any($event.target), rowIndex)"
+              ></textarea>
+            } @else {
+              <input
+                type="text"
+                class="cell-editor-input"
+                [attr.data-edit-row]="rowIndex"
+                [attr.data-edit-field]="getColumnField(column)"
+                [value]="getCellEditorValue(dataRow, column, rowIndex)"
+                [attr.placeholder]="getCellEditorPlaceholder(rowIndex, column)"
+                (input)="onCellEditorInput(rowIndex, column, $any($event.target))"
+                (keydown)="onCellEditorKeydown($event, dataRow, column, rowIndex)"
+                (blur)="onCellEditorBlur(dataRow, column, $any($event.target), rowIndex)"
+              />
+            }
+            @if (supportsCellFormulaInput(column) && !hasFormulaSuggestions()) {
+              <span class="cell-editor-hint">{{ getCellEditorHint(rowIndex, column) }}</span>
+            }
+          </div>
+        } @else {
+          <span
+            class="cell-value"
+            [class.flashing]="isCellFlashing(rowIndex, getColumnField(column))"
+            [style.--heat]="
+              colorScaleEnabled() ? (getColorScaleIntensity(dataRow, column) ?? 0) : null
+            "
+            [attr.title]="getCellTitle(dataRow, column)"
+            [renderCell]="getCellValueWithHighlight(dataRow, column)"
+          ></span>
+          @if (showAnomalyAlerts() && isCellAnomaly(dataRow, column)) {
+            <span class="anomaly-dot"></span>
+          }
+        }
+      </div>
+    </ng-template>
+
+    <ng-template
+      #dataRowCellsTemplate
+      let-dataRow="dataRow"
+      let-rowIndex="rowIndex"
+      let-useGroupedEditing="useGroupedEditing"
+    >
+      @let bindCellHoverEvents = shouldBindCellHoverEvents();
+      @for (column of visibleColumns(); track trackByField($index, column)) {
+        @if (bindCellHoverEvents) {
+          <td
+            [class]="getCellClass(dataRow, column)"
+            [class.is-editing-cell]="isEditing(rowIndex, column)"
+            [class.search-select-cell]="isSearchSelectColumn(column) && !isAppendRow(dataRow)"
+            [class.date-editor-cell]="isDatePickerCell(dataRow, column) && !isAppendRow(dataRow)"
+            [attr.data-grid-row-index]="rowIndex"
+            [attr.data-grid-column-field]="getColumnField(column)"
+            [ngStyle]="getCellStyle(dataRow, column)"
+            (mousedown)="handleCellPointerDown(dataRow, column, $event)"
+            (mouseenter)="handleCellMouseEnter($event, column, dataRow, rowIndex)"
+            (mousemove)="handleCellMouseMove($event)"
+            (mouseleave)="handleCellMouseLeave()"
+            (click)="handleCellClick(dataRow, column, $event)"
+            (dblclick)="handleCellDoubleClick(dataRow, column, $event, useGroupedEditing)"
+            (contextmenu)="openCellContextMenu(dataRow, column, $event)"
+          >
+            <ng-container
+              [ngTemplateOutlet]="rowCellContentTemplate"
+              [ngTemplateOutletContext]="{
+                dataRow: dataRow,
+                column: column,
+                rowIndex: rowIndex
+              }"
+            ></ng-container>
+          </td>
+        } @else {
+          <td
+            [class]="getCellClass(dataRow, column)"
+            [class.is-editing-cell]="isEditing(rowIndex, column)"
+            [class.search-select-cell]="isSearchSelectColumn(column) && !isAppendRow(dataRow)"
+            [class.date-editor-cell]="isDatePickerCell(dataRow, column) && !isAppendRow(dataRow)"
+            [attr.data-grid-row-index]="rowIndex"
+            [attr.data-grid-column-field]="getColumnField(column)"
+            [ngStyle]="getCellStyle(dataRow, column)"
+            (mousedown)="handleCellPointerDown(dataRow, column, $event)"
+            (click)="handleCellClick(dataRow, column, $event)"
+            (dblclick)="handleCellDoubleClick(dataRow, column, $event, useGroupedEditing)"
+            (contextmenu)="openCellContextMenu(dataRow, column, $event)"
+          >
+            <ng-container
+              [ngTemplateOutlet]="rowCellContentTemplate"
+              [ngTemplateOutletContext]="{
+                dataRow: dataRow,
+                column: column,
+                rowIndex: rowIndex
+              }"
+            ></ng-container>
+          </td>
+        }
+      }
+    </ng-template>
+
+    <ng-template #rowActionsCellTemplate let-dataRow="dataRow">
+      @if (config.rowActions?.length) {
+        <td class="row-actions-cell">
+          <div class="row-actions">
+            @for (action of config.rowActions; track action) {
+              <button
+                type="button"
+                class="row-action-btn"
+                [style.color]="action.color"
+                [class.hidden]="action.show && !action.show(dataRow)"
+                (click)="action.action(dataRow)"
+              >
+                {{ action.icon }}
+              </button>
+            }
+            <button type="button" class="row-action-btn ghost" (click)="togglePinRow(dataRow)">
+              {{ isRowPinned(dataRow) ? 'Unpin' : 'Pin' }}
+            </button>
+          </div>
+        </td>
+      }
+    </ng-template>
+
+    <ng-template #grandTotalFooterRowTemplate>
+      <tr class="footer-row grand-total-row">
+        @if (config.selectable) {
+          <td class="selection-cell" [class.pinned-left]="shouldPinSelection()"></td>
+        }
+        @for (column of visibleColumns(); track trackByField($index, column)) {
+          <td
+            [ngClass]="getMainFooterAggregateCellClass(column)"
+            [ngStyle]="getAggregateCellStyle(column)"
+            [class.aggregate-pill-cell]="column.aggregate || isFirstVisibleColumn(column)"
+          >
+            @if (column.aggregate) {
+              <span class="aggregate-value" [attr.data-aggregate]="column.aggregate">
+                <span class="aggregate-number">{{ getAggregateValue(column) }}</span>
+              </span>
+            }
+          </td>
+        }
+        @if (config.rowActions?.length) {
+          <td class="row-actions-cell"></td>
+        }
+      </tr>
+    </ng-template>
+
+    @if (shouldUseVirtualScroll()) {
+      <cdk-virtual-scroll-viewport
+        class="virtual-scroll-viewport"
+        [itemSize]="config.rowHeight || 40"
+        [minBufferPx]="(config.rowHeight || 40) * (config.virtualScrollBuffer ?? 10)"
+        [maxBufferPx]="(config.rowHeight || 40) * (config.virtualScrollBuffer ?? 10) * 2"
+        [style.height.px]="virtualViewportHeight"
+        data-grid-scroll-host="main"
+        #gridViewport
+      >
+        <table class="data-grid-table" [style.minWidth.px]="getTotalTableWidth()">
+          <ng-container [ngTemplateOutlet]="gridColumnGroupTemplate"></ng-container>
+          <ng-container
+            [ngTemplateOutlet]="gridTableHeadTemplate"
+            [ngTemplateOutletContext]="{
+              headerMode: getScrollableHeaderMode(),
+              renderHeaderEnd: shouldRenderHeaderEndInScrollableHeader()
+            }"
+          ></ng-container>
+          <!-- Grouped view: per-group scrollable bodies -->
+          @if (groupColumns().length > 0) {
+            @for (block of groupedBlocks(); track trackByGroupBlock($index, block)) {
+              @let blockExpanded = isGroupExpandedById(block.id);
+              @let blockSelectionState = getGroupSelectionViewState(block);
+              @let blockLabel = getGroupLabel(block.field);
+              @let blockDisplayValue = getGroupDisplayValue(block);
+              @let blockToneClass = getGroupToneClass(block);
+              <tbody class="group-body-block" [class.collapsed]="!blockExpanded">
+                <tr
+                  class="group-row"
+                  [class.is-selected-group]="blockSelectionState.checked"
+                  [class.is-partial-group]="blockSelectionState.partial"
+                  [class.is-expanded-group]="blockExpanded"
+                >
+                  <td [attr.colspan]="gridColumnSpan()">
+                    <div
+                      class="group-row-content"
+                      role="button"
+                      tabindex="0"
+                      [attr.aria-expanded]="blockExpanded"
+                      (click)="toggleGroupById(block.id)"
+                      (keydown.enter)="toggleGroupById(block.id)"
+                      (keydown.space)="toggleGroupById(block.id); $event.preventDefault()"
+                    >
+                      <div class="group-row-main">
+                        <ng-container
+                          [ngTemplateOutlet]="groupSelectionControlTemplate"
+                          [ngTemplateOutletContext]="{
+                            groupScope: block,
+                            selectionState: blockSelectionState
+                          }"
+                        ></ng-container>
+                        <button
+                          type="button"
+                          class="group-toggle"
+                          [class.expanded]="blockExpanded"
+                          (click)="toggleGroupById(block.id); $event.stopPropagation()"
+                        >
+                          <span class="chevron"></span>
+                        </button>
+                        <div class="group-row-title">
+                          <span
+                            [class]="'pill group-row-pill ' + blockToneClass"
+                            [attr.title]="blockLabel + ': ' + blockDisplayValue"
+                          >
+                            <span class="pill__label">{{ blockDisplayValue }}</span>
+                          </span>
+                          <span class="group-row-count">{{ block.count }}</span>
+                        </div>
+                      </div>
+                      <div class="group-row-tools">
+                        @if (hasGroupAggregates()) {
+                          <span class="group-row-aggregate">
+                            @for (
+                              column of aggregateColumns();
+                              track trackByField($index, column)
+                            ) {
+                              <span>
+                                {{ column.header }}: {{ getGroupBlockAggregate(block, column) }}
+                              </span>
+                            }
+                          </span>
+                        }
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                @if (blockExpanded) {
+                  <tr class="group-body-wrapper">
+                    <td [attr.colspan]="gridColumnSpan()">
+                      <div class="group-items-scroll">
+                        <div class="group-items-inner">
+                          @if (block.rows.length > 0) {
+                            <cdk-virtual-scroll-viewport
+                              class="group-virtual-viewport"
+                              [itemSize]="virtualRowHeight"
+                              [minBufferPx]="virtualRowHeight * 4"
+                              [maxBufferPx]="virtualRowHeight * 8"
+                              [style.height.px]="getGroupViewportHeight(block)"
+                              [style.width.px]="getTotalTableWidth()"
+                              [style.minWidth.px]="getTotalTableWidth()"
+                            >
+                              <table
+                                class="data-grid-table subgroup subgroup-table"
+                                [style.width.px]="getTotalTableWidth()"
+                                [style.minWidth.px]="getTotalTableWidth()"
+                              >
+                                <ng-container
+                                  [ngTemplateOutlet]="gridColumnGroupTemplate"
+                                ></ng-container>
+                                <tbody class="grouped-display-body">
+                                  <ng-container
+                                    *cdkVirtualFor="
+                                      let dataRow of block.rows;
+                                      trackBy: trackByDataRow
+                                    "
+                                  >
+                                    @let virtualRowGlobalIndex = getGlobalRowIndex(dataRow);
+                                    @let virtualRowSelected = isRowSelected(dataRow);
+                                    @let virtualRowBookmarked = isRowBookmarked(dataRow);
+                                    @let virtualRowPinned = isRowPinned(dataRow);
+                                    <tr
+                                      class="data-row"
+                                      [ngClass]="getRowClass(dataRow, virtualRowGlobalIndex)"
+                                      [class.append-row]="isAppendRow(dataRow)"
+                                      [class.selected]="virtualRowSelected"
+                                      [class.bookmarked]="virtualRowBookmarked"
+                                      [class.pinned]="virtualRowPinned"
+                                      (click)="onRowClickHandler(dataRow)"
+                                      (dblclick)="onRowDoubleClickHandler(dataRow)"
+                                    >
+                                      <ng-container
+                                        [ngTemplateOutlet]="rowSelectionCellTemplate"
+                                        [ngTemplateOutletContext]="{
+                                          dataRow: dataRow,
+                                          rowIndex: virtualRowGlobalIndex
+                                        }"
+                                      ></ng-container>
+                                      <ng-container
+                                        [ngTemplateOutlet]="dataRowCellsTemplate"
+                                        [ngTemplateOutletContext]="{
+                                          dataRow: dataRow,
+                                          rowIndex: virtualRowGlobalIndex,
+                                          useGroupedEditing: true
+                                        }"
+                                      ></ng-container>
+                                      <ng-container
+                                        [ngTemplateOutlet]="rowActionsCellTemplate"
+                                        [ngTemplateOutletContext]="{ dataRow: dataRow }"
+                                      ></ng-container>
+                                    </tr>
+                                  </ng-container>
+                                </tbody>
+                              </table>
+                            </cdk-virtual-scroll-viewport>
+                            @if (shouldShowGroupFooterAggregates()) {
+                              <table
+                                class="data-grid-table subgroup subgroup-table group-footer-table"
+                                [style.width.px]="getTotalTableWidth()"
+                                [style.minWidth.px]="getTotalTableWidth()"
+                              >
+                                <ng-container
+                                  [ngTemplateOutlet]="gridColumnGroupTemplate"
+                                ></ng-container>
+                                <tbody>
+                                  <tr class="group-footer-row">
+                                    @if (config.selectable) {
+                                      <td
+                                        class="selection-cell group-footer-cell"
+                                        [class.pinned-left]="shouldPinSelection()"
+                                      ></td>
+                                    }
+                                    @for (
+                                      column of visibleColumns();
+                                      track trackByField($index, column)
+                                    ) {
+                                      <td
+                                        class="group-footer-cell"
+                                        [ngClass]="getAggregateCellClass(column)"
+                                        [ngStyle]="getAggregateCellStyle(column)"
+                                      >
+                                        @if (column.aggregate) {
+                                          <span
+                                            class="aggregate-value"
+                                            [attr.data-aggregate]="column.aggregate"
+                                          >
+                                            <span class="aggregate-number">{{
+                                              getGroupBlockAggregate(block, column)
+                                            }}</span>
+                                          </span>
+                                        }
+                                      </td>
+                                    }
+                                    @if (config.rowActions?.length) {
+                                      <td class="row-actions-cell group-footer-cell"></td>
+                                    }
+                                  </tr>
+                                </tbody>
+                              </table>
+                            }
+                          } @else {
+                            <div class="group-empty-state">
+                              <span class="group-empty-title">No rows match this group filter</span>
+                              @if (getGroupFilterTerm(block.id)) {
+                                <button
+                                  type="button"
+                                  class="group-empty-action"
+                                  (click)="clearGroupFilterTerm(block.id); $event.stopPropagation()"
+                                >
+                                  Clear filter
+                                </button>
+                              }
+                            </div>
+                          }
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            }
+          }
+          @if (!groupColumns().length) {
+            <tbody>
+              <ng-container
+                *cdkVirtualFor="
+                  let dataRow of processedData();
+                  let i = index;
+                  trackBy: trackByDataRow
+                "
+              >
+                @let bindRowHoverState = shouldBindRowHoverState();
+                @let rowSelected = isRowSelected(dataRow);
+                @let rowBookmarked = isRowBookmarked(dataRow);
+                @let rowPinned = isRowPinned(dataRow);
+                @if (bindRowHoverState) {
+                  <tr
+                    class="data-row"
+                    [ngClass]="getRowClass(dataRow, i)"
+                    [class.append-row]="isAppendRow(dataRow)"
+                    [class.selected]="rowSelected"
+                    [class.bookmarked]="rowBookmarked"
+                    [class.pinned]="rowPinned"
+                    [class.is-hovered]="isRowHovered(i)"
+                    (click)="onRowClickHandler(dataRow)"
+                    (dblclick)="onRowDoubleClickHandler(dataRow)"
+                    (mouseenter)="onRowMouseEnter(i, $event)"
+                    (mouseleave)="onRowMouseLeave()"
+                  >
+                    <ng-container
+                      [ngTemplateOutlet]="rowSelectionCellTemplate"
+                      [ngTemplateOutletContext]="{ dataRow: dataRow, rowIndex: i }"
+                    ></ng-container>
+                    <ng-container
+                      [ngTemplateOutlet]="dataRowCellsTemplate"
+                      [ngTemplateOutletContext]="{
+                        dataRow: dataRow,
+                        rowIndex: i,
+                        useGroupedEditing: false
+                      }"
+                    ></ng-container>
+                    <ng-container
+                      [ngTemplateOutlet]="rowActionsCellTemplate"
+                      [ngTemplateOutletContext]="{ dataRow: dataRow }"
+                    ></ng-container>
+                  </tr>
+                } @else {
+                  <tr
+                    class="data-row"
+                    [ngClass]="getRowClass(dataRow, i)"
+                    [class.append-row]="isAppendRow(dataRow)"
+                    [class.selected]="rowSelected"
+                    [class.bookmarked]="rowBookmarked"
+                    [class.pinned]="rowPinned"
+                    (click)="onRowClickHandler(dataRow)"
+                    (dblclick)="onRowDoubleClickHandler(dataRow)"
+                  >
+                    <ng-container
+                      [ngTemplateOutlet]="rowSelectionCellTemplate"
+                      [ngTemplateOutletContext]="{ dataRow: dataRow, rowIndex: i }"
+                    ></ng-container>
+                    <ng-container
+                      [ngTemplateOutlet]="dataRowCellsTemplate"
+                      [ngTemplateOutletContext]="{
+                        dataRow: dataRow,
+                        rowIndex: i,
+                        useGroupedEditing: false
+                      }"
+                    ></ng-container>
+                    <ng-container
+                      [ngTemplateOutlet]="rowActionsCellTemplate"
+                      [ngTemplateOutletContext]="{ dataRow: dataRow }"
+                    ></ng-container>
+                  </tr>
+                }
+              </ng-container>
+            </tbody>
+            <tbody class="grid-append-row-body">
+              <ng-content select="[grid-append-row]"></ng-content>
+            </tbody>
+          }
+          @if (shouldRenderGrandTotalFooter()) {
+            <tfoot>
+              <ng-container [ngTemplateOutlet]="grandTotalFooterRowTemplate"></ng-container>
+            </tfoot>
+          }
+        </table>
+        <div class="grid-filler grid-filler-body" aria-hidden="true"></div>
+      </cdk-virtual-scroll-viewport>
+    } @else {
+      <div class="table-scroll-shell">
+        <div class="table-scroll" data-grid-scroll-host="main" #gridViewport>
+          <table class="data-grid-table" [style.minWidth.px]="getTotalTableWidth()">
+            <ng-container [ngTemplateOutlet]="gridColumnGroupTemplate"></ng-container>
+            <ng-container
+              [ngTemplateOutlet]="gridTableHeadTemplate"
+              [ngTemplateOutletContext]="{
+                headerMode: getScrollableHeaderMode(),
+                renderHeaderEnd: shouldRenderHeaderEndInScrollableHeader()
+              }"
+            ></ng-container>
+            @if (groupColumns().length === 1) {
+              @for (block of groupedBlocks(); track trackByGroupBlock($index, block)) {
+                @let blockExpanded = isGroupExpandedById(block.id);
+                @let blockSelectionState = getGroupSelectionViewState(block);
+                @let blockLabel = getGroupLabel(block.field);
+                @let blockDisplayValue = getGroupDisplayValue(block);
+                @let blockToneClass = getGroupToneClass(block);
+                <tbody
+                  class="group-body-block grouped-display-body"
+                  [class.collapsed]="!blockExpanded"
+                >
+                  <tr
+                    class="group-row"
+                    [class.is-selected-group]="blockSelectionState.checked"
+                    [class.is-partial-group]="blockSelectionState.partial"
+                    [class.is-expanded-group]="blockExpanded"
+                  >
+                    <td [attr.colspan]="gridColumnSpan()">
+                      <div
+                        class="group-row-content"
+                        role="button"
+                        tabindex="0"
+                        [attr.aria-expanded]="blockExpanded"
+                        (click)="toggleGroupById(block.id)"
+                        (keydown.enter)="toggleGroupById(block.id)"
+                        (keydown.space)="toggleGroupById(block.id); $event.preventDefault()"
+                      >
+                        <div class="group-row-main">
+                          <ng-container
+                            [ngTemplateOutlet]="groupSelectionControlTemplate"
+                            [ngTemplateOutletContext]="{
+                              groupScope: block,
+                              selectionState: blockSelectionState
+                            }"
+                          ></ng-container>
+                          <button
+                            type="button"
+                            class="group-toggle"
+                            [class.expanded]="blockExpanded"
+                            (click)="toggleGroupById(block.id); $event.stopPropagation()"
+                          >
+                            <span class="chevron"></span>
+                          </button>
+                          <div class="group-row-title">
+                            <span
+                              [class]="'pill group-row-pill ' + blockToneClass"
+                              [attr.title]="blockLabel + ': ' + blockDisplayValue"
+                            >
+                              <span class="pill__label">{{ blockDisplayValue }}</span>
+                            </span>
+                            <span class="group-row-count">{{ block.count }}</span>
+                          </div>
+                        </div>
+                        <div class="group-row-tools">
+                          @if (hasGroupAggregates()) {
+                            <span class="group-row-aggregate">
+                              @for (
+                                column of aggregateColumns();
+                                track trackByField($index, column)
+                              ) {
+                                <span>
+                                  {{ column.header }}: {{ getGroupBlockAggregate(block, column) }}
+                                </span>
+                              }
+                            </span>
+                          }
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  @if (blockExpanded) {
+                    <tr class="group-body-wrapper">
+                      <td [attr.colspan]="gridColumnSpan()">
+                        <div class="group-items-scroll">
+                          <div class="group-items-inner">
+                            @if (block.rows.length > 0) {
+                              <table
+                                class="data-grid-table subgroup subgroup-table"
+                                [style.width.px]="getTotalTableWidth()"
+                                [style.minWidth.px]="getTotalTableWidth()"
+                              >
+                                <ng-container
+                                  [ngTemplateOutlet]="gridColumnGroupTemplate"
+                                ></ng-container>
+                                <tbody class="grouped-display-body">
+                                  @let bindGroupedRowHoverState = shouldBindRowHoverState();
+                                  @for (
+                                    dataRow of block.rows;
+                                    track trackByDataRow($index, dataRow);
+                                    let rowIndex = $index
+                                  ) {
+                                    @let rowGlobalIndex = getGlobalRowIndex(dataRow);
+                                    @let rowSelected = isRowSelected(dataRow);
+                                    @let rowBookmarked = isRowBookmarked(dataRow);
+                                    @let rowPinned = isRowPinned(dataRow);
+                                    @if (bindGroupedRowHoverState) {
+                                      <tr
+                                        class="data-row grouped-data-row"
+                                        [ngClass]="getRowClass(dataRow, rowGlobalIndex)"
+                                        [class.append-row]="isAppendRow(dataRow)"
+                                        [class.selected]="rowSelected"
+                                        [class.bookmarked]="rowBookmarked"
+                                        [class.pinned]="rowPinned"
+                                        [class.is-hovered]="isRowHovered(rowGlobalIndex)"
+                                        (click)="onRowClickHandler(dataRow)"
+                                        (dblclick)="onRowDoubleClickHandler(dataRow)"
+                                        (mouseenter)="onRowMouseEnter(rowGlobalIndex, $event)"
+                                        (mouseleave)="onRowMouseLeave()"
+                                      >
+                                        <ng-container
+                                          [ngTemplateOutlet]="rowSelectionCellTemplate"
+                                          [ngTemplateOutletContext]="{
+                                            dataRow: dataRow,
+                                            rowIndex: rowGlobalIndex
+                                          }"
+                                        ></ng-container>
+                                        <ng-container
+                                          [ngTemplateOutlet]="dataRowCellsTemplate"
+                                          [ngTemplateOutletContext]="{
+                                            dataRow: dataRow,
+                                            rowIndex: rowGlobalIndex,
+                                            useGroupedEditing: true
+                                          }"
+                                        ></ng-container>
+                                        <ng-container
+                                          [ngTemplateOutlet]="rowActionsCellTemplate"
+                                          [ngTemplateOutletContext]="{ dataRow: dataRow }"
+                                        ></ng-container>
+                                      </tr>
+                                    } @else {
+                                      <tr
+                                        class="data-row grouped-data-row"
+                                        [ngClass]="getRowClass(dataRow, rowGlobalIndex)"
+                                        [class.append-row]="isAppendRow(dataRow)"
+                                        [class.selected]="rowSelected"
+                                        [class.bookmarked]="rowBookmarked"
+                                        [class.pinned]="rowPinned"
+                                        (click)="onRowClickHandler(dataRow)"
+                                        (dblclick)="onRowDoubleClickHandler(dataRow)"
+                                      >
+                                        <ng-container
+                                          [ngTemplateOutlet]="rowSelectionCellTemplate"
+                                          [ngTemplateOutletContext]="{
+                                            dataRow: dataRow,
+                                            rowIndex: rowGlobalIndex
+                                          }"
+                                        ></ng-container>
+                                        <ng-container
+                                          [ngTemplateOutlet]="dataRowCellsTemplate"
+                                          [ngTemplateOutletContext]="{
+                                            dataRow: dataRow,
+                                            rowIndex: rowGlobalIndex,
+                                            useGroupedEditing: true
+                                          }"
+                                        ></ng-container>
+                                        <ng-container
+                                          [ngTemplateOutlet]="rowActionsCellTemplate"
+                                          [ngTemplateOutletContext]="{ dataRow: dataRow }"
+                                        ></ng-container>
+                                      </tr>
+                                    }
+                                  }
+                                </tbody>
+                              </table>
+                              @if (shouldShowGroupFooterAggregates()) {
+                                <table
+                                  class="data-grid-table subgroup subgroup-table group-footer-table"
+                                  [style.width.px]="getTotalTableWidth()"
+                                  [style.minWidth.px]="getTotalTableWidth()"
+                                >
+                                  <ng-container
+                                    [ngTemplateOutlet]="gridColumnGroupTemplate"
+                                  ></ng-container>
+                                  <tbody>
+                                    <tr class="group-footer-row">
+                                      @if (config.selectable) {
+                                        <td
+                                          class="selection-cell group-footer-cell"
+                                          [class.pinned-left]="shouldPinSelection()"
+                                        ></td>
+                                      }
+                                      @for (
+                                        column of visibleColumns();
+                                        track trackByField($index, column)
+                                      ) {
+                                        <td
+                                          class="group-footer-cell"
+                                          [ngClass]="getAggregateCellClass(column)"
+                                          [ngStyle]="getAggregateCellStyle(column)"
+                                        >
+                                          @if (column.aggregate) {
+                                            <span
+                                              class="aggregate-value"
+                                              [attr.data-aggregate]="column.aggregate"
+                                            >
+                                              <span class="aggregate-number">{{
+                                                getGroupBlockAggregate(block, column)
+                                              }}</span>
+                                            </span>
+                                          }
+                                        </td>
+                                      }
+                                      @if (config.rowActions?.length) {
+                                        <td class="row-actions-cell group-footer-cell"></td>
+                                      }
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              }
+                            } @else {
+                              <div class="group-empty-state">
+                                <span class="group-empty-title"
+                                  >No rows match this group filter</span
+                                >
+                                @if (getGroupFilterTerm(block.id)) {
+                                  <button
+                                    type="button"
+                                    class="group-empty-action"
+                                    (click)="
+                                      clearGroupFilterTerm(block.id); $event.stopPropagation()
+                                    "
+                                  >
+                                    Clear filter
+                                  </button>
+                                }
+                              </div>
+                            }
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              }
+            } @else {
+              @if (!groupColumns().length) {
+                <tbody>
+                  @for (
+                    dataRow of processedData();
+                    track trackByDataRow($index, dataRow);
+                    let i = $index
+                  ) {
+                    @let bindRowHoverState = shouldBindRowHoverState();
+                    @let rowSelected = isRowSelected(dataRow);
+                    @let rowBookmarked = isRowBookmarked(dataRow);
+                    @let rowPinned = isRowPinned(dataRow);
+                    @if (bindRowHoverState) {
+                      <tr
+                        class="data-row"
+                        [ngClass]="getRowClass(dataRow, i)"
+                        [class.append-row]="isAppendRow(dataRow)"
+                        [class.selected]="rowSelected"
+                        [class.bookmarked]="rowBookmarked"
+                        [class.pinned]="rowPinned"
+                        [class.is-hovered]="isRowHovered(i)"
+                        (click)="onRowClickHandler(dataRow)"
+                        (dblclick)="onRowDoubleClickHandler(dataRow)"
+                        (mouseenter)="onRowMouseEnter(i, $event)"
+                        (mouseleave)="onRowMouseLeave()"
+                      >
+                        <ng-container
+                          [ngTemplateOutlet]="rowSelectionCellTemplate"
+                          [ngTemplateOutletContext]="{ dataRow: dataRow, rowIndex: i }"
+                        ></ng-container>
+                        <ng-container
+                          [ngTemplateOutlet]="dataRowCellsTemplate"
+                          [ngTemplateOutletContext]="{
+                            dataRow: dataRow,
+                            rowIndex: i,
+                            useGroupedEditing: false
+                          }"
+                        ></ng-container>
+                        <ng-container
+                          [ngTemplateOutlet]="rowActionsCellTemplate"
+                          [ngTemplateOutletContext]="{ dataRow: dataRow }"
+                        ></ng-container>
+                      </tr>
+                    } @else {
+                      <tr
+                        class="data-row"
+                        [ngClass]="getRowClass(dataRow, i)"
+                        [class.append-row]="isAppendRow(dataRow)"
+                        [class.selected]="rowSelected"
+                        [class.bookmarked]="rowBookmarked"
+                        [class.pinned]="rowPinned"
+                        (click)="onRowClickHandler(dataRow)"
+                        (dblclick)="onRowDoubleClickHandler(dataRow)"
+                      >
+                        <ng-container
+                          [ngTemplateOutlet]="rowSelectionCellTemplate"
+                          [ngTemplateOutletContext]="{ dataRow: dataRow, rowIndex: i }"
+                        ></ng-container>
+                        <ng-container
+                          [ngTemplateOutlet]="dataRowCellsTemplate"
+                          [ngTemplateOutletContext]="{
+                            dataRow: dataRow,
+                            rowIndex: i,
+                            useGroupedEditing: false
+                          }"
+                        ></ng-container>
+                        <ng-container
+                          [ngTemplateOutlet]="rowActionsCellTemplate"
+                          [ngTemplateOutletContext]="{ dataRow: dataRow }"
+                        ></ng-container>
+                      </tr>
+                    }
+                  }
+                </tbody>
+              } @else {
+                <tbody class="grouped-display-body">
+                  @for (row of displayRows(); track trackByDisplayRow(i, row); let i = $index) {
+                    @if (row.kind === 'group') {
+                      @let rowSelectionState = getGroupSelectionViewState(row);
+                      @let rowLabel = getGroupLabel(row.field);
+                      @let rowDisplayValue = getGroupDisplayValue(row);
+                      @let rowToneClass = getGroupToneClass(row);
+                      <tr
+                        class="group-row level-{{ row.level }}"
+                        [class.is-selected-group]="rowSelectionState.checked"
+                        [class.is-partial-group]="rowSelectionState.partial"
+                        [class.is-expanded-group]="row.expanded"
+                      >
+                        <td [attr.colspan]="gridColumnSpan()">
+                          <div
+                            class="group-row-content"
+                            [style.padding-left.px]="24 + row.level * 18"
+                            role="button"
+                            tabindex="0"
+                            [attr.aria-expanded]="row.expanded"
+                            (click)="toggleGroup(row)"
+                            (keydown.enter)="toggleGroup(row)"
+                            (keydown.space)="toggleGroup(row); $event.preventDefault()"
+                          >
+                            <div class="group-row-main">
+                              <ng-container
+                                [ngTemplateOutlet]="groupSelectionControlTemplate"
+                                [ngTemplateOutletContext]="{
+                                  groupScope: row,
+                                  selectionState: rowSelectionState
+                                }"
+                              ></ng-container>
+                              <button
+                                type="button"
+                                class="group-toggle"
+                                [class.expanded]="row.expanded"
+                                (click)="toggleGroup(row); $event.stopPropagation()"
+                              >
+                                <span class="chevron"></span>
+                              </button>
+                              <div class="group-row-title">
+                                <span
+                                  [class]="'pill group-row-pill ' + rowToneClass"
+                                  [attr.title]="rowLabel + ': ' + rowDisplayValue"
+                                >
+                                  <span class="pill__label">{{ rowDisplayValue }}</span>
+                                </span>
+                                <span class="group-row-count">{{ row.count }}</span>
+                              </div>
+                            </div>
+                            <div class="group-row-tools">
+                              @if (hasGroupAggregates()) {
+                                <span class="group-row-aggregate">
+                                  @for (
+                                    column of aggregateColumns();
+                                    track trackByField($index, column)
+                                  ) {
+                                    <span>
+                                      {{ column.header }}: {{ getGroupAggregate(row, column) }}
+                                    </span>
+                                  }
+                                </span>
+                              }
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    } @else {
+                      @if (row.kind === 'group-footer') {
+                        <tr class="group-footer-row level-{{ row.level }}">
+                          @if (config.selectable) {
+                            <td
+                              class="selection-cell group-footer-cell"
+                              [class.pinned-left]="shouldPinSelection()"
+                            ></td>
+                          }
+                          @for (column of visibleColumns(); track trackByField($index, column)) {
+                            <td
+                              class="group-footer-cell"
+                              [ngClass]="getAggregateCellClass(column)"
+                              [ngStyle]="getAggregateCellStyle(column)"
+                            >
+                              @if (column.aggregate) {
+                                <span
+                                  class="aggregate-value"
+                                  [attr.data-aggregate]="column.aggregate"
+                                >
+                                  <span class="aggregate-number">{{
+                                    getGroupAggregate(row, column)
+                                  }}</span>
+                                </span>
+                              }
+                            </td>
+                          }
+                          @if (config.rowActions?.length) {
+                            <td class="row-actions-cell group-footer-cell"></td>
+                          }
+                        </tr>
+                      } @else {
+                        @if (getDisplayRowData(row); as dataRow) {
+                          @let bindRowHoverState = shouldBindRowHoverState();
+                          @let rowSelected = isRowSelected(dataRow);
+                          @let rowBookmarked = isRowBookmarked(dataRow);
+                          @let rowPinned = isRowPinned(dataRow);
+                          @if (bindRowHoverState) {
+                            <tr
+                              class="data-row grouped-data-row"
+                              [ngClass]="getRowClass(dataRow, getGlobalRowIndex(dataRow))"
+                              [class.append-row]="isAppendRow(dataRow)"
+                              [class.selected]="rowSelected"
+                              [class.bookmarked]="rowBookmarked"
+                              [class.pinned]="rowPinned"
+                              [class.is-hovered]="isRowHovered(i)"
+                              (click)="onDisplayRowClick(row)"
+                              (dblclick)="onDisplayRowDoubleClick(row)"
+                              (mouseenter)="onRowMouseEnter(i, $event)"
+                              (mouseleave)="onRowMouseLeave()"
+                            >
+                              <ng-container
+                                [ngTemplateOutlet]="rowSelectionCellTemplate"
+                                [ngTemplateOutletContext]="{ dataRow: dataRow, rowIndex: i }"
+                              ></ng-container>
+                              <ng-container
+                                [ngTemplateOutlet]="dataRowCellsTemplate"
+                                [ngTemplateOutletContext]="{
+                                  dataRow: dataRow,
+                                  rowIndex: i,
+                                  useGroupedEditing: false
+                                }"
+                              ></ng-container>
+                              <ng-container
+                                [ngTemplateOutlet]="rowActionsCellTemplate"
+                                [ngTemplateOutletContext]="{ dataRow: dataRow }"
+                              ></ng-container>
+                            </tr>
+                          } @else {
+                            <tr
+                              class="data-row grouped-data-row"
+                              [ngClass]="getRowClass(dataRow, getGlobalRowIndex(dataRow))"
+                              [class.append-row]="isAppendRow(dataRow)"
+                              [class.selected]="rowSelected"
+                              [class.bookmarked]="rowBookmarked"
+                              [class.pinned]="rowPinned"
+                              (click)="onDisplayRowClick(row)"
+                              (dblclick)="onDisplayRowDoubleClick(row)"
+                            >
+                              <ng-container
+                                [ngTemplateOutlet]="rowSelectionCellTemplate"
+                                [ngTemplateOutletContext]="{ dataRow: dataRow, rowIndex: i }"
+                              ></ng-container>
+                              <ng-container
+                                [ngTemplateOutlet]="dataRowCellsTemplate"
+                                [ngTemplateOutletContext]="{
+                                  dataRow: dataRow,
+                                  rowIndex: i,
+                                  useGroupedEditing: false
+                                }"
+                              ></ng-container>
+                              <ng-container
+                                [ngTemplateOutlet]="rowActionsCellTemplate"
+                                [ngTemplateOutletContext]="{ dataRow: dataRow }"
+                              ></ng-container>
+                            </tr>
+                          }
+                        }
+                      }
+                    }
+                  }
+                </tbody>
+              }
+            }
+            <tbody class="grid-append-row-body">
+              <ng-content select="[grid-append-row]"></ng-content>
+            </tbody>
+            @if (shouldRenderGrandTotalFooter()) {
+              <tfoot>
+                <ng-container [ngTemplateOutlet]="grandTotalFooterRowTemplate"></ng-container>
+              </tfoot>
+            }
+          </table>
+          <div class="grid-filler grid-filler-body" aria-hidden="true"></div>
+        </div>
+      </div>
+    }
+
+    <ng-template #emptyStateTemplate>
+      <div class="empty-state">
+        <div class="empty-icon">☁</div>
+        <div class="empty-title">{{ config.emptyMessage || 'No data to display' }}</div>
+        <p class="empty-detail">Try adjusting filters or refreshing the dataset.</p>
+        @if (filterStates().length || globalSearchTerm) {
+          <button type="button" class="action-btn" (click)="clearAllFilters()">
+            Clear active filters
+          </button>
+        }
+      </div>
+    </ng-template>
+  </div>
+
+  <!-- ag-Grid Style Pagination Footer -->
+  @if (shouldRenderFooterStack()) {
+    <div class="grid-footer-stack" [class.has-aggregate-band]="shouldReserveCalculateFooterBand()">
+      <div class="grid-footer-custom-band">
+        <ng-content select="[grid-footer-band]"></ng-content>
+      </div>
+      @if (shouldShowCalculateFooter()) {
+        <div class="grid-pagination-aggregate-band">
+          <grid-calculate-footer
+            [columns]="visibleColumns()"
+            [config]="effectiveAggregateFooter()"
+            (footerChange)="handleAggregateFooterChange($event)"
+          ></grid-calculate-footer>
+        </div>
+      }
+      @if (config.pagination) {
+        <div class="grid-pagination-footer">
+          <div class="pagination-left">
+            <div class="grid-action-slot-footer">
+              <ng-content select="[grid-actions]"></ng-content>
+            </div>
+          </div>
+          <div class="pagination-right">
+            <button
+              type="button"
+              class="pagination-btn"
+              [disabled]="isRemotePaginationPending() || paginationState().currentPage === 1"
+              (click)="onPageChange(1)"
+            >
+              &laquo; First
+            </button>
+            <button
+              type="button"
+              class="pagination-btn"
+              [disabled]="isRemotePaginationPending() || paginationState().currentPage === 1"
+              (click)="onPageChange(paginationState().currentPage - 1)"
+            >
+              &lsaquo; Prev
+            </button>
+            <span class="page-indicator">
+              @if (isRemotePaginationPending()) {
+                Loading...
+              } @else {
+                Page {{ paginationState().currentPage }} of {{ paginationState().totalPages }}
+              }
+            </span>
+            <button
+              type="button"
+              class="pagination-btn"
+              [disabled]="
+                isRemotePaginationPending() ||
+                paginationState().currentPage === paginationState().totalPages
+              "
+              (click)="onPageChange(paginationState().currentPage + 1)"
+            >
+              Next &rsaquo;
+            </button>
+            <button
+              type="button"
+              class="pagination-btn"
+              [disabled]="
+                isRemotePaginationPending() ||
+                paginationState().currentPage === paginationState().totalPages
+              "
+              (click)="onPageChange(paginationState().totalPages)"
+            >
+              Last &raquo;
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  <engineers-salary-reference-grid-selection-action-bar
+    #selectionActionBar
+    [selectedCount]="currentSelectedCount"
+    [hasAggregateFooter]="shouldRenderAggregateFooter()"
+    [showSelectVisibleAction]="config.selectable ?? true"
+    [showExportActions]="config.exportable ?? true"
+    [showExportVisibleAction]="config.exportable ?? true"
+    [showBookmarkAction]="config.enableBookmarks ?? false"
+    [showQualityAction]="true"
+    [showAuditAction]="true"
+    [showHeadlineAction]="true"
+    [showShareAction]="true"
+    [showSnapshotAction]="!!stateKey"
+    [qualityPanelOpen]="showQualityPanel()"
+    [auditTrailOpen]="showAuditTrail()"
+    [headlinePanelOpen]="showHeadlinePanel()"
+    [colorScaleEnabled]="colorScaleEnabled()"
+    [anomalyAlertsEnabled]="showAnomalyAlerts()"
+    [highContrastEnabled]="highContrastMode()"
+    [forecastEnabled]="showForecastSparklines()"
+    [snapshotManagerOpen]="snapshotManagerOpen()"
+    [showEditAction]="shouldShowSelectionBarEditAction()"
+    [showDeleteAction]="shouldShowSelectionBarDeleteAction()"
+    [bulkEditFields]="selectionBarBulkEditFields()"
+    [undoAvailable]="hasSelectionUndo()"
+    [undoLabel]="getSelectionUndoLabel()"
+    [showMoreAction]="true"
+    (clearRequested)="clearSelection()"
+    (clearUndoRequested)="clearSelectionBarUndo()"
+    (undoRequested)="undoSelectionBarChange()"
+    (selectVisibleRequested)="toggleSelectAll()"
+    (selectAllRequested)="selectAll()"
+    (invertSelectionRequested)="invertSelection()"
+    (copyRequested)="copySelectionToClipboard()"
+    (exportVisibleRequested)="exportVisible()"
+    (exportExcelRequested)="batchExportSelected('excel')"
+    (exportCsvRequested)="batchExportSelected('csv')"
+    (exportPdfRequested)="batchExportSelected('pdf')"
+    (copyJsonRequested)="copySelectionAsJson()"
+    (copyInsightsRequested)="copySelectionInsights()"
+    (bulkEditRequested)="applySelectionBarBulkEdit($event)"
+    (bookmarkRequested)="bookmarkSelection()"
+    (qualityRequested)="toggleQualityPanelFromSelectionBar()"
+    (auditRequested)="toggleAuditTrailFromSelectionBar()"
+    (headlineRequested)="toggleHeadlinePanelFromSelectionBar()"
+    (shareViewRequested)="generateShareableLinkFromSelectionBar()"
+    (snapshotRequested)="toggleSnapshotManagerFromSelectionBar()"
+    (colorScaleRequested)="toggleColorScaleFromSelectionBar()"
+    (anomalyAlertsRequested)="toggleAnomalyAlertsFromSelectionBar()"
+    (highContrastRequested)="toggleHighContrastFromSelectionBar()"
+    (forecastRequested)="toggleForecastSparklinesFromSelectionBar()"
+    (editRequested)="requestSelectionBarEditAction()"
+    (deleteRequested)="requestSelectionBarDeleteAction()"
+  ></engineers-salary-reference-grid-selection-action-bar>
+
+  @if (shouldRenderBottomScrollbarBand()) {
+    <div class="grid-bottom-scrollbar-band" #bottomScrollbarBand>
+      <div
+        class="grid-bottom-scrollbar-spacer"
+        [style.width.px]="getBottomHorizontalScrollbarSpacerWidth()"
+        [style.minWidth.px]="getBottomHorizontalScrollbarSpacerWidth()"
+        [style.maxWidth.px]="getBottomHorizontalScrollbarSpacerWidth()"
+        aria-hidden="true"
+      ></div>
+      <div
+        class="grid-bottom-scrollbar-strip"
+        #bottomScrollbarViewport
+        data-grid-scroll-host="bottom"
+      >
+        <div
+          class="grid-bottom-scrollbar-track"
+          #bottomScrollbarTrack
+          [style.width.px]="getBottomHorizontalScrollbarTrackWidth()"
+          [style.minWidth.px]="getBottomHorizontalScrollbarTrackWidth()"
+        ></div>
+      </div>
+    </div>
+  }
+
+  @if (showColumnInsights() && columnInsights(); as insight) {
+    <div class="column-insights-panel">
+      <div class="panel-header">
+        <div>
+          <div class="panel-title">Column insights</div>
+          <div class="panel-subtitle">{{ insight.header }}</div>
+        </div>
+        <button type="button" class="icon-btn" (click)="toggleColumnInsights()">&times;</button>
+      </div>
+      <div class="insight-body">
+        <div class="insight-stat">
+          <span>Total values</span>
+          <strong>{{ insight.totalValues | number }}</strong>
+        </div>
+        <div class="insight-stat">
+          <span>Distinct</span>
+          <strong>{{ insight.distinctValues | number }}</strong>
+        </div>
+        @if (insight.numericStats) {
+          <div class="insight-stat">
+            <span>Average</span>
+            <strong>{{ insight.numericStats.avg | number: '1.0-2' }}</strong>
+          </div>
+        }
+        <div class="insight-chart">
+          <div class="chart-label">Top values</div>
+          @for (value of insight.topValues; track value) {
+            <div class="chart-row">
+              <span class="value-label">{{ value.label }}</span>
+              <div class="chart-bar">
+                <span class="chart-fill" [style.width.%]="value.percentage"></span>
+              </div>
+              <span class="value-percent">{{ value.percentage }}%</span>
+            </div>
+          }
+        </div>
+      </div>
+      <div class="insight-footer">
+        <label>Focus column</label>
+        <select (change)="setInsightColumn($any($event.target).value)">
+          @for (column of getInsightColumns(); track column) {
+            <option
+              [value]="getColumnField(column)"
+              [selected]="getColumnField(column) === insight.field"
+            >
+              {{ column.header }}
+            </option>
+          }
+        </select>
+      </div>
+    </div>
+  }
+
+  @if (showQualityPanel()) {
+    <div class="quality-panel">
+      <div class="panel-header">
+        <div>
+          <div class="panel-title">Data quality</div>
+          <div class="panel-subtitle">Automated health metrics</div>
+        </div>
+        <button type="button" class="icon-btn" (click)="toggleQualityPanel()">&times;</button>
+      </div>
+      @if (dataQualitySummary(); as quality) {
+        <div class="quality-score">
+          <div class="score">{{ quality.score }}</div>
+          <div class="label">Quality score</div>
+        </div>
+        <div class="quality-metrics">
+          <div>
+            <span class="metric-label">Empty cells</span>
+            <strong>{{ quality.emptyPercent }}%</strong>
+          </div>
+          <div>
+            <span class="metric-label">Zeros</span>
+            <strong>{{ quality.zeroPercent }}%</strong>
+          </div>
+          <div>
+            <span class="metric-label">Duplicates</span>
+            <strong>{{ quality.duplicateRows }}</strong>
+          </div>
+        </div>
+        @if (quality.issues.length) {
+          <div class="quality-issues">
+            @for (issue of quality.issues; track issue) {
+              <div class="issue">
+                <span class="issue-label">{{ issue.label }}</span>
+                <span class="issue-detail">{{ issue.detail }}</span>
+              </div>
+            }
+          </div>
+        }
+      }
+    </div>
+  }
+
+  @if (showAuditTrail()) {
+    <div class="audit-trail-panel">
+      <div class="panel-header">
+        <div>
+          <div class="panel-title">Audit trail</div>
+          <div class="panel-subtitle">Recent grid actions</div>
+        </div>
+        <button type="button" class="icon-btn" (click)="toggleAuditTrail()">&times;</button>
+      </div>
+      <div class="audit-feed">
+        @for (event of auditEvents(); track event) {
+          <div class="audit-event">
+            <div class="event-meta">
+              <span class="event-type">{{ event.type }}</span>
+              <span class="event-time">{{ event.timestamp | date: 'shortTime' }}</span>
+            </div>
+            <div class="event-label">{{ event.label }}</div>
+            <button type="button" class="copy-btn" (click)="copyAuditEvent(event.id)">Copy</button>
+          </div>
+        }
+        @if (auditEvents().length === 0) {
+          <div class="empty-feed">No activity captured yet.</div>
+        }
+      </div>
+    </div>
+  }
+
+  @if (bookmarkedRows().length) {
+    <div class="bookmark-drawer">
+      <div class="drawer-header">
+        <div>
+          <div class="drawer-title">Bookmarks</div>
+          <div class="drawer-subtitle">{{ bookmarkedRows().length }} saved rows</div>
+        </div>
+        <button type="button" class="icon-btn" (click)="clearBookmarks()">&times;</button>
+      </div>
+      <div class="bookmark-list">
+        @for (row of bookmarkedRows(); track trackByIndex($index)) {
+          <div class="bookmark-item">
+            <span>{{ getBookmarkLabel(row) }}</span>
+            <div class="bookmark-actions">
+              <button type="button" (click)="toggleBookmarkRow(row)">Remove</button>
+              <button type="button" (click)="toggleRowSelection(row)">Select</button>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- Filter & Column Menus - Outside grid container to avoid overflow:hidden -->
+  @if (activeFilterColumn) {
+    <engineers-salary-reference-filter-menu
+      [options]="filterOptions"
+      [loading]="filterOptionsLoading"
+      [position]="filterMenuPosition"
+      [placeholder]="filterPlaceholder"
+      [initialSearchTerm]="filterMenuSearchTerm"
+      (onFilter)="applyFilterMenu(activeFilterColumn!, $event)"
+      (onSearchTermChange)="applyFilterMenuSearch(activeFilterColumn!, $event)"
+    >
+    </engineers-salary-reference-filter-menu>
+  }
+
+  @if (contextMenuColumn) {
+    <engineers-salary-reference-column-menu
+      [column]="contextMenuColumn"
+      [position]="contextMenuPosition"
+      [allColumns]="columns"
+      (onActionClick)="handleContextMenuAction($event)"
+      (onToggleColumn)="toggleColumnVisibility($event)"
+      (onClose)="closeContextMenu()"
+    >
+    </engineers-salary-reference-column-menu>
+  }
+
+  <!-- Other panels inside grid wrapper -->
+  <div class="grid-panels-wrapper">
+    @if (showColumnVisibilityPanel) {
+      <div class="column-visibility-flyout">
+        <engineers-salary-reference-column-visibility-panel
+          [columns]="columns"
+          [rtl]="config.rtl ?? false"
+          (onToggle)="handleColumnToggle($event)"
+          (onClose)="closeColumnVisibilityPanel()"
+        >
+        </engineers-salary-reference-column-visibility-panel>
+      </div>
+    }
+
+    @if (activeTooltip(); as tooltip) {
+      <div class="data-grid-tooltip" [style.left.px]="tooltip.x" [style.top.px]="tooltip.y">
+        <div class="tooltip-content" [textContent]="tooltip.content"></div>
+      </div>
+    }
+
+    @if (showKeyboardShortcuts()) {
+      <div class="shortcuts-overlay">
+        <div class="shortcuts-panel">
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">Keyboard shortcuts</div>
+              <div class="panel-subtitle">Navigate and act faster</div>
+            </div>
+            <button type="button" class="icon-btn" (click)="toggleKeyboardShortcuts()">
+              &times;
+            </button>
+          </div>
+          <div class="shortcut-grid">
+            <div class="shortcut-item">
+              <span class="shortcut-keys">Ctrl + /</span>
+              <span class="shortcut-label">Toggle shortcuts</span>
+            </div>
+            <div class="shortcut-item">
+              <span class="shortcut-keys">Shift + Click</span>
+              <span class="shortcut-label">Range select rows</span>
+            </div>
+            <div class="shortcut-item">
+              <span class="shortcut-keys">Enter</span>
+              <span class="shortcut-label">Edit focused cell</span>
+            </div>
+            <div class="shortcut-item">
+              <span class="shortcut-keys">Esc</span>
+              <span class="shortcut-label">Cancel edit / close</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- Cell Context Menu -->
+    @if (showCellContextMenu) {
+      <div
+        class="cell-context-menu"
+        [style.left.px]="cellContextMenuPosition.x"
+        [style.top.px]="cellContextMenuPosition.y"
+        (click)="$event.stopPropagation()"
+        (pointerdown)="$event.stopPropagation()"
+        (mousemove)="onCellContextMenuHover($event)"
+      >
+        @if (cellContextMenuColumn && cellContextMenuRow) {
+          <div class="context-menu-header">
+            <div class="context-menu-title">{{ getContextMenuColumnLabel() }}</div>
+            <div class="context-menu-value">{{ getContextMenuCellValue() }}</div>
+          </div>
+        }
+        <div class="context-menu-divider"></div>
+        <div class="context-menu-label">Cell</div>
+        <button
+          class="context-menu-item"
+          type="button"
+          data-cell-submenu-trigger="true"
+          (mouseenter)="showCellSubmenu('copy', $event)"
+          (mouseleave)="hideCellSubmenu()"
+        >
+          <i appIcon="file-earmark-text" class="menu-icon" aria-hidden="true"></i>
+          <span>Copy</span>
+          <span class="menu-right">
+            <span class="submenu-arrow">&gt;</span>
+          </span>
+        </button>
+        @if (cellContextMenuColumn?.editable && config.editMode !== 'none') {
+          <button
+            class="context-menu-item"
+            type="button"
+            (click)="editCellFromMenu(); $event.stopPropagation()"
+          >
+            <i appIcon="pencil" class="menu-icon" aria-hidden="true"></i>
+            <span>Edit Cell</span>
+            <span class="shortcut">F2</span>
+          </button>
+        }
+        <div class="context-menu-divider"></div>
+        <div class="context-menu-label">Column</div>
+        <button
+          class="context-menu-item"
+          type="button"
+          data-cell-submenu-trigger="true"
+          [disabled]="!isContextColumnFilterable()"
+          (mouseenter)="showCellSubmenu('filter', $event)"
+          (mouseleave)="hideCellSubmenu()"
+        >
+          <i appIcon="funnel" class="menu-icon" aria-hidden="true"></i>
+          <span>Filter</span>
+          <span class="menu-right">
+            @if (isContextColumnFiltered()) {
+              <span class="menu-meta">Active</span>
+            }
+            <span class="submenu-arrow">&gt;</span>
+          </span>
+        </button>
+        <button
+          class="context-menu-item"
+          type="button"
+          data-cell-submenu-trigger="true"
+          [disabled]="!isContextColumnSortable()"
+          (mouseenter)="showCellSubmenu('sort', $event)"
+          (mouseleave)="hideCellSubmenu()"
+        >
+          <i appIcon="arrow-down-up" class="menu-icon" aria-hidden="true"></i>
+          <span>Sort</span>
+          <span class="menu-right">
+            @if (isContextColumnSorted()) {
+              <span class="menu-meta">Active</span>
+            }
+            <span class="submenu-arrow">&gt;</span>
+          </span>
+        </button>
+        <div class="context-menu-divider"></div>
+        <div class="context-menu-label">Row</div>
+        <button
+          class="context-menu-item"
+          type="button"
+          data-cell-submenu-trigger="true"
+          (mouseenter)="showCellSubmenu('row-actions', $event)"
+          (mouseleave)="hideCellSubmenu()"
+        >
+          <i appIcon="list-task" class="menu-icon" aria-hidden="true"></i>
+          <span>Row Actions</span>
+          <span class="menu-right">
+            @if (getContextRowActions().length) {
+              <span class="menu-meta">{{ getContextRowActions().length }} custom</span>
+            }
+            <span class="submenu-arrow">&gt;</span>
+          </span>
+        </button>
+        @if (config.exportable) {
+          <button
+            class="context-menu-item"
+            type="button"
+            data-cell-submenu-trigger="true"
+            (mouseenter)="showCellSubmenu('export', $event)"
+            (mouseleave)="hideCellSubmenu()"
+          >
+            <i appIcon="download" class="menu-icon" aria-hidden="true"></i>
+            <span>Export</span>
+            <span class="menu-right">
+              <span class="menu-meta">{{ exportFormat().toUpperCase() }}</span>
+              <span class="submenu-arrow">&gt;</span>
+            </span>
+          </button>
+        }
+        <button
+          class="context-menu-item"
+          type="button"
+          [class.is-on]="isRowPinned(cellContextMenuRow!)"
+          (click)="
+            togglePinRow(cellContextMenuRow!); showCellContextMenu = false; $event.stopPropagation()
+          "
+        >
+          <i appIcon="pin-angle" class="menu-icon" aria-hidden="true"></i>
+          <span>{{ isRowPinned(cellContextMenuRow!) ? 'Unpin Row' : 'Pin Row' }}</span>
+          <span class="menu-right">
+            @if (isRowPinned(cellContextMenuRow!)) {
+              <span class="menu-check" aria-hidden="true">&#10003;</span>
+            }
+          </span>
+        </button>
+        @if (config.enableBookmarks) {
+          <button
+            class="context-menu-item"
+            type="button"
+            [class.is-on]="isRowBookmarked(cellContextMenuRow!)"
+            (click)="
+              toggleBookmarkRow(cellContextMenuRow!);
+              showCellContextMenu = false;
+              $event.stopPropagation()
+            "
+          >
+            <i appIcon="bookmark-star" class="menu-icon" aria-hidden="true"></i>
+            <span>{{
+              isRowBookmarked(cellContextMenuRow!) ? 'Remove Bookmark' : 'Bookmark Row'
+            }}</span>
+            <span class="menu-right">
+              @if (isRowBookmarked(cellContextMenuRow!)) {
+                <span class="menu-check" aria-hidden="true">&#10003;</span>
+              }
+            </span>
+          </button>
+        }
+        <div class="context-menu-divider"></div>
+        <div class="context-menu-label">Selection</div>
+        <button
+          class="context-menu-item"
+          type="button"
+          [disabled]="!config.selectable"
+          [class.is-on]="isRowSelected(cellContextMenuRow!)"
+          (click)="
+            toggleRowSelection(cellContextMenuRow!, $event);
+            showCellContextMenu = false;
+            $event.stopPropagation()
+          "
+        >
+          <i appIcon="check2-square" class="menu-icon" aria-hidden="true"></i>
+          <span>{{ isRowSelected(cellContextMenuRow!) ? 'Deselect Row' : 'Select Row' }}</span>
+          <span class="menu-right">
+            @if (isRowSelected(cellContextMenuRow!)) {
+              <span class="menu-check" aria-hidden="true">&#10003;</span>
+            }
+          </span>
+        </button>
+        <button
+          class="context-menu-item"
+          type="button"
+          [disabled]="!config.selectable"
+          (click)="selectAll(); showCellContextMenu = false; $event.stopPropagation()"
+        >
+          <i appIcon="list" class="menu-icon" aria-hidden="true"></i>
+          <span>Select All Rows</span>
+        </button>
+        <button
+          class="context-menu-item"
+          type="button"
+          [disabled]="!hasSelectedRows()"
+          (click)="clearSelection(); showCellContextMenu = false; $event.stopPropagation()"
+        >
+          <i appIcon="x-lg" class="menu-icon" aria-hidden="true"></i>
+          <span>Clear Selection</span>
+        </button>
+      </div>
+    }
+
+    <!-- Copy Submenu -->
+    @if (activeCellSubmenu === 'copy') {
+      <div
+        class="cell-submenu"
+        [style.left.px]="cellSubmenuPosition.x"
+        [style.top.px]="cellSubmenuPosition.y"
+        (mouseenter)="keepCellSubmenuOpen()"
+        (mouseleave)="hideCellSubmenu()"
+      >
+        <div class="context-menu-label">Cell</div>
+        <button
+          class="context-menu-item"
+          type="button"
+          (click)="copyCellValue(); $event.stopPropagation()"
+        >
+          <i appIcon="file-earmark-text" class="menu-icon" aria-hidden="true"></i>
+          <span>Copy Cell</span>
+          <span class="shortcut">Ctrl+C</span>
+        </button>
+        <button
+          class="context-menu-item"
+          type="button"
+          (click)="copyCellWithHeader(); $event.stopPropagation()"
+        >
+          <i appIcon="table" class="menu-icon" aria-hidden="true"></i>
+          <span>Copy Cell with Header</span>
+        </button>
+        <div class="context-menu-divider"></div>
+        <div class="context-menu-label">Row</div>
+        <button
+          class="context-menu-item"
+          type="button"
+          (click)="copyRowData(); $event.stopPropagation()"
+        >
+          <i appIcon="list" class="menu-icon" aria-hidden="true"></i>
+          <span>Copy Row</span>
+        </button>
+        <button
+          class="context-menu-item"
+          type="button"
+          (click)="copyWithHeaders(); $event.stopPropagation()"
+        >
+          <i appIcon="table" class="menu-icon" aria-hidden="true"></i>
+          <span>Copy Row with Headers</span>
+        </button>
+        <button
+          class="context-menu-item"
+          type="button"
+          (click)="copyRowAsJson(); $event.stopPropagation()"
+        >
+          <span class="menu-icon menu-icon--text">&#123;&#125;</span>
+          <span>Copy Row as JSON</span>
+        </button>
+        <div class="context-menu-divider"></div>
+        <div class="context-menu-label">Column</div>
+        <button
+          class="context-menu-item"
+          type="button"
+          (click)="copyColumnFromCell(); $event.stopPropagation()"
+        >
+          <i appIcon="layout-three-columns" class="menu-icon" aria-hidden="true"></i>
+          <span>Copy Column Values</span>
+        </button>
+      </div>
+    }
+
+    <!-- Filter Submenu -->
+    @if (activeCellSubmenu === 'filter') {
+      <div
+        class="cell-submenu"
+        [style.left.px]="cellSubmenuPosition.x"
+        [style.top.px]="cellSubmenuPosition.y"
+        (mouseenter)="keepCellSubmenuOpen()"
+        (mouseleave)="hideCellSubmenu()"
+      >
+        <div class="context-menu-label">Quick Match</div>
+        <button
+          class="context-menu-item"
+          type="button"
+          [disabled]="!isContextColumnFilterable()"
+          (click)="filterByCellValue(); $event.stopPropagation()"
+        >
+          <i appIcon="funnel" class="menu-icon" aria-hidden="true"></i>
+          <span>Filter by This Value</span>
+        </button>
+        <button
+          class="context-menu-item"
+          type="button"
+          [disabled]="!isContextColumnFilterable()"
+          (click)="filterNotEqual(); $event.stopPropagation()"
+        >
+          <i appIcon="x-lg" class="menu-icon" aria-hidden="true"></i>
+          <span>Exclude This Value</span>
+        </button>
+        <button
+          class="context-menu-item"
+          type="button"
+          [disabled]="!isContextColumnFilterable()"
+          (click)="filterContains(); $event.stopPropagation()"
+        >
+          <span class="menu-icon menu-icon--text">Aa</span>
+          <span>Contains</span>
+        </button>
+        <button
+          class="context-menu-item"
+          type="button"
+          [disabled]="!isContextColumnFilterable()"
+          (click)="filterStartsWith(); $event.stopPropagation()"
+        >
+          <span class="menu-icon menu-icon--text">A^</span>
+          <span>Starts With</span>
+        </button>
+        <button
+          class="context-menu-item"
+          type="button"
+          [disabled]="!isContextColumnFilterable()"
+          (click)="filterEndsWith(); $event.stopPropagation()"
+        >
+          <span class="menu-icon menu-icon--text">A$</span>
+          <span>Ends With</span>
+        </button>
+        <div class="context-menu-divider"></div>
+        <div class="context-menu-label">Numeric</div>
+        <button
+          class="context-menu-item"
+          type="button"
+          [disabled]="!isContextColumnFilterable() || !isContextColumnNumeric()"
+          (click)="filterGreaterThan(); $event.stopPropagation()"
+        >
+          <i appIcon="arrow-right" class="menu-icon" aria-hidden="true"></i>
+          <span>Greater Than...</span>
+        </button>
+        <button
+          class="context-menu-item"
+          type="button"
+          [disabled]="!isContextColumnFilterable() || !isContextColumnNumeric()"
+          (click)="filterLessThan(); $event.stopPropagation()"
+        >
+          <i appIcon="arrow-left" class="menu-icon" aria-hidden="true"></i>
+          <span>Less Than...</span>
+        </button>
+        <div class="context-menu-divider"></div>
+        <div class="context-menu-label">Empty</div>
+        <button
+          class="context-menu-item"
+          type="button"
+          [disabled]="!isContextColumnFilterable()"
+          (click)="filterIsEmpty(); $event.stopPropagation()"
+        >
+          <span class="menu-icon menu-icon--text">0</span>
+          <span>Is Empty</span>
+        </button>
+        <button
+          class="context-menu-item"
+          type="button"
+          [disabled]="!isContextColumnFilterable()"
+          (click)="filterNotEmpty(); $event.stopPropagation()"
+        >
+          <span class="menu-icon menu-icon--text">!0</span>
+          <span>Is Not Empty</span>
+        </button>
+        <div class="context-menu-divider"></div>
+        <button
+          class="context-menu-item"
+          type="button"
+          [disabled]="!isContextColumnFiltered()"
+          (click)="clearColumnFilterFromMenu(); $event.stopPropagation()"
+        >
+          <i appIcon="x-lg" class="menu-icon" aria-hidden="true"></i>
+          <span>Clear Column Filter</span>
+        </button>
+        <button
+          class="context-menu-item"
+          type="button"
+          [disabled]="!hasActiveFilters()"
+          (click)="clearAllFilters(); showCellContextMenu = false; $event.stopPropagation()"
+        >
+          <i appIcon="x-lg" class="menu-icon" aria-hidden="true"></i>
+          <span>Clear All Filters</span>
+        </button>
+      </div>
+    }
+
+    <!-- Sort Submenu -->
+    @if (activeCellSubmenu === 'sort') {
+      <div
+        class="cell-submenu"
+        [style.left.px]="cellSubmenuPosition.x"
+        [style.top.px]="cellSubmenuPosition.y"
+        (mouseenter)="keepCellSubmenuOpen()"
+        (mouseleave)="hideCellSubmenu()"
+      >
+        <div class="context-menu-label">Sort Order</div>
+        <button
+          class="context-menu-item"
+          type="button"
+          [disabled]="!isContextColumnSortable()"
+          (click)="sortByColumn(); $event.stopPropagation()"
+        >
+          <i appIcon="arrow-up" class="menu-icon" aria-hidden="true"></i>
+          <span>Sort Ascending</span>
+        </button>
+        <button
+          class="context-menu-item"
+          type="button"
+          [disabled]="!isContextColumnSortable()"
+          (click)="sortDescending(); $event.stopPropagation()"
+        >
+          <i appIcon="arrow-down" class="menu-icon" aria-hidden="true"></i>
+          <span>Sort Descending</span>
+        </button>
+        <div class="context-menu-divider"></div>
+        <button
+          class="context-menu-item"
+          type="button"
+          [disabled]="!isContextColumnSortable() || !isContextColumnSorted()"
+          (click)="clearSort(); $event.stopPropagation()"
+        >
+          <i appIcon="x-lg" class="menu-icon" aria-hidden="true"></i>
+          <span>Clear Sort</span>
+        </button>
+      </div>
+    }
+
+    <!-- Row Actions Submenu -->
+    @if (activeCellSubmenu === 'row-actions') {
+      <div
+        class="cell-submenu"
+        [style.left.px]="cellSubmenuPosition.x"
+        [style.top.px]="cellSubmenuPosition.y"
+        (mouseenter)="keepCellSubmenuOpen()"
+        (mouseleave)="hideCellSubmenu()"
+      >
+        <div class="context-menu-label">Row Operations</div>
+        <button
+          class="context-menu-item"
+          type="button"
+          (click)="insertRowBelow(); $event.stopPropagation()"
+        >
+          <i appIcon="plus-lg" class="menu-icon" aria-hidden="true"></i>
+          <span>Insert Row Below</span>
+        </button>
+        <button
+          class="context-menu-item"
+          type="button"
+          (click)="duplicateRow(); $event.stopPropagation()"
+        >
+          <i appIcon="files" class="menu-icon" aria-hidden="true"></i>
+          <span>Duplicate Row</span>
+        </button>
+        <div class="context-menu-divider"></div>
+        <button
+          class="context-menu-item danger"
+          type="button"
+          (click)="deleteRowFromMenu(); $event.stopPropagation()"
+        >
+          <i appIcon="trash" class="menu-icon" aria-hidden="true"></i>
+          <span>Delete Row</span>
+          <span class="shortcut">Del</span>
+        </button>
+        <div class="context-menu-divider"></div>
+        <div class="context-menu-label">Row Status</div>
+        <button
+          class="context-menu-item"
+          type="button"
+          [disabled]="pinnedRows().length === 0"
+          (click)="unpinAllRows(); showCellContextMenu = false; $event.stopPropagation()"
+        >
+          <span class="menu-icon menu-icon--text">PIN</span>
+          <span>Unpin All Rows</span>
+        </button>
+        @if (config.enableBookmarks) {
+          <button
+            class="context-menu-item"
+            type="button"
+            [disabled]="bookmarkedRows().length === 0"
+            (click)="clearBookmarks(); showCellContextMenu = false; $event.stopPropagation()"
+          >
+            <span class="menu-icon menu-icon--text">BM</span>
+            <span>Clear Bookmarks</span>
+          </button>
+        }
+        @if (getContextRowActions().length) {
+          <div class="context-menu-divider"></div>
+          <div class="context-menu-label">Custom Actions</div>
+          @for (action of getContextRowActions(); track action) {
+            <button
+              class="context-menu-item"
+              type="button"
+              (click)="runContextRowAction(action); $event.stopPropagation()"
+            >
+              <span class="menu-icon menu-icon--text">{{ action.icon }}</span>
+              <span>{{ action.label }}</span>
+            </button>
+          }
+        }
+      </div>
+    }
+
+    <!-- Export Submenu -->
+    @if (activeCellSubmenu === 'export') {
+      <div
+        class="cell-submenu"
+        [style.left.px]="cellSubmenuPosition.x"
+        [style.top.px]="cellSubmenuPosition.y"
+        (mouseenter)="keepCellSubmenuOpen()"
+        (mouseleave)="hideCellSubmenu()"
+      >
+        <div class="context-menu-label">Scope</div>
+        <button
+          class="context-menu-item"
+          type="button"
+          (click)="exportRow(); $event.stopPropagation()"
+        >
+          <i appIcon="download" class="menu-icon" aria-hidden="true"></i>
+          <span>Export This Row</span>
+        </button>
+        <button
+          class="context-menu-item"
+          type="button"
+          [disabled]="!hasSelectedRows()"
+          (click)="exportSelection(); $event.stopPropagation()"
+        >
+          <i appIcon="check2-square" class="menu-icon" aria-hidden="true"></i>
+          <span>Export Selected Rows</span>
+        </button>
+        <button
+          class="context-menu-item"
+          type="button"
+          (click)="exportVisible(); $event.stopPropagation()"
+        >
+          <i appIcon="eye" class="menu-icon" aria-hidden="true"></i>
+          <span>Export Visible Data</span>
+        </button>
+        <div class="context-menu-divider"></div>
+        <div class="context-menu-label">Export Format</div>
+        @for (format of getExportFormats(); track format) {
+          <button
+            class="context-menu-item"
+            type="button"
+            [class.is-active]="exportFormat() === format"
+            (click)="setExportFormat(format); $event.stopPropagation()"
+          >
+            <span class="menu-icon menu-icon--text">{{ format.toUpperCase() }}</span>
+            <span>{{ getExportFormatLabel(format) }}</span>
+          </button>
+        }
+      </div>
+    }
+  </div>
+</div>
+
+@if (hasFormulaSuggestions()) {
+  <div
+    class="formula-suggestions formula-suggestions--overlay"
+    [ngStyle]="getFormulaSuggestionOverlayStyle()"
+    (mousedown)="$event.preventDefault()"
+  >
+    <div class="formula-suggestions__header">
+      <span>Formula Suggestions</span>
+      <span>Tab to apply</span>
+    </div>
+    @for (
+      suggestion of getFormulaSuggestions();
+      track suggestion.label + '-' + $index;
+      let index = $index
+    ) {
+      <button
+        type="button"
+        [class]="getFormulaSuggestionClass(index)"
+        (click)="applyFormulaSuggestionFromList(index, $event)"
+      >
+        <span class="formula-suggestion__label">{{ suggestion.label }}</span>
+        <span class="formula-suggestion__detail">{{ suggestion.detail }}</span>
+      </button>
+    }
+  </div>
+}

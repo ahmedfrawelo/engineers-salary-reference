@@ -1,0 +1,40 @@
+﻿@if (tab() === 'audit') {
+  <div class="access-pane access-pane--audit">
+    <section class="access-audit-state">
+      <div class="access-audit-state__icon">
+        <hugeicons-icon
+          class="access-huge-icon"
+          [icon]="hugeIcons.time"
+          [size]="24"
+          [strokeWidth]="1.8"
+          aria-hidden="true"
+        ></hugeicons-icon>
+      </div>
+      <div class="access-audit-state__copy">
+        <p class="access-section-kicker">Audit feed</p>
+        <h2>Audit timeline is coming into this shared shell next.</h2>
+        <p class="muted">
+          The page structure is ready, but the event stream still needs to be connected to the
+          unified activity source.
+        </p>
+      </div>
+      <div class="access-audit-state__checks">
+        <article class="access-audit-card">
+          <span class="access-audit-card__label">Planned</span>
+          <strong>Role updates</strong>
+          <p>Track permission saves, role renames, and destructive access changes.</p>
+        </article>
+        <article class="access-audit-card">
+          <span class="access-audit-card__label">Planned</span>
+          <strong>User seat events</strong>
+          <p>See invites, suspensions, restores, and profile edits in a single stream.</p>
+        </article>
+        <article class="access-audit-card">
+          <span class="access-audit-card__label">Planned</span>
+          <strong>Actor context</strong>
+          <p>Capture who made the change, when it happened, and what the previous state was.</p>
+        </article>
+      </div>
+    </section>
+  </div>
+}

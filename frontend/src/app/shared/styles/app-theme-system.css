@@ -1,0 +1,2388 @@
+:root {
+  /* Theme foundations */
+  --app-font-family-sans:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', roboto, 'Helvetica Neue', helvetica, arial,
+    sans-serif;
+  --app-theme-font-sans: var(--app-font-family-sans);
+  --app-grid-header-font-family: var(--app-theme-font-sans);
+  --app-grid-header-cell-height: 32px;
+  --app-grid-header-cell-padding-inline: 8px;
+  --app-grid-header-cell-font-size: 13px;
+  --app-grid-header-cell-font-weight: 700;
+  --app-grid-header-text-height: 16px;
+  --app-grid-header-text-size: 12px;
+  --app-grid-header-text-font-weight: 500;
+  --app-grid-header-text-line-height: 1.3333333333;
+  --app-grid-header-icon-gap: 4px;
+  --app-grid-header-icon-cluster-gap: 2px;
+  --app-grid-header-icon-button-size: 16px;
+  --app-grid-header-icon-size: 12px;
+  --app-grid-group-card-header-height: 40px;
+  --app-grid-group-card-row-height: 31px;
+  --app-grid-group-card-gap: 12px;
+  --app-grid-selection-column-width: 44px;
+  --app-grid-row-actions-column-width: 120px;
+  --app-grid-checkbox-size: 14px;
+  --app-grid-checkbox-radius: 4px;
+  --app-grid-pill-height: 21px;
+  --app-grid-pill-radius: 6px;
+  --app-grid-pill-padding-inline: 7px;
+  --app-grid-pill-gap: 4px;
+  --app-grid-pill-font-size: 10px;
+  --app-grid-pill-font-weight: 600;
+  --app-grid-pill-dot-size: 7px;
+  --app-grid-pill-dot-ring: 1.5px;
+  --app-pill-height: var(--app-grid-pill-height);
+  --app-pill-radius: var(--app-grid-pill-radius);
+  --app-pill-padding-inline: var(--app-grid-pill-padding-inline);
+  --app-pill-gap: var(--app-grid-pill-gap);
+  --app-pill-font-size: var(--app-grid-pill-font-size);
+  --app-pill-font-weight: var(--app-grid-pill-font-weight);
+  --app-pill-dot-size: var(--app-grid-pill-dot-size);
+  --app-pill-dot-ring: var(--app-grid-pill-dot-ring);
+  --app-color-grid-checkbox-bg: rgb(17 17 17);
+  --app-color-grid-checkbox-bg-hover: rgb(17 17 17);
+  --app-color-grid-checkbox-border: rgb(110 110 110);
+  --app-color-grid-checkbox-border-strong: rgb(110 110 110);
+  --app-color-grid-checkbox-check: rgb(255 255 255);
+  --app-color-grid-checkbox-checked-bg: var(--app-color-primary);
+  --app-color-grid-header-bg: rgb(25 25 25);
+  --app-color-grid-group-header-bg: var(--app-color-grid-header-bg);
+  --app-color-grid-row-hover: var(--app-color-grid-header-bg);
+  --app-color-grid-header-cell-fg: rgb(238 238 238);
+  --app-color-grid-header-text-fg: rgb(123 123 123);
+  --app-grid-group-header-accent-rgb: var(--primary);
+  --app-grid-group-footer-accent-rgb: var(--warning);
+  --app-grid-grand-total-accent-rgb: var(--success);
+  --app-color-grid-surface: color-mix(in oklab, rgb(var(--bg0, 17 18 20)) 96%, black 4%);
+  --app-color-grid-surface-raised: color-mix(
+    in oklab,
+    rgb(var(--bg1, 23 25 28)) 92%,
+    rgb(var(--fg, 255 255 255)) 8%
+  );
+  --app-color-grid-surface-footer: var(--app-color-grid-surface);
+  --app-color-grid-outline: color-mix(
+    in oklab,
+    rgb(var(--border-strong, var(--border))) 34%,
+    transparent
+  );
+  --app-color-grid-line: color-mix(
+    in oklab,
+    rgb(var(--border-strong, var(--border))) 56%,
+    transparent
+  );
+  --app-color-grid-line-soft: color-mix(
+    in oklab,
+    rgb(var(--border-strong, var(--border))) 38%,
+    transparent
+  );
+  --app-color-grid-line-faint: color-mix(
+    in oklab,
+    rgb(var(--border-strong, var(--border))) 24%,
+    transparent
+  );
+  --app-tree-connector-width: 1px;
+  --app-tree-connector-color: color-mix(
+    in oklab,
+    rgb(var(--fg, 255 255 255)) 42%,
+    transparent
+  );
+  --app-tree-connector-hover-color: var(--app-tree-connector-color);
+  --app-tree-connector-selected-color: var(--app-tree-connector-color);
+  --app-tree-connector-hitbox-width: 30px;
+  --app-tree-connector-elbow-height: 8px;
+  --app-tree-toggle-bg: rgb(var(--bg0, 12 13 14));
+  --app-tree-toggle-hover-bg: rgb(var(--bg1, 23 25 28));
+  --app-tree-card-fill: transparent;
+  --app-tree-card-outline: transparent;
+  --app-tree-card-hover-fill: transparent;
+  --app-tree-card-hover-outline: transparent;
+  --app-tree-card-selected-fill-start: color-mix(
+    in oklab,
+    rgb(var(--primary, 132 199 24)) 17%,
+    transparent
+  );
+  --app-tree-card-selected-fill-mid: color-mix(
+    in oklab,
+    rgb(var(--primary, 132 199 24)) 8%,
+    transparent
+  );
+  --app-tree-card-selected-fill-tail: color-mix(
+    in oklab,
+    rgb(var(--fg, 255 255 255)) 2%,
+    transparent
+  );
+  --app-tree-card-selected-outline: color-mix(
+    in oklab,
+    rgb(var(--primary, 132 199 24)) 38%,
+    transparent
+  );
+  --app-tree-card-hover-rail: color-mix(
+    in oklab,
+    rgb(var(--primary, 132 199 24)) 46%,
+    transparent
+  );
+  --app-tree-root-card-outline: var(--app-color-grid-line-soft);
+  --app-tree-root-card-fill-top: var(--app-color-grid-header-bg);
+  --app-tree-root-card-fill-bottom: var(--app-color-grid-header-bg);
+  --app-tree-root-card-hover-fill-top: var(--app-tree-root-card-fill-top);
+  --app-tree-root-card-hover-fill-bottom: var(--app-tree-root-card-fill-bottom);
+  --app-tree-root-card-selected-fill-top: var(--app-tree-root-card-fill-top);
+  --app-tree-root-card-selected-fill-mid: var(--app-tree-root-card-fill-top);
+  --app-tree-root-card-selected-fill-tail: var(--app-tree-root-card-fill-bottom);
+  --app-tree-root-card-hover-ring: none;
+  --app-tree-root-card-selected-ring: inset 0 0 0 1px var(--app-tree-root-card-outline);
+  --app-tree-branch-card-outline: var(--app-color-grid-line-soft);
+  --app-tree-branch-card-fill-top: color-mix(
+    in oklab,
+    var(--app-color-grid-header-bg) 88%,
+    transparent
+  );
+  --app-tree-branch-card-fill-bottom: color-mix(
+    in oklab,
+    var(--app-color-grid-header-bg) 82%,
+    transparent
+  );
+  --app-tree-branch-card-inner-line: color-mix(
+    in oklab,
+    var(--app-color-grid-line-faint) 72%,
+    transparent
+  );
+  --app-tree-branch-card-inner-outline: color-mix(
+    in oklab,
+    var(--app-color-grid-line-faint) 56%,
+    transparent
+  );
+  --app-tree-branch-card-hover-outline: var(--app-color-grid-line);
+  --app-tree-branch-card-hover-fill-top: var(--app-tree-branch-card-fill-top);
+  --app-tree-branch-card-hover-fill-bottom: var(--app-tree-branch-card-fill-bottom);
+  --app-tree-branch-card-selected-outline: color-mix(
+    in oklab,
+    rgb(var(--primary, 132 199 24)) 44%,
+    transparent
+  );
+  --app-tree-branch-card-selected-fill-start: color-mix(
+    in oklab,
+    rgb(var(--primary, 132 199 24)) 17%,
+    transparent
+  );
+  --app-tree-branch-card-selected-fill-end: color-mix(
+    in oklab,
+    rgb(var(--fg, 255 255 255)) 4%,
+    transparent
+  );
+  --app-tree-branch-card-selected-ring: inset 0 0 0 1px
+    color-mix(in oklab, rgb(var(--primary, 132 199 24)) 22%, transparent);
+  --app-tree-nested-branch-outline: rgb(var(--fg, 255 255 255) / 0.12);
+  --app-tree-nested-branch-fill: rgb(var(--fg, 255 255 255) / 0.035);
+  --app-tree-nested-branch-hover-outline: var(--app-color-grid-line-soft);
+  --app-tree-nested-branch-selected-outline: color-mix(
+    in oklab,
+    rgb(var(--primary, 132 199 24)) 34%,
+    var(--app-color-grid-line-soft)
+  );
+  --app-tree-nested-branch-selected-fill: color-mix(
+    in oklab,
+    rgb(var(--primary, 132 199 24)) 5%,
+    var(--app-tree-nested-branch-fill)
+  );
+  --app-tree-nested-branch-open-fill: rgb(var(--primary, 132 199 24) / 0.045);
+  --app-tree-nested-branch-open-outline: rgb(var(--primary, 132 199 24) / 0.28);
+  --app-tree-label-text: color-mix(in oklab, rgb(var(--fg, 255 255 255)) 92%, transparent);
+  --app-tree-root-label-font-size: 14px;
+  --app-tree-root-label-font-weight: 820;
+  --app-tree-level-1-label-font-size: 12.15px;
+  --app-tree-level-1-label-font-weight: 640;
+  --app-tree-level-1-branch-label-font-size: 12.85px;
+  --app-tree-level-1-branch-label-font-weight: 780;
+  --app-tree-level-2-label-font-size: 11.55px;
+  --app-tree-level-2-label-font-weight: 590;
+  --app-tree-level-2-branch-label-font-size: 12.1px;
+  --app-tree-level-2-branch-label-font-weight: 740;
+  --app-tree-level-deep-label-font-size: 11px;
+  --app-tree-level-deep-label-font-weight: 560;
+  --app-tree-root-label-text: rgb(var(--fg, 255 255 255));
+  --app-tree-branch-label-text: color-mix(
+    in oklab,
+    rgb(var(--fg, 255 255 255)) 88%,
+    transparent
+  );
+  --app-tree-level-1-label-text: color-mix(
+    in oklab,
+    rgb(var(--fg, 255 255 255)) 76%,
+    transparent
+  );
+  --app-tree-level-1-branch-label-text: color-mix(
+    in oklab,
+    rgb(var(--fg, 255 255 255)) 88%,
+    transparent
+  );
+  --app-tree-level-2-label-text: color-mix(
+    in oklab,
+    rgb(var(--fg, 255 255 255)) 68%,
+    transparent
+  );
+  --app-tree-level-2-branch-label-text: color-mix(
+    in oklab,
+    rgb(var(--fg, 255 255 255)) 82%,
+    transparent
+  );
+  --app-tree-level-deep-label-text: color-mix(
+    in oklab,
+    rgb(var(--fg, 255 255 255)) 60%,
+    transparent
+  );
+  --app-tree-active-label-text: rgb(var(--primary, 132 199 24));
+  --app-tree-leaf-label-text: color-mix(
+    in oklab,
+    rgb(var(--fg, 255 255 255)) 78%,
+    transparent
+  );
+  --app-tree-count-bg: color-mix(in oklab, rgb(var(--fg, 255 255 255)) 5.5%, transparent);
+  --app-tree-count-text: color-mix(in oklab, rgb(var(--fg, 255 255 255)) 80%, transparent);
+  --app-tree-count-root-bg: color-mix(in oklab, rgb(var(--bg1, 23 25 28)) 78%, transparent);
+  --app-tree-branch-count-bg: color-mix(
+    in oklab,
+    rgb(var(--fg, 255 255 255)) 5.5%,
+    transparent
+  );
+  --app-tree-branch-count-text: color-mix(
+    in oklab,
+    rgb(var(--fg, 255 255 255)) 82%,
+    transparent
+  );
+  --app-tree-record-count-bg: color-mix(
+    in oklab,
+    rgb(var(--primary, 132 199 24)) 10%,
+    transparent
+  );
+  --app-tree-record-count-text: color-mix(
+    in oklab,
+    rgb(var(--primary, 132 199 24)) 88%,
+    transparent
+  );
+  --app-tree-price-record-count-bg: color-mix(
+    in oklab,
+    rgb(var(--info, 99 179 237)) 10%,
+    transparent
+  );
+  --app-tree-price-record-count-text: color-mix(
+    in oklab,
+    rgb(var(--info, 99 179 237)) 88%,
+    rgb(var(--fg, 255 255 255)) 12%
+  );
+  --app-tree-count-selected-bg: color-mix(
+    in oklab,
+    rgb(var(--primary, 132 199 24)) 20%,
+    transparent
+  );
+  --app-tree-tag-row-extra: 13px;
+  --app-tree-tag-list-gap: 7px;
+  --app-tree-tag-height: 14px;
+  --app-tree-tag-padding-inline: 0;
+  --app-tree-tag-gap: 1px;
+  --app-tree-tag-radius: 0;
+  --app-tree-tag-max-width: 92px;
+  --app-tree-tag-overflow-max-width: 94px;
+  --app-tree-tag-font-size: 9.8px;
+  --app-tree-tag-font-weight: 740;
+  --app-tree-tag-bg: transparent;
+  --app-tree-tag-border: transparent;
+  --app-tree-tag-text: color-mix(
+    in oklab,
+    var(--app-color-warning-text, rgb(var(--warning, 245 158 11))) 88%,
+    rgb(var(--fg, 255 255 255)) 12%
+  );
+  --app-tree-tag-inherited-bg: color-mix(
+    in oklab,
+    rgb(var(--fg, 255 255 255)) 4%,
+    transparent
+  );
+  --app-tree-tag-inherited-border: color-mix(
+    in oklab,
+    rgb(var(--fg, 255 255 255)) 0%,
+    transparent
+  );
+  --app-tree-tag-inherited-text: color-mix(
+    in oklab,
+    rgb(var(--fg, 255 255 255)) 62%,
+    transparent
+  );
+  --app-tree-tag-inherited-opacity: 0.72;
+  --app-tree-search-match-text: rgb(var(--fg, 255 255 255));
+  --app-tree-search-highlight-bg: color-mix(
+    in oklab,
+    rgb(var(--primary, 132 199 24)) 20%,
+    transparent
+  );
+  --app-tree-search-highlight-text: rgb(var(--primary, 132 199 24));
+  --app-tree-search-bg: rgb(var(--fg, 255 255 255) / 0.03);
+  --app-tree-search-bg-focus: rgb(var(--fg, 255 255 255) / 0.04);
+  --app-tree-search-text: rgb(var(--fg, 255 255 255) / 0.88);
+  --app-tree-search-muted-text: rgb(var(--fg, 255 255 255) / 0.62);
+  --app-tree-search-icon-text: rgb(var(--fg, 255 255 255) / 0.86);
+  --app-tree-toolbar-action-text: rgb(var(--fg, 255 255 255) / 0.56);
+  --app-tree-toolbar-action-hover-text: rgb(var(--fg, 255 255 255) / 0.88);
+  --app-tree-toolbar-action-disabled-text: rgb(var(--fg, 255 255 255) / 0.22);
+  --app-tree-toolbar-divider: rgb(var(--fg, 255 255 255) / 0.1);
+  --app-tree-header-text: rgb(var(--fg, 255 255 255) / 0.96);
+  --app-tree-header-muted-text: rgb(var(--fg, 255 255 255) / 0.6);
+  --app-tree-header-count-bg: rgb(var(--fg, 255 255 255) / 0.055);
+  --app-tree-header-count-text: rgb(var(--fg, 255 255 255) / 0.84);
+  --app-tree-more-text: color-mix(in oklab, rgb(var(--fg, 255 255 255)) 55%, transparent);
+  --app-tree-more-hover-fill: color-mix(
+    in oklab,
+    rgb(var(--fg, 255 255 255)) 8%,
+    transparent
+  );
+  --app-tree-more-hover-text: rgb(var(--primary, 132 199 24));
+  --app-tree-context-bg: rgb(var(--bg0) / 0.98);
+  --app-tree-context-border: rgb(var(--fg) / 0.1);
+  --app-tree-context-divider: rgb(var(--fg) / 0.08);
+  --app-tree-context-hover-bg: rgb(var(--fg) / 0.045);
+  --app-tree-context-muted-text: rgb(var(--fg) / 0.48);
+  --app-tree-context-action-text: rgb(var(--fg) / 0.86);
+  --app-tree-context-action-hover-text: rgb(var(--fg));
+  --app-tree-context-focus-outline: rgb(var(--primary, 132 199 24) / 0.36);
+  --app-tree-context-danger-text: rgb(254 202 202);
+  --app-tree-context-danger-bg: rgb(248 113 113 / 0.1);
+  --app-tree-context-input-bg: rgb(var(--fg) / 0.045);
+  --app-tree-context-input-border: rgb(var(--fg) / 0.1);
+  --app-tree-root-bg: color-mix(
+    in oklab,
+    rgb(var(--primary, 132 199 24)) 8%,
+    transparent
+  );
+  --app-tree-root-selected-bg-end: color-mix(
+    in oklab,
+    rgb(var(--surface, 23 25 28)) 82%,
+    transparent
+  );
+  --app-tree-editor-bg: color-mix(in oklab, rgb(var(--surface, 23 25 28)) 90%, transparent);
+  --app-color-grid-row-selected: color-mix(
+    in oklab,
+    rgb(var(--primary, 132 199 24)) 10%,
+    transparent
+  );
+  --app-color-grid-body-text: #d5d6d7;
+  --app-color-grid-body-text-soft: var(--app-color-text-soft, rgb(var(--fg) / 0.74));
+  --app-color-grid-link: #d5d6d7;
+  --app-color-grid-link-hover: #d5d6d7;
+  --app-color-grid-pill-border: color-mix(
+    in oklab,
+    rgb(var(--border-strong, var(--border))) 26%,
+    transparent
+  );
+  --app-color-grid-pill-surface: color-mix(
+    in oklab,
+    var(--app-color-grid-surface-raised) 93%,
+    rgb(var(--fg, 255 255 255)) 7%
+  );
+  --app-color-grid-pill-text: color-mix(in oklab, rgb(var(--fg, 255 255 255)) 84%, transparent);
+  --app-color-grid-pill-custom-bg: color-mix(
+    in oklab,
+    var(--app-color-grid-pill-surface) 88%,
+    var(--custom) 12%
+  );
+  --app-color-grid-pill-custom-border: color-mix(
+    in oklab,
+    var(--app-color-grid-pill-border) 78%,
+    var(--custom) 22%
+  );
+  --app-color-grid-pill-tone-border: color-mix(
+    in oklab,
+    var(--app-color-grid-pill-border) 80%,
+    currentColor 20%
+  );
+  --app-color-grid-pill-tone-bg: color-mix(
+    in oklab,
+    var(--app-color-grid-pill-surface) 90%,
+    currentColor 10%
+  );
+  --app-color-pill-border: var(--app-color-grid-pill-border);
+  --app-color-pill-surface: var(--app-color-grid-pill-surface);
+  --app-color-pill-text: var(--app-color-grid-pill-text);
+  --app-color-pill-custom-bg: var(--app-color-grid-pill-custom-bg);
+  --app-color-pill-custom-border: var(--app-color-grid-pill-custom-border);
+  --app-color-pill-tone-border: var(--app-color-grid-pill-tone-border);
+  --app-color-pill-tone-bg: var(--app-color-grid-pill-tone-bg);
+  --app-color-grid-muted-label: color-mix(in oklab, rgb(var(--fg, 255 255 255)) 38%, transparent);
+  --app-color-grid-muted-value: color-mix(in oklab, rgb(var(--fg, 255 255 255)) 70%, transparent);
+  --app-color-grid-muted-placeholder: color-mix(
+    in oklab,
+    rgb(var(--fg, 255 255 255)) 46%,
+    transparent
+  );
+  --app-color-grid-icon: color-mix(in oklab, var(--app-color-grid-body-text) 38%, transparent);
+  --app-color-grid-icon-active: color-mix(
+    in oklab,
+    var(--app-color-grid-body-text) 66%,
+    transparent
+  );
+  --app-color-grid-icon-strong: color-mix(
+    in oklab,
+    var(--app-color-grid-body-text) 84%,
+    transparent
+  );
+  --app-color-grid-control-hover: color-mix(
+    in oklab,
+    var(--app-color-grid-body-text) 4%,
+    transparent
+  );
+  --app-color-grid-control-focus: color-mix(
+    in oklab,
+    var(--app-color-grid-body-text) 6%,
+    transparent
+  );
+  --app-color-grid-resize-line: color-mix(
+    in oklab,
+    var(--app-color-grid-body-text) 18%,
+    transparent
+  );
+  --app-color-grid-resize-line-hover: color-mix(
+    in oklab,
+    var(--app-color-grid-body-text) 30%,
+    transparent
+  );
+  --app-color-grid-resize-line-active: color-mix(
+    in oklab,
+    var(--app-color-grid-body-text) 42%,
+    transparent
+  );
+  --app-color-grid-selection-index: rgb(171 174 176);
+  --app-color-grid-page-text: var(--app-color-grid-muted-label);
+  --app-color-grid-page-text-strong: var(--app-color-grid-muted-value);
+  --app-color-grid-overlay-bg: color-mix(
+    in oklab,
+    var(--app-color-overlay-body, rgb(var(--bg1, var(--surface)))) 94%,
+    var(--app-color-header, rgb(var(--bg0, 17 17 17))) 6%
+  );
+  --app-color-grid-overlay-border: var(--app-color-control-border, var(--app-color-outline-stroke));
+  --app-shadow-grid-overlay:
+    0 14px 32px rgb(0 0 0 / 0.28), 0 6px 18px rgb(0 0 0 / 0.18), 0 0 0 1px rgb(255 255 255 / 0.02);
+  --app-color-grid-floating-toolbar-bg: color-mix(
+    in oklab,
+    var(--app-color-grid-overlay-bg) 92%,
+    var(--app-color-grid-header-bg) 8%
+  );
+  --app-color-grid-floating-toolbar-border: color-mix(
+    in oklab,
+    var(--app-color-primary-border-strong) 72%,
+    var(--app-color-grid-overlay-border) 28%
+  );
+  --app-shadow-grid-floating-toolbar:
+    0 8px 24px rgb(0 0 0 / 0.22),
+    0 0 0 1px color-mix(in oklab, var(--app-color-primary-border) 72%, transparent);
+  --app-color-grid-floating-toolbar-text: var(--app-color-grid-body-text);
+  --app-color-grid-floating-toolbar-chip-bg: var(--app-color-grid-pill-surface);
+  --app-color-grid-floating-toolbar-chip-border: var(--app-color-grid-pill-border);
+  --app-color-grid-floating-toolbar-dismiss-text: color-mix(
+    in oklab,
+    var(--app-color-grid-floating-toolbar-text) 66%,
+    transparent
+  );
+  --app-color-grid-floating-toolbar-action-text: color-mix(
+    in oklab,
+    var(--app-color-grid-floating-toolbar-text) 82%,
+    transparent
+  );
+  --app-color-grid-control-bg: color-mix(
+    in oklab,
+    var(--app-color-control-bg) 72%,
+    var(--app-color-grid-overlay-bg) 28%
+  );
+  --app-color-grid-control-bg-strong: color-mix(
+    in oklab,
+    var(--app-color-control-bg) 58%,
+    var(--app-color-grid-overlay-bg) 42%
+  );
+  --app-color-grid-control-border: color-mix(in oklab, var(--app-color-outline) 60%, transparent);
+  --app-color-grid-control-border-strong: color-mix(
+    in oklab,
+    var(--app-color-outline-strong) 78%,
+    transparent
+  );
+  --app-color-grid-control-placeholder: color-mix(
+    in oklab,
+    var(--app-color-grid-body-text) 46%,
+    transparent
+  );
+  --app-color-grid-bottom-bar-bg: color-mix(
+    in oklab,
+    var(--app-color-grid-control-bg) 70%,
+    var(--app-color-grid-surface) 30%
+  );
+  --app-color-grid-bottom-bar-border: color-mix(
+    in oklab,
+    var(--app-color-outline) 60%,
+    transparent
+  );
+  --app-color-grid-header-hover-bg: color-mix(
+    in oklab,
+    var(--app-color-grid-header-bg) 82%,
+    var(--app-color-grid-control-bg-strong) 18%
+  );
+  --app-color-grid-header-state-line: var(--app-color-primary-text);
+  --app-color-grid-header-state-line-muted: color-mix(
+    in oklab,
+    var(--app-color-grid-header-state-line) 58%,
+    var(--app-color-grid-header-text-fg) 42%
+  );
+  --app-color-grid-header-filtered-bg: color-mix(
+    in oklab,
+    var(--app-color-grid-header-bg) 86%,
+    var(--app-color-grid-header-state-line-muted) 14%
+  );
+  --app-color-grid-header-sorted-bg: color-mix(
+    in oklab,
+    var(--app-color-grid-header-bg) 88%,
+    var(--app-color-grid-header-state-line) 12%
+  );
+  --app-color-grid-header-mixed-bg: color-mix(
+    in oklab,
+    var(--app-color-grid-header-sorted-bg) 54%,
+    var(--app-color-grid-header-filtered-bg) 46%
+  );
+  --app-gradient-grid-header-state-combined-line: linear-gradient(
+    90deg,
+    var(--app-color-grid-header-state-line) 0%,
+    var(--app-color-grid-header-state-line-muted) 100%
+  );
+  --app-color-grid-header-drop-bg: color-mix(
+    in oklab,
+    var(--app-color-grid-header-bg) 90%,
+    var(--app-color-grid-header-state-line) 10%
+  );
+  --app-color-grid-body-column-accent: color-mix(
+    in oklab,
+    var(--app-color-grid-header-state-line) 78%,
+    transparent
+  );
+  --app-color-grid-body-column-accent-muted: color-mix(
+    in oklab,
+    var(--app-color-grid-header-state-line-muted) 72%,
+    transparent
+  );
+  --app-color-grid-row-hover-border: color-mix(
+    in oklab,
+    var(--app-color-grid-outline) 68%,
+    transparent
+  );
+  --app-color-grid-sticky-divider: color-mix(
+    in oklab,
+    var(--app-color-grid-outline) 82%,
+    transparent
+  );
+  --app-color-grid-search-icon: color-mix(in oklab, rgb(var(--fg)) 55%, transparent);
+  --app-color-grid-search-icon-active: var(--app-color-primary);
+  --app-color-grid-control-surface: rgb(var(--bg1));
+  --app-color-grid-control-surface-border: rgb(var(--border) / 0.35);
+  --app-color-grid-control-surface-text: rgb(var(--fg));
+  --app-color-grid-control-surface-focus-border: var(--app-color-primary);
+  --app-color-grid-header-separator: rgb(var(--border-strong) / 0.25);
+  --app-color-grid-header-input-border: color-mix(
+    in oklab,
+    var(--app-color-grid-line) 74%,
+    transparent
+  );
+  --app-color-grid-header-input-bg: color-mix(
+    in oklab,
+    var(--app-color-grid-surface-raised) 88%,
+    transparent
+  );
+  --app-color-grid-quick-filter-border: color-mix(
+    in oklab,
+    var(--app-color-grid-line) 72%,
+    transparent
+  );
+  --app-color-grid-quick-filter-bg: color-mix(
+    in oklab,
+    var(--app-color-grid-surface-raised) 86%,
+    transparent
+  );
+  --app-color-grid-quick-filter-focus-bg: color-mix(
+    in oklab,
+    var(--app-color-grid-surface-raised) 94%,
+    transparent
+  );
+  --app-color-grid-footer-divider: color-mix(in oklab, rgb(var(--border)) 55%, transparent);
+  --app-color-grid-menu-bg: color-mix(in oklab, rgb(var(--surface)) 60%, transparent);
+  --app-color-grid-menu-border: rgb(var(--border-strong) / 0.12);
+  --app-color-grid-menu-active-outline: rgb(var(--primary) / 0.45);
+  --app-color-grid-menu-active-bg: rgb(var(--primary) / 0.08);
+  --app-color-grid-menu-active-text: var(--app-color-primary);
+  --app-shadow-grid-menu: 0 18px 48px rgb(0 0 0 / 0.18), 0 0 0 1px rgb(var(--primary) / 0.08) inset;
+  --app-color-grid-sort-badge-bg: var(--app-color-primary);
+  --app-color-grid-prb-pill-bg: var(--app-color-primary-bg);
+  --app-color-grid-prb-pill-border: var(--app-color-outline-strong);
+  --app-color-grid-prb-pill-text: var(--app-color-text-high);
+  --app-color-grid-group-row-bg: rgb(var(--app-grid-group-header-accent-rgb) / 0.14);
+  --app-color-grid-group-row-border-top: rgb(var(--app-grid-group-header-accent-rgb) / 0.6);
+  --app-color-grid-group-row-border-bottom: rgb(var(--app-grid-group-header-accent-rgb) / 0.4);
+  --app-color-grid-group-row-edge: rgb(var(--app-grid-group-header-accent-rgb) / 0.98);
+  --app-color-grid-group-row-value-bg: rgb(var(--app-grid-group-header-accent-rgb) / 0.22);
+  --app-color-grid-group-row-value-border: rgb(var(--app-grid-group-header-accent-rgb) / 0.6);
+  --app-color-grid-group-row-value-text: rgb(var(--fg));
+  --app-color-grid-group-row-count-bg: rgb(var(--app-grid-group-header-accent-rgb) / 0.32);
+  --app-color-grid-group-row-count-border: rgb(var(--app-grid-group-header-accent-rgb) / 0.7);
+  --app-color-grid-group-row-count-text: rgb(var(--fg));
+  --app-color-grid-group-row-aggregate-bg: rgb(var(--app-grid-group-header-accent-rgb) / 0.18);
+  --app-color-grid-group-row-aggregate-border: rgb(var(--app-grid-group-header-accent-rgb) / 0.45);
+  --app-color-grid-group-row-aggregate-text: rgb(var(--fg));
+  --app-gradient-grid-group-row: linear-gradient(
+    90deg,
+    rgb(var(--app-grid-group-header-accent-rgb) / 0.7) 0%,
+    rgb(var(--app-grid-group-header-accent-rgb) / 0.32) 100%
+  );
+  --app-gradient-grid-group-footer: linear-gradient(
+    90deg,
+    rgb(var(--app-grid-group-footer-accent-rgb) / 0.65) 0%,
+    rgb(var(--app-grid-group-footer-accent-rgb) / 0.28) 100%
+  );
+  --app-color-grid-group-card-bg: color-mix(
+    in oklab,
+    var(--app-color-grid-surface-raised) 94%,
+    rgb(var(--fg, 255 255 255)) 6%
+  );
+  --app-color-grid-group-card-active-bg: color-mix(
+    in oklab,
+    var(--app-color-grid-group-card-bg) 92%,
+    var(--app-color-grid-row-selected) 8%
+  );
+  --app-color-grid-group-card-border: var(--app-color-grid-pill-border);
+  --app-shadow-grid-group-card: 0 1px 0
+    color-mix(in oklab, var(--app-color-grid-line-faint) 68%, transparent);
+  --app-color-grid-group-backdrop-bg: var(--app-color-grid-surface);
+  --app-color-grid-group-body-bg: color-mix(
+    in oklab,
+    var(--app-color-grid-surface) 97%,
+    rgb(var(--fg, 255 255 255)) 3%
+  );
+  --app-color-grid-group-body-border: var(--app-color-grid-line-soft);
+  --app-color-grid-group-count-text: color-mix(
+    in oklab,
+    var(--app-color-text-muted) 78%,
+    transparent
+  );
+  --app-color-grid-group-focus-outline: color-mix(
+    in oklab,
+    var(--app-color-primary-border-strong) 72%,
+    transparent
+  );
+  --app-color-grid-group-partial-bg: color-mix(
+    in oklab,
+    var(--app-color-grid-group-card-bg) 93%,
+    var(--app-color-primary-bg) 7%
+  );
+  --app-color-grid-group-filter-border: color-mix(
+    in oklab,
+    var(--app-color-grid-group-body-border) 70%,
+    transparent
+  );
+  --app-color-grid-group-filter-bg: var(--app-color-grid-surface-raised);
+  --app-color-grid-group-aggregate-chip-bg: color-mix(
+    in oklab,
+    var(--app-color-grid-group-body-bg) 92%,
+    transparent
+  );
+  --app-color-grid-group-items-inner-bg: color-mix(
+    in oklab,
+    var(--app-color-grid-group-body-bg) 96%,
+    black 4%
+  );
+  --app-color-grid-group-empty-border: color-mix(
+    in oklab,
+    var(--app-color-grid-group-body-border) 84%,
+    transparent
+  );
+  --app-color-grid-group-empty-bg: color-mix(
+    in oklab,
+    var(--app-color-grid-group-body-bg) 92%,
+    black 8%
+  );
+  --app-color-grid-group-empty-title: color-mix(
+    in oklab,
+    var(--app-color-text-muted) 90%,
+    transparent
+  );
+  --app-color-grid-group-empty-action-border: color-mix(
+    in oklab,
+    var(--app-color-primary-border-strong) 36%,
+    var(--app-color-grid-group-body-border) 64%
+  );
+  --app-color-grid-group-empty-action-bg: color-mix(
+    in oklab,
+    var(--app-color-surface) 88%,
+    transparent
+  );
+  --app-color-grid-group-empty-action-text: var(--app-color-text-high);
+  --app-color-grid-group-corner-bg: var(--app-color-grid-group-body-bg);
+  --app-color-pill-tone-green-rgb: 168 202 119;
+  --app-color-pill-tone-yellow-rgb: 224 185 94;
+  --app-color-pill-tone-red-rgb: 223 126 120;
+  --app-color-pill-tone-blue-rgb: 126 163 232;
+  --app-color-pill-tone-purple-rgb: 176 141 228;
+  --app-color-pill-tone-teal-rgb: 137 196 191;
+  --app-color-pill-tone-orange-rgb: 214 157 104;
+  --app-color-pill-tone-gray-rgb: 202 207 214;
+  --app-color-grid-pill-tone-green: rgb(var(--app-color-pill-tone-green-rgb));
+  --app-color-grid-pill-tone-yellow: rgb(var(--app-color-pill-tone-yellow-rgb));
+  --app-color-grid-pill-tone-red: rgb(var(--app-color-pill-tone-red-rgb));
+  --app-color-grid-pill-tone-blue: rgb(var(--app-color-pill-tone-blue-rgb));
+  --app-color-grid-pill-tone-purple: rgb(var(--app-color-pill-tone-purple-rgb));
+  --app-color-grid-pill-tone-teal: rgb(var(--app-color-pill-tone-teal-rgb));
+  --app-color-grid-pill-tone-orange: rgb(var(--app-color-pill-tone-orange-rgb));
+  --app-color-grid-pill-tone-gray: rgb(var(--app-color-pill-tone-gray-rgb));
+  --app-color-pill-tone-green: var(--app-color-grid-pill-tone-green);
+  --app-color-pill-tone-yellow: var(--app-color-grid-pill-tone-yellow);
+  --app-color-pill-tone-red: var(--app-color-grid-pill-tone-red);
+  --app-color-pill-tone-blue: var(--app-color-grid-pill-tone-blue);
+  --app-color-pill-tone-purple: var(--app-color-grid-pill-tone-purple);
+  --app-color-pill-tone-teal: var(--app-color-grid-pill-tone-teal);
+  --app-color-pill-tone-orange: var(--app-color-grid-pill-tone-orange);
+  --app-color-pill-tone-gray: var(--app-color-grid-pill-tone-gray);
+  --app-task-status-backlog-rgb: var(--app-color-pill-tone-gray-rgb);
+  --app-task-status-progress-rgb: var(--app-color-pill-tone-blue-rgb);
+  --app-task-status-review-rgb: var(--app-color-pill-tone-purple-rgb);
+  --app-task-status-blocked-rgb: var(--app-color-pill-tone-red-rgb);
+  --app-task-status-done-rgb: var(--app-color-pill-tone-green-rgb);
+  --app-task-priority-low-rgb: var(--app-color-pill-tone-gray-rgb);
+  --app-task-priority-medium-rgb: var(--app-color-pill-tone-blue-rgb);
+  --app-task-priority-high-rgb: var(--app-color-pill-tone-orange-rgb);
+  --app-task-priority-critical-rgb: var(--app-color-pill-tone-red-rgb);
+  --app-task-tone-info-rgb: var(--app-task-status-progress-rgb);
+  --app-task-tone-warn-rgb: var(--app-color-pill-tone-orange-rgb);
+  --app-task-tone-risk-rgb: var(--app-task-status-blocked-rgb);
+  --app-task-tone-good-rgb: var(--app-task-status-done-rgb);
+  --app-task-owner-color-1: var(--app-color-pill-tone-green);
+  --app-task-owner-color-2: var(--app-color-pill-tone-blue);
+  --app-task-owner-color-3: var(--app-color-pill-tone-orange);
+  --app-task-owner-color-4: var(--app-color-pill-tone-purple);
+  --app-task-owner-color-5: var(--app-color-pill-tone-yellow);
+  --app-task-owner-color-6: var(--app-color-pill-tone-teal);
+  --app-task-owner-color-7: var(--app-color-pill-tone-red);
+  --app-task-owner-color-8: var(--app-color-pill-tone-gray);
+  --app-color-task-board-column-bg: color-mix(
+    in oklab,
+    var(--app-color-grid-surface-raised) 95%,
+    currentColor 5%
+  );
+  --app-color-task-board-column-bg-strong: color-mix(
+    in oklab,
+    var(--app-color-grid-surface-raised) 97%,
+    currentColor 3%
+  );
+  --app-color-task-board-custom-column-bg: color-mix(
+    in oklab,
+    var(--app-color-grid-surface-raised) 88%,
+    currentColor 12%
+  );
+  --app-color-task-board-status-bg: color-mix(
+    in oklab,
+    var(--app-color-grid-surface-raised) 74%,
+    currentColor 26%
+  );
+  --app-shadow-grid-header-icon-focus: 0 0 0 2px
+    color-mix(in oklab, var(--app-color-primary) 20%, transparent);
+  --app-shadow-grid-header-input-focus: 0 0 0 2px
+    color-mix(in oklab, var(--app-color-grid-header-state-line) 16%, transparent);
+  --app-shadow-grid-quick-filter-clear-focus: 0 0 0 2px
+    color-mix(in oklab, var(--app-color-primary) 18%, transparent);
+  --app-shadow-grid-checkbox-focus: 0 0 0 3px
+    color-mix(in oklab, var(--app-color-primary) 20%, transparent);
+  --app-shadow-grid-calc-footer-trigger-focus:
+    inset 0 0 0 1px color-mix(in oklab, var(--app-color-primary) 34%, transparent),
+    0 0 0 2px color-mix(in oklab, var(--app-color-primary) 16%, transparent);
+  --app-color-grid-surface-transparent: transparent;
+  --app-color-grid-focus: var(--app-color-primary);
+  --app-color-grid-focus-ring: color-mix(in oklab, var(--app-color-primary) 32%, transparent);
+  --app-color-grid-focus-header-bg: color-mix(
+    in oklab,
+    var(--app-color-grid-header-bg) 85%,
+    var(--app-color-grid-focus) 15%
+  );
+  --app-color-grid-focus-cell-bg: color-mix(
+    in oklab,
+    transparent 90%,
+    var(--app-color-grid-focus) 10%
+  );
+  --app-color-grid-focus-cell-bg-strong: color-mix(
+    in oklab,
+    transparent 75%,
+    var(--app-color-grid-focus) 25%
+  );
+  --app-shadow-grid-focus: 0 0 0 4px var(--app-color-grid-focus-ring);
+  --app-shadow-grid-focus-within: 0 0 0 2px var(--app-color-grid-focus-ring);
+  --app-color-grid-overlay-bg-strong: color-mix(
+    in oklab,
+    var(--app-color-grid-overlay-bg) 92%,
+    var(--app-color-grid-header-bg) 8%
+  );
+  --app-color-grid-overlay-subtle: color-mix(
+    in oklab,
+    var(--app-color-grid-overlay-bg) 96%,
+    var(--app-color-grid-body-text) 4%
+  );
+  --app-color-grid-overlay-divider: var(--app-color-divider);
+  --app-color-grid-overlay-scrim: rgb(0 0 0 / 0.46);
+  --app-color-grid-menu-item-hover-bg: color-mix(
+    in oklab,
+    var(--app-color-primary-bg) 78%,
+    var(--app-color-grid-overlay-bg) 22%
+  );
+  --app-shadow-grid-menu-item-hover:
+    -2px 0 0 0 var(--app-color-primary-text) inset,
+    0 0 0 1px color-mix(in oklab, var(--app-color-primary-border) 74%, transparent) inset;
+  --app-color-grid-menu-shortcut-bg: color-mix(
+    in oklab,
+    var(--app-color-grid-overlay-bg) 92%,
+    var(--app-color-grid-body-text) 8%
+  );
+  --app-color-grid-menu-item-active-bg: color-mix(
+    in oklab,
+    var(--app-color-primary-bg) 82%,
+    var(--app-color-grid-overlay-bg) 18%
+  );
+  --app-color-grid-menu-item-on-bg: color-mix(
+    in oklab,
+    var(--app-color-primary-bg) 76%,
+    var(--app-color-grid-overlay-bg) 24%
+  );
+  --app-shadow-grid-menu-item-on:
+    -2px 0 0 0 var(--app-color-primary-border) inset,
+    0 0 0 1px color-mix(in oklab, var(--app-color-primary-border) 60%, transparent) inset;
+  --app-shadow-grid-menu-divider: 0 1px 0 rgb(0 0 0 / 0.2);
+  --app-color-grid-menu-meta-bg: color-mix(
+    in oklab,
+    var(--app-color-grid-overlay-bg) 94%,
+    var(--app-color-grid-body-text) 6%
+  );
+  --app-color-grid-menu-danger-hover-bg: color-mix(
+    in oklab,
+    var(--app-color-danger-bg) 82%,
+    var(--app-color-grid-overlay-bg) 18%
+  );
+  --app-color-grid-menu-scrollbar-track: color-mix(
+    in oklab,
+    var(--app-color-grid-overlay-bg) 80%,
+    transparent
+  );
+  --app-color-grid-menu-scrollbar-thumb: color-mix(
+    in oklab,
+    var(--app-color-grid-overlay-border) 72%,
+    transparent
+  );
+  --app-color-grid-menu-scrollbar-thumb-hover: color-mix(
+    in oklab,
+    var(--app-color-grid-overlay-border) 92%,
+    transparent
+  );
+  --app-shadow-grid-menu-search-focus: 0 0 0 2px
+    color-mix(in oklab, var(--app-color-primary-text) 15%, transparent);
+  --app-shadow-grid-menu-success-hover: 0 0 0 4px
+    color-mix(in oklab, var(--app-color-success-text) 12%, transparent);
+  --app-color-grid-menu-success-checked-inner: color-mix(
+    in oklab,
+    var(--app-color-grid-overlay-bg) 20%,
+    black 80%
+  );
+  --app-shadow-grid-menu-success-focus: 0 0 0 4px
+    color-mix(in oklab, var(--app-color-success-text) 16%, transparent);
+  --app-color-grid-group-panel-icon: color-mix(
+    in oklab,
+    var(--app-color-primary-text) 72%,
+    transparent
+  );
+  --app-color-grid-group-placeholder-border: color-mix(
+    in oklab,
+    var(--app-color-grid-outline) 72%,
+    transparent
+  );
+  --app-color-grid-group-placeholder-bg: color-mix(
+    in oklab,
+    var(--app-color-grid-surface-raised) 28%,
+    transparent
+  );
+  --app-color-grid-group-chip-bg: color-mix(
+    in oklab,
+    var(--app-color-grid-surface-raised) 46%,
+    transparent
+  );
+  --app-color-grid-group-chip-border-hover: color-mix(
+    in oklab,
+    var(--app-color-primary-border-strong) 42%,
+    var(--app-color-grid-overlay-border) 58%
+  );
+  --app-color-grid-group-chip-bg-hover: color-mix(
+    in oklab,
+    var(--app-color-grid-surface-raised) 58%,
+    transparent
+  );
+  --app-color-grid-group-chip-remove-hover-bg: color-mix(
+    in oklab,
+    var(--app-color-danger-bg) 84%,
+    transparent
+  );
+  --app-color-grid-group-actions-divider: color-mix(
+    in oklab,
+    var(--app-color-grid-overlay-divider) 78%,
+    transparent
+  );
+  --app-color-grid-group-action-bg: color-mix(
+    in oklab,
+    var(--app-color-grid-surface-raised) 36%,
+    transparent
+  );
+  --app-color-grid-group-action-border-hover: color-mix(
+    in oklab,
+    var(--app-color-primary-border-strong) 44%,
+    var(--app-color-grid-overlay-border) 56%
+  );
+  --app-color-grid-group-action-bg-hover: color-mix(
+    in oklab,
+    var(--app-color-grid-surface-raised) 52%,
+    transparent
+  );
+  --app-color-grid-filter-chip-bg: color-mix(
+    in oklab,
+    var(--app-color-primary-bg) 74%,
+    var(--app-color-grid-surface) 26%
+  );
+  --app-color-grid-filter-chip-border: color-mix(
+    in oklab,
+    var(--app-color-primary-border) 72%,
+    transparent
+  );
+  --app-color-grid-filter-clear-all-bg: color-mix(
+    in oklab,
+    var(--app-color-grid-overlay-bg) 82%,
+    transparent
+  );
+  --app-color-grid-insights-panel-bg: color-mix(
+    in oklab,
+    var(--app-color-grid-overlay-bg) 88%,
+    var(--app-color-primary-bg) 12%
+  );
+  --app-shadow-grid-insights-panel: 0 10px 24px rgb(0 0 0 / 0.14);
+  --app-shadow-grid-primary-hover: 0 6px 16px
+    color-mix(in oklab, var(--app-color-primary-text) 18%, transparent);
+  --app-shadow-grid-bookmark-dot: 0 0 6px
+    color-mix(in oklab, var(--app-color-primary-text) 55%, transparent);
+  --app-color-grid-headline-card-bg: rgb(var(--bg1, 24 28 30) / 0.9);
+  --app-color-grid-headline-card-border: rgb(var(--primary) / 0.2);
+  --app-color-grid-headline-label: rgb(var(--fg, 230 230 230) / 0.65);
+  --app-color-grid-headline-value: rgb(var(--fg, 245 245 245));
+  --app-shadow-grid-side-panel:
+    0 10px 30px rgb(0 0 0 / 0.35), inset 0 0 0 1px rgb(255 255 255 / 0.02);
+  --app-gradient-grid-value-bar-fill: linear-gradient(
+    90deg,
+    var(--app-color-primary-text),
+    color-mix(in oklab, var(--app-color-primary-text) 72%, white 28%)
+  );
+  --app-color-grid-row-group-panel-border: color-mix(
+    in oklab,
+    var(--app-color-grid-overlay-border) 68%,
+    transparent
+  );
+  --app-color-grid-row-group-panel-bg: color-mix(
+    in oklab,
+    var(--app-color-grid-overlay-bg) 82%,
+    var(--app-color-header) 18%
+  );
+  --app-color-grid-dialog-backdrop: rgb(0 0 0 / 0.52);
+  --app-color-grid-dialog-close: rgb(var(--fg, 220 220 220) / 0.6);
+  --app-color-grid-dialog-close-hover-bg: color-mix(
+    in oklab,
+    var(--app-color-grid-overlay-bg) 88%,
+    white 12%
+  );
+  --app-color-grid-dialog-close-hover-text: rgb(var(--fg, 220 220 220));
+  --app-color-grid-help-step-number-bg: color-mix(
+    in oklab,
+    var(--app-color-primary-bg) 84%,
+    var(--app-color-grid-overlay-bg) 16%
+  );
+  --app-color-grid-help-step-number-border: rgb(var(--primary) / 0.4);
+  --app-color-grid-help-step-number-text: rgb(var(--primary));
+  --app-color-grid-help-tip-bg: color-mix(
+    in oklab,
+    var(--app-color-primary-bg) 82%,
+    var(--app-color-grid-overlay-bg) 18%
+  );
+  --app-color-grid-help-tip-border: rgb(var(--primary) / 0.6);
+  --app-color-grid-help-tip-text: rgb(var(--fg, 220 220 220) / 0.8);
+  --app-color-grid-dialog-footer-border: rgb(var(--border) / 0.3);
+  --app-color-grid-dialog-primary-action-bg: var(--app-color-primary);
+  --app-color-grid-dialog-primary-action-text: white;
+  --app-color-grid-dialog-primary-action-hover-bg: color-mix(
+    in oklab,
+    var(--app-color-primary) 90%,
+    white 10%
+  );
+  --app-shadow-grid-dialog-primary-action-hover: 0 6px 14px rgb(var(--primary) / 0.18);
+  --app-color-grid-search-icon-idle: rgb(var(--fg, 230 230 230) / 0.55);
+  --app-color-grid-search-icon-active: var(--app-color-primary);
+  --app-color-grid-freshness-bg: rgb(var(--bg1, 24 28 30) / 0.8);
+  --app-color-grid-freshness-border: rgb(var(--primary) / 0.25);
+  --app-shadow-grid-freshness-inner: inset 0 0 0 1px rgb(255 255 255 / 0.03);
+  --app-color-grid-freshness-ready: var(--app-color-success);
+  --app-shadow-grid-freshness-ready: 0 0 12px
+    color-mix(in oklab, var(--app-color-success) 70%, transparent);
+  --app-color-grid-freshness-sync: var(--app-color-primary);
+  --app-color-grid-freshness-label: rgb(var(--fg, 230 230 230) / 0.6);
+  --app-color-grid-refresh-btn-bg: rgb(var(--primary) / 0.15);
+  --app-color-grid-refresh-btn-hover-bg: rgb(var(--primary) / 0.25);
+  --app-color-grid-batch-toolbar-bg: rgb(var(--primary) / 0.15);
+  --app-color-grid-batch-toolbar-border: rgb(var(--primary) / 0.3);
+  --app-color-grid-batch-btn-bg: rgb(var(--fg, 255 255 255) / 0.08);
+  --app-color-grid-batch-btn-hover-bg: rgb(var(--fg, 255 255 255) / 0.12);
+  --app-color-grid-batch-delete-hover-bg: rgb(var(--danger) / 0.2);
+  --app-color-grid-batch-delete-hover-border: var(--app-color-danger);
+  --app-color-grid-batch-delete-hover-text: var(--app-color-danger);
+  --app-color-grid-batch-export-hover-bg: rgb(var(--success) / 0.2);
+  --app-color-grid-batch-export-hover-border: var(--app-color-success);
+  --app-color-grid-batch-export-hover-text: var(--app-color-success);
+  --app-color-grid-batch-clear-hover-bg: rgb(156 163 175 / 0.2);
+  --app-color-grid-batch-clear-hover-border: rgb(156 163 175);
+  --app-color-grid-batch-clear-hover-text: rgb(156 163 175);
+  --app-color-grid-header-search-input-bg: rgb(var(--bg1, 30 30 30) / 0.9);
+  --app-color-grid-header-search-input-border: rgb(var(--border) / 0.7);
+  --app-color-grid-header-search-input-text: rgb(var(--fg, 230 230 230));
+  --app-color-grid-action-btn-bg: var(--app-color-grid-header-search-input-bg);
+  --app-color-grid-action-btn-border: var(--app-color-grid-header-search-input-border);
+  --app-color-grid-action-btn-text: var(--app-color-grid-header-search-input-text);
+  --app-color-grid-action-btn-hover-bg: rgb(var(--primary) / 0.1);
+  --app-color-grid-action-btn-hover-border: var(--app-color-primary);
+  --app-color-grid-action-btn-hover-text: var(--app-color-primary);
+  --app-color-grid-action-btn-active-bg: rgb(var(--primary) / 0.2);
+  --app-color-grid-action-btn-active-border: rgb(var(--primary) / 0.8);
+  --app-color-grid-action-btn-active-text: var(--app-color-primary);
+  --app-shadow-grid-action-btn-active: 0 4px 12px rgb(var(--primary) / 0.35);
+  --app-color-grid-mega-menu-border: rgb(var(--primary) / 0.2);
+  --app-gradient-grid-mega-menu-bg: linear-gradient(
+    135deg,
+    rgb(8 12 18 / 0.95),
+    rgb(15 20 32 / 0.96)
+  );
+  --app-shadow-grid-mega-menu: 0 24px 60px rgb(0 0 0 / 0.65);
+  --app-color-grid-mega-subtitle: rgb(var(--fg, 230 230 230) / 0.7);
+  --app-color-grid-mega-summary-bg: rgb(var(--bg1, 30 30 30) / 0.75);
+  --app-color-grid-mega-summary-border: rgb(var(--border) / 0.4);
+  --app-shadow-grid-mega-summary: inset 0 0 0 1px rgb(255 255 255 / 0.02);
+  --app-color-grid-mega-summary-label: rgb(var(--fg, 230 230 230) / 0.6);
+  --app-color-grid-mega-headline-border: rgb(var(--primary) / 0.18);
+  --app-color-grid-mega-headline-bg: rgb(var(--bg1, 24 28 30) / 0.85);
+  --app-color-grid-mega-headline-label: rgb(var(--fg, 232 232 232) / 0.65);
+  --app-color-grid-mega-headline-value: rgb(var(--fg, 245 245 245));
+  --app-color-grid-mega-section-bg: rgb(var(--bg1, 24 28 30) / 0.9);
+  --app-color-grid-mega-section-border: rgb(var(--border) / 0.45);
+  --app-shadow-grid-mega-section: inset 0 0 0 1px rgb(255 255 255 / 0.02);
+  --app-color-grid-mega-section-subtitle: rgb(var(--fg, 230 230 230) / 0.6);
+  --app-color-grid-mega-chip-bg: rgb(var(--bg0, 18 20 22) / 0.8);
+  --app-color-grid-mega-chip-border: rgb(var(--border) / 0.5);
+  --app-color-grid-mega-chip-text: rgb(var(--fg, 230 230 230) / 0.85);
+  --app-color-grid-mega-chip-hover-border: rgb(var(--primary) / 0.6);
+  --app-color-grid-mega-chip-hover-text: var(--app-color-primary);
+  --app-color-grid-mega-chip-active-bg: rgb(var(--primary) / 0.15);
+  --app-color-grid-mega-chip-active-border: var(--app-color-primary);
+  --app-color-grid-mega-chip-active-text: var(--app-color-primary);
+  --app-shadow-grid-mega-chip-active: 0 0 12px rgb(var(--primary) / 0.25);
+  --app-color-grid-mega-toggle-bg: rgb(var(--bg0, 18 20 22) / 0.75);
+  --app-color-grid-mega-toggle-border: rgb(var(--border) / 0.5);
+  --app-color-grid-mega-toggle-text: rgb(var(--fg, 230 230 230) / 0.85);
+  --app-color-grid-mega-toggle-hover-border: rgb(var(--primary) / 0.6);
+  --app-color-grid-mega-toggle-hover-text: var(--app-color-primary);
+  --app-color-grid-mega-toggle-active-bg: rgb(var(--primary) / 0.2);
+  --app-color-grid-mega-toggle-active-border: var(--app-color-primary);
+  --app-color-grid-mega-toggle-active-text: var(--app-color-primary);
+  --app-shadow-grid-mega-toggle-active: 0 10px 18px rgb(var(--primary) / 0.2);
+  --app-color-grid-mega-primary-border: var(--app-color-primary);
+  --app-gradient-grid-mega-primary-bg: linear-gradient(
+    120deg,
+    rgb(var(--primary) / 0.15),
+    rgb(41 171 226 / 0.25)
+  );
+  --app-gradient-grid-mega-primary-hover-bg: linear-gradient(
+    120deg,
+    rgb(var(--primary) / 0.25),
+    rgb(41 171 226 / 0.35)
+  );
+  --app-color-grid-mega-primary-text: var(--app-color-primary);
+  --app-shadow-grid-mega-primary-hover: 0 10px 20px rgb(var(--primary) / 0.25);
+  --app-color-grid-scrollbar-thumb-glow: rgb(var(--primary) / 0.6);
+  --app-color-grid-scrollbar-thumb: rgb(var(--primary) / 0.3);
+  --app-color-grid-scrollbar-thumb-hover: rgb(var(--primary) / 0.8);
+  --app-color-grid-scrollbar-thumb-active: var(--app-color-primary);
+  --app-shadow-grid-scrollbar-thumb:
+    inset 0 0 0 1px rgb(0 0 0 / 0.35), 0 0 0 2px var(--app-color-grid-scrollbar-thumb-glow),
+    0 12px 26px rgb(0 0 0 / 0.55);
+  --app-color-grid-resize-guide-line: rgb(var(--primary) / 0.8);
+  --app-shadow-grid-resize-guide-line: 0 0 14px rgb(var(--primary) / 0.4);
+  --app-color-grid-resize-guide-label-bg: rgb(var(--bg1, 24 28 30) / 0.92);
+  --app-color-grid-resize-guide-label-border: rgb(var(--primary) / 0.35);
+  --app-shadow-grid-resize-guide-label:
+    0 6px 20px rgb(0 0 0 / 0.25), 0 0 0 1px rgb(var(--primary) / 0.2);
+  --app-color-grid-resize-guide-label-title: rgb(var(--fg, 232 232 232) / 0.65);
+  --app-color-grid-resize-guide-label-value: rgb(var(--fg, 240 240 240));
+  --app-color-grid-resize-guide-label-delta: var(--app-color-primary);
+  --app-color-grid-loading-overlay: rgb(0 0 0 / 0.5);
+  --app-color-grid-loading-card-bg: rgb(var(--bg1, 24 28 30) / 0.95);
+  --app-color-grid-loading-card-border: rgb(var(--primary) / 0.3);
+  --app-shadow-grid-loading-card: 0 8px 32px rgb(0 0 0 / 0.3), 0 0 0 1px rgb(var(--primary) / 0.1);
+  --app-color-grid-spinner-ring-primary: var(--app-color-primary);
+  --app-color-grid-spinner-ring-secondary: rgb(var(--primary) / 0.6);
+  --app-color-grid-spinner-ring-tertiary: rgb(var(--primary) / 0.3);
+  --app-color-grid-loading-message: rgb(var(--fg, 230 230 230));
+  --app-color-grid-loading-bar-bg: rgb(var(--primary) / 0.2);
+  --app-gradient-grid-loading-progress: linear-gradient(
+    90deg,
+    transparent,
+    var(--app-color-primary),
+    transparent
+  );
+  --app-color-grid-spinner-legacy-track: rgb(255 255 255 / 0.25);
+  --app-gradient-grid-skeleton-header: linear-gradient(
+    90deg,
+    rgb(var(--fg, 255 255 255) / 0.06),
+    rgb(var(--fg, 255 255 255) / 0.1),
+    rgb(var(--fg, 255 255 255) / 0.06)
+  );
+  --app-gradient-grid-skeleton-header-accent: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgb(var(--primary) / 0.15) 50%,
+    transparent 100%
+  );
+  --app-gradient-grid-skeleton-row: linear-gradient(
+    90deg,
+    rgb(var(--fg, 255 255 255) / 0.03),
+    rgb(var(--fg, 255 255 255) / 0.06),
+    rgb(var(--fg, 255 255 255) / 0.03)
+  );
+  --app-gradient-grid-skeleton-row-accent: linear-gradient(
+    110deg,
+    transparent 0%,
+    transparent 40%,
+    rgb(var(--primary) / 0.1) 50%,
+    transparent 60%,
+    transparent 100%
+  );
+  --app-color-grid-footer-page-btn-bg: color-mix(
+    in oklab,
+    var(--app-color-grid-control-bg) 78%,
+    transparent
+  );
+  --app-gradient-grid-grand-total: linear-gradient(
+    90deg,
+    rgb(var(--app-grid-grand-total-accent-rgb) / 0.95) 0%,
+    rgb(var(--app-grid-grand-total-accent-rgb) / 0.5) 100%
+  );
+  --app-color-grid-grand-total-border-top: rgb(var(--app-grid-grand-total-accent-rgb) / 0.98);
+  --app-color-grid-grand-total-border-bottom: rgb(var(--app-grid-grand-total-accent-rgb) / 0.7);
+  --app-color-grid-grand-total-edge: rgb(var(--app-grid-grand-total-accent-rgb) / 0.98);
+  --app-color-grid-grand-total-value-bg: rgb(var(--app-grid-grand-total-accent-rgb) / 0.82);
+  --app-color-grid-grand-total-value-border: rgb(var(--app-grid-grand-total-accent-rgb) / 0.98);
+  --app-gradient-grid-grand-total-overlay: linear-gradient(
+    90deg,
+    rgb(var(--app-grid-grand-total-accent-rgb) / 0.82) 0%,
+    rgb(var(--app-grid-grand-total-accent-rgb) / 0.38) 100%
+  );
+  --app-color-grid-group-footer-row-bg: rgb(var(--app-grid-group-footer-accent-rgb) / 0.55);
+  --app-color-grid-group-footer-border-top: rgb(var(--app-grid-group-footer-accent-rgb) / 0.98);
+  --app-color-grid-group-footer-border-bottom: rgb(var(--app-grid-group-footer-accent-rgb) / 0.6);
+  --app-color-grid-group-footer-edge: rgb(var(--app-grid-group-footer-accent-rgb) / 0.98);
+  --app-color-grid-group-footer-value-bg: rgb(var(--app-grid-group-footer-accent-rgb) / 0.78);
+  --app-color-grid-group-footer-value-border: rgb(var(--app-grid-group-footer-accent-rgb) / 0.98);
+  --app-color-grid-group-footer-overlay: rgb(var(--app-grid-group-footer-accent-rgb) / 0.32);
+  --app-color-grid-zebra-even-bg: rgb(var(--fg, 255 255 255) / 0.02);
+  --app-color-grid-zebra-even-hover-bg: rgb(var(--bg1, 24 28 30) / 0.3);
+  --app-color-grid-zebra-even-selected-bg: rgb(var(--primary) / 0.12);
+  --app-color-grid-zebra-even-selected-hover-bg: rgb(var(--primary) / 0.18);
+  --app-color-grid-zebra-odd-hover-bg: rgb(var(--bg1, 24 28 30) / 0.26);
+  --app-color-grid-zebra-odd-selected-bg: rgb(var(--primary) / 0.1);
+  --app-color-grid-zebra-odd-selected-hover-bg: rgb(var(--primary) / 0.15);
+  --app-color-grid-fullscreen-bg: rgb(var(--bg0, 18 20 22));
+  --app-color-grid-empty-title: rgb(var(--fg, 230 230 230));
+  --app-color-grid-empty-message: rgb(var(--fg, 224 224 224) / 0.65);
+  --app-color-grid-empty-action-border: rgb(var(--primary) / 0.3);
+  --app-color-grid-empty-action-bg: rgb(var(--primary) / 0.08);
+  --app-color-grid-empty-action-text: var(--app-color-primary);
+  --app-color-grid-empty-action-hover-bg: rgb(var(--primary) / 0.15);
+  --app-shadow-grid-empty-action-hover: 0 4px 12px rgb(var(--primary) / 0.2);
+  --app-color-grid-header-sparkline-stroke: rgb(var(--primary) / 0.8);
+  --app-color-grid-header-sort-indicator-bg: color-mix(
+    in oklab,
+    var(--app-color-grid-control-bg) 72%,
+    transparent
+  );
+  --app-shadow-grid-header-sort-indicator: 0 0 4px rgb(var(--primary) / 0.3);
+  --app-color-grid-header-sort-arrow: var(--app-color-primary);
+  --app-color-grid-group-toggle-border: rgb(var(--border) / 0.55);
+  --app-color-grid-group-toggle-hover-border: rgb(var(--border) / 0.8);
+  --app-color-grid-group-toggle-hover-bg: rgb(var(--fg, 255 255 255) / 0.04);
+  --app-color-grid-group-row-label: rgb(var(--fg, 230 230 230) / 0.65);
+  --app-color-grid-group-row-value: rgb(var(--fg, 240 240 240));
+  --app-color-grid-group-filter-shell-border: rgb(var(--border, 45 52 54) / 0.4);
+  --app-color-grid-group-filter-shell-bg: rgb(var(--bg1, 28 32 34) / 0.6);
+  --app-color-grid-group-filter-clear-bg: rgb(var(--primary) / 0.16);
+  --app-color-grid-group-row-aggregate-text: rgb(var(--fg, 230 230 230) / 0.7);
+  --app-color-grid-group-body-sticky-bg: color-mix(
+    in oklab,
+    rgb(var(--bg1, 24 28 30)) 94%,
+    transparent
+  );
+  --app-color-grid-group-row-cell-border: rgb(var(--border, 45 52 54) / 0.2);
+  --app-color-grid-group-aggregate-bg: rgb(var(--primary) / 0.08);
+  --app-color-grid-group-aggregate-border: rgb(var(--primary) / 0.2);
+  --app-color-grid-group-aggregate-label: rgb(var(--fg, 224 224 224) / 0.5);
+  --app-color-grid-group-aggregate-value: var(--app-color-primary);
+  --app-shadow-grid-chooser-search-focus: 0 0 0 2px
+    color-mix(in oklab, var(--app-color-primary-text) 16%, transparent);
+  --app-color-grid-renderer-status-active-bg: var(--app-color-success-bg);
+  --app-color-grid-renderer-status-active-text: var(--app-color-success-text);
+  --app-color-grid-renderer-status-active-border: var(--app-color-success-border);
+  --app-color-grid-renderer-status-inactive-bg: var(--app-color-danger-bg);
+  --app-color-grid-renderer-status-inactive-text: var(--app-color-danger-text);
+  --app-color-grid-renderer-status-inactive-border: var(--app-color-danger-border);
+  --app-color-grid-renderer-status-pending-bg: var(--app-color-warning-bg);
+  --app-color-grid-renderer-status-pending-text: var(--app-color-warning-text);
+  --app-color-grid-renderer-status-pending-border: var(--app-color-warning-border);
+  --app-color-grid-renderer-status-completed-bg: var(--app-color-info-bg);
+  --app-color-grid-renderer-status-completed-text: var(--app-color-info-text);
+  --app-color-grid-renderer-status-completed-border: var(--app-color-info-border);
+  --app-color-grid-renderer-status-cancelled-bg: var(--app-color-grid-pill-surface);
+  --app-color-grid-renderer-status-cancelled-text: var(--app-color-grid-muted-value);
+  --app-color-grid-renderer-status-cancelled-border: var(--app-color-grid-line-soft);
+  --app-color-grid-renderer-status-default-bg: var(--app-color-grid-surface-raised);
+  --app-color-grid-renderer-status-default-text: var(--app-color-grid-body-text);
+  --app-color-grid-renderer-status-default-border: var(--app-color-grid-line);
+  --app-color-grid-renderer-link: var(--app-color-primary);
+  --app-color-grid-renderer-link-hover: color-mix(
+    in oklab,
+    var(--app-color-primary) 78%,
+    var(--app-color-text-high) 22%
+  );
+  --app-color-grid-renderer-link-visited: color-mix(
+    in oklab,
+    var(--app-color-primary) 60%,
+    var(--app-color-grid-pill-tone-purple) 40%
+  );
+  --app-color-grid-renderer-avatar-border: var(--app-color-grid-line);
+  --app-gradient-grid-renderer-avatar: linear-gradient(
+    135deg,
+    var(--app-color-grid-pill-tone-blue) 0%,
+    var(--app-color-grid-pill-tone-purple) 100%
+  );
+  --app-color-grid-renderer-avatar-text: white;
+  --app-color-grid-renderer-tag-bg: color-mix(
+    in oklab,
+    var(--app-color-info-bg) 88%,
+    var(--app-color-grid-surface) 12%
+  );
+  --app-color-grid-renderer-tag-text: var(--app-color-info-text);
+  --app-color-grid-renderer-tag-border: var(--app-color-info-border);
+  --app-color-grid-renderer-tag-more-bg: var(--app-color-grid-surface-raised);
+  --app-color-grid-renderer-tag-more-text: var(--app-color-grid-muted-value);
+  --app-color-grid-renderer-tag-more-border: var(--app-color-grid-line-soft);
+  --app-color-grid-renderer-progress-track: var(--app-color-grid-surface-raised);
+  --app-shadow-grid-renderer-progress-track: inset 0 1px 2px rgb(0 0 0 / 0.1);
+  --app-gradient-grid-renderer-progress-success: linear-gradient(
+    90deg,
+    var(--app-color-success) 0%,
+    color-mix(in oklab, var(--app-color-success) 72%, var(--app-color-info) 28%) 100%
+  );
+  --app-gradient-grid-renderer-progress-info: linear-gradient(
+    90deg,
+    var(--app-color-info) 0%,
+    var(--app-color-primary) 100%
+  );
+  --app-gradient-grid-renderer-progress-warning: linear-gradient(
+    90deg,
+    var(--app-color-warning) 0%,
+    var(--app-color-grid-pill-tone-orange) 100%
+  );
+  --app-gradient-grid-renderer-progress-danger: linear-gradient(
+    90deg,
+    var(--app-color-danger) 0%,
+    var(--app-color-grid-pill-tone-red) 100%
+  );
+  --app-color-grid-renderer-progress-label: var(--app-color-grid-body-text);
+  --app-shadow-grid-renderer-progress-label: 0 1px 2px rgb(255 255 255 / 0.8);
+  --app-color-grid-renderer-rating-star: var(--app-color-warning);
+  --app-color-grid-renderer-rating-star-empty: var(--app-color-grid-line);
+  --app-color-grid-renderer-rating-value: var(--app-color-grid-muted-value);
+  --app-color-grid-renderer-mark-bg: var(--app-color-warning-bg);
+  --app-color-grid-renderer-mark-text: var(--app-color-warning-text);
+  --app-shadow-grid-renderer-button-hover: 0 2px 4px rgb(0 0 0 / 0.1);
+  --app-color-grid-renderer-btn-primary-bg: var(--app-color-primary);
+  --app-color-grid-renderer-btn-primary-border: var(--app-color-primary);
+  --app-color-grid-renderer-btn-secondary-bg: var(--app-color-grid-muted-value);
+  --app-color-grid-renderer-btn-secondary-border: var(--app-color-grid-muted-value);
+  --app-color-grid-renderer-btn-success-bg: var(--app-color-success);
+  --app-color-grid-renderer-btn-success-border: var(--app-color-success);
+  --app-color-grid-renderer-btn-danger-bg: var(--app-color-danger);
+  --app-color-grid-renderer-btn-danger-border: var(--app-color-danger);
+  --app-color-grid-renderer-btn-warning-bg: var(--app-color-warning);
+  --app-color-grid-renderer-btn-warning-text: rgb(33 37 41);
+  --app-color-grid-renderer-btn-warning-border: var(--app-color-warning);
+  --app-color-grid-renderer-btn-info-bg: var(--app-color-info);
+  --app-color-grid-renderer-btn-info-border: var(--app-color-info);
+  --app-color-grid-renderer-btn-outline-primary-text: var(--app-color-primary);
+  --app-color-grid-renderer-btn-outline-primary-border: var(--app-color-primary);
+  --app-color-grid-renderer-print-text: black;
+  --app-color-grid-renderer-print-border: black;
+  --primary: 132 199 24;
+  --info: 14 165 233;
+  --success: 34 197 94;
+  --warning: 245 158 11;
+  --danger: 239 68 68;
+
+  --data-grid-link-color: rgb(var(--primary));
+  --data-grid-link-hover-color: color-mix(in oklab, rgb(var(--primary)) 88%, white 12%);
+
+  --bg0: 17 17 17;
+  --bg1: 25 25 25;
+  --surface: 32 32 32;
+  --surfaceA: 1;
+  --border: 42 42 42;
+  --border-strong: 58 58 58;
+  --outline-soft: 42 42 42;
+  --fg: 234 236 239;
+  --muted: 110 110 110;
+  --hoverA: 0.12;
+  --app-bg-gradient: none;
+
+  --app-palette-canvas: var(--bg0);
+  --app-palette-shell: var(--bg1);
+  --app-palette-chrome: 17 17 17;
+  --app-palette-panel-body: 25 25 25;
+  --app-palette-surface: var(--surface);
+  --app-palette-outline: 42 42 42;
+  --app-palette-outline-strong: 58 58 58;
+  --app-palette-text: var(--fg);
+  --app-palette-muted: var(--muted);
+  --app-outline-width: 0.5px;
+  --app-outline-width-strong: 0.75px;
+  --app-outline-stroke-mix: 66%;
+  --app-outline-stroke-strong-mix: 78%;
+  --app-outline-soft-mix: 68%;
+  --app-outline-divider-mix: 72%;
+  --app-outline-grid-mix: 70%;
+  --app-outline-empty-mix: 62%;
+
+  --app-header-bg: var(--app-palette-chrome);
+  --app-footer-bg: var(--app-palette-chrome);
+  --app-corner-primary: rgb(132 199 24 / 0.58);
+  --app-corner-secondary: rgb(148 163 184 / 0.22);
+  --app-corner-primary-blur: 170px;
+  --app-corner-secondary-blur: 120px;
+  --app-corner-primary-opacity: 0.95;
+  --app-corner-secondary-opacity: 0.72;
+
+  --sideW-open: 238px;
+  --sideW-collapsed: 56px;
+  --fab: 36px;
+  --side-toggle-overlap: calc(var(--fab) * 0.1);
+  --hdrH: 36px;
+  --brandH: 26px;
+  --brandH-sm: 18px;
+  --fs-nav: 12.5px;
+  --fs-menu: 12px;
+  --fs-acc-name: 11.5px;
+  --fs-acc-email: 10px;
+  --ico-nav: 16px;
+  --ico-nav-collapsed: 19px;
+  --ico-menu: 15px;
+  --ico-acc: 20px;
+  --h-nav: 32px;
+  --h-menu-row: 34px;
+  --h-org-pill: 36px;
+  --h-search: 28px;
+  --h-account: 42px;
+  --app-shell-motion-duration-fast: 120ms;
+  --app-shell-motion-duration: 180ms;
+  --app-shell-motion-duration-slow: 240ms;
+  --app-shell-sidebar-motion-duration: 180ms;
+  --app-shell-sidebar-transition-window: 220ms;
+  --app-shell-sidebar-content-stagger: 20ms;
+  --app-shell-motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --app-scale: 1;
+  --full-height: 100dvh;
+  --app-shell-height: calc((var(--full-height, 100dvh) / var(--app-scale, 1)) - var(--hdrH, 0px));
+
+  --tooltip-bg: var(--surface);
+  --tooltip-fg: var(--fg);
+  --tooltip-border: var(--border);
+  --tooltip-shadow: 0 12px 26px rgb(0 0 0 / 0.28);
+  --tooltip-grad: linear-gradient(
+    135deg,
+    rgb(var(--tooltip-bg) / 0.98),
+    rgb(var(--tooltip-bg) / 0.92)
+  );
+  --tooltip-bubble: var(--primary);
+
+  --task-detail-site-bg: 17 17 17;
+  --task-detail-main-bg: 17 17 17;
+  --task-detail-activity-bg: 9 9 9;
+  --task-detail-activity-rail-bg: 17 17 17;
+
+  /* Brand / status */
+  --app-color-primary: rgb(var(--primary));
+  --app-color-info: rgb(var(--info));
+  --app-color-success: rgb(var(--success));
+  --app-color-warning: rgb(var(--warning));
+  --app-color-warning-soft: rgb(253 224 71);
+  --app-color-warning-soft-strong: rgb(254 240 138);
+  --app-color-danger: rgb(var(--danger));
+  --app-color-danger-soft: rgb(248 113 113);
+  --app-color-danger-soft-strong: rgb(252 165 165);
+  --app-color-danger-on-accent: color-mix(in oklab, white 94%, var(--app-color-danger) 6%);
+  --app-color-primary-bg: color-mix(
+    in oklab,
+    var(--app-color-primary) 10%,
+    var(--app-color-surface)
+  );
+  --app-color-primary-bg-strong: color-mix(
+    in oklab,
+    var(--app-color-primary) 18%,
+    var(--app-color-surface)
+  );
+  --app-color-primary-bg-emphasis: color-mix(
+    in oklab,
+    var(--app-color-primary) 24%,
+    var(--app-color-surface)
+  );
+  --app-color-primary-border: color-mix(in oklab, var(--app-color-primary) 30%, transparent);
+  --app-color-primary-border-strong: color-mix(in oklab, var(--app-color-primary) 58%, transparent);
+  --app-color-primary-focus-ring: color-mix(in oklab, var(--app-color-primary) 35%, transparent);
+  --app-color-primary-text: var(--app-color-primary);
+  --app-color-primary-text-strong: color-mix(
+    in oklab,
+    var(--app-color-primary) 72%,
+    var(--app-color-text-high) 28%
+  );
+  --app-color-primary-on-accent: color-mix(in oklab, black 78%, var(--app-color-primary) 22%);
+
+  /* Core surfaces */
+  --app-color-canvas: rgb(var(--app-palette-canvas, var(--bg0)));
+  --app-color-shell: rgb(var(--app-palette-shell, var(--bg1)));
+  --app-color-panel-body: rgb(var(--app-palette-panel-body, var(--bg1)));
+  --app-color-surface: rgb(var(--app-palette-surface, var(--surface)));
+  --app-color-header: rgb(var(--app-palette-chrome, var(--app-header-bg, var(--bg1))));
+  --app-color-footer: rgb(var(--app-palette-chrome, var(--app-footer-bg, var(--bg1))));
+  --app-color-overlay-panel: var(--app-color-surface);
+  --app-color-overlay-header: var(--app-color-header);
+  --app-color-overlay-body: var(--app-color-surface);
+  --app-color-control-bg: color-mix(
+    in oklab,
+    var(--app-color-panel-body) 92%,
+    var(--app-color-header) 8%
+  );
+  --app-color-card-bg: color-mix(in oklab, var(--app-color-panel-body) 94%, black 6%);
+  --app-color-row-bg: color-mix(in oklab, var(--app-color-panel-body) 94%, black 6%);
+
+  /* Outline / separators */
+  --app-color-outline: rgb(var(--app-palette-outline, var(--border)));
+  --app-color-outline-strong: rgb(var(--app-palette-outline-strong, var(--border-strong)));
+  --app-color-outline-soft: color-mix(
+    in oklab,
+    var(--app-color-outline) var(--app-outline-soft-mix),
+    transparent
+  );
+  --app-color-outline-stroke: color-mix(
+    in oklab,
+    var(--app-color-outline) var(--app-outline-stroke-mix),
+    transparent
+  );
+  --app-color-outline-stroke-strong: color-mix(
+    in oklab,
+    var(--app-color-outline-strong) var(--app-outline-stroke-strong-mix),
+    transparent
+  );
+  --app-color-divider: color-mix(
+    in oklab,
+    var(--app-color-outline) var(--app-outline-divider-mix),
+    transparent
+  );
+  --app-color-grid-line: color-mix(
+    in oklab,
+    var(--app-color-outline) var(--app-outline-grid-mix),
+    transparent
+  );
+  --app-color-control-border: var(--app-color-outline-stroke);
+  --app-color-card-border: var(--app-color-outline-stroke);
+  --app-color-row-border: var(--app-color-outline-stroke);
+  --app-color-empty-border: color-mix(
+    in oklab,
+    var(--app-color-outline-stroke) var(--app-outline-empty-mix),
+    transparent
+  );
+  --app-outline-stroke: var(--app-outline-width) solid var(--app-color-outline-stroke);
+  --app-outline-stroke-strong: var(--app-outline-width-strong) solid
+    var(--app-color-outline-stroke-strong);
+  --app-divider-stroke: var(--app-outline-width) solid var(--app-color-divider);
+  --app-grid-stroke: var(--app-outline-width) solid var(--app-color-grid-line);
+  --app-control-stroke: var(--app-outline-width) solid var(--app-color-control-border);
+  --app-card-stroke: var(--app-outline-width) solid var(--app-color-card-border);
+  --app-row-stroke: var(--app-outline-width) solid var(--app-color-row-border);
+  --app-empty-stroke: var(--app-outline-width) dashed var(--app-color-empty-border);
+
+  /* Text hierarchy */
+  --app-color-text-strong: color-mix(
+    in oklab,
+    rgb(var(--app-palette-text, var(--fg))) 100%,
+    transparent
+  );
+  --app-color-text-high: color-mix(
+    in oklab,
+    rgb(var(--app-palette-text, var(--fg))) 96%,
+    transparent
+  );
+  --app-color-text-body: color-mix(
+    in oklab,
+    rgb(var(--app-palette-text, var(--fg))) 90%,
+    transparent
+  );
+  --app-color-text-soft: color-mix(
+    in oklab,
+    rgb(var(--app-palette-text, var(--fg))) 78%,
+    transparent
+  );
+  --app-color-text-muted: color-mix(
+    in oklab,
+    rgb(var(--app-palette-muted, var(--muted))) 100%,
+    transparent
+  );
+  --app-color-text-faint: color-mix(
+    in oklab,
+    rgb(var(--app-palette-muted, var(--muted))) 86%,
+    transparent
+  );
+  --app-color-text-quiet: color-mix(
+    in oklab,
+    rgb(var(--app-palette-muted, var(--muted))) 66%,
+    transparent
+  );
+  --app-color-link: var(--app-color-primary);
+  --app-color-link-hover: var(--app-color-text-high);
+  --app-link-color: var(--app-color-link);
+  --app-link-hover-color: var(--app-color-link-hover);
+  --app-link-font-weight: 500;
+  --app-link-underline-thickness: 1px;
+  --app-link-underline-offset: 2px;
+  --app-link-rest-padding-inline-start: 0;
+  --app-link-rest-padding-inline-end: 3px;
+  --app-link-hover-padding-inline-start: 3px;
+  --app-link-hover-padding-inline-end: 0;
+  --app-link-transition:
+    padding-inline-start 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+    padding-inline-end 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.2s ease,
+    text-decoration-color 0.2s ease;
+  --app-color-placeholder: var(--app-color-text-quiet);
+  --app-color-empty-text: var(--app-color-text-quiet);
+  --app-color-heading: var(--app-color-text-high);
+  --app-color-subheading: var(--app-color-text-soft);
+  --app-color-body: var(--app-color-text-body);
+  --app-color-data-title: color-mix(
+    in oklab,
+    var(--app-color-body) 78%,
+    var(--app-color-heading) 22%
+  );
+  --app-color-data-text: color-mix(
+    in oklab,
+    var(--app-color-body) 88%,
+    var(--app-color-subheading) 12%
+  );
+  --app-color-label: var(--app-color-text-faint);
+  --app-color-meta: var(--app-color-text-faint);
+  --app-color-icon-neutral: var(--app-color-text-muted);
+
+  /* Panel semantics */
+  --app-color-panel-heading: var(--app-color-heading);
+  --app-color-panel-subheading: var(--app-color-subheading);
+  --app-color-panel-body-text: var(--app-color-body);
+  --app-color-panel-data-title: var(--app-color-data-title);
+  --app-color-panel-data-text: var(--app-color-data-text);
+  --app-color-panel-label-text: var(--app-color-label);
+  --app-color-panel-meta-text: var(--app-color-meta);
+  --app-color-panel-empty-text: var(--app-color-empty-text);
+  --app-color-panel-section-bg: var(--app-color-card-bg);
+  --app-color-panel-card-bg: var(--app-color-card-bg);
+  --app-color-panel-row-bg: var(--app-color-row-bg);
+  --app-color-panel-divider: var(--app-color-divider);
+  --app-color-panel-grid-line: var(--app-color-grid-line);
+
+  /* Status semantics */
+  --app-color-info-bg: color-mix(in oklab, var(--app-color-info) 16%, var(--app-color-surface));
+  --app-color-info-bg-strong: color-mix(
+    in oklab,
+    var(--app-color-info) 24%,
+    var(--app-color-surface)
+  );
+  --app-color-info-border: color-mix(in oklab, var(--app-color-info) 50%, transparent);
+  --app-color-info-text: var(--app-color-info);
+  --app-color-success-bg: color-mix(
+    in oklab,
+    var(--app-color-success) 18%,
+    var(--app-color-surface)
+  );
+  --app-color-success-bg-strong: color-mix(
+    in oklab,
+    var(--app-color-success) 26%,
+    var(--app-color-surface)
+  );
+  --app-color-success-border: color-mix(in oklab, var(--app-color-success) 48%, transparent);
+  --app-color-success-text: var(--app-color-success);
+  --app-color-warning-bg: color-mix(
+    in oklab,
+    var(--app-color-warning) 16%,
+    var(--app-color-surface)
+  );
+  --app-color-warning-bg-strong: color-mix(
+    in oklab,
+    var(--app-color-warning) 24%,
+    var(--app-color-surface)
+  );
+  --app-color-warning-border: color-mix(in oklab, var(--app-color-warning) 55%, transparent);
+  --app-color-warning-text: var(--app-color-warning);
+  --app-color-danger-bg: color-mix(in oklab, var(--app-color-danger) 14%, var(--app-color-surface));
+  --app-color-danger-bg-strong: color-mix(
+    in oklab,
+    var(--app-color-danger) 18%,
+    var(--app-color-surface)
+  );
+  --app-color-danger-border: color-mix(in oklab, var(--app-color-danger-soft) 34%, transparent);
+  --app-color-danger-text: var(--app-color-danger-soft);
+
+  --app-color-supplier-action-bg: var(--app-color-text-high);
+  --app-color-supplier-action-text: var(--app-color-surface);
+  --app-color-supplier-action-bg-active: color-mix(
+    in oklab,
+    var(--app-color-text-high) 90%,
+    var(--app-color-surface) 10%
+  );
+  --app-color-supplier-action-surface-bg: var(--app-color-supplier-action-bg);
+  --app-color-supplier-action-surface-text: var(--app-color-supplier-action-text);
+  --app-color-supplier-action-surface-focus-bg: color-mix(
+    in oklab,
+    var(--app-color-text-high) 96%,
+    var(--app-color-surface) 4%
+  );
+  --app-color-supplier-action-divider: color-mix(
+    in oklab,
+    var(--app-color-supplier-action-text) 18%,
+    transparent
+  );
+  --app-color-supplier-action-pressed-bg: color-mix(
+    in oklab,
+    var(--app-color-supplier-action-text) 10%,
+    transparent
+  );
+  --app-shadow-supplier-control-top: inset 0 1px 0
+    color-mix(in oklab, var(--app-color-surface) 6%, transparent);
+  --app-shadow-supplier-floating-control: 0 6px 18px
+    color-mix(in oklab, var(--app-color-shadow, rgb(0 0 0)) 18%, transparent);
+
+  /* Special accents used by supplier flows */
+  --app-color-mail-supplier-bg: color-mix(
+    in oklab,
+    var(--app-color-primary) 32%,
+    rgb(255 187 92) 50%
+  );
+  --app-color-mail-supplier-border: color-mix(
+    in oklab,
+    var(--app-color-mail-supplier-bg) 70%,
+    transparent
+  );
+  --app-color-mail-supplier-text: rgb(32 21 3);
+  --app-color-mail-official-bg: color-mix(
+    in oklab,
+    var(--app-color-primary) 38%,
+    rgb(176 166 255) 52%
+  );
+  --app-color-mail-official-border: color-mix(
+    in oklab,
+    var(--app-color-mail-official-bg) 70%,
+    transparent
+  );
+  --app-color-mail-official-text: rgb(19 24 45);
+  --app-color-mail-hybrid-bg: color-mix(
+    in oklab,
+    var(--app-color-mail-supplier-bg) 50%,
+    var(--app-color-mail-official-bg) 50%
+  );
+  --app-color-mail-hybrid-border: color-mix(
+    in oklab,
+    var(--app-color-mail-hybrid-bg) 80%,
+    transparent
+  );
+  --app-color-mail-hybrid-text: rgb(18 18 18);
+  --app-color-note-highlight: rgb(255 229 138);
+  --app-color-note-highlight-text: color-mix(
+    in oklab,
+    black 84%,
+    var(--app-color-note-highlight) 16%
+  );
+  --app-color-empty-pill-bg: color-mix(
+    in oklab,
+    var(--app-color-surface) 80%,
+    var(--app-color-outline) 20%
+  );
+  --app-color-empty-pill-border: color-mix(in oklab, var(--app-color-outline) 65%, transparent);
+  --app-color-empty-pill-text: color-mix(
+    in oklab,
+    var(--app-color-text-body) 65%,
+    var(--app-color-outline) 35%
+  );
+
+  /* Tabs / badges */
+  --app-color-tab-inactive: var(--app-color-text-muted);
+  --app-color-tab-hover: color-mix(
+    in oklab,
+    var(--app-color-primary) 76%,
+    var(--app-color-text-body) 24%
+  );
+  --app-color-tab-active: var(--app-color-text-body);
+  --app-color-tab-indicator: var(--app-color-primary);
+  --app-color-tab-badge-bg: color-mix(
+    in oklab,
+    var(--app-color-primary) 16%,
+    var(--app-color-header)
+  );
+  --app-color-tab-badge-text: var(--app-color-primary);
+
+  /* Toolbar actions */
+  --app-color-toolbar-hover-bg: color-mix(
+    in oklab,
+    var(--app-color-control-bg) 88%,
+    var(--app-color-text-high) 12%
+  );
+  --app-color-toolbar-hover-border: color-mix(
+    in oklab,
+    var(--app-color-outline-stroke-strong) 72%,
+    var(--app-color-text-high) 28%
+  );
+  --app-color-toolbar-hover-fg: var(--app-color-text-high);
+  --app-color-toolbar-hover-icon: var(--app-color-text-high);
+  --app-color-toolbar-selected-accent: #221b53;
+  --app-color-toolbar-selected-bg: var(--app-color-toolbar-selected-accent);
+  --app-color-toolbar-selected-border: var(--app-color-outline-stroke);
+  --app-color-toolbar-selected-content: color-mix(
+    in oklab,
+    rgb(255 255 255) 82%,
+    var(--app-color-toolbar-selected-bg) 18%
+  );
+  --app-color-toolbar-selected-fg: var(--app-color-toolbar-selected-content);
+  --app-color-toolbar-selected-icon: var(--app-color-toolbar-selected-content);
+  --app-color-toolbar-active-bg: var(--app-color-toolbar-selected-bg);
+  --app-color-toolbar-active-border: var(--app-color-toolbar-selected-border);
+  --app-color-toolbar-active-fg: var(--app-color-toolbar-selected-fg);
+  --app-color-toolbar-active-icon: var(--app-color-toolbar-selected-icon);
+  --app-color-toolbar-filled-bg: var(--app-color-text-high);
+  --app-color-toolbar-filled-border: color-mix(
+    in oklab,
+    var(--app-color-text-high) 18%,
+    transparent
+  );
+  --app-color-toolbar-filled-fg: var(--app-color-shell);
+  --app-color-toolbar-filled-hover-bg: color-mix(
+    in oklab,
+    var(--app-color-text-high) 88%,
+    var(--app-color-shell) 12%
+  );
+  --app-color-toolbar-filled-hover-border: color-mix(
+    in oklab,
+    var(--app-color-text-high) 28%,
+    transparent
+  );
+  --app-color-toolbar-filled-hover-fg: var(--app-color-shell);
+
+  /* Shell chrome */
+  --app-shell-sidebar-bg: var(--app-color-shell);
+  --app-shell-header-bg: var(--app-shell-sidebar-bg);
+  --app-shell-panel-bg: var(--app-color-panel-body);
+  --app-shell-subpanel-bg: var(--app-shell-panel-bg);
+  --app-shell-subpanel-border: var(--app-card-stroke);
+  --app-shell-subpanel-divider: var(--app-shell-divider-stroke);
+  --app-shell-subpanel-item-hover-bg: var(--app-shell-control-bg-hover);
+  --app-shell-subpanel-item-active-bg: var(--app-shell-control-bg-active);
+  --app-shell-nav-active-bg: color-mix(
+    in oklab,
+    var(--app-shell-control-bg-hover) 58%,
+    var(--app-shell-sidebar-bg) 42%
+  );
+  --app-shell-nav-active-border: var(--app-shell-control-border-hover);
+  --app-shell-nav-active-border-strong: var(--app-shell-control-border-hover);
+  --app-shell-nav-active-text: var(--app-shell-text);
+  --app-shell-stage-context-bg: color-mix(
+    in oklab,
+    var(--app-shell-control-bg-hover) 78%,
+    var(--app-shell-sidebar-bg) 22%
+  );
+  --app-shell-stage-context-text: var(--app-shell-text);
+  --app-shell-control-bg: var(--app-color-control-bg);
+  --app-shell-control-bg-hover: var(--app-color-toolbar-hover-bg);
+  --app-shell-control-bg-active: var(--app-color-toolbar-active-bg);
+  --app-shell-control-border: var(--app-color-control-border);
+  --app-shell-control-border-hover: var(--app-color-toolbar-hover-border);
+  --app-shell-control-border-active: var(--app-color-toolbar-active-border);
+  --app-shell-accent-bg: var(--app-color-primary-bg);
+  --app-shell-accent-bg-strong: var(--app-color-primary-bg-strong);
+  --app-shell-accent-border: var(--app-color-primary-border);
+  --app-shell-accent-border-strong: var(--app-color-primary-border-strong);
+  --app-shell-accent-text: var(--app-color-primary-text-strong);
+  --app-shell-text: var(--app-color-text-high);
+  --app-shell-text-soft: var(--app-color-text-soft);
+  --app-shell-text-muted: var(--app-color-text-muted);
+  --app-shell-icon: var(--app-color-text-muted);
+  --app-shell-icon-active: var(--app-color-primary-text);
+  --app-shell-divider-stroke: var(--app-divider-stroke);
+  --app-shell-focus-ring: 0 0 0 3px var(--app-color-primary-focus-ring);
+  --app-shell-panel-shadow: var(--app-shadow-overlay);
+  --app-shell-badge-danger-bg: var(--app-color-danger);
+  --app-shell-badge-danger-text: var(--app-color-danger-on-accent);
+
+  /* Effects */
+  --app-color-scroll-thumb: rgb(255 255 255 / 0.12);
+  --app-color-scroll-thumb-hover: rgb(255 255 255 / 0.18);
+  --app-shadow-soft: 0 1px 3px rgb(0 0 0 / 0.1);
+  --app-shadow-card: 0 4px 10px rgb(0 0 0 / 0.18);
+  --app-shadow-panel: 0 8px 18px rgb(0 0 0 / 0.18);
+  --app-shadow-panel-strong: 0 22px 60px rgb(0 0 0 / 0.45), 0 6px 20px rgb(0 0 0 / 0.25);
+  --app-shadow-overlay: 0 8px 20px rgb(0 0 0 / 0.18), 0 2px 6px rgb(0 0 0 / 0.1);
+  --app-shadow-primary-soft: 0 4px 12px
+    color-mix(in oklab, var(--app-color-primary) 22%, transparent);
+  --app-shadow-primary-strong: 0 6px 18px
+    color-mix(in oklab, var(--app-color-primary) 34%, transparent);
+  --app-shadow-danger-soft: 0 4px 14px
+    color-mix(in oklab, var(--app-color-danger-soft) 35%, transparent);
+
+  /* Typography */
+  --app-type-panel-title-size: clamp(1.06rem, 1.16vw, 1.22rem);
+  --app-type-panel-title-weight: 700;
+  --app-type-section-title-size: 13px;
+  --app-type-section-title-weight: 800;
+  --app-type-section-meta-size: 11px;
+  --app-type-section-meta-weight: 600;
+  --app-type-card-title-size: 12px;
+  --app-type-card-title-weight: 700;
+  --app-type-body-size: 14px;
+  --app-type-body-weight: 600;
+  --app-type-card-value-size: 10px;
+  --app-type-card-value-weight: 500;
+  --app-type-label-size: 10px;
+  --app-type-label-weight: 700;
+  --app-type-label-size-xs: 8px;
+  --app-type-label-weight-xs: 800;
+  --app-type-meta-size: 10px;
+  --app-type-meta-weight: 500;
+  --app-type-tab-size: 14px;
+  --app-type-tab-weight: 700;
+  --app-type-empty-size: 12px;
+}
+
+html[data-theme='light'] {
+  color-scheme: light;
+  --bg0: 255 255 255;
+  --bg1: 249 249 249;
+  --app-palette-canvas: var(--bg0);
+  --app-palette-shell: var(--bg1);
+  --app-palette-chrome: 249 249 249;
+  --app-palette-panel-body: 255 255 255;
+  --app-header-bg: var(--app-palette-chrome);
+  --app-footer-bg: var(--app-palette-chrome);
+  --surface: 255 255 255;
+  --app-palette-surface: var(--surface);
+  --surfaceA: 1;
+  --border: 232 232 232;
+  --border-strong: 214 214 214;
+  --outline-soft: 232 232 232;
+  --app-palette-outline: var(--border);
+  --app-palette-outline-strong: var(--border-strong);
+  --app-outline-stroke-mix: 72%;
+  --app-outline-stroke-strong-mix: 84%;
+  --app-outline-soft-mix: 74%;
+  --app-outline-divider-mix: 78%;
+  --app-outline-grid-mix: 76%;
+  --app-outline-empty-mix: 68%;
+  --fg: 31 35 43;
+  --muted: 141 141 141;
+  --app-palette-text: var(--fg);
+  --app-palette-muted: var(--muted);
+  --hoverA: 0.08;
+  --app-bg-gradient: none;
+  --app-corner-primary: rgb(132 199 24 / 0.44);
+  --app-corner-secondary: rgb(255 255 255 / 0.62);
+  --app-corner-primary-blur: 150px;
+  --app-corner-secondary-blur: 110px;
+  --app-corner-primary-opacity: 0.95;
+  --app-corner-secondary-opacity: 0.86;
+  --tooltip-bg: var(--surface);
+  --tooltip-fg: var(--fg);
+  --tooltip-border: var(--border);
+  --tooltip-shadow: 0 10px 24px rgb(15 23 42 / 0.14);
+  --task-detail-site-bg: 255 255 255;
+  --task-detail-main-bg: 255 255 255;
+  --task-detail-activity-bg: 249 249 249;
+  --task-detail-activity-rail-bg: 255 255 255;
+  --app-color-card-bg: color-mix(
+    in oklab,
+    var(--app-color-panel-body) 98%,
+    var(--app-color-shell) 2%
+  );
+  --app-color-row-bg: color-mix(
+    in oklab,
+    var(--app-color-panel-body) 98%,
+    var(--app-color-shell) 2%
+  );
+  --app-color-control-bg: color-mix(
+    in oklab,
+    var(--app-color-panel-body) 96%,
+    var(--app-color-shell) 4%
+  );
+  --app-color-text-strong: rgb(24 28 36);
+  --app-color-text-high: rgb(31 35 43);
+  --app-color-text-body: rgb(76 84 96);
+  --app-color-text-soft: rgb(109 118 131);
+  --app-color-text-muted: rgb(141 141 141);
+  --app-color-text-faint: rgb(157 163 171);
+  --app-color-text-quiet: rgb(176 181 188);
+  --app-color-grid-checkbox-bg: rgb(255 255 255);
+  --app-color-grid-checkbox-bg-hover: rgb(248 250 252);
+  --app-color-grid-checkbox-border: rgb(148 156 169);
+  --app-color-grid-checkbox-border-strong: rgb(121 129 142);
+  --app-color-grid-checkbox-check: rgb(255 255 255);
+  --app-color-grid-checkbox-checked-bg: var(--app-color-primary);
+  --app-color-grid-header-bg: rgb(252 252 252);
+  --app-color-grid-row-hover: rgb(240 240 240);
+  --app-color-grid-header-cell-fg: rgb(32 32 32);
+  --app-color-grid-header-text-fg: rgb(131 131 131);
+  --app-color-grid-surface: color-mix(in oklab, white 97%, rgb(var(--bg0, 255 255 255)) 3%);
+  --app-color-grid-surface-raised: color-mix(in oklab, white 98%, rgb(var(--bg1, 248 250 252)) 2%);
+  --app-color-grid-outline: color-mix(
+    in oklab,
+    rgb(var(--border-strong, var(--border))) 48%,
+    transparent
+  );
+  --app-color-grid-line: color-mix(
+    in oklab,
+    rgb(var(--border-strong, var(--border))) 72%,
+    transparent
+  );
+  --app-color-grid-line-soft: color-mix(
+    in oklab,
+    rgb(var(--border-strong, var(--border))) 54%,
+    transparent
+  );
+  --app-color-grid-line-faint: color-mix(
+    in oklab,
+    rgb(var(--border-strong, var(--border))) 36%,
+    transparent
+  );
+  --app-color-grid-row-selected: color-mix(
+    in oklab,
+    rgb(var(--primary, 132 199 24)) 12%,
+    white 88%
+  );
+  --app-color-grid-body-text: #292d34;
+  --app-color-grid-body-text-soft: color-mix(in oklab, rgb(var(--fg, 15 23 42)) 68%, white 32%);
+  --app-color-grid-link: #292d34;
+  --app-color-grid-link-hover: #292d34;
+  --app-color-grid-pill-border: color-mix(
+    in oklab,
+    rgb(var(--border-strong, var(--border))) 40%,
+    transparent
+  );
+  --app-color-grid-pill-surface: color-mix(in oklab, white 96%, rgb(var(--bg1, 248 250 252)) 4%);
+  --app-color-grid-pill-text: color-mix(in oklab, rgb(var(--fg, 15 23 42)) 76%, transparent);
+  --app-color-grid-muted-label: color-mix(in oklab, rgb(var(--fg, 15 23 42)) 44%, transparent);
+  --app-color-grid-muted-value: color-mix(in oklab, rgb(var(--fg, 15 23 42)) 72%, transparent);
+  --app-color-grid-muted-placeholder: color-mix(
+    in oklab,
+    rgb(var(--fg, 15 23 42)) 50%,
+    transparent
+  );
+  --app-color-grid-selection-index: color-mix(in oklab, rgb(var(--fg, 15 23 42)) 54%, white 46%);
+  --app-color-pill-tone-green-rgb: 78 128 62;
+  --app-color-pill-tone-yellow-rgb: 160 117 36;
+  --app-color-pill-tone-red-rgb: 178 81 76;
+  --app-color-pill-tone-blue-rgb: 61 104 183;
+  --app-color-pill-tone-purple-rgb: 116 84 174;
+  --app-color-pill-tone-teal-rgb: 43 118 113;
+  --app-color-pill-tone-orange-rgb: 168 108 42;
+  --app-color-pill-tone-gray-rgb: 94 101 113;
+  --app-shadow-grid-group-card: 0 1px 0 rgb(15 23 42 / 0.035);
+  --app-color-heading: var(--app-color-text-high);
+  --app-color-subheading: var(--app-color-text-soft);
+  --app-color-body: var(--app-color-text-body);
+  --app-color-data-title: rgb(88 96 108);
+  --app-color-data-text: rgb(108 117 129);
+  --app-color-label: var(--app-color-text-muted);
+  --app-color-meta: var(--app-color-text-soft);
+  --app-color-empty-text: var(--app-color-text-quiet);
+  --app-color-toolbar-selected-bg: color-mix(
+    in oklab,
+    var(--app-color-toolbar-selected-accent) 10%,
+    rgb(255 255 255) 90%
+  );
+  --app-color-toolbar-selected-border: color-mix(
+    in oklab,
+    var(--app-color-toolbar-selected-accent) 30%,
+    rgb(255 255 255) 70%
+  );
+  --app-color-toolbar-selected-content: var(--app-color-toolbar-selected-accent);
+  --app-color-tab-inactive: var(--app-color-text-soft);
+  --app-color-tab-active: var(--app-color-text-high);
+  --app-color-scroll-thumb: rgb(148 163 184 / 0.34);
+  --app-color-scroll-thumb-hover: rgb(148 163 184 / 0.5);
+  --app-shadow-card: 0 2px 8px rgb(15 23 42 / 0.06);
+  --app-shadow-panel: 0 8px 18px rgb(15 23 42 / 0.08);
+  --app-shadow-panel-strong: 0 22px 60px rgb(15 23 42 / 0.14), 0 6px 20px rgb(15 23 42 / 0.08);
+  --app-shadow-overlay: 0 14px 24px rgb(15 23 42 / 0.14), 0 2px 8px rgb(15 23 42 / 0.08);
+}
+
+html[data-theme='dark'],
+html:not([data-theme]),
+html.dark-mode,
+html.theme-dark,
+body.dark-mode,
+body.theme-dark,
+body[data-theme='dark'] {
+  color-scheme: dark;
+  --bg0: 17 17 17;
+  --bg1: 25 25 25;
+  --app-palette-canvas: var(--bg0);
+  --app-palette-shell: var(--bg1);
+  --app-palette-chrome: 17 17 17;
+  --app-palette-panel-body: 25 25 25;
+  --app-header-bg: var(--app-palette-chrome);
+  --app-footer-bg: var(--app-palette-chrome);
+  --surface: 32 32 32;
+  --app-palette-surface: var(--surface);
+  --surfaceA: 1;
+  --border: 42 42 42;
+  --border-strong: 58 58 58;
+  --outline-soft: 42 42 42;
+  --app-palette-outline: var(--border);
+  --app-palette-outline-strong: var(--border-strong);
+  --app-outline-stroke-mix: 64%;
+  --app-outline-stroke-strong-mix: 76%;
+  --app-outline-soft-mix: 66%;
+  --app-outline-divider-mix: 70%;
+  --app-outline-grid-mix: 68%;
+  --app-outline-empty-mix: 60%;
+  --fg: 234 236 239;
+  --muted: 110 110 110;
+  --app-color-grid-checkbox-bg: rgb(17 17 17);
+  --app-color-grid-checkbox-bg-hover: rgb(17 17 17);
+  --app-color-grid-checkbox-border: rgb(110 110 110);
+  --app-color-grid-checkbox-border-strong: rgb(110 110 110);
+  --app-color-grid-checkbox-check: rgb(255 255 255);
+  --app-color-grid-checkbox-checked-bg: var(--app-color-primary);
+  --app-color-grid-header-bg: rgb(25 25 25);
+  --app-color-grid-row-hover: var(--app-color-grid-header-bg);
+  --app-color-grid-header-cell-fg: rgb(238 238 238);
+  --app-color-grid-header-text-fg: rgb(123 123 123);
+  --app-color-grid-group-backdrop-bg: rgb(9 9 9);
+  --app-color-grid-group-table-body-bg: rgb(9 9 9);
+  --app-color-grid-group-body-bg: rgb(9 9 9);
+  --app-color-grid-group-items-inner-bg: rgb(9 9 9);
+  --app-color-grid-group-card-bg: rgb(17 17 17);
+  --app-color-grid-group-corner-bg: rgb(17 17 17);
+  --app-palette-text: var(--fg);
+  --app-palette-muted: var(--muted);
+  --hoverA: 0.12;
+  --app-bg-gradient: none;
+  --app-corner-primary: rgb(132 199 24 / 0.58);
+  --app-corner-secondary: rgb(148 163 184 / 0.22);
+  --app-corner-primary-blur: 170px;
+  --app-corner-secondary-blur: 120px;
+  --app-corner-primary-opacity: 0.95;
+  --app-corner-secondary-opacity: 0.72;
+  --tooltip-bg: var(--surface);
+  --tooltip-fg: var(--fg);
+  --tooltip-border: var(--border);
+  --tooltip-shadow: 0 12px 26px rgb(0 0 0 / 0.28);
+  --task-detail-site-bg: 17 17 17;
+  --task-detail-main-bg: 17 17 17;
+  --task-detail-activity-bg: 9 9 9;
+  --task-detail-activity-rail-bg: 17 17 17;
+  --app-color-card-bg: color-mix(in oklab, var(--app-color-panel-body) 94%, black 6%);
+  --app-color-row-bg: color-mix(in oklab, var(--app-color-panel-body) 94%, black 6%);
+  --app-color-control-bg: color-mix(
+    in oklab,
+    var(--app-color-panel-body) 90%,
+    var(--app-color-header) 10%
+  );
+  --app-color-heading: rgb(232 236 239);
+  --app-color-subheading: rgb(160 166 174);
+  --app-color-body: rgb(212 216 221);
+  --app-color-data-title: rgb(194 200 208);
+  --app-color-data-text: rgb(176 183 191);
+  --app-color-label: rgb(110 110 110);
+  --app-color-meta: rgb(138 144 150);
+  --app-color-empty-text: rgb(96 101 108);
+  --app-color-tab-inactive: rgb(110 110 110);
+  --app-color-tab-active: rgb(234 236 239);
+}
+
+html[data-theme='teal'] {
+  --primary: 18 184 134;
+  --app-color-grid-group-backdrop-bg: rgb(9 9 9);
+  --app-color-grid-group-table-body-bg: rgb(9 9 9);
+  --app-color-grid-group-body-bg: rgb(9 9 9);
+  --app-color-grid-group-items-inner-bg: rgb(9 9 9);
+  --app-color-grid-group-card-bg: rgb(17 17 17);
+  --app-color-grid-group-corner-bg: rgb(17 17 17);
+}
+
+html[data-theme='violet'] {
+  --primary: 139 92 246;
+  --app-color-grid-group-backdrop-bg: rgb(9 9 9);
+  --app-color-grid-group-table-body-bg: rgb(9 9 9);
+  --app-color-grid-group-body-bg: rgb(9 9 9);
+  --app-color-grid-group-items-inner-bg: rgb(9 9 9);
+  --app-color-grid-group-card-bg: rgb(17 17 17);
+  --app-color-grid-group-corner-bg: rgb(17 17 17);
+}
+
+html[data-theme='amber'] {
+  --primary: 245 158 11;
+  --app-color-grid-group-backdrop-bg: rgb(9 9 9);
+  --app-color-grid-group-table-body-bg: rgb(9 9 9);
+  --app-color-grid-group-body-bg: rgb(9 9 9);
+  --app-color-grid-group-items-inner-bg: rgb(9 9 9);
+  --app-color-grid-group-card-bg: rgb(17 17 17);
+  --app-color-grid-group-corner-bg: rgb(17 17 17);
+}
+
+html[data-theme='aurora'] {
+  color-scheme: dark;
+  --primary: 132 199 24;
+  --bg0: 10 15 20;
+  --bg1: 16 24 32;
+  --surface: 18 28 40;
+  --surfaceA: 0.68;
+  --border: 70 105 130;
+  --border-strong: 58 92 118;
+  --fg: 220 233 240;
+  --muted: 148 162 177;
+  --hoverA: 0.12;
+  --app-palette-canvas: var(--bg0);
+  --app-palette-shell: var(--bg1);
+  --app-palette-chrome: 10 15 20;
+  --app-palette-panel-body: 16 24 32;
+  --app-palette-surface: var(--surface);
+  --app-palette-outline: 70 105 130;
+  --app-palette-outline-strong: 58 92 118;
+  --app-palette-text: var(--fg);
+  --app-palette-muted: var(--muted);
+  --app-header-bg: var(--app-palette-chrome);
+  --app-footer-bg: var(--app-palette-chrome);
+  --tooltip-bg: var(--surface);
+  --tooltip-fg: var(--fg);
+  --tooltip-border: var(--border);
+  --tooltip-shadow: 0 18px 34px rgb(4 10 18 / 0.45);
+  --task-detail-site-bg: 10 15 20;
+  --task-detail-main-bg: 10 15 20;
+  --task-detail-activity-bg: 7 11 15;
+  --task-detail-activity-rail-bg: 10 15 20;
+  --app-color-grid-group-backdrop-bg: rgb(9 9 9);
+  --app-color-grid-group-table-body-bg: rgb(9 9 9);
+  --app-color-grid-group-body-bg: rgb(9 9 9);
+  --app-color-grid-group-items-inner-bg: rgb(9 9 9);
+  --app-color-grid-group-card-bg: rgb(17 17 17);
+  --app-color-grid-group-corner-bg: rgb(17 17 17);
+}
+
+body[data-theme='aurora'],
+body.theme-aurora,
+html.theme-aurora {
+  --app-color-grid-group-backdrop-bg: rgb(9 9 9);
+  --app-color-grid-group-table-body-bg: rgb(9 9 9);
+  --app-color-grid-group-body-bg: rgb(9 9 9);
+  --app-color-grid-group-items-inner-bg: rgb(9 9 9);
+  --app-color-grid-group-card-bg: rgb(17 17 17);
+  --app-color-grid-group-corner-bg: rgb(17 17 17);
+}
+
+html[data-theme='aurora'] .bg-app {
+  position: relative;
+  background-color: rgb(var(--bg0));
+  background-image: var(--app-bg-gradient);
+  background-repeat: no-repeat;
+  background-size: cover;
+  overflow: visible;
+}
+
+html[data-theme='aurora'] .theme {
+  position: relative;
+  z-index: calc(var(--z-dropdown) + 10);
+}
+
+html[data-theme='aurora'] .bg-bar,
+html[data-theme='aurora'] header {
+  background: rgba(11, 17, 24, 0.72);
+  border-bottom: 1px solid rgba(148, 187, 233, 0.08);
+  box-shadow: 0 20px 48px rgba(4, 9, 14, 0.45);
+  backdrop-filter: blur(18px);
+}
+
+html[data-theme='aurora'] .sidebar {
+  background: rgba(11, 17, 24, 0.72);
+  border-right: 1px solid rgba(148, 187, 233, 0.08);
+  box-shadow: 10px 0 40px rgba(4, 9, 14, 0.45);
+  backdrop-filter: blur(20px);
+}
+
+html[data-theme='aurora'] .menu-panel {
+  background: linear-gradient(
+    160deg,
+    rgba(6, 12, 20, 0.96) 0%,
+    rgba(10, 18, 28, 0.98) 70%,
+    rgba(4, 10, 18, 0.98) 100%
+  ) !important;
+  border: 1px solid rgba(148, 187, 233, 0.25);
+  box-shadow: 0 22px 48px rgba(2, 6, 12, 0.55);
+  backdrop-filter: none;
+  isolation: isolate;
+}
+
+html[data-theme='aurora'] .card,
+html[data-theme='aurora'] .panel,
+html[data-theme='aurora'] .table-card,
+html[data-theme='aurora'] .stat,
+html[data-theme='aurora'] .metric,
+html[data-theme='aurora'] .list li,
+html[data-theme='aurora'] .actions-list li,
+html[data-theme='aurora'] .summary .block {
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.07) 0%, rgba(12, 18, 26, 0.6) 100%);
+  border: 1px solid rgba(148, 187, 233, 0.12);
+  box-shadow: 0 20px 48px rgba(4, 9, 14, 0.35);
+  backdrop-filter: blur(18px);
+}
+
+html[data-theme='aurora'] .metric .value,
+html[data-theme='aurora'] .summary .value {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+html[data-theme='aurora'] .metric .note,
+html[data-theme='aurora'] .list .meta {
+  color: rgba(223, 231, 238, 0.6);
+}
+
+html[data-theme='aurora'] .btn {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 12px 28px rgba(4, 10, 18, 0.35);
+}
+
+html[data-theme='aurora'] .btn.primary {
+  background: linear-gradient(135deg, rgba(45, 212, 191, 0.85), rgba(56, 189, 248, 0.75));
+  border: 1px solid rgba(56, 189, 248, 0.45);
+  color: #041016;
+  box-shadow: 0 22px 46px rgba(37, 211, 166, 0.28);
+}
+
+html[data-theme='aurora'] .btn.ghost {
+  background: rgba(10, 16, 22, 0.6);
+  border: 1px solid rgba(148, 187, 233, 0.16);
+  color: rgba(223, 231, 238, 0.85);
+}
+
+html[data-theme='aurora'] .btn.danger {
+  background: rgba(244, 63, 94, 0.18);
+  border: 1px solid rgba(244, 63, 94, 0.32);
+  color: #ffd9e0;
+  box-shadow: 0 16px 34px rgba(244, 63, 94, 0.25);
+}
+
+html[data-theme='aurora'] .badge,
+html[data-theme='aurora'] .pill {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(223, 231, 238, 0.85);
+}
+
+html[data-theme='aurora'] .pill.info {
+  background: rgba(56, 189, 248, 0.2);
+  border-color: rgba(56, 189, 248, 0.38);
+  color: #b5e4ff;
+}
+
+html[data-theme='aurora'] .pill.warn {
+  background: rgba(250, 204, 21, 0.18);
+  border-color: rgba(250, 204, 21, 0.35);
+  color: #fce088;
+}
+
+html[data-theme='aurora'] .pill.success {
+  background: rgba(34, 197, 94, 0.18);
+  border-color: rgba(34, 197, 94, 0.35);
+  color: #a8f4c9;
+}
+
+html[data-theme='aurora'] .pill.danger {
+  background: rgba(244, 63, 94, 0.2);
+  border-color: rgba(244, 63, 94, 0.4);
+  color: #ffc6d3;
+}
+
+html[data-theme='aurora'] .pill.neutral {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: rgba(223, 231, 238, 0.72);
+}
+
+html[data-theme='aurora'] .search {
+  background: rgba(10, 16, 22, 0.75);
+  border: 1px solid rgba(148, 187, 233, 0.16);
+  box-shadow: 0 12px 28px rgba(4, 10, 18, 0.35);
+}
+
+html[data-theme='aurora'] .org-pill,
+html[data-theme='aurora'] .account-pill {
+  background: rgba(12, 20, 28, 0.65);
+  border: 1px solid rgba(148, 187, 233, 0.18);
+  box-shadow: 0 16px 36px rgba(4, 9, 14, 0.32);
+}
+
+:where(.app-link, .link, .data-grid-link, .official-link) {
+  color: var(--app-link-color) !important;
+  -webkit-text-fill-color: var(--app-link-color) !important;
+  text-decoration: underline !important;
+  text-decoration-color: currentColor !important;
+  text-decoration-thickness: var(--app-link-underline-thickness);
+  text-underline-offset: var(--app-link-underline-offset);
+  cursor: pointer;
+  display: inline-block;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding-inline-start: var(--app-link-rest-padding-inline-start);
+  padding-inline-end: var(--app-link-rest-padding-inline-end);
+  transition: var(--app-link-transition);
+  font-weight: var(--app-link-font-weight);
+}
+
+:where(.app-link, .link, .data-grid-link, .official-link):hover {
+  color: var(--app-link-hover-color) !important;
+  -webkit-text-fill-color: var(--app-link-hover-color) !important;
+  padding-inline-start: var(--app-link-hover-padding-inline-start);
+  padding-inline-end: var(--app-link-hover-padding-inline-end);
+}
+
+:where(.app-link, .link, .data-grid-link, .official-link):focus,
+:where(.app-link, .link, .data-grid-link, .official-link):focus-visible,
+:where(.app-link, .link, .data-grid-link, .official-link):active {
+  outline: none;
+  box-shadow: none;
+  background: transparent;
+}
+
+:where(button, [role='button'], summary):focus,
+:where(button, [role='button'], summary):focus-visible,
+:where(button, [role='button'], summary):active {
+  outline: none !important;
+  box-shadow: none !important;
+}

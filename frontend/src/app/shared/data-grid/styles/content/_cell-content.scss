@@ -1,0 +1,707 @@
+/* Feature-owned cell-content styling lives with each feature.
+   Keep this file for grid-wide generic cell-content hooks only. */
+
+:host ::ng-deep .data-grid-table td.data-grid-link-cell,
+:host ::ng-deep .data-grid-table td.data-grid-link-cell * {
+  pointer-events: auto;
+}
+
+:host ::ng-deep .data-grid-table td.data-grid-link-cell .cell-content,
+:host ::ng-deep .data-grid-table td.data-grid-link-cell .cell-value {
+  height: 100%;
+}
+
+/* Unified table cell-content styling source of truth */
+:host
+  ::ng-deep
+  .data-grid-table
+  td
+  :is(
+    a,
+    a:visited,
+    .data-grid-link,
+    button.data-grid-link,
+    button.link.data-grid-link,
+    .cell-link
+  ) {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  margin: 0 !important;
+  border: none !important;
+  background: transparent !important;
+  text-align: inherit !important;
+  font: inherit !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  padding: 0 !important;
+  color: var(--dg-clickup-link-fg) !important;
+  text-decoration: none !important;
+  transition: color 0.16s ease !important;
+}
+
+:host
+  ::ng-deep
+  .data-grid-table
+  td
+  :is(a, .data-grid-link, button.data-grid-link, button.link.data-grid-link, .cell-link):focus,
+:host
+  ::ng-deep
+  .data-grid-table
+  td
+  :is(
+    a,
+    .data-grid-link,
+    button.data-grid-link,
+    button.link.data-grid-link,
+    .cell-link
+  ):focus-visible,
+:host
+  ::ng-deep
+  .data-grid-table
+  td
+  :is(a, .data-grid-link, button.data-grid-link, button.link.data-grid-link, .cell-link):active {
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+:host
+  ::ng-deep
+  .data-grid-table
+  td:focus-within
+  :is(
+    a,
+    a:visited,
+    .data-grid-link,
+    button.data-grid-link,
+    button.link.data-grid-link,
+    .cell-link
+  ) {
+  color: var(--dg-clickup-link-fg-hover) !important;
+}
+
+:host ::ng-deep .data-grid-table td .cell-content,
+:host ::ng-deep .data-grid-table td .cell-value {
+  color: inherit !important;
+  font-weight: inherit !important;
+}
+
+:host ::ng-deep .data-grid-table td .cell-content {
+  display: flex !important;
+  align-items: center !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  min-height: 100% !important;
+  height: 100% !important;
+  overflow: hidden !important;
+}
+
+:host ::ng-deep .data-grid-table td .cell-content > .cell-value {
+  flex: 1 1 auto !important;
+}
+
+:host ::ng-deep .data-grid-table td .cell-value {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  height: auto !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  box-sizing: border-box !important;
+}
+
+:host ::ng-deep .data-grid-table td.cell-wrap {
+  height: auto !important;
+  min-height: 38px !important;
+  vertical-align: top !important;
+}
+
+:host ::ng-deep .data-grid-table td.cell-wrap .cell-content {
+  align-items: flex-start !important;
+  height: auto !important;
+  min-height: 38px !important;
+  overflow: visible !important;
+}
+
+:host ::ng-deep .data-grid-table td.cell-wrap .cell-value {
+  height: auto !important;
+  min-height: 100% !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  white-space: normal !important;
+}
+
+:host
+  ::ng-deep
+  .data-grid-table
+  td.cell-wrap
+  :is(a, .data-grid-link, button.data-grid-link, button.link.data-grid-link, .cell-link) {
+  height: auto !important;
+  overflow: visible !important;
+  overflow-wrap: anywhere !important;
+  text-overflow: clip !important;
+  white-space: normal !important;
+}
+
+:host ::ng-deep .data-grid-table td.data-grid-link-cell .cell-value {
+  min-height: 100% !important;
+  height: 100% !important;
+}
+
+:host ::ng-deep .data-grid-table td.cell-wrap.data-grid-link-cell .cell-value {
+  height: auto !important;
+}
+
+:host ::ng-deep .data-grid-table td .cell-value > * {
+  max-width: 100% !important;
+  min-width: 0 !important;
+  flex-shrink: 1 !important;
+}
+
+:host ::ng-deep .data-grid-table td.is-editing-cell .cell-content.is-editing {
+  position: relative !important;
+  overflow: visible !important;
+}
+
+:host ::ng-deep .data-grid-table td.is-editing-cell .cell-editor-wrap.wrap-editor {
+  position: relative !important;
+  min-height: 100% !important;
+}
+
+:host ::ng-deep .data-grid-table td.is-editing-cell .cell-editor-input,
+:host ::ng-deep .data-grid-table td input[data-edit-row][data-edit-field],
+:host ::ng-deep .data-grid-table td textarea[data-edit-row][data-edit-field] {
+  display: block !important;
+  width: 100% !important;
+  min-width: 100% !important;
+  height: 100% !important;
+  min-height: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  color: inherit !important;
+  font: inherit !important;
+  line-height: inherit !important;
+  text-align: inherit !important;
+  box-sizing: border-box !important;
+}
+
+:host ::ng-deep .data-grid-table td.is-editing-cell .cell-editor-input--multiline,
+:host ::ng-deep .data-grid-table td textarea[data-edit-row][data-edit-field] {
+  resize: none !important;
+  overflow: hidden !important;
+  white-space: pre-wrap !important;
+  overflow-wrap: anywhere !important;
+  word-break: normal !important;
+  line-height: inherit !important;
+}
+
+:host ::ng-deep .data-grid-table td.is-editing-cell .cell-editor-input:focus,
+:host ::ng-deep .data-grid-table td input[data-edit-row][data-edit-field]:focus,
+:host ::ng-deep .data-grid-table td textarea[data-edit-row][data-edit-field]:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+:host ::ng-deep .data-grid-table td .append-row-hint {
+  display: inline-flex !important;
+  align-items: center !important;
+  min-height: 100% !important;
+  color: var(--dg-clickup-body-fg-soft) !important;
+  font-size: 11px !important;
+  font-style: italic !important;
+  line-height: 1.2 !important;
+  white-space: nowrap !important;
+  opacity: 0.72 !important;
+  pointer-events: none !important;
+  user-select: none !important;
+}
+
+:host
+  ::ng-deep
+  .data-grid-table
+  td.data-grid-link-cell
+  :is(a, a:visited, .data-grid-link, .cell-link),
+:host ::ng-deep .data-grid-table td .cell-link {
+  color: var(--dg-clickup-link-fg) !important;
+  font-weight: 500 !important;
+}
+
+:host
+  ::ng-deep
+  .data-grid-table
+  td
+  :is(
+    .status-badge,
+    .pill,
+    .tag,
+    .brand-pill,
+    .country-pill,
+    .dg-leave-pill,
+    .dg-leave-status,
+    .dg-leave-chip,
+    .tt-tag,
+    .tt-count-pill,
+    .tt-source,
+    .tt-delta,
+    .tt-sync,
+    .tt-list-action,
+    .priority-pill,
+    .status-pill,
+    .proc-chip,
+    .top-pill,
+    .ts-pill
+  ) {
+  --dg-cell-chip-bg: var(--dg-clickup-pill-surface);
+  --dg-cell-chip-border: var(--dg-clickup-pill-border);
+  --dg-cell-chip-fg: var(--dg-clickup-pill-fg);
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: var(--dg-clickup-pill-gap) !important;
+  height: var(--dg-clickup-pill-height) !important;
+  min-height: var(--dg-clickup-pill-height) !important;
+  max-height: var(--dg-clickup-pill-height) !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  padding: 0 var(--dg-clickup-pill-padding-inline) !important;
+  border-radius: var(--dg-clickup-pill-radius) !important;
+  border: 1px solid var(--dg-cell-chip-border) !important;
+  background: var(--dg-cell-chip-bg) !important;
+  box-shadow: none !important;
+  outline: none !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+  vertical-align: middle !important;
+  color: var(--dg-cell-chip-fg) !important;
+  -webkit-text-fill-color: var(--dg-cell-chip-fg) !important;
+  font-size: var(--dg-clickup-pill-font-size) !important;
+  font-weight: var(--dg-clickup-pill-font-weight) !important;
+  font-family: inherit !important;
+  line-height: 1 !important;
+  letter-spacing: 0 !important;
+  white-space: nowrap !important;
+  font-variant-numeric: tabular-nums !important;
+  text-transform: none !important;
+  text-decoration: none !important;
+  transform: none !important;
+  transition:
+    background-color 0.16s ease,
+    border-color 0.16s ease,
+    color 0.16s ease !important;
+}
+
+:host
+  ::ng-deep
+  .data-grid-table
+  td
+  :is(
+    .status-badge,
+    .pill,
+    .brand-pill,
+    .country-pill,
+    .dg-leave-pill,
+    .dg-leave-status,
+    .dg-leave-chip,
+    .priority-pill,
+    .status-pill,
+    .proc-chip,
+    .top-pill
+  )::before {
+  content: '' !important;
+  width: var(--dg-clickup-pill-dot-size) !important;
+  height: var(--dg-clickup-pill-dot-size) !important;
+  flex: 0 0 var(--dg-clickup-pill-dot-size) !important;
+  border-radius: 999px !important;
+  background: transparent !important;
+  box-shadow: inset 0 0 0 var(--dg-clickup-pill-dot-ring) currentColor !important;
+  opacity: 0.92 !important;
+}
+
+:host
+  ::ng-deep
+  .data-grid-table
+  td
+  :is(.status-badge, .pill, .dg-leave-pill, .dg-leave-status, .priority-pill, .status-pill)
+  .icon {
+  display: none !important;
+}
+
+:host ::ng-deep .data-grid-table td .pill__label {
+  display: block !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  color: inherit !important;
+  -webkit-text-fill-color: currentColor !important;
+}
+
+:host ::ng-deep .data-grid-table td :is(.tag-list, .tt-tag-list) {
+  display: flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  flex-wrap: nowrap !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+}
+
+:host ::ng-deep .data-grid-table td .tag {
+  --dg-cell-chip-bg: var(--dg-renderer-tag-bg, var(--dg-clickup-pill-surface));
+  --dg-cell-chip-border: var(--dg-renderer-tag-border, var(--dg-clickup-pill-border));
+  --dg-cell-chip-fg: var(--dg-renderer-tag-text, var(--dg-clickup-pill-fg));
+}
+
+:host ::ng-deep .data-grid-table td .tag.tag-more {
+  --dg-cell-chip-bg: var(--dg-renderer-tag-more-bg, var(--dg-clickup-pill-surface));
+  --dg-cell-chip-border: var(--dg-renderer-tag-more-border, var(--dg-clickup-pill-border));
+  --dg-cell-chip-fg: var(--dg-renderer-tag-more-text, var(--dg-clickup-pill-fg));
+}
+
+:host
+  ::ng-deep
+  .data-grid-table
+  td
+  :is(.tt-tag, .tt-count-pill, .ts-pill, .proc-chip.gray, .proc-chip.neutral) {
+  --dg-cell-chip-bg: var(--dg-clickup-pill-surface);
+  --dg-cell-chip-border: var(--dg-clickup-pill-border);
+  --dg-cell-chip-fg: var(--dg-clickup-body-fg-soft);
+}
+
+:host ::ng-deep .data-grid-table td :is(.tt-source, .tt-delta, .tt-sync, .tt-list-action) {
+  --dg-cell-chip-bg: var(--dg-clickup-pill-surface);
+  --dg-cell-chip-border: var(--dg-clickup-pill-border);
+  --dg-cell-chip-fg: var(--dg-clickup-body-fg-soft);
+}
+
+:host ::ng-deep .data-grid-table td .tt-tag-more {
+  --dg-cell-chip-fg: var(--app-color-primary-text, var(--dg-clickup-link-fg));
+}
+
+:host ::ng-deep .data-grid-table td :is(.tt-count-pill, .ts-pill, .tt-delta) {
+  justify-content: center !important;
+}
+
+:host ::ng-deep .data-grid-table td .ts-pill {
+  min-width: 32px !important;
+}
+
+:host ::ng-deep .data-grid-table td .tt-actions {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  flex-wrap: nowrap !important;
+  max-width: 100% !important;
+}
+
+:host ::ng-deep .data-grid-table td .tt-list-action {
+  justify-content: center !important;
+  inline-size: var(--dg-clickup-pill-height) !important;
+  min-width: var(--dg-clickup-pill-height) !important;
+  padding-inline: 0 !important;
+  appearance: none !important;
+  cursor: pointer !important;
+}
+
+:host ::ng-deep .data-grid-table td .tt-list-action.is-disabled {
+  opacity: 0.46 !important;
+  pointer-events: none !important;
+  cursor: default !important;
+}
+
+:host ::ng-deep .data-grid-table td .tt-sync {
+  gap: 5px !important;
+}
+
+:host ::ng-deep .data-grid-table td .tt-list-action .app-icon-host,
+:host ::ng-deep .data-grid-table td .tt-list-action i,
+:host ::ng-deep .data-grid-table td .tt-sync .app-icon-host,
+:host ::ng-deep .data-grid-table td .tt-sync i {
+  color: inherit !important;
+  font-size: 11px !important;
+}
+
+:host ::ng-deep .data-grid-table td :is(.brand-pill, .country-pill) {
+  --dg-cell-chip-bg: color-mix(
+    in oklab,
+    var(--brand-fill, var(--dg-clickup-pill-tone-bg)) 34%,
+    var(--dg-clickup-pill-tone-bg)
+  );
+  --dg-cell-chip-border: color-mix(
+    in oklab,
+    var(--brand-border, var(--dg-clickup-pill-tone-border)) 46%,
+    var(--dg-clickup-pill-tone-border)
+  );
+  --dg-cell-chip-fg: color-mix(
+    in oklab,
+    var(--brand-text, var(--dg-clickup-pill-fg)) 90%,
+    var(--dg-clickup-body-fg) 10%
+  );
+}
+
+:host ::ng-deep .data-grid-table td .top-pill {
+  --dg-cell-chip-bg: color-mix(
+    in oklab,
+    var(--tone, var(--dg-pill-tone-teal)) 34%,
+    var(--dg-clickup-pill-tone-bg)
+  );
+  --dg-cell-chip-border: color-mix(
+    in oklab,
+    var(--tone, var(--dg-pill-tone-teal)) 46%,
+    var(--dg-clickup-pill-tone-border)
+  );
+  --dg-cell-chip-fg: color-mix(
+    in oklab,
+    var(--tone, var(--dg-pill-tone-teal)) 90%,
+    var(--dg-clickup-body-fg) 10%
+  );
+}
+
+:host
+  ::ng-deep
+  .data-grid-table
+  td
+  :is(
+    .proc-chip.info,
+    .priority-pill.prio-medium,
+    .status-pill.status-progress,
+    .dg-leave-pill.type-annual,
+    .dg-leave-status.status-pending
+  ) {
+  --dg-cell-chip-bg: var(--dg-clickup-pill-tone-bg);
+  --dg-cell-chip-border: var(--dg-clickup-pill-tone-border);
+  --dg-cell-chip-fg: var(--dg-pill-tone-blue);
+}
+
+:host
+  ::ng-deep
+  .data-grid-table
+  td
+  :is(
+    .proc-chip.success,
+    .status-pill.status-done,
+    .dg-leave-pill.type-training,
+    .dg-leave-status.status-approved,
+    .dg-leave-chip.success
+  ) {
+  --dg-cell-chip-bg: var(--dg-clickup-pill-tone-bg);
+  --dg-cell-chip-border: var(--dg-clickup-pill-tone-border);
+  --dg-cell-chip-fg: var(--dg-pill-tone-green);
+}
+
+:host
+  ::ng-deep
+  .data-grid-table
+  td
+  :is(.proc-chip.warn, .priority-pill.prio-high, .dg-leave-status.status-needs-info) {
+  --dg-cell-chip-bg: var(--dg-clickup-pill-tone-bg);
+  --dg-cell-chip-border: var(--dg-clickup-pill-tone-border);
+  --dg-cell-chip-fg: var(--dg-pill-tone-orange);
+}
+
+:host
+  ::ng-deep
+  .data-grid-table
+  td
+  :is(
+    .proc-chip.danger,
+    .priority-pill.prio-critical,
+    .status-pill.status-blocked,
+    .dg-leave-pill.type-emergency,
+    .dg-leave-status.status-rejected,
+    .dg-leave-chip.danger
+  ) {
+  --dg-cell-chip-bg: var(--dg-clickup-pill-tone-bg);
+  --dg-cell-chip-border: var(--dg-clickup-pill-tone-border);
+  --dg-cell-chip-fg: var(--dg-pill-tone-red);
+}
+
+:host ::ng-deep .data-grid-table td :is(.proc-chip.primary, .status-pill.status-review) {
+  --dg-cell-chip-bg: var(--app-color-primary-bg, var(--dg-clickup-pill-tone-bg));
+  --dg-cell-chip-border: var(--app-color-primary-border, var(--dg-clickup-pill-tone-border));
+  --dg-cell-chip-fg: var(--app-color-primary-text, var(--dg-clickup-pill-fg));
+}
+
+:host
+  ::ng-deep
+  .data-grid-table
+  td
+  :is(
+    .priority-pill.prio-low,
+    .status-pill.status-backlog,
+    .status-pill.is-disabled,
+    .dg-leave-pill.type-unpaid,
+    .dg-leave-status.status-cancelled,
+    .dg-leave-chip.muted
+  ) {
+  --dg-cell-chip-bg: var(--dg-clickup-pill-surface);
+  --dg-cell-chip-border: var(--dg-clickup-pill-border);
+  --dg-cell-chip-fg: var(--dg-pill-tone-gray);
+}
+
+:host ::ng-deep .data-grid-table td .status-pill:not([class*='status-']):not(.is-disabled) {
+  --dg-cell-chip-bg: var(--dg-clickup-pill-tone-bg);
+  --dg-cell-chip-border: var(--dg-clickup-pill-tone-border);
+  --dg-cell-chip-fg: var(--dg-pill-tone-green);
+}
+
+:host ::ng-deep .data-grid-table td .dg-leave-pill.type-sick,
+:host ::ng-deep .data-grid-table td .dg-leave-pill.type-maternity {
+  --dg-cell-chip-bg: var(--dg-clickup-pill-tone-bg);
+  --dg-cell-chip-border: var(--dg-clickup-pill-tone-border);
+  --dg-cell-chip-fg: var(--dg-pill-tone-purple);
+}
+
+:host ::ng-deep .data-grid-table td .dg-leave-pill.type-compassionate {
+  --dg-cell-chip-bg: var(--dg-clickup-pill-tone-bg);
+  --dg-cell-chip-border: var(--dg-clickup-pill-tone-border);
+  --dg-cell-chip-fg: var(--dg-pill-tone-teal);
+}
+
+:host ::ng-deep .data-grid-table td .tt-delta.tt-delta-overdue,
+:host ::ng-deep .data-grid-table td .tt-sync.error {
+  --dg-cell-chip-bg: var(--dg-clickup-pill-tone-bg);
+  --dg-cell-chip-border: var(--dg-clickup-pill-tone-border);
+  --dg-cell-chip-fg: var(--dg-pill-tone-red);
+}
+
+:host ::ng-deep .data-grid-table td .tt-delta.tt-delta-soon,
+:host ::ng-deep .data-grid-table td .tt-sync.pending {
+  --dg-cell-chip-bg: var(--dg-clickup-pill-tone-bg);
+  --dg-cell-chip-border: var(--dg-clickup-pill-tone-border);
+  --dg-cell-chip-fg: var(--dg-pill-tone-orange);
+}
+
+:host ::ng-deep .data-grid-table td .tt-delta.tt-delta-today {
+  --dg-cell-chip-bg: var(--dg-clickup-pill-tone-bg);
+  --dg-cell-chip-border: var(--dg-clickup-pill-tone-border);
+  --dg-cell-chip-fg: var(--dg-pill-tone-blue);
+}
+
+:host
+  ::ng-deep
+  .data-grid-table
+  td
+  :is(.tt-delta.tt-delta-safe, .tt-delta.tt-delta-none, .tt-sync.synced) {
+  --dg-cell-chip-bg: var(--dg-clickup-pill-tone-bg);
+  --dg-cell-chip-border: var(--dg-clickup-pill-tone-border);
+}
+
+:host ::ng-deep .data-grid-table td .tt-delta.tt-delta-safe,
+:host ::ng-deep .data-grid-table td .tt-sync.synced {
+  --dg-cell-chip-fg: var(--dg-pill-tone-green);
+}
+
+:host ::ng-deep .data-grid-table td .tt-delta.tt-delta-none {
+  --dg-cell-chip-fg: var(--dg-pill-tone-gray);
+}
+
+:host ::ng-deep .data-grid-table td .status-badge.status-active {
+  --dg-cell-chip-bg: var(--dg-renderer-status-active-bg, var(--dg-clickup-pill-tone-bg));
+  --dg-cell-chip-border: var(
+    --dg-renderer-status-active-border,
+    var(--dg-clickup-pill-tone-border)
+  );
+  --dg-cell-chip-fg: var(--dg-renderer-status-active-text, var(--dg-clickup-pill-fg));
+}
+
+:host ::ng-deep .data-grid-table td .status-badge.status-inactive {
+  --dg-cell-chip-bg: var(--dg-renderer-status-inactive-bg, var(--dg-clickup-pill-surface));
+  --dg-cell-chip-border: var(--dg-renderer-status-inactive-border, var(--dg-clickup-pill-border));
+  --dg-cell-chip-fg: var(--dg-renderer-status-inactive-text, var(--dg-clickup-pill-fg));
+}
+
+:host ::ng-deep .data-grid-table td .status-badge.status-pending {
+  --dg-cell-chip-bg: var(--dg-renderer-status-pending-bg, var(--dg-clickup-pill-tone-bg));
+  --dg-cell-chip-border: var(
+    --dg-renderer-status-pending-border,
+    var(--dg-clickup-pill-tone-border)
+  );
+  --dg-cell-chip-fg: var(--dg-renderer-status-pending-text, var(--dg-clickup-pill-fg));
+}
+
+:host ::ng-deep .data-grid-table td .status-badge.status-completed {
+  --dg-cell-chip-bg: var(--dg-renderer-status-completed-bg, var(--dg-clickup-pill-tone-bg));
+  --dg-cell-chip-border: var(
+    --dg-renderer-status-completed-border,
+    var(--dg-clickup-pill-tone-border)
+  );
+  --dg-cell-chip-fg: var(--dg-renderer-status-completed-text, var(--dg-clickup-pill-fg));
+}
+
+:host ::ng-deep .data-grid-table td .status-badge.status-cancelled {
+  --dg-cell-chip-bg: var(--dg-renderer-status-cancelled-bg, var(--dg-clickup-pill-tone-bg));
+  --dg-cell-chip-border: var(
+    --dg-renderer-status-cancelled-border,
+    var(--dg-clickup-pill-tone-border)
+  );
+  --dg-cell-chip-fg: var(--dg-renderer-status-cancelled-text, var(--dg-clickup-pill-fg));
+}
+
+:host ::ng-deep .data-grid-table td .status-badge.status-default,
+:host ::ng-deep .data-grid-table td .pill.pill-muted {
+  --dg-cell-chip-bg: var(--dg-renderer-status-default-bg, var(--dg-clickup-pill-surface));
+  --dg-cell-chip-border: var(--dg-renderer-status-default-border, var(--dg-clickup-pill-border));
+  --dg-cell-chip-fg: var(--dg-renderer-status-default-text, var(--dg-clickup-body-fg-soft));
+}
+
+:host ::ng-deep .data-grid-table td .pill.custom {
+  --dg-cell-chip-bg: color-mix(in oklab, var(--custom) 10%, var(--dg-clickup-pill-surface));
+  --dg-cell-chip-border: color-mix(in oklab, var(--custom) 22%, transparent);
+  --dg-cell-chip-fg: color-mix(in oklab, var(--custom) 92%, var(--dg-clickup-body-fg) 8%);
+}
+
+:host ::ng-deep .data-grid-table td :is(.pill, .status-badge).tone-green {
+  --dg-cell-chip-fg: var(--dg-pill-tone-green);
+}
+
+:host ::ng-deep .data-grid-table td :is(.pill, .status-badge).tone-yellow {
+  --dg-cell-chip-fg: var(--dg-pill-tone-yellow);
+}
+
+:host ::ng-deep .data-grid-table td :is(.pill, .status-badge).tone-red {
+  --dg-cell-chip-fg: var(--dg-pill-tone-red);
+}
+
+:host ::ng-deep .data-grid-table td :is(.pill, .status-badge).tone-blue {
+  --dg-cell-chip-fg: var(--dg-pill-tone-blue);
+}
+
+:host ::ng-deep .data-grid-table td :is(.pill, .status-badge).tone-purple {
+  --dg-cell-chip-fg: var(--dg-pill-tone-purple);
+}
+
+:host ::ng-deep .data-grid-table td :is(.pill, .status-badge).tone-teal {
+  --dg-cell-chip-fg: var(--dg-pill-tone-teal);
+}
+
+:host ::ng-deep .data-grid-table td :is(.pill, .status-badge).tone-orange {
+  --dg-cell-chip-fg: var(--dg-pill-tone-orange);
+}
+
+:host ::ng-deep .data-grid-table td :is(.pill, .status-badge).tone-gray {
+  --dg-cell-chip-fg: var(--dg-pill-tone-gray);
+}
+
+:host ::ng-deep .data-grid-table td :is(.pill, .status-badge)[class*='tone-'] {
+  --dg-cell-chip-bg: var(--dg-clickup-pill-tone-bg);
+  --dg-cell-chip-border: var(--dg-clickup-pill-tone-border);
+}
+
+:host ::ng-deep .data-grid-table td .prb-pill {
+  --dg-cell-chip-bg: var(--prb-pill-bg, var(--dg-clickup-prb-pill-bg));
+  --dg-cell-chip-border: var(--prb-pill-border, var(--dg-clickup-prb-pill-border));
+  --dg-cell-chip-fg: var(--prb-pill-color, var(--dg-clickup-prb-pill-fg));
+  justify-content: center !important;
+}

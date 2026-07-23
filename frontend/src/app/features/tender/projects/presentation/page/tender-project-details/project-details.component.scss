@@ -1,0 +1,1518 @@
+:host {
+  display: block;
+  --pd-site-bg: rgb(var(--task-detail-site-bg, var(--bg0)));
+  --pd-activity-black: rgb(var(--task-detail-activity-bg, var(--bg0)));
+  --pd-panel-bg: rgb(var(--task-detail-main-bg, var(--bg0)));
+  --pd-header-bg: rgb(var(--app-header-bg, var(--task-detail-site-bg, var(--bg0))));
+  --pd-main-bg: var(--pd-panel-bg);
+  --pd-main-surface: color-mix(in oklab, rgb(var(--surface)) 72%, rgb(var(--bg0)) 28%);
+  --pd-activity-bg: color-mix(in oklab, rgb(var(--bg1)) 74%, rgb(var(--bg0)) 26%);
+  --pd-activity-surface: var(--pd-activity-black);
+  --pd-activity-rail-bg: rgb(
+    var(--task-detail-activity-rail-bg, var(--task-detail-site-bg, var(--bg0)))
+  );
+  --pd-border: color-mix(in oklab, rgb(var(--border-strong)) 58%, transparent);
+  --pd-border-soft: color-mix(in oklab, rgb(var(--border)) 44%, transparent);
+  --pd-text: rgb(var(--fg));
+  --pd-text-strong: color-mix(in oklab, rgb(var(--fg)) 95%, white 5%);
+  --pd-muted: rgb(var(--muted));
+  --pd-control-bg: color-mix(in oklab, rgb(var(--surface)) 84%, rgb(var(--bg0)) 16%);
+  --pd-control-border: color-mix(in oklab, rgb(var(--border-strong)) 56%, transparent);
+  --pd-ask-ai-bg: linear-gradient(
+    90deg,
+    color-mix(in oklab, rgb(var(--surface)) 88%, rgb(var(--fg)) 12%),
+    color-mix(in oklab, rgb(var(--surface)) 95%, transparent)
+  );
+  --pd-ask-ai-accent: color-mix(in oklab, rgb(var(--primary)) 76%, rgb(var(--fg)) 24%);
+  --pd-comment-input-bg: color-mix(in oklab, rgb(var(--bg0)) 86%, rgb(var(--surface)) 14%);
+  --pd-comment-input-border: rgb(var(--primary) / 0.48);
+  --pd-scroll-thumb: color-mix(in oklab, rgb(var(--border-strong)) 62%, transparent);
+  --pd-scroll-thumb-hover: color-mix(in oklab, rgb(var(--border-strong)) 78%, transparent);
+  --pd-main-max-width: 1020px;
+  --pd-sidebar-width: clamp(248px, 17vw, 312px);
+  --pd-activity-width: clamp(390px, 28vw, 510px);
+}
+
+:host-context(html[data-theme='light']) {
+  --pd-site-bg: rgb(var(--task-detail-site-bg, var(--bg0)));
+  --pd-activity-black: rgb(var(--task-detail-activity-bg, var(--bg1)));
+  --pd-panel-bg: rgb(var(--task-detail-main-bg, var(--bg0)));
+  --pd-header-bg: rgb(var(--app-header-bg, var(--task-detail-site-bg, var(--bg0))));
+  --pd-main-bg: var(--pd-panel-bg);
+  --pd-activity-bg: var(--pd-activity-black);
+  --pd-activity-surface: var(--pd-activity-black);
+  --pd-activity-rail-bg: rgb(
+    var(--task-detail-activity-rail-bg, var(--task-detail-site-bg, var(--bg0)))
+  );
+  --pd-border: color-mix(in oklab, rgb(var(--border-strong)) 64%, transparent);
+  --pd-border-soft: color-mix(in oklab, rgb(var(--border)) 52%, transparent);
+  --pd-text-strong: color-mix(in oklab, rgb(var(--fg)) 98%, black 2%);
+  --pd-control-bg: rgb(var(--surface));
+  --pd-control-border: color-mix(in oklab, rgb(var(--border)) 70%, transparent);
+  --pd-comment-input-bg: rgb(var(--surface));
+  --pd-scroll-thumb: color-mix(in oklab, rgb(var(--border)) 66%, transparent);
+  --pd-scroll-thumb-hover: color-mix(in oklab, rgb(var(--border-strong)) 72%, transparent);
+}
+
+.details-root ::ng-deep .project-details-clickup {
+  --op-panel-bg: var(--pd-panel-bg);
+  --op-header-bg: var(--pd-header-bg);
+  --op-body-bg: var(--pd-panel-bg);
+  --op-icon-bg: var(--pd-control-bg);
+  border-radius: 18px !important;
+  border: 1px solid var(--pd-border) !important;
+  background: var(--pd-panel-bg) !important;
+  box-shadow:
+    0 40px 96px rgb(0 0 0 / 0.58),
+    0 14px 32px rgb(0 0 0 / 0.32) !important;
+}
+
+.details-root ::ng-deep .project-details-clickup .modal-hdr {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 45px;
+  height: 45px;
+  padding: 0 8px !important;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--pd-border-soft) !important;
+  background: var(--pd-header-bg) !important;
+  font-size: 13px;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', roboto, 'Helvetica Neue', helvetica, arial,
+    sans-serif;
+  font-weight: 400;
+  line-height: 1;
+  color: #eeeeee;
+}
+
+.details-root ::ng-deep .project-details-clickup .ttl {
+  display: none !important;
+}
+
+.details-root ::ng-deep .project-details-clickup .hdr-actions {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.details-root ::ng-deep .project-details-clickup .icon.square {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  border: 1px solid var(--pd-control-border);
+  background: var(--pd-control-bg);
+  color: var(--pd-muted);
+}
+
+.details-root ::ng-deep .project-details-clickup .body {
+  padding: 0 !important;
+  overflow: hidden !important;
+  background: var(--pd-main-bg) !important;
+}
+
+.project-detail-header {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  min-width: 0;
+  font-size: 13px;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', roboto, 'Helvetica Neue', helvetica, arial,
+    sans-serif;
+  font-weight: 400;
+  line-height: 1;
+  color: #eeeeee;
+}
+
+.project-detail-header-left {
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  overflow: hidden;
+}
+
+.project-detail-header-controls {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.project-detail-header-controls button,
+.project-detail-crumb-icon,
+.project-detail-head-icon {
+  width: 31px;
+  height: 31px;
+  border-radius: 8px;
+  border: 0;
+  background: transparent;
+  color: var(--pd-muted);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+.project-detail-header-controls button.active,
+.project-detail-head-icon:hover,
+.project-detail-head-link:hover,
+.project-detail-crumb-icon:hover {
+  border: 1px solid color-mix(in oklab, var(--pd-control-border) 76%, transparent);
+  background: color-mix(in oklab, var(--pd-control-bg) 78%, transparent);
+  color: var(--pd-text-strong);
+}
+
+.project-detail-head-icon.danger {
+  color: color-mix(in oklab, rgb(var(--danger)) 74%, rgb(var(--fg)));
+}
+
+.project-detail-head-icon.danger:hover {
+  border-color: color-mix(in oklab, rgb(var(--danger)) 52%, transparent);
+  background: color-mix(in oklab, rgb(var(--danger)) 10%, transparent);
+}
+
+.project-detail-breadcrumb {
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: color-mix(in oklab, var(--pd-text) 90%, var(--pd-muted) 10%);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.project-detail-crumb {
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.project-detail-crumb.team {
+  color: color-mix(in oklab, var(--pd-text) 80%, var(--pd-muted) 20%);
+}
+
+.project-detail-crumb.team i {
+  color: color-mix(in oklab, rgb(var(--primary)) 78%, var(--pd-text) 22%);
+  font-size: 14px;
+}
+
+.project-detail-crumb.project {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 220px;
+  color: var(--pd-text-strong);
+  font-weight: 700;
+}
+
+.project-detail-crumb-sep {
+  color: color-mix(in oklab, var(--pd-muted) 88%, var(--pd-text) 12%);
+  font-size: 0.72rem;
+}
+
+.project-detail-header-meta {
+  margin-inline-start: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.project-detail-created {
+  color: var(--pd-muted);
+  font-size: 13px;
+  white-space: nowrap;
+  margin-inline-end: 4px;
+}
+
+.project-detail-head-link {
+  border: 0;
+  background: transparent;
+  color: color-mix(in oklab, var(--pd-text) 92%, var(--pd-muted) 8%);
+  min-height: 30px;
+  padding: 0 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 14px;
+  font-weight: 700;
+  border-radius: 10px;
+}
+
+.project-detail-head-link i {
+  color: var(--pd-muted);
+  font-size: 14px;
+}
+
+.panel-fill {
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.project-detail-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+  background: var(--pd-main-bg);
+}
+
+.project-detail-content {
+  flex: 1;
+  min-height: 0;
+  height: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--pd-activity-width);
+}
+
+.project-detail-content.sidebar-open {
+  grid-template-columns: var(--pd-sidebar-width) minmax(0, 1fr) var(--pd-activity-width);
+}
+
+.project-detail-sidebar-pane {
+  min-height: 0;
+  overflow: auto;
+  border-inline-end: 1px solid color-mix(in oklab, var(--pd-border-soft) 78%, transparent);
+  background: rgb(var(--task-detail-activity-bg, var(--bg0)));
+  display: grid;
+  align-content: start;
+  gap: 0;
+  padding: 0 0 8px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--pd-scroll-thumb) transparent;
+}
+
+.project-detail-sidebar-pane::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.project-detail-sidebar-pane::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.project-detail-sidebar-pane::-webkit-scrollbar-thumb {
+  background: var(--pd-scroll-thumb);
+  border-radius: 999px;
+}
+
+.project-detail-sidebar-pane::-webkit-scrollbar-thumb:hover {
+  background: var(--pd-scroll-thumb-hover);
+}
+
+.project-detail-sidebar-head {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 2;
+  min-height: 42px;
+  border-bottom: 1px solid color-mix(in oklab, var(--pd-border-soft) 72%, transparent);
+  padding: 0 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  background: rgb(var(--task-detail-activity-bg, var(--bg0)));
+}
+
+.project-detail-sidebar-head-title {
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.project-detail-sidebar-head-title i {
+  color: var(--pd-muted);
+  font-size: 0.74rem;
+}
+
+.project-detail-sidebar-head h4 {
+  margin: 0;
+  color: var(--pd-text-strong);
+  font-size: 0.97rem;
+  font-weight: 700;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+}
+
+.project-detail-sidebar-list {
+  display: grid;
+  align-content: start;
+  gap: 0;
+  padding-inline: 0;
+}
+
+.project-detail-sidebar-item {
+  min-height: 32px;
+  border: 1px solid transparent;
+  border-radius: 0;
+  padding: 0 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  text-align: left;
+  font-size: 0.86rem;
+  font-weight: 600;
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease,
+    color 120ms ease;
+  cursor: pointer;
+  color: color-mix(in oklab, var(--pd-text) 88%, var(--pd-muted) 12%);
+  background: transparent;
+  border-color: transparent;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+}
+
+.project-detail-sidebar-item.active {
+  background: color-mix(in oklab, var(--pd-control-bg) 88%, transparent);
+  border-color: transparent;
+}
+
+.project-detail-sidebar-item:hover {
+  background: color-mix(in oklab, var(--pd-control-bg) 74%, transparent);
+  border-color: transparent;
+}
+
+.project-detail-sidebar-main {
+  min-width: 0;
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.project-detail-sidebar-dot {
+  font-size: 0.8rem;
+  color: color-mix(in oklab, var(--pd-muted) 88%, var(--pd-text) 12%);
+  margin-top: 0;
+}
+
+.project-detail-sidebar-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.84rem;
+  font-weight: 600;
+}
+
+.project-detail-sidebar-actions {
+  margin-inline-start: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: color-mix(in oklab, var(--pd-muted) 90%, var(--pd-text) 10%);
+  font-size: 0.76rem;
+}
+
+.project-detail-sidebar-action-dot,
+.project-detail-sidebar-action-plus {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.project-detail-sidebar-action-dot {
+  font-size: 0.82rem;
+}
+
+.project-detail-sidebar-action-plus {
+  font-size: 0.9rem;
+}
+
+.project-detail-sidebar-go {
+  color: var(--pd-muted);
+  font-size: 0.7rem;
+}
+
+.project-detail-main {
+  min-height: 0;
+  overflow: auto;
+  padding: 22px 24px 28px;
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  background: var(--pd-main-bg);
+  scrollbar-width: thin;
+  scrollbar-color: var(--pd-scroll-thumb) transparent;
+}
+
+.project-detail-main::-webkit-scrollbar,
+.project-detail-activity-main::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.project-detail-main::-webkit-scrollbar-thumb,
+.project-detail-activity-main::-webkit-scrollbar-thumb {
+  background: var(--pd-scroll-thumb);
+  border-radius: 999px;
+}
+
+.project-detail-main::-webkit-scrollbar-thumb:hover,
+.project-detail-activity-main::-webkit-scrollbar-thumb:hover {
+  background: var(--pd-scroll-thumb-hover);
+}
+
+.project-detail-main-inner {
+  width: min(100%, var(--pd-main-max-width));
+  margin-inline: auto;
+  display: grid;
+  align-content: start;
+  gap: 14px;
+}
+
+.project-detail-context {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.project-detail-pill {
+  border: 1px solid var(--pd-control-border);
+  background: var(--pd-control-bg);
+  color: var(--pd-text);
+  border-radius: 9px;
+  min-height: 30px;
+  padding: 0 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.project-detail-pill i {
+  font-size: 13px;
+  color: var(--pd-muted);
+}
+
+.project-detail-pill-type,
+.project-detail-pill-attention,
+.project-detail-pill-action {
+  appearance: none;
+  cursor: pointer;
+}
+
+.project-detail-pill-save {
+  color: color-mix(in oklab, var(--pd-text) 88%, var(--pd-muted) 12%);
+}
+
+.project-detail-pill-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: color-mix(in oklab, rgb(var(--fg)) 42%, transparent);
+}
+
+.project-detail-pill-save.is-saving,
+.project-detail-pill-save.is-saved,
+.project-detail-pill-save.is-dirty,
+.project-detail-pill-save.is-deferred,
+.project-detail-pill-save.is-failed {
+  border-color: color-mix(in oklab, rgb(var(--primary)) 30%, var(--pd-control-border));
+}
+
+.project-detail-pill-save.is-saving .project-detail-pill-dot {
+  background: rgb(var(--primary));
+}
+
+.project-detail-pill-save.is-saved {
+  border-color: color-mix(in oklab, rgb(var(--success)) 34%, transparent);
+  color: color-mix(in oklab, rgb(var(--success)) 76%, rgb(var(--fg)));
+}
+
+.project-detail-pill-save.is-saved .project-detail-pill-dot {
+  background: rgb(var(--success));
+}
+
+.project-detail-pill-save.is-dirty,
+.project-detail-pill-save.is-deferred,
+.project-detail-pill-attention {
+  border-color: color-mix(in oklab, rgb(var(--warning)) 34%, transparent);
+  color: color-mix(in oklab, rgb(var(--warning)) 82%, rgb(var(--fg)));
+}
+
+.project-detail-pill-save.is-dirty .project-detail-pill-dot,
+.project-detail-pill-save.is-deferred .project-detail-pill-dot,
+.project-detail-pill-attention i {
+  background: rgb(var(--warning));
+  color: rgb(var(--warning));
+}
+
+.project-detail-pill-save.is-failed {
+  border-color: color-mix(in oklab, rgb(var(--danger)) 38%, transparent);
+  color: color-mix(in oklab, rgb(var(--danger)) 82%, rgb(var(--fg)));
+}
+
+.project-detail-pill-save.is-failed .project-detail-pill-dot {
+  background: rgb(var(--danger));
+}
+
+.project-detail-pill-action {
+  color: color-mix(in oklab, var(--pd-text) 88%, var(--pd-muted) 12%);
+}
+
+.project-detail-title {
+  display: block;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  padding-inline: 8px;
+  margin-inline: -8px;
+}
+
+.project-detail-title--static {
+  width: 100%;
+  color: var(--pd-text-strong);
+  font-size: clamp(1.14rem, 1.95vw, 1.72rem);
+  line-height: 1.28;
+  font-weight: 700;
+  min-height: 46px;
+  padding: 2px 0;
+}
+
+:host ::ng-deep .project-title-slot search-select {
+  display: block;
+  width: 100%;
+}
+
+:host ::ng-deep .project-title-slot .ss-inline-trigger,
+:host ::ng-deep .project-title-slot .ss-trigger {
+  min-height: 46px;
+  height: 46px;
+  border: 0 !important;
+  background: transparent !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+:host ::ng-deep .project-title-slot .ss-inline-input,
+:host ::ng-deep .project-title-slot .ss-label {
+  color: var(--pd-text-strong) !important;
+  font-size: clamp(1.14rem, 1.95vw, 1.72rem) !important;
+  line-height: 1.28 !important;
+  font-weight: 700 !important;
+  padding: 2px 0 !important;
+}
+
+:host ::ng-deep .project-title-slot .ss-inline-input::placeholder {
+  color: color-mix(in oklab, var(--pd-muted) 78%, transparent) !important;
+}
+
+:host ::ng-deep .project-title-slot .ss-caret-trigger {
+  width: 34px;
+  border-radius: 10px;
+}
+
+.project-detail-validation {
+  display: grid;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid color-mix(in oklab, rgb(var(--border-strong)) 50%, transparent);
+  background: color-mix(in oklab, rgb(var(--bg1)) 88%, transparent);
+}
+
+.project-detail-validation.has-errors {
+  background: linear-gradient(
+    90deg,
+    color-mix(in oklab, rgb(var(--danger)) 8%, rgb(var(--bg1)) 92%),
+    color-mix(in oklab, rgb(var(--warning)) 7%, rgb(var(--bg1)) 93%)
+  );
+}
+
+.project-detail-validation-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.project-detail-validation-summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  color: color-mix(in oklab, rgb(var(--fg)) 74%, transparent);
+  font-size: 0.73rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.project-detail-validation-action,
+.project-detail-validation-pill,
+.mobile-section-btn {
+  appearance: none;
+  cursor: pointer;
+}
+
+.project-detail-validation-action {
+  min-height: 28px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in oklab, rgb(var(--border-strong)) 58%, transparent);
+  background: color-mix(in oklab, rgb(var(--bg1)) 88%, transparent);
+  color: color-mix(in oklab, rgb(var(--fg)) 82%, transparent);
+  padding: 0 12px;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.project-detail-validation-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.project-detail-validation-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 30px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in oklab, rgb(var(--border-strong)) 58%, transparent);
+  background: color-mix(in oklab, rgb(var(--bg1)) 86%, transparent);
+  color: color-mix(in oklab, rgb(var(--fg)) 78%, transparent);
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.project-detail-validation-pill.is-error {
+  border-color: color-mix(in oklab, rgb(var(--danger)) 42%, transparent);
+  color: color-mix(in oklab, rgb(var(--danger)) 82%, rgb(var(--fg)));
+}
+
+.project-detail-validation-pill.is-warning {
+  border-color: color-mix(in oklab, rgb(var(--warning)) 42%, transparent);
+  color: color-mix(in oklab, rgb(var(--warning)) 80%, rgb(var(--fg)));
+}
+
+.project-detail-validation-pill.is-more {
+  cursor: default;
+}
+
+.mobile-sections {
+  display: none;
+}
+
+.project-detail-body {
+  min-width: 0;
+  display: grid;
+  gap: 14px;
+}
+
+.clickup-detail-fields {
+  margin-top: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 28px;
+}
+
+.clickup-detail-field {
+  display: grid;
+  grid-template-columns: 148px minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+}
+
+.clickup-detail-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: color-mix(in oklab, var(--pd-text) 88%, var(--pd-muted) 12%);
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+}
+
+.clickup-detail-label i {
+  color: var(--pd-muted);
+  font-size: 0.74rem;
+}
+
+.clickup-detail-empty {
+  color: var(--pd-muted);
+  min-height: 28px;
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.82rem;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+}
+
+.clickup-detail-control {
+  appearance: none;
+  width: 100%;
+  min-height: 30px;
+  border: 1px solid var(--pd-control-border);
+  border-radius: 10px;
+  background: var(--pd-control-bg);
+  color: var(--pd-text);
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 7px;
+  padding: 0 10px;
+  margin: 0;
+  text-align: left;
+  transition: none;
+}
+
+.clickup-detail-control input,
+.clickup-detail-control textarea,
+.clickup-detail-control select {
+  border: 0;
+  outline: 0;
+  min-width: 0;
+  width: 100%;
+  background: transparent;
+  color: inherit;
+  font-size: 0.82rem;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+}
+
+.clickup-detail-control.status-chip {
+  width: fit-content;
+  min-width: 116px;
+}
+
+.clickup-detail-control-date {
+  position: relative;
+  min-width: 0;
+  overflow: hidden;
+  border: 0;
+  background: transparent;
+  border-radius: 0;
+  min-height: 28px;
+  padding: 0;
+}
+
+.clickup-detail-control-input {
+  cursor: text;
+}
+
+.clickup-detail-field .clickup-detail-control:not(.status-chip):not(.clickup-detail-control-date) {
+  border: 0;
+  background: transparent;
+  border-radius: 0;
+  min-height: 28px;
+  padding: 0;
+  border-bottom: 1px solid color-mix(in oklab, var(--pd-border-soft) 92%, transparent);
+}
+
+.clickup-detail-field.has-error
+  .clickup-detail-control:not(.status-chip):not(.clickup-detail-control-date) {
+  border-bottom-color: color-mix(in oklab, rgb(var(--danger)) 48%, transparent);
+}
+
+.clickup-detail-field.has-warning
+  .clickup-detail-control:not(.status-chip):not(.clickup-detail-control-date) {
+  border-bottom-color: color-mix(in oklab, rgb(var(--warning)) 48%, transparent);
+}
+
+.clickup-detail-field.has-error .clickup-detail-control.status-chip {
+  border-color: color-mix(in oklab, rgb(var(--danger)) 48%, transparent);
+}
+
+.clickup-detail-field.has-warning .clickup-detail-control.status-chip {
+  border-color: color-mix(in oklab, rgb(var(--warning)) 48%, transparent);
+}
+
+.clickup-detail-field.has-error .clickup-detail-control-date {
+  border-bottom-color: color-mix(in oklab, rgb(var(--danger)) 48%, transparent);
+}
+
+.clickup-detail-field.has-warning .clickup-detail-control-date {
+  border-bottom-color: color-mix(in oklab, rgb(var(--warning)) 48%, transparent);
+}
+
+:host ::ng-deep .clickup-detail-field.has-error date-input .date-trigger {
+  color: color-mix(in oklab, rgb(var(--danger)) 82%, rgb(var(--fg))) !important;
+}
+
+:host ::ng-deep .clickup-detail-field.has-warning date-input .date-trigger {
+  color: color-mix(in oklab, rgb(var(--warning)) 82%, rgb(var(--fg))) !important;
+}
+
+.clickup-detail-description {
+  margin-top: 4px;
+  display: grid;
+  gap: 7px;
+}
+
+.clickup-detail-description summary {
+  list-style: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: color-mix(in oklab, var(--pd-muted) 95%, var(--pd-text) 5%);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+}
+
+.clickup-detail-description summary::-webkit-details-marker {
+  display: none;
+}
+
+.clickup-detail-description textarea {
+  border: 1px solid var(--pd-border-soft);
+  border-radius: 10px;
+  background: color-mix(in oklab, var(--pd-control-bg) 74%, transparent);
+  color: var(--pd-text);
+  resize: vertical;
+  min-height: 80px;
+  padding: 10px 12px;
+  font-size: 0.8rem;
+  line-height: 1.45;
+}
+
+.clickup-detail-description:not([open]) textarea {
+  display: none;
+}
+
+.clickup-detail-description textarea:focus {
+  outline: 0;
+  border-color: var(--pd-border-soft);
+  box-shadow: none;
+}
+
+.clickup-detail-block {
+  margin-top: 14px;
+  border-top: 1px solid var(--pd-border-soft);
+  padding-top: 14px;
+  display: grid;
+  gap: 10px;
+}
+
+.clickup-detail-block h4 {
+  margin: 0;
+  color: var(--pd-text-strong);
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+}
+
+.clickup-detail-block-attachments {
+  gap: 8px;
+}
+
+.clickup-detail-attachments-drop {
+  min-height: 40px;
+  border: 1px solid var(--pd-control-border);
+  border-radius: 9px;
+  background: color-mix(in oklab, var(--pd-control-bg) 74%, transparent);
+  color: var(--pd-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 0 12px;
+  font-size: 0.76rem;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+}
+
+.clickup-detail-attachments-drop button {
+  border: 0;
+  background: transparent;
+  color: color-mix(in oklab, var(--pd-text) 90%, var(--pd-muted) 10%);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  font-size: 0.76rem;
+  padding: 0;
+}
+
+.project-detail-checklists-wrap {
+  min-width: 0;
+}
+
+.project-detail-activity {
+  min-width: 0;
+  min-height: 0;
+  border-inline-start: 1px solid color-mix(in oklab, var(--pd-border-soft) 72%, transparent);
+  background: rgb(
+    var(--task-detail-activity-rail-bg, var(--task-detail-site-bg, var(--bg0)))
+  ) !important;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 60px;
+}
+
+.project-detail-activity-main {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: rgb(var(--task-detail-activity-bg, var(--bg0))) !important;
+}
+
+.project-detail-activity-head {
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px;
+  border-bottom: 1px solid var(--pd-border-soft);
+  background: rgb(var(--task-detail-activity-bg, var(--bg0))) !important;
+}
+
+.project-detail-activity-head h3 {
+  margin: 0;
+  font-size: 1.06rem;
+  font-weight: 700;
+  color: var(--pd-text-strong);
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+}
+
+.project-detail-activity-tools {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.project-detail-activity-tools button {
+  width: 22px;
+  height: 22px;
+  border-radius: 7px;
+  border: 0;
+  background: transparent;
+  color: var(--pd-muted);
+}
+
+.project-detail-activity-rail {
+  position: relative;
+  width: 60px;
+  min-width: 60px;
+  height: 100%;
+  border-inline-start: 1px solid var(--pd-border-soft);
+  display: block;
+  box-sizing: border-box;
+  padding: 12px 8px;
+  background: #111111 !important;
+  font-size: 13px;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', roboto, 'Helvetica Neue', helvetica, arial,
+    sans-serif;
+  font-weight: 400;
+  line-height: 1;
+  color: #eeeeee;
+}
+
+.project-detail-activity-rail button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  margin: 0 auto 8px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: inherit;
+}
+
+.project-detail-activity-rail button.active {
+  color: var(--pd-text-strong);
+  border-color: color-mix(in oklab, var(--pd-control-border) 64%, transparent);
+  background: color-mix(in oklab, var(--pd-control-bg) 72%, transparent);
+}
+
+.project-detail-activity-rail span {
+  position: absolute;
+  inset-inline: 8px;
+  inset-block-end: 12px;
+  display: block;
+  box-sizing: border-box;
+  color: inherit;
+  font-size: 13px;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', roboto, 'Helvetica Neue', helvetica, arial,
+    sans-serif;
+  font-weight: 400;
+  line-height: 1;
+  text-align: center;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+}
+
+.project-detail-activity-list {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 13px 14px;
+  display: grid;
+  align-content: start;
+  gap: 9px;
+  background: rgb(var(--task-detail-activity-bg, var(--bg0))) !important;
+  scrollbar-width: thin;
+  scrollbar-color: var(--pd-scroll-thumb) transparent;
+}
+
+.project-detail-activity-list::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.project-detail-activity-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.project-detail-activity-list::-webkit-scrollbar-thumb {
+  background: var(--pd-scroll-thumb);
+  border-radius: 999px;
+}
+
+.project-detail-activity-list::-webkit-scrollbar-thumb:hover {
+  background: var(--pd-scroll-thumb-hover);
+}
+
+.project-detail-activity-item {
+  display: grid;
+  grid-template-columns: 9px minmax(0, 1fr);
+  align-items: start;
+  gap: 6px;
+  padding: 1px 0;
+}
+
+.project-detail-activity-item.notification-focus-target,
+.project-detail-activity-item.notification-focus-pulse {
+  border-radius: 8px;
+  background: color-mix(in oklab, rgb(var(--primary, 124 219 32)) 14%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, rgb(var(--primary, 124 219 32)) 36%, transparent);
+}
+
+.project-detail-activity-item.notification-focus-pulse {
+  animation: projectNotificationFocusPulse 1.2s ease-out 1;
+}
+
+@keyframes projectNotificationFocusPulse {
+  0% {
+    box-shadow:
+      inset 0 0 0 1px color-mix(in oklab, rgb(var(--primary, 124 219 32)) 54%, transparent),
+      0 0 0 0 color-mix(in oklab, rgb(var(--primary, 124 219 32)) 26%, transparent);
+  }
+  100% {
+    box-shadow:
+      inset 0 0 0 1px color-mix(in oklab, rgb(var(--primary, 124 219 32)) 20%, transparent),
+      0 0 0 12px transparent;
+  }
+}
+
+.project-detail-activity-entry {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+
+.project-detail-activity-line {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 10px;
+}
+
+.project-detail-activity-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--pd-muted) 88%, transparent);
+  margin-top: 7px;
+}
+
+.project-detail-activity-item p {
+  margin: 0;
+  min-width: 0;
+  flex: 1;
+  box-sizing: border-box;
+  display: inline;
+  color: #7b7b7b;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', roboto, 'Helvetica Neue', helvetica, arial,
+    sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.33;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+}
+
+.project-detail-activity-time {
+  display: inline-block;
+  box-sizing: border-box;
+  margin-top: 1px;
+  color: #7b7b7b;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', roboto, 'Helvetica Neue', helvetica, arial,
+    sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.33;
+  white-space: nowrap;
+  text-align: right;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+}
+
+.project-detail-empty-activity {
+  color: var(--pd-muted);
+  font-size: 0.7rem;
+  text-align: center;
+  padding: 20px 8px;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+}
+
+.project-detail-compose {
+  border-top: 1px solid var(--pd-border-soft);
+  padding: 12px 14px;
+  background: rgb(var(--task-detail-activity-bg, var(--bg0))) !important;
+}
+
+.project-detail-compose-box {
+  border: 1px solid color-mix(in oklab, var(--pd-border-soft) 84%, transparent);
+  border-radius: 9px;
+  background: rgb(var(--task-detail-activity-rail-bg, var(--task-detail-site-bg, var(--bg0))));
+  overflow: hidden;
+  transition: none;
+}
+
+.project-detail-compose-box:focus-within {
+  border-color: color-mix(in oklab, var(--pd-border-soft) 84%, transparent);
+  box-shadow: none;
+}
+
+.project-detail-compose-box input {
+  width: 100%;
+  min-height: 36px;
+  border: 0;
+  border-bottom: 1px solid color-mix(in oklab, var(--pd-border-soft) 84%, transparent);
+  background: transparent;
+  color: var(--pd-text-strong);
+  padding: 0 12px;
+  font-size: 0.76rem;
+}
+
+.project-detail-compose-box input:focus {
+  outline: 0;
+}
+
+.project-detail-compose-tools {
+  min-height: 28px;
+  padding: 0 5px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.project-detail-compose-tools button {
+  min-width: 22px;
+  min-height: 22px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--pd-muted);
+  padding: 0 5px;
+  font-size: 0.66rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.project-detail-compose-tools button:disabled {
+  opacity: 0.56;
+}
+
+.project-detail-compose-tools .project-detail-compose-chip {
+  min-width: 62px;
+  border-color: color-mix(in oklab, var(--pd-control-border) 76%, transparent);
+  background: color-mix(in oklab, var(--pd-control-bg) 72%, transparent);
+  color: color-mix(in oklab, var(--pd-text) 88%, var(--pd-muted) 12%);
+  font-size: 0.68rem;
+  font-weight: 700;
+}
+
+.project-detail-compose-tools .project-detail-compose-send {
+  margin-inline-start: auto;
+  border-color: color-mix(in oklab, var(--pd-control-border) 74%, transparent);
+  background: color-mix(in oklab, var(--pd-control-bg) 74%, transparent);
+  color: color-mix(in oklab, var(--pd-text) 88%, var(--pd-muted) 12%);
+}
+
+.project-detail-compose-tools .project-detail-compose-send:not(:disabled) {
+  color: var(--pd-text-strong);
+}
+
+.project-detail-compose-tools .project-detail-compose-send i {
+  font-size: 0.74rem;
+}
+
+:host ::ng-deep .clickup-project-fields search-select {
+  display: block;
+  width: 100%;
+}
+
+:host ::ng-deep .clickup-project-fields search-select .ss-trigger,
+:host ::ng-deep .clickup-project-fields search-select .ss-inline-trigger {
+  min-height: 28px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+:host ::ng-deep .clickup-project-fields search-select .ss-label,
+:host ::ng-deep .clickup-project-fields search-select .ss-inline-input {
+  color: var(--pd-text) !important;
+  font-size: 0.82rem !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+}
+
+:host ::ng-deep .clickup-project-fields search-select .ss-label.placeholder,
+:host ::ng-deep .clickup-project-fields search-select .ss-inline-input::placeholder {
+  color: var(--pd-muted) !important;
+}
+
+:host ::ng-deep .clickup-project-fields search-select .ss-caret-trigger {
+  width: 24px;
+  height: 24px;
+  border-radius: 0;
+}
+
+:host ::ng-deep .clickup-project-fields date-input {
+  display: block;
+  width: 100%;
+}
+
+:host ::ng-deep .clickup-project-fields date-input .date-trigger {
+  min-height: 28px !important;
+  height: 28px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+:host ::ng-deep .clickup-project-fields date-input .date-text {
+  color: var(--pd-text) !important;
+  font-size: 0.82rem !important;
+  letter-spacing: 0 !important;
+}
+
+:host ::ng-deep .clickup-project-fields date-input .date-text.placeholder {
+  color: var(--pd-muted) !important;
+}
+
+:host ::ng-deep .project-detail-checklists-wrap .overview {
+  background: transparent !important;
+}
+
+:host ::ng-deep .project-detail-checklists-wrap .ov-scroll {
+  overflow: visible !important;
+}
+
+:host ::ng-deep .project-detail-checklists-wrap .checklists {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+  border-top: 0 !important;
+}
+
+:host ::ng-deep .project-detail-checklists-wrap .row-head {
+  padding-top: 0 !important;
+}
+
+:host ::ng-deep .project-detail-checklists-wrap .head-icon,
+:host ::ng-deep .project-detail-checklists-wrap .head-block .h {
+  display: none !important;
+}
+
+:host ::ng-deep .project-detail-checklists-wrap .head-left {
+  gap: 0 !important;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.project-detail-validation-action:focus-visible,
+.project-detail-validation-pill:focus-visible,
+.mobile-section-btn:focus-visible,
+.project-detail-pill-action:focus-visible,
+.project-detail-pill-attention:focus-visible {
+  outline: 2px solid color-mix(in oklab, rgb(var(--primary)) 34%, transparent);
+  outline-offset: 2px;
+}
+
+@media (max-width: 1240px) {
+  :host {
+    --pd-activity-width: 340px;
+    --pd-main-max-width: 920px;
+    --pd-sidebar-width: 228px;
+  }
+
+  .clickup-detail-fields {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .clickup-detail-field {
+    grid-template-columns: 132px minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 1080px) {
+  :host {
+    --pd-main-max-width: 100%;
+  }
+
+  .project-detail-header {
+    gap: 10px;
+  }
+
+  .project-detail-header-meta {
+    gap: 6px;
+  }
+
+  .project-detail-created,
+  .project-detail-head-link span {
+    display: none;
+  }
+
+  .mobile-sections {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .mobile-section-btn {
+    border: 1px solid color-mix(in oklab, rgb(var(--border-strong)) 58%, transparent);
+    background: color-mix(in oklab, rgb(var(--bg1)) 88%, transparent);
+    color: color-mix(in oklab, rgb(var(--fg)) 66%, transparent);
+    min-height: 36px;
+    border-radius: 12px;
+    padding: 0 14px;
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+
+  .mobile-section-btn.is-active {
+    border-color: color-mix(in oklab, rgb(var(--primary)) 34%, transparent);
+    color: color-mix(in oklab, rgb(var(--primary)) 78%, rgb(var(--fg)));
+    background: color-mix(in oklab, rgb(var(--primary)) 9%, rgb(var(--bg1)) 91%);
+  }
+
+  .project-detail-content {
+    grid-template-columns: 1fr;
+  }
+
+  .project-detail-sidebar-pane {
+    border-inline-end: 0;
+    border-bottom: 1px solid color-mix(in oklab, var(--pd-border-soft) 76%, transparent);
+    max-height: 240px;
+  }
+
+  .project-detail-main {
+    padding: 20px 18px 18px;
+  }
+
+  .project-detail-activity {
+    border-inline-start: 0;
+    border-top: 1px solid color-mix(in oklab, var(--pd-border-soft) 76%, transparent);
+    min-height: 320px;
+    max-height: 420px;
+  }
+
+  .project-detail-content.mobile-details-active .project-detail-activity {
+    display: none;
+  }
+
+  .project-detail-content.mobile-activity-active .project-detail-sidebar-pane,
+  .project-detail-content.mobile-activity-active .project-detail-main {
+    display: none;
+  }
+}
+
+@media (max-width: 720px) {
+  .project-detail-header-controls {
+    display: none;
+  }
+
+  .project-detail-breadcrumb {
+    font-size: 0.84rem;
+  }
+
+  .project-detail-main {
+    padding: 18px 14px 16px;
+  }
+
+  .clickup-detail-field {
+    grid-template-columns: 100px minmax(0, 1fr);
+    gap: 7px;
+  }
+
+  .clickup-detail-block h4 {
+    font-size: 0.86rem;
+  }
+
+  .project-detail-validation-title {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .project-detail-activity {
+    min-height: 300px;
+    max-height: none;
+  }
+
+  .project-detail-activity-head {
+    padding: 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-detail-validation-pill,
+  .mobile-section-btn,
+  .project-detail-head-icon,
+  .project-detail-head-link,
+  .project-detail-pill {
+    transition: none !important;
+    animation: none !important;
+  }
+}

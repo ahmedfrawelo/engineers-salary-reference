@@ -1,0 +1,34 @@
+<div
+  class="ssk"
+  [class.ssk-list]="variant === 'list'"
+  [style.--ssk-columns]="columnsArray.length"
+  [attr.aria-busy]="true"
+>
+  @if (variant === 'list') {
+    @for (row of rowsArray; track row) {
+      <div class="ssk-list-row">
+        <span class="ssk-avatar"></span>
+        <div class="ssk-copy">
+          <span class="ssk-line" [style.width.%]="rowPrimaryWidth(row)"></span>
+          <span class="ssk-line ssk-line-muted" [style.width.%]="rowSecondaryWidth(row)"></span>
+        </div>
+        <span class="ssk-chip"></span>
+      </div>
+    }
+  } @else {
+    @if (header) {
+      <div class="ssk-table-row is-header">
+        @for (column of columnsArray; track column) {
+          <span class="ssk-line"></span>
+        }
+      </div>
+    }
+    @for (row of rowsArray; track row) {
+      <div class="ssk-table-row">
+        @for (column of columnsArray; track column) {
+          <span class="ssk-line" [style.width.%]="tableCellWidth(row, column)"></span>
+        }
+      </div>
+    }
+  }
+</div>

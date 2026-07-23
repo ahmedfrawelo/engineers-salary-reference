@@ -1,0 +1,484 @@
+:host {
+  --op-font-family: var(
+    --app-theme-font-sans,
+    var(
+      --app-font-family-sans,
+      -apple-system,
+      BlinkMacSystemFont,
+      'Segoe UI',
+      roboto,
+      'Helvetica Neue',
+      helvetica,
+      arial,
+      sans-serif
+    )
+  );
+  --op-border-color: var(--app-color-outline);
+  --op-border-width: var(--app-outline-width, 0.5px);
+  --op-border-stroke: var(--app-outline-stroke);
+  --op-divider-stroke: var(--app-divider-stroke);
+  --op-control-stroke: var(--app-control-stroke);
+  --op-panel-bg: var(--app-color-overlay-panel);
+  --op-header-bg: var(--app-color-overlay-header);
+  --op-body-bg: var(--app-color-overlay-body);
+  --op-icon-bg: var(--app-color-surface);
+  --op-panel-border: var(--op-border-stroke);
+  --op-panel-radius: 14px;
+  --op-panel-radius-compact: 12px;
+  --op-panel-radius-mobile: 12px;
+  --op-panel-shadow: none;
+  --op-panel-filter: none;
+  --op-header-padding: 9px 12px;
+  --op-header-border: var(--op-divider-stroke);
+  --op-header-radius: 0;
+  --op-header-min-height: auto;
+  --op-title-size: var(--app-type-panel-title-size);
+  --op-title-size-mobile: var(--app-type-panel-title-size);
+  --op-title-weight: var(--app-type-panel-title-weight);
+  --op-title-letter-spacing: 0.2px;
+  --op-title-line-height: 1.1;
+  --op-title-color: var(--app-color-panel-heading);
+  --op-subtitle-display: block;
+  --op-subtitle-size: var(--app-type-meta-size);
+  --op-subtitle-weight: var(--app-type-meta-weight);
+  --op-subtitle-letter-spacing: 0.2px;
+  --op-subtitle-color: var(--app-color-panel-meta-text);
+  --op-title-icon-display: inline-flex;
+  --op-title-icon-size: 20px;
+  --op-title-icon-color: color-mix(
+    in oklab,
+    var(--app-color-primary) 70%,
+    var(--app-color-text-body) 40%
+  );
+  --op-actions-gap: 8px;
+  --op-actions-margin-inline-start: 0;
+  --op-icon-size: 34px;
+  --op-icon-size-mobile: 30px;
+  --op-icon-radius: 10px;
+  --op-icon-border: var(--op-control-stroke);
+  --op-icon-color: var(--app-color-icon-neutral);
+  --op-icon-shadow: none;
+  --op-icon-hover-filter: brightness(1.06);
+  --op-icon-hover-transform: none;
+  --op-icon-active-transform: scale(0.97);
+  --op-icon-danger-border-color: color-mix(in oklab, var(--app-color-danger) 65%, transparent);
+  --op-icon-danger-bg: color-mix(in oklab, var(--app-color-danger) 16%, var(--app-color-surface));
+  --op-icon-danger-color: var(--app-color-danger);
+  --op-body-display: block;
+  --op-body-overflow: auto;
+  display: block;
+  width: 0;
+  height: 0;
+  overflow: visible;
+  line-height: 0;
+  font-size: 0;
+  font-family: var(--op-font-family);
+}
+
+/* ===== Backdrop ===== */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 5000;
+  overflow: hidden;
+  overscroll-behavior: contain;
+  padding: 0;
+  margin: 0;
+  display: block;
+  opacity: 1;
+  pointer-events: auto;
+}
+.overlay-backdrop {
+  position: fixed;
+  inset: 0;
+  pointer-events: auto;
+  z-index: 0;
+  background: var(--op-backdrop-surface, transparent);
+  backdrop-filter: var(--op-backdrop-filter, none);
+  -webkit-backdrop-filter: var(--op-backdrop-filter, none);
+  opacity: 1;
+  transition:
+    opacity 0.18s ease-out,
+    background 0.22s ease-out,
+    backdrop-filter 0.22s ease-out;
+}
+.overlay-backdrop::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: var(--op-backdrop-glow, transparent);
+}
+.overlay.overlay-appear .overlay-backdrop {
+  animation: backdropIn 0.18s ease-out both;
+}
+@keyframes backdropIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ===== Panel ===== */
+.panel {
+  position: fixed;
+  background: var(--op-panel-bg);
+  border: var(--op-panel-border);
+  border-radius: var(--op-panel-radius);
+  color: rgb(var(--fg));
+  font-family: var(--op-font-family);
+  font-size: 14px;
+  line-height: 1.35;
+  box-shadow: none;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  touch-action: auto;
+  -webkit-tap-highlight-color: transparent;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  transform: translate3d(0, 0, 0);
+  filter: var(--op-panel-filter);
+  pointer-events: auto;
+  z-index: 1;
+}
+
+.panel.layout-pending {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  animation: none !important;
+  transition: none !important;
+}
+
+/* ????????? (spring) */
+.panel.appear {
+  animation: overlaySnapGlobal 0.2s cubic-bezier(0.22, 0.82, 0.36, 1) both;
+  transform-origin: 50% 12%;
+  will-change: transform, opacity, filter;
+}
+@keyframes overlaySnapGlobal {
+  0% {
+    opacity: 0;
+    transform: translateY(12px) scale(0.97);
+    filter: none;
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: none;
+  }
+}
+
+/* ????? ????????? */
+.panel.appear.anim-slide {
+  animation: slideUp 0.22s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.panel.appear.anim-scale {
+  animation: scaleIn 0.18s ease-out both;
+}
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.panel.appear.anim-morph {
+  animation: morphIn 0.24s cubic-bezier(0.16, 0.8, 0.2, 1) both;
+}
+@keyframes morphIn {
+  0% {
+    opacity: 0;
+    border-radius: 20px;
+    transform: translateY(8px) scale(0.97);
+    filter: saturate(0.92) blur(0.2px);
+  }
+  60% {
+    opacity: 1;
+    border-radius: 14px;
+    transform: translateY(-1px) scale(1.002);
+    filter: none;
+  }
+  100% {
+    opacity: 1;
+    border-radius: 14px;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.panel.is-drawer.appear,
+.panel.is-drawer.appear.anim-slide,
+.panel.is-drawer.appear.anim-scale,
+.panel.is-drawer.appear.anim-morph {
+  animation: drawerSlideIn 0.2s cubic-bezier(0.2, 0.82, 0.24, 1) both;
+  transform-origin: 100% 50%;
+  will-change: transform, opacity;
+}
+@keyframes drawerSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ????? ????? */
+.panel.dragging {
+  transition: transform 0s;
+  cursor: grabbing;
+}
+.panel.compact {
+  border-radius: var(--op-panel-radius-compact);
+}
+
+.panel.is-drawer {
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.panel.is-dialog .modal-hdr {
+  padding: 7px 10px;
+}
+.panel.is-dialog .body {
+  padding: 10px 12px 6px;
+}
+
+.modal-hdr {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: var(--op-header-min-height);
+  padding: var(--op-header-padding);
+  background: var(--op-header-bg);
+  border-bottom: var(--op-header-border);
+  border-radius: var(--op-header-radius);
+  cursor: move;
+  user-select: none;
+  touch-action: none;
+}
+.modal-hdr.compact {
+  padding: 6px 10px;
+}
+.panel.is-drawer .modal-hdr {
+  cursor: default;
+  touch-action: auto;
+}
+.modal-hdr .ttl {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.ttl .ttl-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.ttl .title {
+  font-weight: var(--op-title-weight);
+  font-size: var(--op-title-size);
+  letter-spacing: var(--op-title-letter-spacing);
+  line-height: var(--op-title-line-height);
+  color: var(--op-title-color);
+}
+.ttl .subtitle {
+  display: var(--op-subtitle-display);
+  font-size: var(--op-subtitle-size);
+  color: var(--op-subtitle-color);
+  font-weight: var(--op-subtitle-weight);
+  letter-spacing: var(--op-subtitle-letter-spacing);
+}
+.ttl .title-icon {
+  display: var(--op-title-icon-display);
+  align-items: center;
+  justify-content: center;
+  width: var(--op-title-icon-size);
+  height: var(--op-title-icon-size);
+  color: var(--op-title-icon-color);
+}
+.ttl .title-icon svg {
+  width: 100%;
+  height: 100%;
+  stroke: currentColor;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.hdr-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--op-actions-gap);
+  margin-inline-start: var(--op-actions-margin-inline-start);
+}
+
+.header-action {
+  height: var(--op-icon-size);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: var(--op-icon-border);
+  background: color-mix(in oklab, var(--app-color-primary) 10%, var(--op-icon-bg));
+  color: var(--op-title-color);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  transition:
+    filter 0.12s,
+    transform 0.06s,
+    border-color 0.12s,
+    background 0.12s;
+  box-shadow: var(--op-icon-shadow);
+}
+
+.header-action:hover {
+  filter: var(--op-icon-hover-filter);
+}
+
+.header-action:active {
+  transform: var(--op-icon-active-transform);
+}
+
+.header-action i {
+  font-size: 13px;
+  line-height: 1;
+}
+.icon.square {
+  width: var(--op-icon-size);
+  height: var(--op-icon-size);
+  border-radius: var(--op-icon-radius);
+  border: var(--op-icon-border);
+  background: var(--op-icon-bg);
+  color: var(--op-icon-color);
+  display: grid;
+  place-items: center;
+  transition:
+    filter 0.12s,
+    transform 0.06s,
+    border-color 0.12s,
+    background 0.12s;
+  box-shadow: var(--op-icon-shadow);
+}
+.icon.square:hover {
+  filter: var(--op-icon-hover-filter);
+  transform: var(--op-icon-hover-transform);
+}
+.icon.square i {
+  font-size: 14px;
+  line-height: 1;
+  display: inline-block;
+}
+.icon.square hugeicons-icon {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  line-height: 0;
+  color: inherit;
+  pointer-events: none;
+}
+.icon.square:active {
+  transform: var(--op-icon-active-transform);
+}
+.icon.square.ghost {
+  background: transparent;
+}
+.icon.square.danger {
+  border-color: var(--op-icon-danger-border-color);
+  background: var(--op-icon-danger-bg);
+  color: var(--op-icon-danger-color);
+}
+.icon.square.accent {
+  border-color: color-mix(in oklab, rgb(var(--primary)) 75%, transparent);
+  background: color-mix(in oklab, rgb(var(--primary)) 18%, rgb(var(--surface)));
+  color: rgb(var(--primary));
+}
+
+.body {
+  flex: 1;
+  min-height: 0;
+  padding: 10px 14px 8px;
+  display: var(--op-body-display);
+  overflow: var(--op-body-overflow);
+  background: var(--op-body-bg);
+  pointer-events: auto;
+}
+.body.compact {
+  padding: 6px;
+}
+
+@media (max-width: 768px) {
+  .panel {
+    border-radius: var(--op-panel-radius-mobile);
+  }
+  .body {
+    padding: 9px 12px 6px;
+  }
+  .icon.square {
+    width: var(--op-icon-size-mobile);
+    height: var(--op-icon-size-mobile);
+  }
+  .header-action {
+    height: var(--op-icon-size-mobile);
+    padding: 0 10px;
+  }
+  .ttl .title {
+    font-size: var(--op-title-size-mobile);
+  }
+}
+
+@media (max-width: 640px) {
+  .header-action {
+    width: var(--op-icon-size-mobile);
+    padding: 0;
+    border-radius: var(--op-icon-radius);
+  }
+
+  .header-action span {
+    display: none;
+  }
+}
+/* ?????? Reduce Motion */
+@media (prefers-reduced-motion: reduce) {
+  .panel.appear,
+  .panel.appear.anim-slide,
+  .panel.appear.anim-scale,
+  .panel.appear.anim-morph,
+  .overlay.overlay-appear .overlay-backdrop {
+    animation-duration: 0.001s;
+  }
+}
+
+/* ?????? Reduce Motion */
+@media (prefers-reduced-motion: reduce) {
+  .panel.appear,
+  .panel.appear.anim-slide,
+  .panel.appear.anim-scale,
+  .panel.appear.anim-morph,
+  .overlay.overlay-appear .overlay-backdrop {
+    animation-duration: 0.001s;
+  }
+}

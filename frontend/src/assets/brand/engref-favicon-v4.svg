@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title description">
+  <title id="title">ENGREF</title>
+  <desc id="description">Large ER monogram with a connected plus and baseline.</desc>
+  <path fill="#f2f5ec" d="M28 8H1v8h18v8H3v8h16v11H1v8h27V8Z"/>
+  <path fill="#8bd21b" d="M24 8h17c9 0 14 5 14 13 0 6-3 10-8 12l10 18H47l-8-15h-6v15h-9V8Zm9 8v12h8c3 0 5-2 5-6s-2-6-6-6h-7Z"/>
+  <rect x="52" y="1" width="5" height="19" fill="#8bd21b"/>
+  <rect x="39" y="8" width="24" height="5" fill="#8bd21b"/>
+  <rect x="1" y="57" width="62" height="6" fill="#8bd21b"/>
+</svg>

@@ -1,0 +1,57 @@
+<section class="tab-grid tab-grid--development">
+  <article class="panel panel-development-availability">
+    <header class="section-head">
+      <h2>Availability and wellbeing</h2>
+      <p>Coverage planning and wellbeing cadence.</p>
+    </header>
+    <ul class="stack-list compact">
+      @for (slot of availability; track slot.title) {
+        <li>
+          <div class="stack-head">
+            <strong>{{ slot.title }}</strong>
+            <span>{{ slot.value }}</span>
+          </div>
+          <p>{{ slot.caption }}</p>
+        </li>
+      }
+    </ul>
+    @if (wellbeingNote) {
+      <p class="note">{{ wellbeingNote }}</p>
+    }
+  </article>
+
+  <article class="panel panel-development-learning">
+    <header class="section-head">
+      <h2>Learning and credentials</h2>
+      <p>Active development plans and certifications.</p>
+    </header>
+    <section class="subsection">
+      <h3>Active learning</h3>
+      <ul class="stack-list compact">
+        @for (item of learning; track item.name) {
+          <li>
+            <div class="stack-head">
+              <strong>{{ item.name }}</strong>
+              <span>{{ item.due }}</span>
+            </div>
+            <p>{{ item.provider }}</p>
+          </li>
+        }
+      </ul>
+    </section>
+    <section class="subsection">
+      <h3>Certifications</h3>
+      <ul class="stack-list compact">
+        @for (cert of certifications; track cert.name) {
+          <li>
+            <div class="stack-head">
+              <strong>{{ cert.name }}</strong>
+              <span>{{ cert.status }}</span>
+            </div>
+            <p>{{ cert.issuer }}</p>
+          </li>
+        }
+      </ul>
+    </section>
+  </article>
+</section>

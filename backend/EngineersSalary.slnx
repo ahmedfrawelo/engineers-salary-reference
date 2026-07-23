@@ -1,0 +1,9 @@
+<Solution>
+  <Project Path="EngineersSalary.Api/EngineersSalary.Api.csproj" />
+  <Project Path="EngineersSalary.Application/EngineersSalary.Application.csproj" />
+  <Project Path="EngineersSalary.Contracts/EngineersSalary.Contracts.csproj" />
+  <Project Path="EngineersSalary.Domain/EngineersSalary.Domain.csproj" />
+  <Project Path="EngineersSalary.Infrastructure/EngineersSalary.Infrastructure.csproj" />
+  <Project Path="EngineersSalary.PostgreSqlMigrations/EngineersSalary.PostgreSqlMigrations.csproj" />
+  <Project Path="EngineersSalary.Tests/EngineersSalary.Tests.csproj" />
+</Solution>

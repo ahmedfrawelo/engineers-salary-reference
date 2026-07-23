@@ -1,0 +1,315 @@
+.data-grid-table tbody tr {
+  opacity: 1 !important;
+}
+
+.grid-header-bar {
+  position: relative;
+  z-index: 150;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 4px 12px 6px;
+  min-height: 34px;
+  border-bottom: none;
+  background: var(--dg-bg-header) !important;
+  outline: none !important;
+  transition: none !important;
+  isolation: isolate;
+
+  // Focus within for keyboard navigation
+  &:focus-within {
+    box-shadow: 0 0 0 2px var(--focus-color-alt);
+    border-radius: 999px;
+  }
+
+  // ABSOLUTE LOCK: Force background to stay same in ALL states
+  &,
+  &:hover,
+  &:active,
+  &:focus,
+  &:focus-within,
+  &[data-drag-over] {
+    background: var(--dg-bg-header) !important;
+    background-color: var(--dg-bg-header) !important;
+    background-image: none !important;
+    filter: none !important;
+    opacity: 1 !important;
+    transition: none !important;
+    animation: none !important;
+  }
+
+  // Prevent any other pseudo-elements from showing
+  &::after {
+    display: none !important;
+    content: none !important;
+    background: none !important;
+  }
+}
+
+.groupbar-slot {
+  align-self: stretch;
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 8px;
+
+  // Focus within for composite component
+  &:focus-within {
+    box-shadow: 0 0 0 2px var(--focus-color-alt);
+    border-radius: 8px;
+  }
+
+  // Lock background during drag operations
+  &[data-drag-over] {
+    background: transparent !important;
+    background-color: transparent !important;
+  }
+
+  .group-panel {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    flex: 1 1 auto;
+    width: 100%;
+    min-width: 0;
+    gap: 6px;
+    min-height: 28px;
+    padding: 2px 0;
+    border-radius: 0;
+    border: none;
+    background: transparent !important;
+    outline: none !important;
+    outline-width: 0 !important;
+    outline-style: none !important;
+    outline-color: transparent !important;
+    outline-offset: 0 !important;
+    transition: none !important;
+
+    &,
+    *,
+    &:focus,
+    &:focus-visible,
+    &:focus-within,
+    &:hover,
+    &:active,
+    &.active,
+    &[data-drag-over],
+    *:focus,
+    *:focus-visible {
+      outline: none !important;
+      outline-width: 0 !important;
+      outline-style: none !important;
+      outline-color: transparent !important;
+      outline-offset: 0 !important;
+      box-shadow: none !important;
+      background: transparent !important;
+    }
+
+    &:hover {
+      background: transparent !important;
+    }
+
+    &.active {
+      background: transparent !important;
+    }
+
+    // Prevent any background changes during drag operations
+    &[data-drag-over] {
+      background: transparent !important;
+      background-color: transparent !important;
+    }
+
+    .group-panel-icon {
+      color: var(--dg-group-panel-icon);
+      opacity: 0.9;
+      margin-inline-end: 4px;
+      transition: color 0.2s ease;
+      width: 16px;
+      height: 16px;
+    }
+
+    .group-panel-text {
+      color: var(--dg-fg-muted);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+    }
+
+    .group-placeholder {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 28px;
+      padding: 0 8px;
+      border-radius: 8px;
+      border: 1px dashed var(--dg-group-placeholder-border);
+      background: var(--dg-group-placeholder-bg);
+      outline: none;
+    }
+
+    .group-chips {
+      display: inline-flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .group-chip {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      min-height: 24px;
+      padding: 0 9px;
+      border-radius: 999px;
+      border: 1px solid var(--dg-overlay-border);
+      background: var(--dg-group-chip-bg);
+      cursor: grab;
+      transition:
+        border-color 0.16s ease,
+        background-color 0.16s ease,
+        transform 0.16s ease;
+      box-shadow: none;
+      outline: none !important;
+      font-size: 12px;
+
+      &:focus,
+      &:focus-visible {
+        outline: none !important;
+        box-shadow: none !important;
+      }
+
+      &:hover {
+        border-color: var(--dg-group-chip-border-hover);
+        background: var(--dg-group-chip-bg-hover);
+        transform: translateY(-1px);
+      }
+
+      &:active {
+        cursor: grabbing;
+        transform: scale(0.98);
+        outline: none !important;
+      }
+
+      .chip-drag-handle {
+        color: var(--dg-fg-muted);
+        opacity: 0.6;
+        transition: opacity 0.2s ease;
+        flex-shrink: 0;
+      }
+
+      &:hover .chip-drag-handle {
+        opacity: 1;
+        color: var(--dg-fg-soft);
+      }
+
+      .chip-label {
+        font-weight: 600;
+        font-size: 11px;
+        color: var(--dg-fg-strong);
+        letter-spacing: 0.01em;
+      }
+
+      .chip-remove {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 14px;
+        height: 14px;
+        padding: 0;
+        background: transparent;
+        border: none;
+        border-radius: 4px;
+        color: var(--dg-fg-soft);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        flex-shrink: 0;
+
+        .chip-remove-icon {
+          width: 10px;
+          height: 10px;
+        }
+
+        &:hover {
+          background: var(--dg-group-chip-remove-hover-bg);
+          color: var(--dg-danger-text);
+        }
+
+        &:active {
+          transform: scale(0.95);
+        }
+      }
+    }
+
+    // Arrow separator between chips
+    .group-chip-separator {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 1px;
+      color: var(--dg-fg-muted);
+      flex-shrink: 0;
+
+      .group-chip-separator-icon {
+        width: 12px;
+        height: 12px;
+        opacity: 0.6;
+      }
+    }
+  }
+}
+
+// Group Actions (Expand/Collapse/Clear buttons)
+.group-actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  padding-left: 8px;
+  border-left: 1px solid var(--dg-group-actions-divider);
+}
+
+.group-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 1px solid var(--dg-overlay-border);
+  border-radius: 8px;
+  background: var(--dg-group-action-bg);
+  color: var(--dg-fg-soft);
+  cursor: pointer;
+  transition:
+    border-color 0.16s ease,
+    background-color 0.16s ease,
+    color 0.16s ease,
+    transform 0.16s ease;
+
+  .group-action-icon {
+    width: 13px;
+    height: 13px;
+  }
+
+  &:hover {
+    border-color: var(--dg-group-action-border-hover);
+    background: var(--dg-group-action-bg-hover);
+    color: var(--dg-fg-strong);
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0) scale(0.95);
+  }
+
+  &.danger {
+    &:hover {
+      border-color: var(--dg-danger-border);
+      background: var(--dg-danger-bg);
+      color: var(--dg-danger-text);
+    }
+  }
+}

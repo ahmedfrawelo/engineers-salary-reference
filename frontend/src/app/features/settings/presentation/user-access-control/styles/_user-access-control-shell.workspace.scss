@@ -1,0 +1,394 @@
+@use '../../../../../shared/styles/stretch-tabs' as stretchTabs;
+
+.access-profile-sidebar {
+  display: none;
+}
+
+.access-sidebar-block {
+  display: none;
+}
+
+.access-sidebar-block + .access-sidebar-block {
+  border-top: 0;
+}
+
+.access-sidebar-head,
+.access-sidebar-empty {
+  display: none;
+}
+
+.access-sidebar-empty {
+  min-height: 0;
+}
+
+.access-header-actions,
+.access-toolbar-slot,
+.access-toolbar-actions {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.access-toolbar-slot,
+.access-toolbar-actions {
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.access-toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-width: 0;
+}
+
+.access-toolbar--profile {
+  flex: 1 1 auto;
+}
+
+.access-toolbar-filters {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.access-view-strip {
+  display: flex;
+  justify-content: center;
+  min-width: 0;
+  padding: 2px 18px 8px;
+}
+
+.access-tabs {
+  --stretch-tabs-current-inline-padding: 8px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  min-width: 0;
+  width: 100%;
+  overflow: visible;
+}
+
+.access-tab-list {
+  display: flex;
+  flex: 1 1 auto;
+  width: 100%;
+  align-items: flex-end;
+  gap: 4px;
+  justify-content: center;
+  min-width: 0;
+  position: relative;
+  z-index: 2;
+}
+
+@include stretchTabs.stretch-underline-tabs-theme(
+  $tabs-selector: '.access-tabs',
+  $tab-selector: '.access-tab-list .access-tab',
+  $label-selector: '.tab-label',
+  $indicator-selector: '.stretch-tabs-indicator',
+  $enter-keyframes-name: access-control-tab-enter,
+  $badge-keyframes-name: access-control-tab-pop,
+  $tab-stagger-delays: (
+    0.02s,
+    0.05s,
+    0.08s
+  ),
+  $tabs-gap: 4px,
+  $tabs-padding-bottom: 10px,
+  $tabs-justify: center,
+  $tabs-divider: 1px solid color-mix(in oklab, rgb(var(--border)) 55%, transparent),
+  $tabs-divider-bleed: calc(var(--stretch-tabs-current-inline-padding) * -1),
+  $tab-height: 42px,
+  $tab-padding: 4px 8px 13px,
+  $tab-gap: 0,
+  $tab-color: color-mix(in oklab, rgb(var(--fg)) 72%, transparent),
+  $tab-hover-color: color-mix(in oklab, rgb(var(--fg)) 92%, rgb(var(--primary)) 8%),
+  $tab-active-color: rgb(var(--primary)),
+  $label-size: 12px,
+  $label-weight: 650,
+  $indicator-height: 2px,
+  $indicator-color: rgb(var(--primary))
+);
+
+.tool-chip,
+.access-toolbar-note {
+  min-height: 30px;
+  border-radius: 999px;
+  padding: 0 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid rgb(var(--border) / 0.42);
+  background: rgb(var(--bg1));
+  color: rgb(var(--fg) / 0.88);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+button.tool-chip {
+  cursor: pointer;
+}
+
+.tool-chip:hover,
+button.tool-chip:focus-visible {
+  border-color: rgb(var(--primary) / 0.28);
+  color: rgb(var(--fg));
+  outline: none;
+}
+
+.tool-chip.active,
+.access-live-chip.active {
+  background: rgb(var(--primary) / 0.12);
+  border-color: rgb(var(--primary) / 0.28);
+  color: rgb(var(--primary));
+}
+
+.access-live-chip.is-syncing {
+  color: rgb(var(--warning, 225 179 84));
+  border-color: rgb(var(--warning, 225 179 84) / 0.35);
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: currentColor;
+  box-shadow: 0 0 0 4px color-mix(in oklab, currentColor 18%, transparent);
+}
+
+.access-metric-chip strong {
+  font-size: 0.92rem;
+}
+
+.access-metric-chip.is-active {
+  color: rgb(68 197 133);
+}
+
+.access-metric-chip.is-suspended {
+  color: rgb(232 92 92);
+}
+
+.access-metric-chip.is-invited {
+  color: rgb(226 183 69);
+}
+
+.access-huge-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  vertical-align: middle;
+}
+
+.access-toolbar-note {
+  border-style: solid;
+  color: rgb(var(--muted));
+}
+
+.access-toolbar-note--stamp {
+  border-style: solid;
+}
+
+.access-scope-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.access-section {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 18px;
+  border-radius: 18px;
+  border: 1px solid rgb(var(--border) / 0.38);
+  background: color-mix(in oklab, rgb(var(--surface)) 94%, rgb(var(--bg1)) 6%);
+  box-shadow: none;
+}
+
+.access-section-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.access-section-head h2,
+.access-section-head h3,
+.role-form h3,
+.perm-head h3 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.access-section-kicker {
+  margin: 0 0 6px;
+  font-size: 0.73rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgb(var(--primary));
+}
+
+.muted {
+  margin: 0;
+  color: rgb(var(--muted));
+  font-size: 0.9rem;
+}
+
+.access-data-strip {
+  display: grid;
+  grid-template-columns: minmax(190px, 240px) minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 12px;
+  padding: 12px 14px;
+  border-top: 1px solid rgb(var(--border) / 0.18);
+  background: transparent;
+}
+
+.access-data-strip:last-of-type {
+  border-bottom: 1px solid rgb(var(--border) / 0.18);
+}
+
+.access-data-strip__head,
+.access-data-strip__empty {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.access-data-strip__head h2,
+.access-data-strip__empty h2 {
+  margin: 0;
+  font-size: 0.98rem;
+  line-height: 1.2;
+}
+
+.access-data-strip--editor {
+  grid-template-columns: 1fr;
+}
+
+.access-data-strip__head--editor {
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.access-data-strip__fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+  align-items: end;
+  min-width: 0;
+}
+
+.access-data-strip__fields--create {
+  grid-template-columns: repeat(5, minmax(120px, 1fr));
+}
+
+.access-data-strip__fields--editor {
+  grid-template-columns: repeat(6, minmax(130px, 1fr));
+}
+
+.access-data-strip__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.access-data-strip--editor .access-editor-summary,
+.access-data-strip--editor .access-data-strip__actions {
+  justify-content: flex-start;
+}
+
+.access-data-strip__empty {
+  grid-column: 1 / -1;
+  min-height: 96px;
+  justify-content: center;
+}
+
+.access-content-tools,
+.access-content-tools__controls,
+.access-content-tools__meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.access-content-tools {
+  justify-content: space-between;
+  padding: 12px 14px;
+  border-bottom: 1px solid rgb(var(--border) / 0.18);
+}
+
+.access-content-tools--permissions {
+  flex: 0 0 auto;
+  padding: 8px 0 12px;
+  border-bottom: 0;
+}
+
+.access-content-tools--permissions .access-content-tools__meta {
+  justify-content: flex-end;
+  flex: 1 1 auto;
+}
+
+.access-create-grid,
+.access-editor-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  align-items: end;
+}
+
+.field,
+.edit-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.edit-field--status-switch {
+  justify-content: flex-start;
+}
+
+.field > span,
+.edit-field > span {
+  font-size: 0.73rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgb(var(--muted));
+}
+
+.field input,
+.edit-field input {
+  width: 100%;
+  min-height: 36px;
+  border-radius: 10px;
+  border: 1px solid rgb(var(--border) / 0.45);
+  background: color-mix(in oklab, rgb(var(--bg1)) 84%, rgb(var(--surface)) 16%);
+  color: rgb(var(--fg));
+  padding: 0 11px;
+  font-size: 0.88rem;
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    background-color 0.18s ease;
+}
+
+.field input:focus,
+.edit-field input:focus {
+  outline: none;
+  border-color: rgb(var(--primary) / 0.44);
+  box-shadow: 0 0 0 3px rgb(var(--primary) / 0.12);
+}

@@ -1,0 +1,168 @@
+@if (open) {
+  <section
+    class="lce-popover"
+    [style.width.px]="width"
+    role="dialog"
+    (pointerdown)="$event.stopPropagation()"
+    (click)="$event.stopPropagation()"
+  >
+    <header class="lce-head">
+      <span class="lce-title">{{ title }}</span>
+      <button class="lce-close" type="button" aria-label="Close editor" (click)="close()">
+        <i appIcon="x-lg" aria-hidden="true"></i>
+      </button>
+    </header>
+
+    @switch (column) {
+      @case ('status') {
+        <app-status-list-cell-editor-status-column-panel
+          [open]="open"
+          [value]="value"
+          [placeholder]="placeholder"
+          [searchable]="searchable"
+          [options]="options"
+          (pick)="pick.emit($event)"
+        ></app-status-list-cell-editor-status-column-panel>
+      }
+      @case ('priority') {
+        <app-status-list-cell-editor-priority-column-panel
+          [open]="open"
+          [value]="value"
+          [placeholder]="placeholder"
+          [searchable]="searchable"
+          [options]="options"
+          (pick)="pick.emit($event)"
+        ></app-status-list-cell-editor-priority-column-panel>
+      }
+      @case ('assignee') {
+        <app-status-list-cell-editor-assignee-column-panel
+          [open]="open"
+          [value]="value"
+          [placeholder]="placeholder"
+          [searchable]="searchable"
+          [options]="options"
+          (pick)="pick.emit($event)"
+        ></app-status-list-cell-editor-assignee-column-panel>
+      }
+      @case ('dueDate') {
+        <app-status-list-cell-editor-due-date-column-panel
+          [open]="open"
+          [value]="value"
+          (pick)="pick.emit($event)"
+        ></app-status-list-cell-editor-due-date-column-panel>
+      }
+      @case ('comments') {
+        <app-status-list-cell-editor-comments-column-panel
+          [open]="open"
+          [placeholder]="placeholder"
+          (commentAdd)="commentAdd.emit($event)"
+        ></app-status-list-cell-editor-comments-column-panel>
+      }
+      @case ('assignedComments') {
+        <app-status-list-cell-editor-assigned-comments-column-panel
+          [open]="open"
+          [placeholder]="placeholder"
+          (commentAdd)="commentAdd.emit($event)"
+        ></app-status-list-cell-editor-assigned-comments-column-panel>
+      }
+      @case ('lists') {
+        <app-status-list-cell-editor-lists-column-panel
+          [open]="open"
+          [value]="value"
+          [placeholder]="placeholder"
+          [searchable]="searchable"
+          [options]="options"
+          (pick)="pick.emit($event)"
+        ></app-status-list-cell-editor-lists-column-panel>
+      }
+      @case ('taskType') {
+        <app-status-list-cell-editor-task-type-column-panel
+          [open]="open"
+          [value]="value"
+          [placeholder]="placeholder"
+          [searchable]="searchable"
+          [options]="options"
+          (pick)="pick.emit($event)"
+        ></app-status-list-cell-editor-task-type-column-panel>
+      }
+      @case ('startDate') {
+        <app-status-list-cell-editor-start-date-column-panel
+          [open]="open"
+          [value]="value"
+          (pick)="pick.emit($event)"
+        ></app-status-list-cell-editor-start-date-column-panel>
+      }
+      @case ('linkedTasks') {
+        <app-status-list-cell-editor-linked-tasks-column-panel
+          [open]="open"
+          [value]="value"
+          [placeholder]="placeholder"
+          (pick)="pick.emit($event)"
+        ></app-status-list-cell-editor-linked-tasks-column-panel>
+      }
+      @case ('dependencies') {
+        <app-status-list-cell-editor-dependencies-column-panel
+          [open]="open"
+          [value]="value"
+          [placeholder]="placeholder"
+          (pick)="pick.emit($event)"
+        ></app-status-list-cell-editor-dependencies-column-panel>
+      }
+      @case ('linkedDocs') {
+        <app-status-list-cell-editor-linked-docs-column-panel
+          [open]="open"
+          [value]="value"
+          [placeholder]="placeholder"
+          (pick)="pick.emit($event)"
+        ></app-status-list-cell-editor-linked-docs-column-panel>
+      }
+      @case ('timeEstimate') {
+        <app-status-list-cell-editor-time-estimate-column-panel
+          [open]="open"
+          [value]="value"
+          [placeholder]="placeholder"
+          (pick)="pick.emit($event)"
+        ></app-status-list-cell-editor-time-estimate-column-panel>
+      }
+      @case ('timeTracked') {
+        <app-status-list-cell-editor-time-tracked-column-panel
+          [open]="open"
+          [value]="value"
+          [placeholder]="placeholder"
+          (pick)="pick.emit($event)"
+        ></app-status-list-cell-editor-time-tracked-column-panel>
+      }
+      @default {
+        @if (type === 'comments') {
+          <app-status-list-cell-editor-comments-panel
+            [open]="open"
+            [placeholder]="placeholder"
+            (commentAdd)="commentAdd.emit($event)"
+          ></app-status-list-cell-editor-comments-panel>
+        } @else if (type === 'date') {
+          <app-status-list-cell-editor-date-panel
+            [open]="open"
+            [value]="value"
+            (pick)="pick.emit($event)"
+          ></app-status-list-cell-editor-date-panel>
+        } @else if (type === 'text') {
+          <app-status-list-cell-editor-text-panel
+            [open]="open"
+            [value]="value"
+            [placeholder]="placeholder"
+            (pick)="pick.emit($event)"
+          ></app-status-list-cell-editor-text-panel>
+        } @else {
+          <app-status-list-cell-editor-options-panel
+            [open]="open"
+            [value]="value"
+            [placeholder]="placeholder"
+            [searchable]="searchable"
+            [options]="options"
+            (pick)="pick.emit($event)"
+          ></app-status-list-cell-editor-options-panel>
+        }
+      }
+    }
+  </section>
+}

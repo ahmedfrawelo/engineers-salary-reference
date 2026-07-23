@@ -1,0 +1,5 @@
+{
+  "description": "Allowlist disabled for strict migration validation.",
+  "importerPatterns": [],
+  "edgePatterns": []
+}

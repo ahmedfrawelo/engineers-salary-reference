@@ -1,0 +1,139 @@
+<engineers-salary-reference-page-design
+  class="settings-page-design proj-page"
+  [class.settings-page-design--overlay]="presentationMode === 'overlay'"
+  title="Settings"
+  sub="Configure the shared systems that shape access, materials, pricing, supplier workflows, and workspace appearance."
+  icon="sliders2-vertical"
+  toolbarAriaLabel="Settings toolbar"
+>
+  <div toolbar-left class="settings-toolbar">
+    <span class="settings-toolbar__label">
+      {{ presentationMode === 'overlay' ? 'Quick access' : 'Workspace settings' }}
+    </span>
+    <div class="settings-toolbar-readiness" aria-label="Settings readiness">
+      <span>{{ liveDomainCount }}/{{ categoryCount }} domains</span>
+      <strong>{{ readinessPercent }}%</strong>
+      <span class="settings-toolbar-readiness__bar" aria-hidden="true">
+        <span [style.width.%]="readinessPercent"></span>
+      </span>
+    </div>
+    <span class="settings-toolbar__metric">
+      <strong>{{ liveToolsCount }}</strong>
+      <span>Live tools</span>
+    </span>
+  </div>
+
+  <div toolbar-right class="settings-toolbar-actions">
+    @if (liveEntries.length > 0) {
+      @for (entry of liveEntries; track entry.id) {
+        <button
+          type="button"
+          class="settings-toolbar-action"
+          [attr.data-tone]="entry.tone"
+          (click)="onActionClick(entry.action)"
+        >
+          <i [appIcon]="entry.icon" aria-hidden="true"></i>
+          <span>{{ entry.title }}</span>
+        </button>
+      }
+    }
+  </div>
+
+  <div page-table class="table-area-shell settings-page-shell">
+    <div class="settings-page-body">
+      <section class="settings-directory">
+        <div class="settings-directory__header">
+          <div class="settings-directory__title">
+            <p class="settings-section__eyebrow">Workspace controls</p>
+            <h2>Settings directory</h2>
+            <p>
+              Manage the shared rules for materials, access, appearance, suppliers, commercial
+              controls, and live sessions from one clean page.
+            </p>
+          </div>
+        </div>
+
+        <div class="settings-directory__nav" aria-label="Settings domains">
+          @for (category of domainCards; track category.id) {
+            <button
+              type="button"
+              class="settings-anchor-chip"
+              [class.is-active]="activeDomainId === category.id"
+              [attr.data-tone]="category.tone"
+              (click)="scrollToDomain(category.id)"
+            >
+              <i [appIcon]="category.icon" aria-hidden="true"></i>
+              <span>{{ category.title }}</span>
+              <strong>{{ category.liveCount }} live</strong>
+            </button>
+          }
+        </div>
+
+        <div class="settings-domain-list">
+          <div class="settings-domain-list__head" aria-hidden="true">
+            <span>Domain</span>
+            <span>Scope</span>
+            <span>Status</span>
+            <span>Action</span>
+          </div>
+
+          @for (category of domainCards; track category.id) {
+            <article
+              class="settings-domain-row"
+              [attr.id]="domainAnchorId(category.id)"
+              [attr.data-tone]="category.tone"
+            >
+              <div class="settings-domain-row__identity">
+                <span class="settings-domain-row__icon" aria-hidden="true">
+                  <i [appIcon]="category.icon"></i>
+                </span>
+
+                <div class="settings-domain-row__titles">
+                  <p class="settings-domain__eyebrow">{{ category.eyebrow }}</p>
+                  <h3>{{ category.title }}</h3>
+                  <p>{{ category.focus }}</p>
+                </div>
+              </div>
+
+              <div class="settings-domain-row__scope">
+                @for (item of category.scope; track item) {
+                  <span>{{ item }}</span>
+                }
+              </div>
+
+              <div class="settings-domain-row__status">
+                <span
+                  class="settings-status-badge"
+                  [class.settings-status-badge--live]="category.liveCount > 0"
+                >
+                  {{ category.statusLabel }}
+                </span>
+                @if (category.plannedActions.length > 0) {
+                  <span class="settings-domain-row__planned">
+                    Next:
+                    @for (action of category.plannedActions; track action.label) {
+                      <span>{{ action.label }}</span>
+                    }
+                  </span>
+                }
+              </div>
+
+              <div class="settings-domain-row__actions">
+                @if (category.availableActions.length > 0) {
+                  @for (action of category.availableActions; track action.label) {
+                    <button type="button" class="settings-action" (click)="onActionClick(action)">
+                      <span>{{ action.label }}</span>
+                      <i appIcon="arrow-right" aria-hidden="true"></i>
+                    </button>
+                  }
+                } @else {
+                  <span class="settings-domain-row__empty">Roadmap</span>
+                }
+              </div>
+            </article>
+          }
+        </div>
+      </section>
+    </div>
+  </div>
+</engineers-salary-reference-page-design>

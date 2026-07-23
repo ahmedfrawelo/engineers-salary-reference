@@ -1,0 +1,328 @@
+<overlay-panel
+  [open]="open"
+  title="Tender Settings"
+  [showSave]="false"
+  [closeDanger]="true"
+  [draggable]="true"
+  [dense]="true"
+  [autoFitContent]="false"
+  [maxWidth]="980"
+  [fitRatioWDesktop]="0.74"
+  [fitRatioWMobile]="0.9"
+  [fitRatioHDesktop]="0.62"
+  [fitRatioHMobile]="0.82"
+  [maxHeight]="720"
+  [edgeGap]="4"
+  [panelSidePad]="0"
+  [backdropBlur]="0"
+  [backdropTint]="0"
+  [bodyPadding]="0"
+  [bodyPaddingDense]="0"
+  [lockPosition]="false"
+  [bubbleTooltips]="true"
+  [anim]="'scale'"
+  [panelClass]="'tender-settings-panel'"
+  (closed)="onClose()"
+>
+  <div class="wrap">
+    <div class="sticky-top">
+      <div
+        class="tabs"
+        role="tablist"
+        aria-label="Tender settings groups"
+        [appStretchTabsIndicator]="tab()"
+        [stretchTabsItemSelector]="'.tab-list .tab'"
+      >
+        <div class="tab-list">
+          <button
+            type="button"
+            class="tab"
+            role="tab"
+            [class.active]="tab() === 'status'"
+            [attr.aria-selected]="tab() === 'status'"
+            (click)="setTab('status')"
+          >
+            <span class="tab-label">Status</span>
+          </button>
+          <button
+            type="button"
+            class="tab"
+            role="tab"
+            [class.active]="tab() === 'stage'"
+            [attr.aria-selected]="tab() === 'stage'"
+            (click)="setTab('stage')"
+          >
+            <span class="tab-label">Tender Stage</span>
+          </button>
+          <button
+            type="button"
+            class="tab"
+            role="tab"
+            [class.active]="tab() === 'type'"
+            [attr.aria-selected]="tab() === 'type'"
+            (click)="setTab('type')"
+          >
+            <span class="tab-label">Type of Project</span>
+          </button>
+          <button
+            type="button"
+            class="tab"
+            role="tab"
+            [class.active]="tab() === 'importance'"
+            [attr.aria-selected]="tab() === 'importance'"
+            (click)="setTab('importance')"
+          >
+            <span class="tab-label">Degree of Importance</span>
+          </button>
+          <button
+            type="button"
+            class="tab"
+            role="tab"
+            [class.active]="tab() === 'country'"
+            [attr.aria-selected]="tab() === 'country'"
+            (click)="setTab('country')"
+          >
+            <span class="tab-label">Country</span>
+          </button>
+          <button
+            type="button"
+            class="tab"
+            role="tab"
+            [class.active]="tab() === 'owner'"
+            [attr.aria-selected]="tab() === 'owner'"
+            (click)="setTab('owner')"
+          >
+            <span class="tab-label">Owner</span>
+          </button>
+          <button
+            type="button"
+            class="tab"
+            role="tab"
+            [class.active]="tab() === 'ownerType'"
+            [attr.aria-selected]="tab() === 'ownerType'"
+            (click)="setTab('ownerType')"
+          >
+            <span class="tab-label">Owner Type</span>
+          </button>
+          <button
+            type="button"
+            class="tab"
+            role="tab"
+            [class.active]="tab() === 'assignTo'"
+            [attr.aria-selected]="tab() === 'assignTo'"
+            (click)="setTab('assignTo')"
+          >
+            <span class="tab-label">Assign To</span>
+          </button>
+          <button
+            type="button"
+            class="tab"
+            role="tab"
+            [class.active]="tab() === 'inCharge'"
+            [attr.aria-selected]="tab() === 'inCharge'"
+            (click)="setTab('inCharge')"
+          >
+            <span class="tab-label">In Charge</span>
+          </button>
+        </div>
+
+        <div class="quick-links">
+          <button
+            type="button"
+            class="btn primary fx-raise fx-sheen fx-gradient fx-ripple"
+            [attr.data-pulse]="items().length ? null : true"
+            (click)="startCreate()"
+          >
+            {{ addBtnLabel() }}
+          </button>
+        </div>
+      </div>
+
+      @if (creating || editing) {
+        <div class="card">
+          <div class="form">
+            <label class="fld">
+              <span>Name</span>
+              <input
+                type="text"
+                [(ngModel)]="editName"
+                (ngModelChange)="clearFormError()"
+                placeholder="Enter name..."
+              />
+            </label>
+            <label class="fld">
+              <span>Custom Label (optional)</span>
+              <input
+                type="text"
+                [(ngModel)]="editCustomLabel"
+                (ngModelChange)="clearFormError()"
+                placeholder="e.g., Review label..."
+                maxlength="100"
+              />
+            </label>
+            <label class="fld">
+              <span>Tone</span>
+              <div class="combo" [class.open]="toneOpen" (click)="$event.stopPropagation()">
+                <button
+                  type="button"
+                  class="combo-btn btn fx-raise fx-sheen fx-ripple"
+                  (click)="toggleTone()"
+                >
+                  <span class="dot" [style.background]="previewColor() || 'transparent'"></span>
+                  <span class="label">
+                    {{
+                      editToneMode === 'custom'
+                        ? editCustom.toUpperCase() || 'Custom'
+                        : editTone || 'None'
+                    }}
+                  </span>
+                  <span class="chev">&#9662;</span>
+                </button>
+                @if (toneOpen) {
+                  <div class="combo-panel">
+                    <div class="mode-row">
+                      <button
+                        class="mode btn fx-raise fx-ripple"
+                        [class.active]="editToneMode === 'preset'"
+                        (click)="switchMode('preset')"
+                      >
+                        <span class="radio"></span> Preset
+                      </button>
+                      <button
+                        class="mode btn fx-raise fx-ripple"
+                        [class.active]="editToneMode === 'custom'"
+                        (click)="switchMode('custom')"
+                      >
+                        <span class="radio"></span> Custom
+                      </button>
+                    </div>
+                    @if (editToneMode === 'preset') {
+                      <div class="section">
+                        <div class="chips">
+                          @for (t of tones; track t) {
+                            <button
+                              class="chip btn fx-raise fx-ripple"
+                              [class.selected]="editTone === t"
+                              (click)="selectPreset(t)"
+                            >
+                              <span class="chip-dot" [class]="'tone-' + t"></span>{{ t }}
+                            </button>
+                          }
+                          <button
+                            class="chip btn fx-raise fx-ripple"
+                            [class.selected]="!editTone"
+                            (click)="selectPreset('')"
+                          >
+                            <span class="chip-dot none"></span>None
+                          </button>
+                        </div>
+                      </div>
+                    }
+                    @if (editToneMode === 'custom') {
+                      <div class="section">
+                        <div class="swatches">
+                          @for (c of presetCustoms; track c) {
+                            <button
+                              class="swatch btn fx-raise fx-ripple"
+                              [style.background]="c"
+                              (click)="editCustom = c"
+                              [class.active]="editCustom === c"
+                            ></button>
+                          }
+                        </div>
+                        <div class="pick-row">
+                          <input type="color" [(ngModel)]="editCustom" />
+                          <span class="hex">{{ editCustom.toUpperCase() }}</span>
+                        </div>
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+            </label>
+            @if (formError) {
+              <div class="form-error">{{ formError }}</div>
+            }
+            <div class="actions">
+              <button class="btn fx-raise fx-sheen fx-ripple" (click)="cancelEdit()">Cancel</button>
+              <button
+                class="btn primary fx-raise fx-sheen fx-gradient fx-ripple"
+                (click)="applyEdit()"
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+
+    <div class="list-card card">
+      <div class="tbl">
+        <div class="scroll-area">
+          <div class="thead">
+            <div class="th w-40 handle-cell"></div>
+            <div class="th">{{ firstColLabel() }}</div>
+            <div class="th w-160 label-cell">Custom Label</div>
+            <div class="th w-120 actions-head">Actions</div>
+          </div>
+
+          <div
+            class="tbody"
+            cdkDropList
+            [cdkDropListData]="items()"
+            cdkDropListOrientation="vertical"
+            (cdkDropListDropped)="onDrop($event)"
+          >
+            @for (it of items(); track trackById(i, it); let i = $index) {
+              <div class="tr" cdkDrag cdkDragLockAxis="y" cdkDragPreviewClass="tr-preview">
+                <div class="td w-40 handle-cell">
+                  <span class="drag-handle" cdkDragHandle aria-label="Drag to reorder"
+                    >&#8942;&#8942;</span
+                  >
+                </div>
+                <div class="td">
+                  <span
+                    class="pill"
+                    [attr.data-tone]="it.customHex ? 'custom' : it.tone || null"
+                    [ngStyle]="pillStyle(it.tone, it.customHex)"
+                  >
+                    <span class="pill__label">{{ it.name }}</span>
+                  </span>
+                </div>
+                <div class="td w-160 label-cell">
+                  <span class="custom-label-text">{{ it.customLabel || '--' }}</span>
+                </div>
+                <div class="td w-120 actions-cell">
+                  <button
+                    class="icon-btn edit"
+                    (click)="startEdit(it)"
+                    aria-label="Edit"
+                    title="Edit"
+                  >
+                    <i appIcon="pencil" aria-hidden="true"></i>
+                  </button>
+                  <button
+                    class="icon-btn danger"
+                    (click)="remove(it)"
+                    aria-label="Delete"
+                    title="Delete"
+                  >
+                    <i appIcon="trash" aria-hidden="true"></i>
+                  </button>
+                </div>
+              </div>
+            }
+            @if (loading && items().length === 0) {
+              <div class="empty">Loading settings...</div>
+            } @else if (error && items().length === 0) {
+              <div class="empty">{{ error }}</div>
+            } @else if (items().length === 0) {
+              <div class="empty">No items yet.</div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</overlay-panel>

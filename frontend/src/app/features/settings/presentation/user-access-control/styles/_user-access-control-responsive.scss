@@ -1,0 +1,130 @@
+﻿@media (max-width: 1100px) {
+  .access-data-strip {
+    grid-template-columns: 1fr;
+  }
+
+  .access-data-strip__fields--create,
+  .access-data-strip__fields--editor {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  }
+
+  .permissions-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .role-column,
+  .permission-column {
+    min-height: auto;
+  }
+
+  .perm-row {
+    grid-template-columns: 1fr;
+  }
+
+  .perm-row__toggles {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 820px) {
+  .access-section,
+  .access-panel,
+  .access-audit-state {
+    padding: 0;
+    border-radius: 0;
+  }
+
+  .access-section-head,
+  .access-list-toolbar,
+  .bulk-bar,
+  .perm-group-head,
+  .perm-head,
+  .perm-head__actions,
+  .perm-head__compact-actions,
+  .modal-header,
+  .modal-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .perm-section-head,
+  .perm-page-head,
+  .perm-group-toggle {
+    align-items: flex-start;
+  }
+
+  .access-filter,
+  .access-filter--compact {
+    width: 100%;
+  }
+
+  .access-toolbar,
+  .access-toolbar-filters,
+  .access-toolbar-actions,
+  .access-view-row {
+    width: 100%;
+  }
+
+  .access-content-tools,
+  .access-content-tools__controls,
+  .access-content-tools__meta {
+    width: 100%;
+  }
+
+  .access-data-strip__fields--create,
+  .access-data-strip__fields--editor {
+    grid-template-columns: 1fr;
+  }
+
+  .access-create-form {
+    min-width: 0;
+  }
+
+  .access-create-form__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .access-create-form__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .access-user-drawer__form,
+  .access-user-drawer__meta-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .access-user-drawer__section-head,
+  .access-user-drawer__detail-row,
+  .access-user-drawer__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .access-list-toolbar,
+  .filter-chips,
+  .bulk-bar,
+  .roster-footer,
+  .role-form,
+  .perm-head,
+  .access-audit-state {
+    padding-inline: 12px;
+  }
+
+  .role-form__head {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .perm-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .perm-row__toggles,
+  .perm-head__actions {
+    justify-content: flex-start;
+  }
+}
+
+// ─── Role Members ────────────────────────────────────────────────────────────

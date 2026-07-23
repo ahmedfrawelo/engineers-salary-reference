@@ -1,0 +1,208 @@
+<section class="list-shell">
+  <div class="list-head">
+    <div>
+      <span class="eyebrow">{{ eyebrow }}</span>
+      <h2>{{ title }}</h2>
+      @if (description) {
+        <p>{{ description }}</p>
+      }
+    </div>
+
+    <div class="list-head__actions">
+      <div class="summary-strip">
+        @for (item of summary; track item.label) {
+          <span class="summary-pill">{{ item.value }} {{ item.label }}</span>
+        }
+      </div>
+
+      <div class="view-switch">
+        <button
+          type="button"
+          class="seg"
+          [class.active]="viewMode === 'table'"
+          title="Table view"
+          aria-label="Table view"
+          (click)="viewModeChange.emit('table')"
+        >
+          <i appIcon="table" aria-hidden="true"></i>
+          <span class="visually-hidden">Table view</span>
+        </button>
+        <button
+          type="button"
+          class="seg"
+          [class.active]="viewMode === 'cards'"
+          title="Card view"
+          aria-label="Card view"
+          (click)="viewModeChange.emit('cards')"
+        >
+          <i appIcon="grid" aria-hidden="true"></i>
+          <span class="visually-hidden">Card view</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  @if (loading) {
+    <div class="loading-state" role="status" [attr.aria-label]="loadingLabel">
+      <div class="loading-state__head">
+        <span class="skeleton skeleton--title"></span>
+        <span class="skeleton skeleton--pill"></span>
+      </div>
+      <div class="skeleton-table" aria-hidden="true">
+        @for (row of skeletonRows(); track $index) {
+          <div class="skeleton-row">
+            @for (column of skeletonColumns(); track $index) {
+              <span class="skeleton"></span>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  } @else if (errorMessage) {
+    <div class="empty empty--danger" role="alert">
+      <i appIcon="alert-triangle" aria-hidden="true"></i>
+      <h3>Report register unavailable</h3>
+      <p>{{ errorMessage }}</p>
+    </div>
+  } @else if (!rows.length) {
+    <div class="empty">
+      <i appIcon="clipboard-data" aria-hidden="true"></i>
+      <h3>{{ emptyTitle }}</h3>
+      <p>{{ emptyDescription }}</p>
+    </div>
+  }
+
+  @if (!loading && !errorMessage && rows.length && viewMode === 'table') {
+    <div class="table-wrap">
+      <table class="report-table">
+        <thead>
+          <tr>
+            <th class="sortable" (click)="sortChange.emit('title')">
+              Report
+              <span class="sort" [class.active]="sortState?.key === 'title'">
+                <i [appIcon]="sortState?.key === 'title' ? sortIcon({ key: 'title', label: 'Report' }) : 'arrow-down-up'" aria-hidden="true"></i>
+              </span>
+            </th>
+            @for (column of columns; track column.key) {
+              <th
+                [class.num]="column.align === 'right'"
+                [class.sortable]="column.sortable"
+                (click)="column.sortable ? sortChange.emit(column.key) : null"
+              >
+                {{ column.label }}
+                @if (column.sortable) {
+                  <span class="sort" [class.active]="sortState?.key === column.key">
+                    <i [appIcon]="sortIcon(column)" aria-hidden="true"></i>
+                  </span>
+                }
+              </th>
+            }
+            @if (actions.length) {
+              <th class="actions">Actions</th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of rows; track row.id) {
+            <tr>
+              <td>
+                <div class="row-title">{{ row.title }}</div>
+                @if (row.subtitle) {
+                  <div class="row-sub">{{ row.subtitle }}</div>
+                }
+              </td>
+              @for (column of columns; track column.key) {
+                <td [class.num]="column.align === 'right'">
+                  @if (column.key === 'status' && row.status) {
+                    <span class="pill" [class]="'pill ' + (row.statusTone || 'neutral')">
+                      {{ row.status }}
+                    </span>
+                  } @else {
+                    {{ cellValue(row, column) }}
+                  }
+                </td>
+              }
+              @if (actions.length) {
+                <td class="actions">
+                  @for (item of actions; track item.key) {
+                    @if (item.linkKey && row.link) {
+                      <a
+                        class="icon-btn"
+                        [routerLink]="row.link"
+                        [attr.aria-label]="actionLabel(item, row)"
+                        [title]="actionLabel(item, row)"
+                      >
+                        <i [appIcon]="item.icon" aria-hidden="true"></i>
+                      </a>
+                    } @else if (!item.linkKey) {
+                      <button
+                        class="icon-btn"
+                        type="button"
+                        [attr.aria-label]="actionLabel(item, row)"
+                        [title]="actionLabel(item, row)"
+                        (click)="action.emit({ action: item.key, row })"
+                      >
+                        <i [appIcon]="actionIcon(item, row)" aria-hidden="true"></i>
+                      </button>
+                    }
+                  }
+                </td>
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
+  @if (!loading && !errorMessage && rows.length && viewMode === 'cards') {
+    <div class="cards">
+      @for (row of rows; track row.id) {
+        <article class="report-card">
+          <div class="report-card__head">
+            <div>
+              <div class="row-title">{{ row.title }}</div>
+              @if (row.subtitle) {
+                <div class="row-sub">{{ row.subtitle }}</div>
+              }
+            </div>
+            @if (row.status) {
+              <span class="pill" [class]="'pill ' + (row.statusTone || 'neutral')">{{
+                row.status
+              }}</span>
+            }
+          </div>
+
+          <div class="card-grid">
+            @for (column of columns; track column.key) {
+              @if (column.key !== 'status') {
+                <div>
+                  <span class="meta-label">{{ column.label }}</span>
+                  <strong>{{ cellValue(row, column) }}</strong>
+                </div>
+              }
+            }
+          </div>
+
+          @if (actions.length) {
+            <div class="card-actions">
+              @for (item of actions; track item.key) {
+                @if (item.linkKey && row.link) {
+                  <a class="btn ghost" [routerLink]="row.link">
+                    <i [appIcon]="item.icon" aria-hidden="true"></i>
+                    <span>{{ item.label }}</span>
+                  </a>
+                } @else if (!item.linkKey) {
+                  <button class="btn ghost" type="button" (click)="action.emit({ action: item.key, row })">
+                    <i [appIcon]="actionIcon(item, row)" aria-hidden="true"></i>
+                    <span>{{ actionLabel(item, row) }}</span>
+                  </button>
+                }
+              }
+            </div>
+          }
+        </article>
+      }
+    </div>
+  }
+</section>

@@ -1,0 +1,930 @@
+@use '../styles/page-design-shared.skin';
+
+engineers-salary-reference-page-design {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  min-height: 0;
+  min-width: 0;
+  flex: 1 1 auto;
+  overflow: hidden;
+  position: relative;
+  isolation: isolate;
+  box-sizing: border-box;
+  margin-bottom: 0;
+  padding: 0;
+  font-family: var(--app-theme-font-sans, var(--app-font-family-sans));
+
+  /* Tender Projects shell defaults now inherit from shared app theme tokens. */
+  --proj-outline-w: var(--app-outline-width, 1px);
+  --proj-outline-color: var(--app-color-outline-stroke);
+  --proj-grid-line: var(--proj-outline-color);
+  --proj-grid-line-strong: var(--proj-outline-color);
+  --proj-header-divider-width: var(--proj-outline-w);
+  --proj-header-divider-color: var(--proj-outline-color);
+  --proj-header-surface: transparent;
+  --page-shell-toolbar-divider-width: var(--proj-outline-w);
+  --proj-toolbar-divider-color: var(--proj-outline-color);
+  --proj-toolbar-surface: transparent;
+  --proj-toolbar-hover-bg: var(--app-color-toolbar-hover-bg);
+  --proj-toolbar-hover-border: var(--app-color-toolbar-hover-border);
+  --proj-toolbar-hover-fg: var(--app-color-toolbar-hover-fg);
+  --proj-toolbar-hover-icon: var(--app-color-toolbar-hover-icon);
+  --proj-toolbar-active-bg: var(--app-color-toolbar-active-bg);
+  --proj-toolbar-active-border: var(--app-color-toolbar-active-border);
+  --proj-toolbar-active-fg: var(--app-color-toolbar-active-fg);
+  --proj-toolbar-active-icon: var(--app-color-toolbar-active-icon);
+  --proj-toolbar-filled-bg: var(--app-color-toolbar-filled-bg);
+  --proj-toolbar-filled-border: var(--app-color-toolbar-filled-border);
+  --proj-toolbar-filled-fg: var(--app-color-toolbar-filled-fg);
+  --proj-toolbar-filled-hover-bg: var(--app-color-toolbar-filled-hover-bg);
+  --proj-toolbar-filled-hover-border: var(--app-color-toolbar-filled-hover-border);
+  --proj-toolbar-filled-hover-fg: var(--app-color-toolbar-filled-hover-fg);
+  --page-shell-table-header-bg: color-mix(
+    in oklab,
+    var(--app-color-panel-body) 70%,
+    var(--app-color-shell) 30%
+  );
+  --page-shell-grid-header-fg: var(--app-color-panel-subheading);
+
+  min-height: max(0px, var(--app-shell-height));
+  height: max(0px, var(--app-shell-height));
+}
+
+.wsh__header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 4px;
+  padding: 0 4px 4px 18px;
+  margin: 0;
+  position: relative;
+  min-height: auto;
+  background: var(--proj-header-surface, transparent);
+  border: 0;
+  border-bottom-style: solid;
+  border-bottom-width: var(--proj-header-divider-width, 0px);
+  border-bottom-color: var(--proj-header-divider-color, var(--proj-outline-color));
+  box-shadow: none;
+}
+
+.wsh__header::after {
+  content: none;
+}
+
+.wsh__titles {
+  display: none;
+}
+
+.wsh__title-row {
+  display: none;
+}
+
+.wsh__title {
+  display: none;
+}
+
+.wsh__sub {
+  display: none;
+}
+
+.wsh__icon {
+  display: none;
+}
+
+.wsh__header-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: flex-start;
+  margin-inline-start: 0;
+  width: 100%;
+  min-height: 28px;
+}
+
+.wsh__header-actions:empty {
+  display: none;
+}
+
+.wsh__header:has(.wsh__header-actions:empty) {
+  display: none;
+}
+
+.wsh__toolbar {
+  --cu-chip-bg: var(--app-color-control-bg);
+  --cu-chip-border: var(--proj-outline-color);
+  --cu-chip-fg: var(--app-color-text-soft);
+  --proj-toolbar-hover-bg: var(--app-color-toolbar-hover-bg);
+  --proj-toolbar-hover-border: var(--app-color-toolbar-hover-border);
+  --proj-toolbar-hover-fg: var(--app-color-toolbar-hover-fg);
+  --proj-toolbar-hover-icon: var(--app-color-toolbar-hover-icon);
+  --proj-toolbar-active-bg: var(--app-color-toolbar-active-bg);
+  --proj-toolbar-active-border: var(--app-color-toolbar-active-border);
+  --proj-toolbar-active-fg: var(--app-color-toolbar-active-fg);
+  --proj-toolbar-active-icon: var(--app-color-toolbar-active-icon);
+  --proj-toolbar-focus-ring: var(--app-color-primary-focus-ring);
+  --cu-hover: var(--proj-toolbar-hover-bg);
+  --cu-active-bg: var(--proj-toolbar-active-bg);
+  --cu-active-fg: var(--proj-toolbar-active-fg);
+
+  display: flex;
+  position: relative;
+  z-index: 80;
+  overflow: visible;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: nowrap;
+  height: 41px;
+  min-height: 41px;
+  max-height: 41px;
+  box-sizing: border-box;
+  padding: 0 4px 0 18px;
+  margin-bottom: 0;
+  border: 0;
+  border-bottom: var(--page-shell-toolbar-divider-width, var(--proj-outline-w)) solid
+    var(--proj-toolbar-divider-color, var(--proj-outline-color)) !important;
+  background: var(--proj-toolbar-surface, transparent);
+}
+
+.wsh__toolbar::after {
+  content: none;
+}
+
+.wsh__toolbar-left {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.wsh__toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.wsh__toolbar-left > *,
+.wsh__toolbar-right > * {
+  align-self: center;
+}
+
+.wsh__toolbar .proj-cu-chip,
+.wsh__toolbar .proj-cu-chip:hover,
+.wsh__toolbar .proj-toolbar-btn.btn.sm,
+.wsh__toolbar .proj-toolbar-btn.btn.sm:hover,
+.wsh__toolbar .proj-toolbar-btn.btn.sm:active,
+.wsh__toolbar .proj-toolbar-btn.btn.sm:focus,
+.wsh__toolbar .proj-toolbar-btn.btn.sm:focus-visible,
+.wsh__toolbar .proj-toolbar-icon,
+.wsh__toolbar .proj-toolbar-icon:hover,
+.wsh__toolbar .proj-toolbar-icon:active,
+.wsh__toolbar .proj-toolbar-search,
+.wsh__toolbar .proj-toolbar-search.is-open {
+  border-radius: 8px !important;
+}
+
+.wsh__toolbar .proj-toolbar-btn.proj-toolbar-btn--page-pill.btn.sm,
+.wsh__toolbar .proj-toolbar-btn.proj-toolbar-btn--page-pill.btn.sm:hover,
+.wsh__toolbar .proj-toolbar-btn.proj-toolbar-btn--page-pill.btn.sm:active,
+.wsh__toolbar .proj-toolbar-btn.proj-toolbar-btn--page-pill.btn.sm:focus,
+.wsh__toolbar .proj-toolbar-btn.proj-toolbar-btn--page-pill.btn.sm:focus-visible {
+  border-radius: 999px !important;
+}
+
+.wsh__toolbar .proj-toolbar-btn.proj-toolbar-btn--soft-rect.btn.sm,
+.wsh__toolbar .proj-toolbar-btn.proj-toolbar-btn--soft-rect.btn.sm:hover,
+.wsh__toolbar .proj-toolbar-btn.proj-toolbar-btn--soft-rect.btn.sm:active,
+.wsh__toolbar .proj-toolbar-btn.proj-toolbar-btn--soft-rect.btn.sm:focus,
+.wsh__toolbar .proj-toolbar-btn.proj-toolbar-btn--soft-rect.btn.sm:focus-visible {
+  border-radius: 10px !important;
+}
+
+.wsh__toolbar .proj-toolbar-search.proj-toolbar-search--page-pill,
+.wsh__toolbar .proj-toolbar-search.proj-toolbar-search--page-pill.is-open,
+.wsh__toolbar .proj-toolbar-search.proj-toolbar-search--page-pill .proj-toolbar-icon,
+.wsh__toolbar .proj-toolbar-search.proj-toolbar-search--page-pill .proj-toolbar-icon:hover,
+.wsh__toolbar .proj-toolbar-search.proj-toolbar-search--page-pill .proj-toolbar-icon:active,
+.wsh__toolbar .proj-toolbar-search.proj-toolbar-search--page-pill .proj-toolbar-search-clear,
+.wsh__toolbar .proj-toolbar-search.proj-toolbar-search--page-pill .proj-toolbar-search-clear:hover {
+  border-radius: 999px !important;
+}
+
+.wsh__toolbar .proj-toolbar-search.proj-toolbar-search--soft-rect,
+.wsh__toolbar .proj-toolbar-search.proj-toolbar-search--soft-rect.is-open,
+.wsh__toolbar .proj-toolbar-search.proj-toolbar-search--soft-rect .proj-toolbar-icon,
+.wsh__toolbar .proj-toolbar-search.proj-toolbar-search--soft-rect .proj-toolbar-icon:hover,
+.wsh__toolbar .proj-toolbar-search.proj-toolbar-search--soft-rect .proj-toolbar-icon:active,
+.wsh__toolbar .proj-toolbar-search.proj-toolbar-search--soft-rect .proj-toolbar-search-clear,
+.wsh__toolbar .proj-toolbar-search.proj-toolbar-search--soft-rect .proj-toolbar-search-clear:hover {
+  border-radius: 10px !important;
+}
+
+engineers-salary-reference-page-design.toolbar-soft-rect-actions
+  .wsh__toolbar
+  .proj-toolbar-btn.proj-toolbar-btn--soft-rect.btn.sm,
+engineers-salary-reference-page-design.toolbar-soft-rect-actions
+  .wsh__toolbar
+  .proj-toolbar-btn.proj-toolbar-btn--soft-rect.btn.sm:hover,
+engineers-salary-reference-page-design.toolbar-soft-rect-actions
+  .wsh__toolbar
+  .proj-toolbar-btn.proj-toolbar-btn--soft-rect.btn.sm:active,
+engineers-salary-reference-page-design.toolbar-soft-rect-actions
+  .wsh__toolbar
+  .proj-toolbar-btn.proj-toolbar-btn--soft-rect.btn.sm:focus,
+engineers-salary-reference-page-design.toolbar-soft-rect-actions
+  .wsh__toolbar
+  .proj-toolbar-btn.proj-toolbar-btn--soft-rect.btn.sm:focus-visible,
+engineers-salary-reference-page-design.toolbar-soft-rect-actions
+  .wsh__toolbar
+  .proj-toolbar-search.proj-toolbar-search--soft-rect,
+engineers-salary-reference-page-design.toolbar-soft-rect-actions
+  .wsh__toolbar
+  .proj-toolbar-search.proj-toolbar-search--soft-rect.is-open,
+engineers-salary-reference-page-design.toolbar-soft-rect-actions
+  .wsh__toolbar
+  .proj-toolbar-search.proj-toolbar-search--soft-rect
+  .proj-toolbar-icon,
+engineers-salary-reference-page-design.toolbar-soft-rect-actions
+  .wsh__toolbar
+  .proj-toolbar-search.proj-toolbar-search--soft-rect
+  .proj-toolbar-icon:hover,
+engineers-salary-reference-page-design.toolbar-soft-rect-actions
+  .wsh__toolbar
+  .proj-toolbar-search.proj-toolbar-search--soft-rect
+  .proj-toolbar-icon:active,
+engineers-salary-reference-page-design.toolbar-soft-rect-actions
+  .wsh__toolbar
+  .proj-toolbar-search.proj-toolbar-search--soft-rect
+  .proj-toolbar-search-clear,
+engineers-salary-reference-page-design.toolbar-soft-rect-actions
+  .wsh__toolbar
+  .proj-toolbar-search.proj-toolbar-search--soft-rect
+  .proj-toolbar-search-clear:hover {
+  border-radius: 8px !important;
+}
+
+.table-area {
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+  display: flex;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
+  box-shadow: none;
+  border: none;
+}
+
+engineers-salary-reference-page-design .table-area-shell {
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+  display: flex;
+  margin-top: 0 !important;
+}
+
+engineers-salary-reference-page-design .table-area-shell .tgs-shell,
+engineers-salary-reference-page-design .table-area-shell .tgs-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+  display: flex;
+  overflow: hidden;
+}
+
+engineers-salary-reference-page-design .table-area-shell .tgs-shell {
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+engineers-salary-reference-page-design .table-area-shell .tgs-body {
+  border-top: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+engineers-salary-reference-page-design .table-area-shell .tgs-body > * {
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Projected shell-body wrapper must be a flex column so inner grid can own height correctly. */
+engineers-salary-reference-page-design .table-area-shell .tgs-body > [shell-body] {
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  min-width: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+}
+
+@media (max-width: 900px) {
+  engineers-salary-reference-page-design {
+    padding: 4px 0 0;
+  }
+
+  .wsh__header {
+    padding-inline: 6px;
+  }
+}
+
+/* Tasks page variant hosted directly by PageDesign. */
+.clickup-page .tasks-page-header-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  min-width: 0;
+}
+
+engineers-salary-reference-page-design.tasks-page-design .wsh__header {
+  align-items: flex-start;
+}
+
+engineers-salary-reference-page-design.tasks-page-design .wsh__toolbar {
+  height: auto;
+  min-height: 44px;
+  max-height: none;
+  align-items: center;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  --cu-chip-bg: transparent;
+  --cu-active-bg: var(--proj-toolbar-active-bg);
+  --cu-hover: var(--proj-toolbar-hover-bg);
+}
+
+engineers-salary-reference-page-design.tasks-page-design .wsh__toolbar-left,
+engineers-salary-reference-page-design.tasks-page-design .wsh__toolbar-right {
+  gap: 4px;
+}
+
+engineers-salary-reference-page-design.tasks-page-design .table-area {
+  overflow: hidden;
+}
+
+engineers-salary-reference-page-design.tasks-page-design.tasks-page-shell-loading .wsh__header-actions,
+engineers-salary-reference-page-design.tasks-page-design.tasks-page-shell-loading .wsh__toolbar {
+  pointer-events: none;
+  user-select: none;
+}
+
+engineers-salary-reference-page-design.tasks-page-design.tasks-page-shell-loading {
+  --tp-skel-base: color-mix(
+    in oklab,
+    var(--app-color-control-bg) 88%,
+    var(--app-color-text-high) 12%
+  );
+  --tp-skel-wave-soft: color-mix(in oklab, var(--tp-skel-base) 82%, var(--app-color-text-high) 18%);
+  --tp-skel-wave-core: color-mix(in oklab, var(--tp-skel-base) 62%, var(--app-color-text-high) 38%);
+}
+
+engineers-salary-reference-page-design.tasks-page-design.tasks-page-shell-loading .menu-list,
+engineers-salary-reference-page-design.tasks-page-design.tasks-page-shell-loading .mine-quick-panel {
+  display: none !important;
+}
+
+engineers-salary-reference-page-design.tasks-page-design.tasks-page-shell-loading .wsh__title,
+engineers-salary-reference-page-design.tasks-page-design.tasks-page-shell-loading .wsh__sub {
+  color: transparent !important;
+  text-shadow: none !important;
+  background-color: var(--tp-skel-base) !important;
+  background-image: linear-gradient(
+    100deg,
+    var(--tp-skel-base) 24%,
+    var(--tp-skel-wave-soft) 40%,
+    var(--tp-skel-wave-core) 50%,
+    var(--tp-skel-wave-soft) 60%,
+    var(--tp-skel-base) 76%
+  ) !important;
+  background-size: 240% 100% !important;
+  background-position: 170% 0 !important;
+  box-shadow:
+    0 0 0 1px var(--proj-skeleton-outline) inset,
+    var(--proj-skeleton-inset-shadow) !important;
+  animation: tasksPageSkeletonWave 2.7s linear infinite !important;
+}
+
+engineers-salary-reference-page-design.tasks-page-design.tasks-page-shell-loading .wsh__title {
+  border-radius: 6px !important;
+}
+
+engineers-salary-reference-page-design.tasks-page-design.tasks-page-shell-loading .wsh__sub {
+  border-radius: 4px !important;
+}
+
+engineers-salary-reference-page-design.tasks-page-design.tasks-page-shell-loading .wsh__icon,
+engineers-salary-reference-page-design.tasks-page-design.tasks-page-shell-loading .tasks-page-header-actions .view-tab,
+engineers-salary-reference-page-design.tasks-page-design.tasks-page-shell-loading .wsh__toolbar .tool-chip,
+engineers-salary-reference-page-design.tasks-page-design.tasks-page-shell-loading .wsh__toolbar .tool-add,
+engineers-salary-reference-page-design.tasks-page-design.tasks-page-shell-loading .wsh__toolbar .tool-avatar-filter,
+engineers-salary-reference-page-design.tasks-page-design.tasks-page-shell-loading .wsh__toolbar app-assignee-filter-menu,
+engineers-salary-reference-page-design.tasks-page-design.tasks-page-shell-loading
+  .wsh__toolbar
+  app-mine-quick-filter-menu {
+  border-color: transparent !important;
+  color: transparent !important;
+  text-shadow: none !important;
+  background-color: var(--tp-skel-base) !important;
+  background-image: linear-gradient(
+    100deg,
+    var(--tp-skel-base) 24%,
+    var(--tp-skel-wave-soft) 40%,
+    var(--tp-skel-wave-core) 50%,
+    var(--tp-skel-wave-soft) 60%,
+    var(--tp-skel-base) 76%
+  ) !important;
+  background-size: 240% 100% !important;
+  background-position: 170% 0 !important;
+  box-shadow:
+    0 0 0 1px var(--proj-skeleton-outline) inset,
+    var(--proj-skeleton-inset-shadow) !important;
+  animation: tasksPageSkeletonWave 2.7s linear infinite !important;
+}
+
+engineers-salary-reference-page-design.tasks-page-design.tasks-page-shell-loading .wsh__icon {
+  border-radius: 8px !important;
+  font-size: 0 !important;
+}
+
+engineers-salary-reference-page-design.tasks-page-design.tasks-page-shell-loading
+  .tasks-page-header-actions
+  .view-tab::before,
+engineers-salary-reference-page-design.tasks-page-design.tasks-page-shell-loading
+  .tasks-page-header-actions
+  .view-tab::after {
+  content: none !important;
+}
+
+engineers-salary-reference-page-design.tasks-page-design.tasks-page-shell-loading .wsh__toolbar app-assignee-filter-menu,
+engineers-salary-reference-page-design.tasks-page-design.tasks-page-shell-loading
+  .wsh__toolbar
+  app-mine-quick-filter-menu {
+  display: inline-flex !important;
+  align-items: center !important;
+  min-height: 34px !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+}
+
+engineers-salary-reference-page-design.tasks-page-design.tasks-page-shell-loading .wsh__icon::before,
+engineers-salary-reference-page-design.tasks-page-design.tasks-page-shell-loading
+  .tasks-page-header-actions
+  .view-tab
+  > *,
+engineers-salary-reference-page-design.tasks-page-design.tasks-page-shell-loading .wsh__toolbar .tool-chip > *,
+engineers-salary-reference-page-design.tasks-page-design.tasks-page-shell-loading .wsh__toolbar .tool-add > *,
+engineers-salary-reference-page-design.tasks-page-design.tasks-page-shell-loading .wsh__toolbar .tool-avatar-filter > *,
+engineers-salary-reference-page-design.tasks-page-design.tasks-page-shell-loading
+  .wsh__toolbar
+  app-assignee-filter-menu
+  *,
+engineers-salary-reference-page-design.tasks-page-design.tasks-page-shell-loading
+  .wsh__toolbar
+  app-mine-quick-filter-menu
+  * {
+  opacity: 0 !important;
+}
+
+engineers-salary-reference-page-design.tasks-page-design .wsh__toolbar .tool-chip,
+engineers-salary-reference-page-design.tasks-page-design .wsh__toolbar .menu > summary.tool-chip,
+engineers-salary-reference-page-design.tasks-page-design .wsh__toolbar .tool-avatar-filter,
+engineers-salary-reference-page-design.tasks-page-design .wsh__toolbar app-assignee-filter-menu .assignee-trigger {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+
+engineers-salary-reference-page-design.tasks-page-design .wsh__toolbar .tool-chip:hover:not(:disabled),
+engineers-salary-reference-page-design.tasks-page-design .wsh__toolbar .tool-chip:focus-visible,
+engineers-salary-reference-page-design.tasks-page-design .wsh__toolbar .tool-chip.active,
+engineers-salary-reference-page-design.tasks-page-design .wsh__toolbar .menu > summary.tool-chip:hover,
+engineers-salary-reference-page-design.tasks-page-design .wsh__toolbar .menu > summary.tool-chip:focus-visible,
+engineers-salary-reference-page-design.tasks-page-design .wsh__toolbar .menu[open] > summary.tool-chip,
+engineers-salary-reference-page-design.tasks-page-design .wsh__toolbar .tool-avatar-filter:hover,
+engineers-salary-reference-page-design.tasks-page-design .wsh__toolbar .tool-avatar-filter:focus-visible,
+engineers-salary-reference-page-design.tasks-page-design .wsh__toolbar .tool-avatar-filter.active,
+engineers-salary-reference-page-design.tasks-page-design .wsh__toolbar app-assignee-filter-menu .assignee-trigger:hover,
+engineers-salary-reference-page-design.tasks-page-design
+  .wsh__toolbar
+  app-assignee-filter-menu
+  .assignee-trigger:focus-visible,
+engineers-salary-reference-page-design.tasks-page-design .wsh__toolbar app-assignee-filter-menu .assignee-trigger.active {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
+@keyframes tasksPageSkeletonWave {
+  from {
+    background-position: 170% 0;
+  }
+
+  to {
+    background-position: -170% 0;
+  }
+}
+
+/* Final toolbar trigger reset: keep shared page-design toolbar controls visually static */
+engineers-salary-reference-page-design .wsh__toolbar .proj-cu-chip:not(.proj-cu-chip--static),
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-btn.btn.sm,
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-icon,
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-search,
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-search-toggle,
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-search-clear {
+  box-shadow: none !important;
+  transform: none !important;
+  filter: none !important;
+}
+
+engineers-salary-reference-page-design .wsh__toolbar .proj-cu-chip:not(.proj-cu-chip--static):hover,
+engineers-salary-reference-page-design .wsh__toolbar .proj-cu-chip:not(.proj-cu-chip--static):focus,
+engineers-salary-reference-page-design .wsh__toolbar .proj-cu-chip:not(.proj-cu-chip--static):focus-visible,
+engineers-salary-reference-page-design .wsh__toolbar .proj-cu-chip:not(.proj-cu-chip--static):active,
+engineers-salary-reference-page-design .wsh__toolbar .proj-cu-chip:not(.proj-cu-chip--static).is-active,
+engineers-salary-reference-page-design .wsh__toolbar details.proj-menu[open] > summary.proj-cu-chip,
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-btn.btn.sm:hover,
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-btn.btn.sm:focus,
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-btn.btn.sm:focus-visible,
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-btn.btn.sm:active,
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-btn.btn.sm.is-active,
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-icon:hover,
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-icon:focus,
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-icon:focus-visible,
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-icon:active {
+  box-shadow: none !important;
+  transform: none !important;
+  filter: none !important;
+}
+
+engineers-salary-reference-page-design .wsh__toolbar .proj-cu-chip:not(.proj-cu-chip--static):hover,
+engineers-salary-reference-page-design .wsh__toolbar .proj-cu-chip:not(.proj-cu-chip--static):focus,
+engineers-salary-reference-page-design .wsh__toolbar .proj-cu-chip:not(.proj-cu-chip--static):focus-visible,
+engineers-salary-reference-page-design .wsh__toolbar .proj-cu-chip:not(.proj-cu-chip--static):active,
+engineers-salary-reference-page-design .wsh__toolbar .proj-cu-chip:not(.proj-cu-chip--static).is-active,
+engineers-salary-reference-page-design .wsh__toolbar details.proj-menu[open] > summary.proj-cu-chip {
+  border-color: var(--proj-outline-color) !important;
+  background: transparent !important;
+  color: var(--cu-chip-fg) !important;
+}
+
+engineers-salary-reference-page-design .wsh__toolbar .proj-cu-chip:not(.proj-cu-chip--static):hover i,
+engineers-salary-reference-page-design .wsh__toolbar .proj-cu-chip:not(.proj-cu-chip--static):focus i,
+engineers-salary-reference-page-design .wsh__toolbar .proj-cu-chip:not(.proj-cu-chip--static):focus-visible i,
+engineers-salary-reference-page-design .wsh__toolbar .proj-cu-chip:not(.proj-cu-chip--static):active i,
+engineers-salary-reference-page-design .wsh__toolbar .proj-cu-chip:not(.proj-cu-chip--static).is-active i,
+engineers-salary-reference-page-design .wsh__toolbar details.proj-menu[open] > summary.proj-cu-chip i {
+  color: var(--proj-toolbar-hover-icon) !important;
+}
+
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-btn.btn.sm:hover,
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-btn.btn.sm:focus,
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-btn.btn.sm:focus-visible,
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-btn.btn.sm:active,
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-btn.btn.sm.is-active,
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-icon:hover,
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-icon:focus,
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-icon:focus-visible,
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-icon:active,
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-search:hover,
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-search:focus-within,
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-search.is-open:hover {
+  border-color: var(--cu-chip-border) !important;
+  background: transparent !important;
+  color: var(--cu-chip-fg) !important;
+}
+
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-btn--primary.btn.sm,
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-btn--primary.btn.sm:hover,
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-btn--primary.btn.sm:focus,
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-btn--primary.btn.sm:focus-visible,
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-btn--primary.btn.sm:active,
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-btn--primary.btn.sm.is-active {
+  border-color: var(--proj-toolbar-filled-border) !important;
+  background: var(--proj-toolbar-filled-bg) !important;
+  color: var(--proj-toolbar-filled-fg) !important;
+}
+
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-search:hover .proj-toolbar-search-toggle,
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-search:hover .proj-toolbar-search-clear,
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-search:focus-within .proj-toolbar-search-toggle,
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-search:focus-within .proj-toolbar-search-clear,
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-search .proj-toolbar-search-toggle,
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-search .proj-toolbar-search-clear,
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-search-toggle:hover,
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-search-toggle:focus,
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-search-toggle:focus-visible,
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-search-toggle:active,
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-search-clear:hover,
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-search-clear:focus,
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-search-clear:focus-visible,
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-search-clear:active {
+  border: 0 !important;
+  border-color: transparent !important;
+  background: transparent !important;
+  color: inherit !important;
+  box-shadow: none !important;
+  transform: none !important;
+  filter: none !important;
+}
+
+/* Final interaction layer: visible hover, focus, and active states for shared toolbar buttons. */
+engineers-salary-reference-page-design .wsh__toolbar {
+  --proj-toolbar-hover-bg: var(--app-color-toolbar-hover-bg);
+  --proj-toolbar-hover-border: var(--app-color-toolbar-hover-border);
+  --proj-toolbar-hover-fg: var(--app-color-toolbar-hover-fg);
+  --proj-toolbar-hover-icon: var(--app-color-toolbar-hover-icon);
+  --proj-toolbar-active-bg: var(--app-color-toolbar-active-bg);
+  --proj-toolbar-active-border: var(--app-color-toolbar-active-border);
+  --proj-toolbar-active-fg: var(--app-color-toolbar-active-fg);
+  --proj-toolbar-active-icon: var(--app-color-toolbar-active-icon);
+  --proj-toolbar-focus-ring: color-mix(
+    in oklab,
+    var(--app-color-primary-focus-ring) 70%,
+    transparent
+  );
+  --cu-hover: var(--proj-toolbar-hover-bg);
+  --cu-active-bg: var(--proj-toolbar-active-bg);
+  --cu-active-fg: var(--proj-toolbar-active-fg);
+}
+
+engineers-salary-reference-page-design
+  .wsh__toolbar
+  :is(
+    .proj-cu-chip:not(.proj-cu-chip--static),
+    .proj-toolbar-btn.btn.sm,
+    .proj-toolbar-icon,
+    .proj-toolbar-search,
+    .proj-toolbar-search-clear
+  ) {
+  transition:
+    background-color 0.1s ease-out,
+    border-color 0.1s ease-out,
+    color 0.1s ease-out,
+    box-shadow 0.1s ease-out !important;
+}
+
+engineers-salary-reference-page-design
+  .wsh__toolbar
+  :is(
+    .proj-cu-chip:not(.proj-cu-chip--static),
+    .proj-toolbar-btn.btn.sm,
+    .proj-toolbar-icon,
+    .proj-toolbar-search,
+    .proj-toolbar-search-clear
+  ):active:not(:disabled) {
+  transition-duration: 0s !important;
+}
+
+engineers-salary-reference-page-design
+  .wsh__toolbar
+  :is(
+    .proj-cu-chip:not(.proj-cu-chip--static),
+    .proj-toolbar-btn.btn.sm,
+    .proj-toolbar-icon,
+    .proj-toolbar-search
+  ):is(:hover, :focus-visible):not(:disabled),
+engineers-salary-reference-page-design .wsh__toolbar .proj-menu > summary.proj-cu-chip:is(:hover, :focus-visible) {
+  border-color: var(--proj-toolbar-hover-border) !important;
+  background: var(--proj-toolbar-hover-bg) !important;
+  color: var(--proj-toolbar-hover-fg) !important;
+}
+
+engineers-salary-reference-page-design
+  .wsh__toolbar
+  :is(.proj-cu-chip, .proj-toolbar-btn, .proj-toolbar-icon):is(:hover, :focus-visible, .is-active)
+  :is(i, hugeicons-icon, .app-icon-host),
+engineers-salary-reference-page-design
+  .wsh__toolbar
+  .proj-toolbar-search:is(:hover, :focus-within, .is-open, .has-value)
+  :is(i, hugeicons-icon, .app-icon-host) {
+  color: currentColor !important;
+}
+
+engineers-salary-reference-page-design
+  .wsh__toolbar
+  :is(.proj-cu-chip:not(.proj-cu-chip--static), .proj-toolbar-btn.btn.sm):is(:focus-visible):not(
+    :disabled
+  ),
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-search:focus-within {
+  box-shadow: 0 0 0 2px var(--proj-toolbar-focus-ring) !important;
+}
+
+engineers-salary-reference-page-design
+  .wsh__toolbar
+  :is(
+    .proj-cu-chip:not(.proj-cu-chip--static).is-active,
+    .proj-cu-chip:not(.proj-cu-chip--static)[aria-pressed='true'],
+    details.proj-menu[open] > summary.proj-cu-chip,
+    .proj-menu.is-open > .proj-cu-chip,
+    .proj-toolbar-btn.btn.sm.is-active,
+    .proj-toolbar-btn.btn.sm[aria-pressed='true'],
+    .proj-toolbar-search.is-open,
+    .proj-toolbar-search.has-value:not(.is-open)
+  ) {
+  border-color: var(--proj-toolbar-active-border) !important;
+  background: var(--proj-toolbar-active-bg) !important;
+  color: var(--proj-toolbar-active-fg) !important;
+}
+
+engineers-salary-reference-page-design
+  .wsh__toolbar
+  :is(
+    .proj-cu-chip:not(.proj-cu-chip--static).is-active,
+    .proj-cu-chip:not(.proj-cu-chip--static)[aria-pressed='true'],
+    details.proj-menu[open] > summary.proj-cu-chip,
+    .proj-menu.is-open > .proj-cu-chip,
+    .proj-toolbar-btn.btn.sm.is-active,
+    .proj-toolbar-btn.btn.sm[aria-pressed='true'],
+    .proj-toolbar-search.is-open,
+    .proj-toolbar-search.has-value:not(.is-open)
+  )
+  :is(i, hugeicons-icon, .app-icon-host) {
+  color: var(--proj-toolbar-active-icon) !important;
+}
+
+engineers-salary-reference-page-design .wsh__toolbar .proj-cu-chip:not(.proj-cu-chip--static).is-active,
+engineers-salary-reference-page-design .wsh__toolbar .proj-cu-chip:not(.proj-cu-chip--static)[aria-pressed='true'],
+engineers-salary-reference-page-design .wsh__toolbar details.proj-menu[open] > summary.proj-cu-chip,
+engineers-salary-reference-page-design .wsh__toolbar .proj-menu.is-open > .proj-cu-chip,
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-btn.btn.sm.is-active,
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-btn.btn.sm[aria-pressed='true'],
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-search.is-open,
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-search.has-value:not(.is-open) {
+  border-color: var(--proj-toolbar-active-border) !important;
+  background: var(--proj-toolbar-active-bg) !important;
+  color: var(--proj-toolbar-active-fg) !important;
+}
+
+engineers-salary-reference-page-design
+  .wsh__toolbar
+  :is(
+    .proj-cu-chip:not(.proj-cu-chip--static).is-active,
+    .proj-cu-chip:not(.proj-cu-chip--static)[aria-pressed='true'],
+    .proj-toolbar-btn.btn.sm.is-active,
+    .proj-toolbar-btn.btn.sm[aria-pressed='true'],
+    .proj-toolbar-search.is-open,
+    .proj-toolbar-search.has-value:not(.is-open)
+  )
+  :is(i, hugeicons-icon, .app-icon-host),
+engineers-salary-reference-page-design
+  .wsh__toolbar
+  details.proj-menu[open]
+  > summary.proj-cu-chip
+  :is(i, hugeicons-icon, .app-icon-host),
+engineers-salary-reference-page-design
+  .wsh__toolbar
+  .proj-menu.is-open
+  > .proj-cu-chip
+  :is(i, hugeicons-icon, .app-icon-host) {
+  color: var(--proj-toolbar-active-icon) !important;
+}
+
+engineers-salary-reference-page-design .wsh__toolbar .proj-filter-summary-count {
+  border-color: color-mix(in oklab, var(--app-color-primary) 36%, transparent) !important;
+  background: color-mix(in oklab, var(--app-color-primary) 18%, transparent) !important;
+  color: var(--app-color-primary-text) !important;
+}
+
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-search-clear:is(:hover, :focus-visible) {
+  background: var(--proj-toolbar-hover-bg) !important;
+  color: var(--proj-toolbar-hover-icon) !important;
+}
+
+engineers-salary-reference-page-design
+  .wsh__toolbar
+  .proj-toolbar-btn--primary.btn.sm:is(:hover, :focus-visible, :active) {
+  border-color: var(--proj-toolbar-filled-hover-border) !important;
+  background: var(--proj-toolbar-filled-hover-bg) !important;
+  color: var(--proj-toolbar-filled-hover-fg) !important;
+}
+
+engineers-salary-reference-page-design
+  .wsh__toolbar
+  .proj-toolbar-btn--danger.btn.sm:is(:hover, :focus-visible, :active) {
+  border-color: color-mix(
+    in oklab,
+    var(--proj-danger-fg) 34%,
+    var(--proj-outline-color)
+  ) !important;
+  background: color-mix(in oklab, var(--proj-danger-fg) 10%, transparent) !important;
+  color: var(--proj-danger-fg) !important;
+}
+
+engineers-salary-reference-page-design .wsh__toolbar {
+  --pd-toolbar-control-height: 24px;
+  --pd-toolbar-control-padding-inline: 8px;
+}
+
+engineers-salary-reference-page-design .wsh__toolbar .proj-cu-chip,
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-btn.btn.sm,
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-search,
+engineers-salary-reference-page-design .wsh__toolbar .tool-chip,
+engineers-salary-reference-page-design .wsh__toolbar .menu > summary.tool-chip,
+engineers-salary-reference-page-design .wsh__toolbar .tool-add,
+engineers-salary-reference-page-design .wsh__toolbar app-assignee-filter-menu .assignee-trigger {
+  height: var(--pd-toolbar-control-height) !important;
+  min-height: var(--pd-toolbar-control-height) !important;
+  max-height: var(--pd-toolbar-control-height) !important;
+  line-height: 1 !important;
+}
+
+engineers-salary-reference-page-design .wsh__toolbar .proj-cu-chip,
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-btn.btn.sm,
+engineers-salary-reference-page-design .wsh__toolbar .tool-chip,
+engineers-salary-reference-page-design .wsh__toolbar .menu > summary.tool-chip,
+engineers-salary-reference-page-design .wsh__toolbar .tool-add {
+  padding-block: 0 !important;
+  padding-inline: var(--pd-toolbar-control-padding-inline) !important;
+}
+
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-icon,
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-search-toggle.proj-toolbar-icon,
+engineers-salary-reference-page-design .wsh__toolbar .tool-avatar-filter,
+engineers-salary-reference-page-design .wsh__toolbar .proj-avatar-chip,
+engineers-salary-reference-page-design .wsh__toolbar .tool-chip.icon-only,
+engineers-salary-reference-page-design .wsh__toolbar .tool-add.icon-only {
+  width: var(--pd-toolbar-control-height) !important;
+  min-width: var(--pd-toolbar-control-height) !important;
+  max-width: var(--pd-toolbar-control-height) !important;
+  height: var(--pd-toolbar-control-height) !important;
+  min-height: var(--pd-toolbar-control-height) !important;
+  max-height: var(--pd-toolbar-control-height) !important;
+  padding: 0 !important;
+}
+
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-search-input {
+  height: var(--pd-toolbar-control-height) !important;
+}
+
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-search-clear {
+  width: 20px !important;
+  min-width: 20px !important;
+  height: 20px !important;
+  min-height: 20px !important;
+}
+
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-search {
+  position: relative;
+  margin-inline-start: 12px;
+  overflow: visible !important;
+}
+
+engineers-salary-reference-page-design .wsh__toolbar .proj-toolbar-search::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: -16px;
+  top: 50%;
+  width: 16px;
+  height: 16px;
+  display: block;
+  box-sizing: border-box;
+  font-size: 13px;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', roboto, 'Helvetica Neue', helvetica, arial,
+    sans-serif;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--proj-toolbar-divider-color, var(--proj-outline-color));
+  background: linear-gradient(
+    90deg,
+    transparent 0 calc(50% - 0.5px),
+    currentColor calc(50% - 0.5px) calc(50% + 0.5px),
+    transparent calc(50% + 0.5px) 100%
+  );
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+engineers-salary-reference-page-design .wsh__toolbar-right > .proj-toolbar-search:first-child {
+  margin-inline-start: 0;
+}
+
+engineers-salary-reference-page-design .wsh__toolbar-right > .proj-toolbar-search:first-child::before {
+  content: none;
+}

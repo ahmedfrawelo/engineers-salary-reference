@@ -1,0 +1,200 @@
+﻿@if (canManageAccessControlPermissions()) {
+  @if (activePermissionPage(); as activePermissionPage) {
+    <app-side-drawer
+      [open]="true"
+      [width]="420"
+      [backdropTint]="0"
+      [backdropBlur]="0"
+      [panelClass]="'columns-drawer columns-drawer--clickup columns-drawer--sidebar page-design-columns-drawer access-permission-drawer'"
+      (closed)="closePermissionPageDrawer()"
+    >
+      <section
+        class="columns-drawer-surface access-permission-drawer-surface"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="accessPermissionDrawerTitle"
+      >
+        <div class="columns-drawer-head columns-drawer-head--clickup access-user-drawer__head">
+          <div class="columns-drawer-head-main">
+            <div class="columns-drawer-title-wrap">
+              <div class="columns-drawer-title" id="accessPermissionDrawerTitle">
+                Permission details
+              </div>
+              <p class="columns-drawer-subtitle">
+                {{ permissionPageSummary(activePermissionPage) }}
+              </p>
+            </div>
+          </div>
+          <button
+            class="columns-drawer-close"
+            type="button"
+            aria-label="Close permission drawer"
+            (click)="closePermissionPageDrawer()"
+          >
+            <hugeicons-icon
+              class="access-huge-icon"
+              [icon]="hugeIcons.close"
+              [size]="18"
+              [strokeWidth]="1.9"
+              aria-hidden="true"
+            ></hugeicons-icon>
+          </button>
+        </div>
+
+        <div class="columns-drawer-body columns-drawer-body--clickup access-user-drawer__body">
+          <div class="perm-drawer-intro">
+            <p class="access-section-kicker">{{ activePermissionPage.sectionTitle }}</p>
+            <h3>{{ activePermissionPage.page.title }}</h3>
+            <p class="muted">
+              {{
+                permissionScope() === 'role'
+                  ? 'Use the toggles below to shape access for this role on one page only.'
+                  : 'Direct user overrides for this page sit on top of the inherited role access.'
+              }}
+            </p>
+            @if (
+              activePermissionPage.page.groups.length === 1 &&
+              activePermissionPage.page.groups[0].group === 'Page Access'
+            ) {
+              <p class="muted">
+                This page currently exposes page-level permissions only. No extra entity or field
+                contracts were returned for it from the backend.
+              </p>
+            }
+            <div class="perm-head__actions">
+              <label class="perm-item perm-select-all perm-select-all--soft">
+                <input
+                  type="checkbox"
+                  [checked]="isPageFullySelected(activePermissionPage.page)"
+                  [indeterminate]="isPagePartiallySelected(activePermissionPage.page)"
+                  (change)="togglePagePermissions(activePermissionPage.page)"
+                  [disabled]="permissionsLoading()"
+                />
+                <span>Select page</span>
+              </label>
+              <span class="tool-chip perm-drawer-summary">
+                {{ countSelectedPermissionsInPage(activePermissionPage.page) }} /
+                {{ totalPermissionsInPage(activePermissionPage.page) }} enabled
+              </span>
+            </div>
+          </div>
+
+          <div class="perm-drawer-groups">
+            @for (group of activePermissionPage.page.groups; track group.group) {
+              <section class="perm-drawer-group">
+                <div class="perm-group-head perm-drawer-group__head">
+                  <div class="perm-disclosure">
+                    <span class="perm-disclosure__text">
+                      <span class="perm-group-title">{{ group.group }}</span>
+                      <span class="perm-group-subtitle">
+                        {{ countSelectedPermissionsInGroup(group) }} /
+                        {{ totalPermissionsInGroup(group) }} toggles on
+                      </span>
+                    </span>
+                  </div>
+                  <label class="perm-item perm-select-all perm-select-all--group">
+                    <input
+                      type="checkbox"
+                      [checked]="isGroupFullySelected(group)"
+                      [indeterminate]="isGroupPartiallySelected(group)"
+                      (change)="toggleGroupPermissions(group)"
+                      [disabled]="permissionsLoading()"
+                    />
+                    <span>Select all</span>
+                  </label>
+                </div>
+
+                <div class="perm-items">
+                  @for (row of permissionRows(group); track trackByPermissionRow($index, row)) {
+                    <div class="perm-row">
+                      <div class="perm-row__main">
+                        <span class="perm-feature">{{ row.label }}</span>
+                      </div>
+
+                      <div class="perm-row__toggles">
+                        @if (row.view) {
+                          <label class="perm-toggle-chip">
+                            <span class="perm-toggle-chip__label">View</span>
+                            <input
+                              type="checkbox"
+                              [checked]="isPermissionSelected(row.view.code)"
+                              (change)="togglePermission(row.view.code)"
+                              [disabled]="permissionsLoading()"
+                            />
+                          </label>
+                        }
+
+                        @if (row.edit) {
+                          <label class="perm-toggle-chip">
+                            <span class="perm-toggle-chip__label">Edit</span>
+                            <input
+                              type="checkbox"
+                              [checked]="isPermissionSelected(row.edit.code)"
+                              (change)="togglePermission(row.edit.code)"
+                              [disabled]="permissionsLoading()"
+                            />
+                          </label>
+                        }
+
+                        @if (row.create) {
+                          <label class="perm-toggle-chip perm-toggle-chip--create">
+                            <span class="perm-toggle-chip__label">Create</span>
+                            <input
+                              type="checkbox"
+                              [checked]="isPermissionSelected(row.create.code)"
+                              (change)="togglePermission(row.create.code)"
+                              [disabled]="permissionsLoading()"
+                            />
+                          </label>
+                        }
+
+                        @if (row.delete) {
+                          <label class="perm-toggle-chip perm-toggle-chip--delete">
+                            <span class="perm-toggle-chip__label">Delete</span>
+                            <input
+                              type="checkbox"
+                              [checked]="isPermissionSelected(row.delete.code)"
+                              (change)="togglePermission(row.delete.code)"
+                              [disabled]="permissionsLoading()"
+                            />
+                          </label>
+                        }
+
+                        @for (
+                          action of row.actions;
+                          track trackByPermissionAction($index, action)
+                        ) {
+                          <label class="perm-toggle-chip perm-toggle-chip--action">
+                            <span class="perm-toggle-chip__label">
+                              {{ action.label }}
+                            </span>
+                            <input
+                              type="checkbox"
+                              [checked]="isPermissionSelected(action.perm.code)"
+                              (change)="togglePermission(action.perm.code)"
+                              [disabled]="permissionsLoading()"
+                            />
+                          </label>
+                        }
+
+                        @if (
+                          !row.view &&
+                          !row.edit &&
+                          !row.create &&
+                          !row.delete &&
+                          !row.actions.length
+                        ) {
+                          <span class="perm-empty">No toggles available</span>
+                        }
+                      </div>
+                    </div>
+                  }
+                </div>
+              </section>
+            }
+          </div>
+        </div>
+      </section>
+    </app-side-drawer>
+  }
+}

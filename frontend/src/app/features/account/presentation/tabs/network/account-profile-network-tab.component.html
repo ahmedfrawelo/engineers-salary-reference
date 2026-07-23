@@ -1,0 +1,38 @@
+<section class="tab-grid tab-grid--network">
+  <article class="panel panel-network-support">
+    <header class="section-head">
+      <h2>Network and support</h2>
+      <p>Core partners across People, Finance, and Technology.</p>
+    </header>
+    <ul class="stack-list compact">
+      @for (contact of supportContacts; track contact.role) {
+        <li>
+          <div class="stack-head">
+            <strong>{{ contact.role }}</strong>
+            <span>{{ contact.name }}</span>
+          </div>
+          <p>{{ contact.channel }}</p>
+          <small>{{ contact.note }}</small>
+        </li>
+      }
+    </ul>
+  </article>
+
+  <article class="panel panel-network-engagements">
+    <header class="section-head">
+      <h2>Upcoming engagements</h2>
+      <p>Scheduled collaboration points in the next cycle.</p>
+    </header>
+    <ul class="stack-list compact">
+      @for (item of engagements; track item.title) {
+        <li>
+          <div class="stack-head">
+            <strong>{{ item.title }}</strong>
+            <span>{{ item.date }}</span>
+          </div>
+          <p>{{ item.detail }}</p>
+        </li>
+      }
+    </ul>
+  </article>
+</section>

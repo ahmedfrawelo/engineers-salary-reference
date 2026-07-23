@@ -1,0 +1,657 @@
+<div class="messages-workspace">
+  <aside class="messages-sidebar">
+    <div class="messages-sidebar__header">
+      <div>
+        <p class="eyebrow">ENGINEERS_SALARY_REFERENCE Messages</p>
+        <h1>Team Chat</h1>
+      </div>
+      <div class="header-actions">
+        <button class="icon-button" type="button" aria-label="Refresh chats" title="Refresh" (click)="refresh()">
+          <i appIcon="arrow-clockwise"></i>
+        </button>
+        <button
+          class="icon-button"
+          type="button"
+          aria-label="Start conversation"
+          title="Start conversation"
+          (click)="startPanelOpen.set(!startPanelOpen())"
+        >
+          <i appIcon="plus-lg"></i>
+        </button>
+      </div>
+    </div>
+
+    <section class="conversation-tools">
+      <div class="workspace-stats" aria-label="Conversation summary">
+        <span>
+          <strong>{{ totalConversationCount() }}</strong>
+          <small>Chats</small>
+        </span>
+        <span>
+          <strong>{{ unreadConversationCount() }}</strong>
+          <small>Unread</small>
+        </span>
+        <span>
+          <strong>{{ liveConversationCount() }}</strong>
+          <small>Live</small>
+        </span>
+        <span>
+          <strong>{{ draftConversationCount() }}</strong>
+          <small>Drafts</small>
+        </span>
+      </div>
+      <label class="search-field">
+        <i appIcon="search"></i>
+        <input
+          type="search"
+          placeholder="Search chats"
+          [ngModel]="conversationSearch()"
+          (ngModelChange)="updateConversationSearch($event)"
+        />
+      </label>
+      <div class="filter-strip" aria-label="Conversation filters">
+        <button
+          type="button"
+          [class.is-active]="conversationFilter() === 'all'"
+          (click)="setConversationFilter('all')"
+        >
+          All
+        </button>
+        <button
+          type="button"
+          [class.is-active]="conversationFilter() === 'unread'"
+          (click)="setConversationFilter('unread')"
+        >
+          Unread
+        </button>
+        <button
+          type="button"
+          [class.is-active]="conversationFilter() === 'direct'"
+          (click)="setConversationFilter('direct')"
+        >
+          Direct
+        </button>
+        <button
+          type="button"
+          [class.is-active]="conversationFilter() === 'pinned'"
+          (click)="setConversationFilter('pinned')"
+        >
+          Pinned
+        </button>
+        <button
+          type="button"
+          [class.is-active]="conversationFilter() === 'archived'"
+          (click)="setConversationFilter('archived')"
+        >
+          Archive
+        </button>
+      </div>
+    </section>
+
+    @if (startPanelOpen()) {
+      <section class="start-panel">
+        @if (store.error()) {
+          <div class="state-row state-row--error">{{ store.error() }}</div>
+        }
+        <label class="search-field">
+          <i appIcon="search"></i>
+          <input
+            type="search"
+            placeholder="Find a user"
+            [ngModel]="userSearch()"
+            (ngModelChange)="updateSearch($event)"
+          />
+        </label>
+        <div class="user-results">
+          @for (user of filteredUsers(); track trackUser($index, user)) {
+            <button type="button" class="user-row" (click)="openDirect(user)">
+              <span class="avatar" [class.is-online]="user.online">{{
+                user.name.slice(0, 1)
+              }}</span>
+              <span class="user-row__copy">
+                <strong>{{ user.name }}</strong>
+                <small>{{ user.role || user.email || 'ENGINEERS_SALARY_REFERENCE user' }}</small>
+              </span>
+            </button>
+          }
+        </div>
+      </section>
+    }
+
+    <div class="conversation-list" aria-label="Conversations">
+      @if (store.loading()) {
+        <div class="state-row">Loading conversations...</div>
+      }
+      @for (conversation of filteredConversations(); track trackConversation($index, conversation)) {
+        <button
+          class="conversation-row"
+          type="button"
+          [class.is-active]="store.activeConversationId() === conversation.id"
+          (click)="selectConversation(conversation)"
+          (contextmenu)="openConversationMenu($event, conversation)"
+        >
+          <span class="avatar" [class.is-online]="otherParticipants(conversation)[0]?.online">
+            {{ conversationTitle(conversation).slice(0, 1) }}
+          </span>
+          <span class="conversation-row__copy">
+            <span class="conversation-row__top">
+              <strong>
+                @if (store.isConversationPinned(conversation.id)) {
+                  <i appIcon="pin-angle"></i>
+                }
+                {{ conversationTitle(conversation) }}
+              </strong>
+              <small>{{ conversation.updatedAt | date: 'shortTime' }}</small>
+            </span>
+            <span class="conversation-row__chips">
+              @if (store.draftFor(conversation.id)) {
+                <span class="row-chip is-draft">Draft</span>
+              }
+              @if (conversation.kind === 'group') {
+                <span class="row-chip">{{ conversation.participants.length }} members</span>
+              } @else {
+                <span class="row-chip">Direct</span>
+              }
+              @if (otherParticipants(conversation)[0]?.online) {
+                <span class="row-chip is-live">Live</span>
+              }
+            </span>
+            <span class="conversation-row__bottom">
+              <span>
+                @if (store.draftFor(conversation.id)) {
+                  <strong class="draft-chip">Draft</strong>
+                  {{ store.draftFor(conversation.id) }}
+                } @else {
+                  {{ conversation.lastMessage?.body || conversationSubtitle(conversation) }}
+                }
+              </span>
+              @if (conversation.muted) {
+                <i appIcon="bell-slash" title="Muted"></i>
+              }
+              @if (conversation.unreadCount > 0) {
+                <b>{{ conversation.unreadCount }}</b>
+              }
+            </span>
+          </span>
+        </button>
+      } @empty {
+        <div class="state-row">No conversations match this view.</div>
+      }
+    </div>
+  </aside>
+
+  <section class="thread-panel">
+    @if (store.activeConversation(); as conversation) {
+      <header class="thread-header">
+        <div class="thread-header__identity">
+          <span
+            class="avatar avatar--large"
+            [class.is-online]="otherParticipants(conversation)[0]?.online"
+          >
+            {{ conversationTitle(conversation).slice(0, 1) }}
+          </span>
+          <div>
+            <h2>{{ conversationTitle(conversation) }}</h2>
+            <p>{{ conversationSubtitle(conversation) }}</p>
+          </div>
+        </div>
+        <div class="thread-header__meta">
+          <span>{{ store.activeMessages().length }} messages</span>
+          <strong class="live-state" [class.is-live]="store.realtimeConnected()">
+            {{ store.realtimeConnected() ? 'Live' : 'Sync' }}
+          </strong>
+          @if (store.totalUnread() > 0) {
+            <strong>{{ store.totalUnread() }} unread</strong>
+          }
+        </div>
+        <div class="thread-actions">
+          <button
+            type="button"
+            class="icon-button"
+            [title]="store.isConversationPinned(conversation.id) ? 'Unpin chat' : 'Pin chat'"
+            [attr.aria-label]="store.isConversationPinned(conversation.id) ? 'Unpin chat' : 'Pin chat'"
+            [class.is-active]="store.isConversationPinned(conversation.id)"
+            (click)="togglePinned(conversation)"
+          >
+            <i appIcon="pin-angle"></i>
+          </button>
+          <button
+            type="button"
+            class="icon-button"
+            [title]="conversation.muted ? 'Unmute chat' : 'Mute chat'"
+            [attr.aria-label]="conversation.muted ? 'Unmute chat' : 'Mute chat'"
+            [class.is-active]="conversation.muted"
+            (click)="toggleMuted(conversation)"
+          >
+            <i appIcon="bell-slash"></i>
+          </button>
+          @if (store.isConversationArchived(conversation.id)) {
+            <button
+              type="button"
+              class="icon-button"
+              title="Restore chat"
+              aria-label="Restore chat"
+              (click)="restore(conversation)"
+            >
+              <i appIcon="archive"></i>
+            </button>
+          } @else {
+            <button
+              type="button"
+              class="icon-button"
+              title="Archive chat"
+              aria-label="Archive chat"
+              (click)="archive(conversation)"
+            >
+              <i appIcon="archive"></i>
+            </button>
+          }
+          <button
+            type="button"
+            class="icon-button"
+            [class.is-active]="detailsOpen()"
+            title="Conversation details"
+            aria-label="Conversation details"
+            (click)="toggleDetails()"
+          >
+            <i appIcon="info-circle"></i>
+          </button>
+        </div>
+      </header>
+
+      <section class="thread-tools">
+        <label class="search-field">
+          <i appIcon="search"></i>
+          <input
+            type="search"
+            placeholder="Search in conversation"
+            [ngModel]="messageSearch()"
+            (ngModelChange)="updateMessageSearch($event)"
+          />
+        </label>
+        <div class="message-view-toggle">
+          <button
+            type="button"
+            [class.is-active]="messageView() === 'all'"
+            (click)="setMessageView('all')"
+          >
+            All messages
+          </button>
+          <button
+            type="button"
+            [class.is-active]="messageView() === 'starred'"
+            (click)="setMessageView('starred')"
+          >
+            Starred
+          </button>
+        </div>
+      </section>
+
+      <section class="thread-insights" aria-label="Conversation insights">
+        <span>
+          <strong>{{ store.activeMessages().length }}</strong>
+          <small>Messages</small>
+        </span>
+        <span>
+          <strong>{{ activeStarredCount() }}</strong>
+          <small>Starred</small>
+        </span>
+        <span>
+          <strong>{{ conversation.kind === 'group' ? conversation.participants.length : 2 }}</strong>
+          <small>{{ conversation.kind === 'group' ? 'Members' : 'People' }}</small>
+        </span>
+        <span [class.is-live]="store.realtimeConnected()">
+          <strong>{{ store.realtimeConnected() ? 'Live' : 'Sync' }}</strong>
+          <small>{{ store.realtimeConnected() ? 'Realtime' : 'Fallback' }}</small>
+        </span>
+      </section>
+
+      @if (detailsOpen()) {
+        <aside class="conversation-details">
+          <header>
+            <span>Conversation details</span>
+            <button type="button" aria-label="Close details" (click)="detailsOpen.set(false)">
+              <i appIcon="x-lg"></i>
+            </button>
+          </header>
+          <section>
+            <strong>{{ conversationTitle(conversation) }}</strong>
+            <small>{{ conversationSubtitle(conversation) }}</small>
+          </section>
+          <div class="details-stats">
+            <span>
+              <b>{{ store.activeMessages().length }}</b>
+              Messages
+            </span>
+            <span>
+              <b>{{ activeStarredCount() }}</b>
+              Starred
+            </span>
+            <span>
+              <b>{{ otherParticipants(conversation).length + 1 }}</b>
+              Members
+            </span>
+          </div>
+          <div class="details-actions">
+            <button type="button" (click)="copyConversationLink(conversation)">
+              <i appIcon="link-45deg"></i>
+              Copy link
+            </button>
+            <button type="button" (click)="exportTranscript(conversation)">
+              <i appIcon="download"></i>
+              Export transcript
+            </button>
+            <button type="button" (click)="markConversationRead(conversation)">
+              <i appIcon="check2-circle"></i>
+              Mark read
+            </button>
+          </div>
+          <div class="participants-list">
+            @for (participant of conversation.participants; track participant.id) {
+              <span>
+                <i class="avatar" [class.is-online]="participant.online">{{
+                  participant.name.slice(0, 1)
+                }}</i>
+                <b>{{ participant.name }}</b>
+                <small>{{ participant.role || participant.email || 'ENGINEERS_SALARY_REFERENCE user' }}</small>
+              </span>
+            }
+          </div>
+        </aside>
+      }
+
+      <div #messageScroller class="message-list" (scroll)="onMessageScroll()">
+        @if (selectedMessages().length) {
+          <div class="selection-toolbar">
+            <span>{{ selectedMessages().length }} selected</span>
+            <button type="button" (click)="copySelectedMessages()">
+              <i appIcon="clipboard-check"></i>
+              Copy
+            </button>
+            <button type="button" (click)="starSelectedMessages()">
+              <i appIcon="star"></i>
+              Star
+            </button>
+            <button type="button" (click)="exportSelectedMessages()">
+              <i appIcon="download"></i>
+              Export
+            </button>
+            <button type="button" class="is-danger" (click)="deleteSelectedOwnMessages()">
+              <i appIcon="trash"></i>
+              Delete own
+            </button>
+            <button type="button" (click)="clearSelection()">
+              <i appIcon="x-lg"></i>
+              Clear
+            </button>
+          </div>
+        }
+        @if (!selectedMessages().length && visibleMessages().length > 1) {
+          <button type="button" class="select-visible" (click)="selectVisibleMessages()">
+            <i appIcon="check2-circle"></i>
+            Select visible
+          </button>
+        }
+        @for (message of visibleMessages(); track trackMessage($index, message); let i = $index) {
+          @if (shouldShowDateSeparator(i)) {
+            <div class="date-separator">
+              <span>{{ messageDateLabel(message) }}</span>
+            </div>
+          }
+          <article
+            class="message-row"
+            [class.is-own]="isOwnMessage(message)"
+            [class.is-starred]="store.isMessageStarred(message.id)"
+            (contextmenu)="openMessageMenu($event, message)"
+          >
+            @if (!isOwnMessage(message)) {
+              <span class="avatar message-avatar">{{
+                messageSender(message).name.slice(0, 1)
+              }}</span>
+            }
+            <label class="message-select" title="Select message">
+              <input
+                type="checkbox"
+                [checked]="selectedMessageIds().has(message.id)"
+                (click)="$event.stopPropagation()"
+                (change)="toggleMessageSelected(message)"
+              />
+            </label>
+            <div class="bubble">
+              <div class="bubble__meta">
+                <strong>{{ isOwnMessage(message) ? 'You' : messageSender(message).name }}</strong>
+                <small>
+                  {{ message.createdAt | date: 'shortTime' }}
+                  @if (message.editedAt) {
+                    - Edited
+                  }
+                </small>
+              </div>
+              <p>{{ message.body }}</p>
+              <div class="message-actions">
+                <button type="button" title="Copy" aria-label="Copy message" (click)="copy(message)">
+                  <i appIcon="clipboard-check"></i>
+                </button>
+                <button
+                  type="button"
+                  [title]="store.isMessageStarred(message.id) ? 'Unstar' : 'Star'"
+                  [attr.aria-label]="store.isMessageStarred(message.id) ? 'Unstar message' : 'Star message'"
+                  [class.is-active]="store.isMessageStarred(message.id)"
+                  (click)="toggleStar(message)"
+                >
+                  <i appIcon="star"></i>
+                </button>
+                @if (isOwnMessage(message) && message.deliveryState !== 'sending') {
+                  <button type="button" title="Edit" aria-label="Edit message" (click)="startEdit(message)">
+                    <i appIcon="pencil-square"></i>
+                  </button>
+                  <button
+                    type="button"
+                    title="Delete"
+                    aria-label="Delete message"
+                    (click)="deleteMessage(message)"
+                  >
+                    <i appIcon="trash"></i>
+                  </button>
+                }
+              </div>
+              @if (messageReceiptLabel(message); as receiptLabel) {
+                <span class="delivery" [attr.data-state]="messageDeliveryLabel(message)">{{ receiptLabel }}</span>
+                @if (messageDeliveryLabel(message) === 'failed') {
+                  <button type="button" class="retry-button" (click)="retry(message)">Retry</button>
+                }
+              }
+            </div>
+          </article>
+        } @empty {
+          <div class="empty-thread">
+            <i appIcon="chat-dots"></i>
+            <h3>{{ store.activeMessages().length ? 'No matching messages' : 'No messages yet' }}</h3>
+            <p>{{
+              store.activeMessages().length
+                ? 'Clear search or switch back to all messages.'
+                : 'Start the conversation with a clear update or question.'
+            }}</p>
+          </div>
+        }
+        @if (showJumpToLatest()) {
+          <button type="button" class="jump-latest" (click)="scrollToLatest()">
+            <i appIcon="arrow-down"></i>
+            Latest
+          </button>
+        }
+      </div>
+
+      <footer class="composer-shell">
+        @if (store.activeTypingLabel()) {
+          <div class="typing-line">{{ store.activeTypingLabel() }}...</div>
+        }
+        @if (editingMessage()) {
+          <div class="edit-bar">
+            <span>Editing message</span>
+            <button type="button" (click)="cancelEdit()">Cancel</button>
+          </div>
+        }
+        <div class="quick-replies" aria-label="Quick replies">
+          @for (reply of quickReplies(); track reply) {
+            <button type="button" (click)="useQuickReply(reply)">{{ reply }}</button>
+          }
+          <button type="button" class="quick-reply-manage" (click)="quickReplyEditorOpen.set(!quickReplyEditorOpen())">
+            <i appIcon="gear"></i>
+          </button>
+        </div>
+        @if (quickReplyEditorOpen()) {
+          <div class="quick-reply-editor">
+            <label>
+              <input
+                type="text"
+                maxlength="240"
+                placeholder="Add quick reply"
+                [ngModel]="quickReplyDraft()"
+                (ngModelChange)="quickReplyDraft.set($event)"
+                (keydown.enter)="addQuickReply()"
+              />
+              <button type="button" (click)="addQuickReply()">Add</button>
+            </label>
+            <div>
+              @for (reply of quickReplies(); track reply) {
+                <span>
+                  {{ reply }}
+                  <button type="button" aria-label="Remove quick reply" (click)="removeQuickReply(reply)">
+                    <i appIcon="x-lg"></i>
+                  </button>
+                </span>
+              }
+            </div>
+            <button type="button" class="reset-replies" (click)="resetQuickReplies()">Reset defaults</button>
+          </div>
+        }
+        <div class="composer">
+          <textarea
+            rows="1"
+            [attr.maxLength]="maxMessageLength"
+            placeholder="Write a message"
+            [ngModel]="composer()"
+            (ngModelChange)="onComposerInput($event)"
+            (keydown)="onComposerKeydown($event)"
+          ></textarea>
+          <button
+            class="send-button"
+            type="button"
+            aria-label="Send message"
+            [disabled]="!canSend()"
+            (click)="send()"
+          >
+            <i appIcon="send-fill"></i>
+          </button>
+        </div>
+        <div class="composer-meta">
+          <span>{{ store.realtimeConnected() ? 'Real-time connected' : 'Sync fallback active' }}</span>
+          <span [class.is-warning]="composerRemaining() < 200">
+            {{ composerRemaining() }} characters left
+          </span>
+        </div>
+      </footer>
+    } @else {
+      <div class="empty-thread empty-thread--full">
+        <i appIcon="chat-square-text"></i>
+        <h2>Select a conversation</h2>
+        <p>Choose a thread or start a new direct message.</p>
+      </div>
+    }
+  </section>
+
+  @if (contextMenu(); as menu) {
+    <div class="context-menu-backdrop" (click)="closeContextMenu()"></div>
+    <nav
+      class="context-menu"
+      [style.left.px]="menu.x"
+      [style.top.px]="menu.y"
+      (click)="$event.stopPropagation()"
+      (contextmenu)="$event.preventDefault()"
+    >
+      @if (menu.type === 'conversation') {
+        <header>
+          <span>Chat options</span>
+          <strong>{{ conversationTitle(menu.conversation) }}</strong>
+        </header>
+        <button type="button" (click)="selectConversation(menu.conversation)">
+          <i appIcon="chat-dots"></i>
+          Open chat
+        </button>
+        <button type="button" (click)="togglePinned(menu.conversation)">
+          <i appIcon="pin-angle"></i>
+          {{ store.isConversationPinned(menu.conversation.id) ? 'Unpin chat' : 'Pin chat' }}
+        </button>
+        <button type="button" (click)="toggleMuted(menu.conversation)">
+          <i appIcon="bell-slash"></i>
+          {{ menu.conversation.muted ? 'Unmute chat' : 'Mute chat' }}
+        </button>
+        <button type="button" (click)="markConversationRead(menu.conversation)">
+          <i appIcon="check2-circle"></i>
+          Mark as read
+        </button>
+        <button type="button" (click)="copyConversationLink(menu.conversation)">
+          <i appIcon="link-45deg"></i>
+          Copy chat link
+        </button>
+        <button type="button" (click)="clearConversationDraft(menu.conversation)">
+          <i appIcon="eraser"></i>
+          Clear draft
+        </button>
+        <button type="button" (click)="exportTranscript(menu.conversation)">
+          <i appIcon="download"></i>
+          Export transcript
+        </button>
+        @if (store.isConversationArchived(menu.conversation.id)) {
+          <button type="button" (click)="restore(menu.conversation)">
+            <i appIcon="archive"></i>
+            Restore chat
+          </button>
+        } @else {
+          <button type="button" (click)="archive(menu.conversation)">
+            <i appIcon="archive"></i>
+            Archive chat
+          </button>
+        }
+      } @else {
+        <header>
+          <span>Message options</span>
+          <strong>{{ isOwnMessage(menu.message) ? 'You' : messageSender(menu.message).name }}</strong>
+        </header>
+        <button type="button" (click)="copy(menu.message)">
+          <i appIcon="clipboard-check"></i>
+          Copy text
+        </button>
+        <button type="button" (click)="quoteMessage(menu.message)">
+          <i appIcon="quote"></i>
+          Quote reply
+        </button>
+        <button type="button" (click)="toggleStar(menu.message)">
+          <i appIcon="star"></i>
+          {{ store.isMessageStarred(menu.message.id) ? 'Unstar message' : 'Star message' }}
+        </button>
+        <button type="button" (click)="filterMessagesBySender(menu.message)">
+          <i appIcon="search"></i>
+          Find this sender
+        </button>
+        @if (messageDeliveryLabel(menu.message) === 'failed') {
+          <button type="button" (click)="retry(menu.message)">
+            <i appIcon="arrow-clockwise"></i>
+            Retry send
+          </button>
+        }
+        @if (isOwnMessage(menu.message) && menu.message.deliveryState !== 'sending') {
+          <button type="button" (click)="startEdit(menu.message)">
+            <i appIcon="pencil-square"></i>
+            Edit message
+          </button>
+          <button type="button" class="is-danger" (click)="deleteMessage(menu.message)">
+            <i appIcon="trash"></i>
+            Delete message
+          </button>
+        }
+      }
+    </nav>
+  }
+</div>

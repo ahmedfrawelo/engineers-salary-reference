@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "types": ["node"]
+  },
+  "include": [
+    ".storybook/preview.ts",
+    "src/**/*.stories.ts",
+    "src/**/*.stories.tsx",
+    "src/**/*.stories.js",
+    "src/**/*.stories.jsx",
+    "src/**/*.stories.mjs",
+    "src/**/*.story.ts"
+  ],
+  "exclude": ["**/*.spec.ts", "dist/**/*", "node_modules/**/*"]
+}

@@ -1,0 +1,104 @@
+<button
+  type="button"
+  class="emojiIconPicker__button"
+  cdkOverlayOrigin
+  #emojiPickerOrigin="cdkOverlayOrigin"
+  [disabled]="disabled"
+  [title]="label + ': ' + selectedLabel()"
+  [attr.aria-label]="label + ': ' + selectedLabel()"
+  [attr.aria-expanded]="open"
+  aria-haspopup="dialog"
+  (click)="toggle()"
+>
+  <span class="emojiIconPicker__buttonSymbol" aria-hidden="true">
+    @if (selectedIconName(); as iconName) {
+      <i [appIcon]="iconName" aria-hidden="true"></i>
+    } @else {
+      {{ selectedSymbol() }}
+    }
+  </span>
+</button>
+
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOpen]="open"
+  [cdkConnectedOverlayOrigin]="emojiPickerOrigin"
+  [cdkConnectedOverlayPositions]="positions"
+  [cdkConnectedOverlayPush]="true"
+  [cdkConnectedOverlayViewportMargin]="10"
+  [cdkConnectedOverlayFlexibleDimensions]="false"
+  [cdkConnectedOverlayGrowAfterOpen]="false"
+  [cdkConnectedOverlayHasBackdrop]="true"
+  cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
+  cdkConnectedOverlayPanelClass="emoji-icon-picker-overlay-pane"
+  (backdropClick)="close()"
+  (detach)="close()"
+>
+  <div class="emojiIconPicker__panel" role="dialog" [attr.aria-label]="label" (click)="$event.stopPropagation()">
+    <div class="emojiIconPicker__search">
+      <i appIcon="search" aria-hidden="true"></i>
+      <input
+        type="text"
+        [(ngModel)]="searchDraft"
+        [disabled]="disabled"
+        placeholder="Search emoji..."
+        aria-label="Search emoji"
+        (input)="onSearchChange()"
+      />
+    </div>
+
+    <div class="emojiIconPicker__tabs" role="tablist" aria-label="Icon categories">
+      @for (option of categories; track option.id) {
+        <button
+          type="button"
+          [class.is-active]="category === option.id"
+          [attr.aria-selected]="category === option.id"
+          role="tab"
+          (click)="setCategory(option.id)"
+        >
+          {{ option.label }}
+        </button>
+      }
+    </div>
+
+    <div class="emojiIconPicker__grid" role="radiogroup" aria-label="Emoji icons">
+      @for (option of visibleChoices(); track option.value) {
+        <button
+          type="button"
+          [class.is-selected]="value === option.value"
+          [disabled]="disabled"
+          [title]="option.label"
+          [attr.aria-label]="option.label"
+          [attr.aria-checked]="value === option.value"
+          role="radio"
+          (click)="select(option.value)"
+        >
+          <span aria-hidden="true">
+            @if (iconName(option.value); as pickerIconName) {
+              <i [appIcon]="pickerIconName" aria-hidden="true"></i>
+            } @else {
+              {{ iconSymbol(option.value) }}
+            }
+          </span>
+        </button>
+      } @empty {
+        <div class="emojiIconPicker__empty">No emoji found.</div>
+      }
+    </div>
+
+    <div class="emojiIconPicker__pager" aria-label="Emoji pages">
+      <button type="button" [disabled]="page <= 0" aria-label="Previous emoji page" (click)="previousPage()">
+        <i appIcon="chevron-left" aria-hidden="true"></i>
+      </button>
+      <span>{{ pageLabel() }}</span>
+      <button
+        type="button"
+        [disabled]="page >= totalPages() - 1"
+        aria-label="Next emoji page"
+        (click)="nextPage()"
+      >
+        <i appIcon="chevron-right" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+</ng-template>

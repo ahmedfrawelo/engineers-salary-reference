@@ -1,0 +1,272 @@
+@mixin cdk-drag-motion(
+  $list-selector,
+  $row-selector,
+  $preview-class,
+  $row-height: 36px,
+  $row-padding: 0 9px,
+  $row-radius: 9px,
+  $preview-border: 1px solid color-mix(in oklab, rgb(var(--border) / 0.5) 80%, transparent),
+  $preview-background: color-mix(in oklab, rgb(var(--surface)) 94%, rgb(var(--bg1)) 6%),
+  $preview-shadow: 0 10px 20px rgb(0 0 0 / 0.28),
+  $preview-grid-template: auto minmax(0, 1fr) auto,
+  $preview-gap: 8px,
+  $preview-rotate: 4deg,
+  $placeholder-border-color: rgb(var(--primary) / 0.38),
+  $placeholder-background: color-mix(in oklab, rgb(var(--surface)) 92%, rgb(var(--primary)) 8%),
+  $move-duration: 0.12s,
+  $move-ease: ease
+) {
+  ::ng-deep .cdk-drag-preview.#{$preview-class} {
+    min-height: $row-height !important;
+    height: $row-height !important;
+    padding: $row-padding !important;
+    border-radius: $row-radius !important;
+    border: $preview-border !important;
+    background: $preview-background !important;
+    display: grid !important;
+    grid-template-columns: $preview-grid-template;
+    align-items: center;
+    gap: $preview-gap;
+    box-sizing: border-box;
+    box-shadow: $preview-shadow !important;
+    opacity: 1 !important;
+    rotate: $preview-rotate;
+    transform-origin: 50% 50%;
+    filter: none !important;
+    mix-blend-mode: normal !important;
+  }
+
+  ::ng-deep .cdk-drag-preview.#{$preview-class} * {
+    opacity: 1 !important;
+  }
+
+  #{$list-selector} .cdk-drag-placeholder {
+    min-height: $row-height;
+    height: $row-height;
+    border-radius: $row-radius;
+    box-sizing: border-box;
+    opacity: 1;
+    border-style: dashed;
+    border-color: $placeholder-border-color;
+    background: $placeholder-background;
+  }
+
+  #{$list-selector} .cdk-drag-placeholder > * {
+    opacity: 0;
+  }
+
+  #{$row-selector}.cdk-drag-dragging {
+    opacity: 0 !important;
+    visibility: hidden;
+  }
+
+  #{$list-selector}.cdk-drop-list-dragging #{$row-selector}:not(.cdk-drag-placeholder) {
+    transition: transform $move-duration $move-ease;
+  }
+}
+
+@mixin cdk-drag-block-motion(
+  $list-selector,
+  $row-selector,
+  $preview-class,
+  $row-radius: 12px,
+  $preview-border: 0,
+  $preview-background: color-mix(in oklab, rgb(var(--surface)) 94%, rgb(var(--bg1)) 6%),
+  $preview-shadow: none,
+  $preview-rotate: 3deg,
+  $placeholder-background: color-mix(in oklab, rgb(var(--surface)) 94%, rgb(var(--bg1)) 6%),
+  $move-duration: 0.12s,
+  $move-ease: ease
+) {
+  ::ng-deep .cdk-drag-preview.#{$preview-class} {
+    border: $preview-border !important;
+    border-radius: $row-radius !important;
+    background: $preview-background !important;
+    box-shadow: $preview-shadow !important;
+    opacity: 1 !important;
+    rotate: $preview-rotate;
+    transform-origin: 50% 50%;
+    filter: none !important;
+    mix-blend-mode: normal !important;
+    pointer-events: none !important;
+  }
+
+  ::ng-deep .cdk-drag-preview.#{$preview-class} * {
+    opacity: 1 !important;
+  }
+
+  #{$list-selector} .cdk-drag-placeholder {
+    border-radius: $row-radius;
+    background: $placeholder-background;
+    opacity: 1;
+  }
+
+  #{$list-selector} .cdk-drag-placeholder > * {
+    opacity: 0 !important;
+  }
+
+  #{$row-selector}.cdk-drag-dragging {
+    opacity: 0 !important;
+    visibility: hidden !important;
+  }
+
+  #{$list-selector}.cdk-drop-list-dragging #{$row-selector}:not(.cdk-drag-placeholder) {
+    transition: transform $move-duration $move-ease;
+  }
+}
+
+@mixin cdk-drag-preview-switch(
+  $preview-class,
+  $switch-selector: '.switch',
+  $slider-selector: '.slider',
+  $switch-width: 34px,
+  $switch-height: 20px,
+  $slider-background: rgb(var(--border) / 0.66),
+  $slider-active-background: rgb(var(--primary) / 0.6),
+  $knob-size: 14px,
+  $knob-offset: 3px,
+  $knob-background: rgb(var(--surface)),
+  $knob-translate-x: 14px
+) {
+  ::ng-deep .cdk-drag-preview.#{$preview-class} #{$switch-selector} {
+    position: relative;
+    width: $switch-width;
+    height: $switch-height;
+    flex: 0 0 $switch-width;
+  }
+
+  ::ng-deep .cdk-drag-preview.#{$preview-class} #{$switch-selector} input {
+    width: 0;
+    height: 0;
+    opacity: 0;
+  }
+
+  ::ng-deep .cdk-drag-preview.#{$preview-class} #{$slider-selector} {
+    position: absolute;
+    inset: 0;
+    border-radius: 999px;
+    background: $slider-background;
+  }
+
+  ::ng-deep .cdk-drag-preview.#{$preview-class} #{$slider-selector}::before {
+    content: '';
+    position: absolute;
+    left: $knob-offset;
+    top: $knob-offset;
+    width: $knob-size;
+    height: $knob-size;
+    border-radius: 999px;
+    background: $knob-background;
+  }
+
+  ::ng-deep
+    .cdk-drag-preview.#{$preview-class}
+    #{$switch-selector}
+    input:checked
+    + #{$slider-selector} {
+    background: $slider-active-background;
+  }
+
+  ::ng-deep
+    .cdk-drag-preview.#{$preview-class}
+    #{$switch-selector}
+    input:checked
+    + #{$slider-selector}::before {
+    transform: translateX($knob-translate-x);
+  }
+}
+
+@mixin columns-overlay-drag-motion(
+  $list-selector: '.columns-overlay-list',
+  $row-selector: '.columns-overlay-row',
+  $preview-class: 'columns-overlay-row-preview',
+  $preview-rotate: 4deg,
+  $move-duration: 0.12s,
+  $move-ease: ease
+) {
+  @include cdk-drag-motion(
+    $list-selector: $list-selector,
+    $row-selector: $row-selector,
+    $preview-class: $preview-class,
+    $row-height: 36px,
+    $row-padding: 0 9px,
+    $row-radius: 9px,
+    $preview-grid-template: auto minmax(0, 1fr) auto,
+    $preview-gap: 8px,
+    $preview-rotate: $preview-rotate,
+    $move-duration: $move-duration,
+    $move-ease: $move-ease
+  );
+
+  @include cdk-drag-preview-switch(
+    $preview-class: $preview-class,
+    $switch-selector: '.switch',
+    $slider-selector: '.slider',
+    $switch-width: 34px,
+    $switch-height: 20px,
+    $slider-background: rgb(var(--border) / 0.66),
+    $slider-active-background: rgb(var(--primary) / 0.6),
+    $knob-size: 14px,
+    $knob-offset: 3px,
+    $knob-background: rgb(var(--surface)),
+    $knob-translate-x: 14px
+  );
+}
+
+@mixin columns-horizontal-drag-motion(
+  $list-selector,
+  $row-selector,
+  $preview-class,
+  $label-selector: '.tsl-head-label',
+  $resize-selector: '.tsl-col-resize',
+  $row-height: 30px,
+  $row-padding: 0 8px,
+  $row-radius: 8px,
+  $preview-gap: 6px,
+  $preview-rotate: 3deg,
+  $move-duration: 0.14s,
+  $move-ease: ease
+) {
+  @include cdk-drag-motion(
+    $list-selector: $list-selector,
+    $row-selector: $row-selector,
+    $preview-class: $preview-class,
+    $row-height: $row-height,
+    $row-padding: $row-padding,
+    $row-radius: $row-radius,
+    $preview-grid-template: minmax(0, auto) auto,
+    $preview-gap: $preview-gap,
+    $preview-rotate: $preview-rotate,
+    $placeholder-border-color: transparent,
+    $placeholder-background: transparent,
+    $move-duration: $move-duration,
+    $move-ease: $move-ease
+  );
+
+  ::ng-deep .cdk-drag-preview.#{$preview-class} #{$resize-selector} {
+    display: none !important;
+  }
+
+  ::ng-deep .cdk-drag-preview.#{$preview-class} #{$label-selector} {
+    min-width: 0;
+    max-width: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  ::ng-deep #{$list-selector} .cdk-drag-placeholder {
+    opacity: 1 !important;
+    min-height: $row-height;
+    height: $row-height;
+    border-radius: $row-radius;
+    box-sizing: border-box;
+    position: relative;
+    border-color: transparent !important;
+    background: transparent !important;
+  }
+
+  ::ng-deep #{$list-selector} .cdk-drag-placeholder > * {
+    opacity: 1 !important;
+  }
+}

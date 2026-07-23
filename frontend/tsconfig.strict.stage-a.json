@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.app.json",
+  "compilerOptions": {
+    "noImplicitAny": true
+  },
+  "files": [],
+  "include": [
+    "src/app/shared/data-grid/**/*.ts",
+    "src/app/pages/tender/suppliers/**/*.ts",
+    "src/**/*.d.ts"
+  ],
+  "exclude": ["**/*.spec.ts", "**/*.test.ts"]
+}

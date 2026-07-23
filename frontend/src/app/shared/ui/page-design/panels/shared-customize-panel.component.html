@@ -1,0 +1,115 @@
+<app-side-drawer
+  [open]="open"
+  [width]="width"
+  [zIndex]="zIndex"
+  [topInset]="topInset"
+  [backdropTint]="0"
+  [backdropBlur]="0"
+  [ignoreOutsideSelectors]="ignoreOutsideSelectors"
+  [motionPreset]="'instant'"
+  [panelClass]="panelClass"
+  (closed)="closed.emit()"
+>
+  <section
+    class="customize-drawer-surface"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="sharedCustomizeDrawerTitle"
+  >
+    <div class="customize-drawer-head">
+      <div class="customize-drawer-title" id="sharedCustomizeDrawerTitle">{{ title }}</div>
+      <ng-content select="[customize-panel-header-actions]"></ng-content>
+      @if (actionIcon) {
+        <div class="customize-drawer-action-split">
+          <button
+            class="customize-drawer-action customize-drawer-action--main"
+            type="button"
+            [disabled]="actionDisabled"
+            [title]="actionLabel"
+            [attr.aria-label]="actionLabel"
+            (click)="action.emit()"
+          >
+            <i [appIcon]="actionIcon" aria-hidden="true"></i>
+            <span class="customize-drawer-action-label">{{ actionIcon === 'save' ? 'Save' : actionLabel }}</span>
+          </button>
+          @if (actionMenuItems.length) {
+            <details #actionMenuDetails class="customize-drawer-action-menu">
+              <summary
+                class="customize-drawer-action customize-drawer-action--trigger"
+                [attr.aria-label]="actionLabel + ' options'"
+                [attr.title]="actionLabel + ' options'"
+                (click)="$event.stopPropagation()"
+              >
+                <i appIcon="chevron-down" aria-hidden="true"></i>
+              </summary>
+              <div class="customize-drawer-action-menu__panel">
+                @for (item of actionMenuItems; track item.id) {
+                  <button
+                    type="button"
+                    [disabled]="actionDisabled"
+                    (click)="actionMenuDetails.removeAttribute('open'); actionMenu.emit(item.id)"
+                  >
+                    @if (item.icon) {
+                      <i [appIcon]="item.icon" aria-hidden="true"></i>
+                    }
+                    <span>{{ item.label }}</span>
+                  </button>
+                }
+              </div>
+            </details>
+          }
+        </div>
+      }
+    </div>
+
+    <div class="customize-drawer-body">
+      @if (showDefaultContent) {
+        <section class="customize-drawer-section customize-drawer-section--first">
+          <div class="customize-drawer-view-pill" aria-label="Current view">
+            <span class="customize-drawer-view-icon">
+              <i [appIcon]="viewIcon" aria-hidden="true"></i>
+            </span>
+            <span>{{ viewLabel }}</span>
+          </div>
+        </section>
+
+        <section class="customize-drawer-section">
+          <button class="customize-row customize-row--nav" type="button" (click)="openFields.emit()">
+            <span class="customize-row-main">
+              <i appIcon="layout-three-columns" aria-hidden="true"></i>
+              <span>Fields</span>
+            </span>
+            <span class="customize-row-side">
+              <span class="customize-row-value">{{ fieldsSummary }}</span>
+              <i appIcon="chevron-right" aria-hidden="true"></i>
+            </span>
+          </button>
+
+          <button class="customize-row customize-row--nav" type="button" (click)="openFilters.emit()">
+            <span class="customize-row-main">
+              <i appIcon="funnel" aria-hidden="true"></i>
+              <span>Filter</span>
+            </span>
+            <span class="customize-row-side">
+              <span class="customize-row-value">{{ filterSummary }}</span>
+              <i appIcon="chevron-right" aria-hidden="true"></i>
+            </span>
+          </button>
+
+          <button class="customize-row customize-row--nav" type="button" (click)="openGroup.emit()">
+            <span class="customize-row-main">
+              <i appIcon="layers" aria-hidden="true"></i>
+              <span>Group</span>
+            </span>
+            <span class="customize-row-side">
+              <span class="customize-row-value">{{ groupSummary }}</span>
+              <i appIcon="chevron-right" aria-hidden="true"></i>
+            </span>
+          </button>
+        </section>
+      }
+
+      <ng-content></ng-content>
+    </div>
+  </section>
+</app-side-drawer>

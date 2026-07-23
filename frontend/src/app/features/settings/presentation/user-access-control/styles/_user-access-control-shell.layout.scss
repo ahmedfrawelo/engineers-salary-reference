@@ -1,0 +1,110 @@
+:host {
+  display: block;
+  min-height: 0;
+  height: 100%;
+  color: rgb(var(--fg));
+}
+
+.access-control-page {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.access-control-page > engineers-salary-reference-page-design {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.access-control-table-shell {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.access-body,
+.access-pane {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  gap: 12px;
+}
+
+.access-pane--profile {
+  gap: 0;
+  overflow: hidden;
+}
+
+.access-pane--permissions {
+  gap: 0;
+  padding-inline-start: 18px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.tasks-body-scroll {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.workspace-shell.workspace-shell-flat.cu-workspace {
+  display: flex;
+  flex-direction: column;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  overflow: hidden;
+  flex: 1 1 auto;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  min-height: 0;
+}
+
+.workspace-main {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  overflow: hidden;
+}
+
+.workspace-main > .register-shell.cu-list-shell {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  gap: 0;
+  overflow: hidden;
+}
+
+:host ::ng-deep overlay-panel {
+  display: contents !important;
+}

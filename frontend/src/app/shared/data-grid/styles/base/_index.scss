@@ -1,0 +1,7 @@
+// Base visual ownership:
+// - theme-and-base provides the semantic token bridge to app theme
+// - simple provides the current canonical DataGrid visual theme
+// - context-menu remains isolated because it is rendered out-of-flow
+@use './theme-and-base';
+@use './simple';
+@use './context-menu';

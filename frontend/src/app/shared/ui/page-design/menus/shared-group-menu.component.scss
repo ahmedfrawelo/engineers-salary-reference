@@ -1,0 +1,160 @@
+:host {
+  display: inline-flex;
+  align-items: center;
+}
+
+.proj-menu-summary .proj-group-summary-icon {
+  width: 16px;
+  min-width: 16px;
+  height: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: currentColor !important;
+  line-height: 0;
+}
+
+.proj-group-menu-list {
+  width: min(380px, calc(100vw - 34px));
+}
+
+.proj-group-menu-list.is-simple-mode {
+  width: min(205px, calc(100vw - 34px));
+}
+
+.proj-group-menu-list:not(.is-simple-mode) {
+  width: min(460px, calc(100vw - 34px));
+}
+
+.proj-group-menu-list:not(.is-simple-mode) .proj-group-controls {
+  grid-template-columns: minmax(0, 1fr) 128px auto;
+}
+
+.proj-group-menu-list:not(.is-simple-mode) .proj-group-controls:has(.proj-inline-select-date-interval) {
+  grid-template-columns: minmax(0, 1fr) 76px 128px auto;
+}
+
+.proj-inline-select-date-interval .proj-inline-select-trigger {
+  min-width: 76px;
+}
+
+.proj-inline-select-order.is-disabled {
+  opacity: 0.56;
+  pointer-events: none;
+}
+
+.proj-inline-select-empty {
+  padding: 10px 12px;
+  font-size: 12px;
+  color: var(--proj-filter-panel-muted-fg);
+}
+
+.proj-group-row-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  justify-self: end;
+}
+
+.proj-group-action {
+  width: 24px;
+  height: 24px;
+  border-radius: 8px;
+  border: 0;
+  background: var(
+    --proj-control-soft-bg,
+    color-mix(in oklab, var(--app-color-text-high) 4%, transparent)
+  );
+  color: var(--proj-control-soft-fg, var(--app-color-text-soft));
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  outline: none;
+  box-shadow: none;
+  transition:
+    background-color 0.1s ease-out,
+    border-color 0.1s ease-out,
+    color 0.1s ease-out,
+    opacity 0.1s ease-out;
+}
+
+.proj-group-action:hover:not(:disabled),
+.proj-group-action:focus-visible:not(:disabled) {
+  background: var(
+    --proj-control-soft-bg-hover,
+    color-mix(in oklab, var(--app-color-text-high) 8%, transparent)
+  );
+  color: var(--proj-control-soft-fg-strong, var(--app-color-text-high));
+  outline: none;
+}
+
+.proj-group-action:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.proj-group-menu-list :is(.proj-inline-select-item, .proj-group-reset, .proj-group-add-subgroup) {
+  transition:
+    background-color 0.1s ease-out,
+    border-color 0.1s ease-out,
+    color 0.1s ease-out,
+    opacity 0.1s ease-out;
+}
+
+.proj-group-menu-list
+  :is(.proj-inline-select-item, .proj-group-reset, .proj-group-add-subgroup):is(
+    :hover,
+    :focus-visible
+  ):not(:disabled) {
+  border-color: var(--proj-toolbar-hover-border, var(--proj-outline-color)) !important;
+  background: var(--proj-toolbar-hover-bg, var(--proj-control-soft-bg-hover)) !important;
+  color: var(--proj-toolbar-hover-fg, var(--proj-control-soft-fg-strong)) !important;
+  outline: none !important;
+}
+
+.proj-group-menu-list
+  :is(.proj-inline-select-item.active, .proj-inline-select-item[aria-pressed='true']) {
+  border-color: var(--proj-toolbar-active-border, var(--proj-outline-color)) !important;
+  background: var(--proj-toolbar-active-bg, var(--proj-control-soft-bg-hover)) !important;
+  color: var(--proj-toolbar-active-fg, var(--proj-control-soft-fg-strong)) !important;
+  font-weight: 700;
+}
+
+.proj-group-menu-list
+  :is(.proj-inline-select-item, .proj-group-reset, .proj-group-add-subgroup):is(
+    :hover,
+    :focus-visible,
+    .active,
+    [aria-pressed='true']
+  )
+  :is(i, hugeicons-icon, .app-icon-host) {
+  color: currentColor !important;
+}
+
+.proj-group-menu-list button:active:not(:disabled),
+.proj-group-action:active:not(:disabled) {
+  transition-duration: 0s !important;
+}
+
+@media (max-width: 820px) {
+  .proj-group-menu-list {
+    width: min(360px, calc(100vw - 20px));
+  }
+
+  .proj-group-menu-list.is-simple-mode {
+    width: min(205px, calc(100vw - 20px));
+  }
+
+  .proj-group-menu-list:not(.is-simple-mode) {
+    width: min(410px, calc(100vw - 20px));
+  }
+
+  .proj-group-controls {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .proj-group-row-actions {
+    justify-self: start;
+  }
+}

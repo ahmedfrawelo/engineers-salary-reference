@@ -1,0 +1,588 @@
+@use '../../../../../shared/styles/stretch-tabs' as stretchTabs;
+
+:host ::ng-deep tender-project-details,
+:host ::ng-deep add-tender-panel,
+:host ::ng-deep tender-project-settings {
+  display: contents !important;
+}
+
+:host ::ng-deep engineers-salary-reference-page-design.tender-projects-page-design .wsh__header {
+  padding-bottom: 0;
+  border-bottom-width: 0;
+}
+
+:host ::ng-deep engineers-salary-reference-page-design.tender-projects-page-design {
+  container-type: inline-size;
+  container-name: tender-projects-page;
+}
+
+.tender-projects-view-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  min-width: 0;
+  width: 100%;
+}
+
+.tender-projects-view-tabs {
+  --stretch-tabs-current-inline-padding: 8px;
+  flex: 1 1 auto;
+  min-width: 0;
+  width: 100%;
+  max-width: none;
+}
+
+.tender-projects-view-list {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  overflow: hidden;
+  position: relative;
+  z-index: 2;
+}
+
+@include stretchTabs.app-navigation-tabs-theme(
+  $tabs-selector: '.tender-projects-view-tabs',
+  $tab-selector: '.tender-projects-view-list .tender-projects-view-tab',
+  $icon-selector: '.tender-projects-view-icon',
+  $label-selector: '.tender-projects-view-label',
+  $indicator-selector: '.stretch-tabs-indicator',
+  $enter-keyframes-name: tender-projects-view-tab-enter,
+  $badge-keyframes-name: tender-projects-view-tab-pop,
+  $tab-stagger-delays: (
+    0.02s,
+    0.05s
+  ),
+  $tabs-divider-bleed: -18px,
+  $icon-width: 16px,
+  $icon-size: 14px,
+  $tab-gap: 7px,
+  $label-size: 12px,
+  $label-weight: 700
+);
+
+.tender-projects-view-host {
+  display: flex;
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.tender-projects-view-host--calendar {
+  background: transparent;
+}
+
+.tender-projects-table-view {
+  min-width: 0;
+  min-height: 0;
+}
+
+.tender-projects-table-view--hidden {
+  display: none !important;
+}
+
+.tender-projects-calendar-view {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  padding: 0;
+  background: transparent;
+  container-type: inline-size;
+  container-name: tender-projects-calendar;
+}
+
+.tender-projects-calendar-view engineers-salary-reference-calendar {
+  display: block;
+  height: 100%;
+  min-height: 0;
+  --cal-side-sticky-top: 53px;
+  --cal-side-height: calc(100dvh - 116px);
+  --cal-main-height: calc(100dvh - 116px);
+  --cal-day-min: clamp(88px, 10vh, 98px);
+  --cal-side-scroll-padding: 12px;
+}
+
+:host ::ng-deep .tender-projects-calendar-view .calendar-shell {
+  min-height: 100%;
+  gap: 0;
+}
+
+:host ::ng-deep .tender-projects-calendar-view .calendar-month {
+  height: 100%;
+}
+
+:host ::ng-deep .tender-projects-calendar-view .month-weeks {
+  min-height: 100%;
+}
+
+:host ::ng-deep .tender-projects-calendar-view .calendar-day {
+  padding: 9px 8px 7px;
+  gap: 6px;
+}
+
+:host ::ng-deep .tender-projects-calendar-view .day-head {
+  gap: 3px;
+}
+
+:host ::ng-deep .tender-projects-calendar-view .calendar-day.first-week .day-head {
+  min-height: 32px;
+}
+
+:host ::ng-deep .tender-projects-calendar-view .day-events {
+  gap: 4px;
+}
+
+:host ::ng-deep .tender-projects-calendar-view .calendar-month .event-chip {
+  min-height: 19px;
+  height: 19px;
+  font-size: 10px;
+}
+
+:host ::ng-deep .tender-projects-calendar-view .event-more {
+  font-size: 10px;
+  line-height: 12px;
+}
+
+:host ::ng-deep .tender-projects-calendar-view .calendar-toolbar--compact .calendar-controls {
+  gap: 8px;
+}
+
+@container tender-projects-calendar (max-width: 1460px) {
+  .tender-projects-calendar-view engineers-salary-reference-calendar {
+    --cal-day-min: clamp(82px, 9.2vh, 94px);
+  }
+
+  :host ::ng-deep .tender-projects-calendar-view .calendar-day {
+    padding: 8px 7px 6px;
+    gap: 5px;
+  }
+
+  :host ::ng-deep .tender-projects-calendar-view .calendar-month .event-chip {
+    min-height: 18px;
+    height: 18px;
+    font-size: 9.5px;
+  }
+
+  :host ::ng-deep .tender-projects-calendar-view .day-events {
+    gap: 3px;
+  }
+}
+
+@container tender-projects-calendar (max-width: 1320px) {
+  :host ::ng-deep .tender-projects-calendar-view .calendar-layout.with-side,
+  :host ::ng-deep .tender-projects-calendar-view .calendar-layout.with-side.side-left {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  :host ::ng-deep .tender-projects-calendar-view .calendar-layout.with-side .calendar-main,
+  :host ::ng-deep .tender-projects-calendar-view .calendar-layout.with-side.side-left .calendar-main {
+    order: 1;
+    height: auto;
+    max-height: none;
+    overflow: visible;
+  }
+
+  :host ::ng-deep .tender-projects-calendar-view .calendar-layout.with-side .calendar-main__body {
+    overflow: visible;
+    padding-right: 0;
+    scrollbar-gutter: auto;
+  }
+
+  :host ::ng-deep .tender-projects-calendar-view .calendar-layout.with-side .calendar-side,
+  :host ::ng-deep .tender-projects-calendar-view .calendar-layout.with-side.side-left .calendar-side {
+    order: 2;
+    position: static;
+    height: auto;
+    max-height: none;
+    border-left: 0;
+    border-right: 0;
+    overflow: visible;
+  }
+
+  :host ::ng-deep .tender-projects-calendar-view .calendar-layout.with-side .calendar-side__body {
+    overflow: visible;
+    margin-right: 0;
+    padding: 10px 0 0;
+    scrollbar-gutter: auto;
+  }
+
+  :host ::ng-deep .tender-projects-calendar-view .calendar-layout.with-side .calendar-side-resize {
+    display: none;
+  }
+}
+
+@container tender-projects-calendar (max-width: 1120px) {
+  :host ::ng-deep .tender-projects-calendar-view .calendar-toolbar--compact {
+    grid-template-columns: minmax(0, 1fr) !important;
+    height: auto !important;
+    min-height: 41px !important;
+    max-height: none !important;
+    gap: 8px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+
+  :host ::ng-deep .tender-projects-calendar-view .calendar-toolbar__primary,
+  :host ::ng-deep .tender-projects-calendar-view .calendar-toolbar__secondary {
+    grid-column: 1 !important;
+    grid-row: auto !important;
+    width: 100%;
+    justify-content: flex-start !important;
+  }
+
+  :host ::ng-deep .tender-projects-calendar-view .calendar-toolbar__secondary {
+    overflow-x: auto;
+    padding-bottom: 2px;
+  }
+
+  :host ::ng-deep .tender-projects-calendar-view .calendar-toolbar--compact .calendar-toolbar__primary {
+    gap: 6px;
+  }
+
+  :host ::ng-deep .tender-projects-calendar-view .calendar-toolbar--compact .calendar-controls {
+    flex-wrap: wrap;
+  }
+
+  :host ::ng-deep .tender-projects-calendar-view .calendar-toolbar--compact .calendar-title--range-only {
+    order: 3;
+    flex: 1 0 100%;
+  }
+}
+
+@container tender-projects-calendar (max-width: 820px) {
+  .tender-projects-calendar-view engineers-salary-reference-calendar {
+    --cal-day-min: clamp(72px, 8.6vh, 86px);
+  }
+
+  :host ::ng-deep .tender-projects-calendar-view .calendar-day {
+    padding: 6px 5px 5px;
+    gap: 4px;
+  }
+
+  :host ::ng-deep .tender-projects-calendar-view .calendar-day.first-week .day-head {
+    min-height: 28px;
+  }
+
+  :host ::ng-deep .tender-projects-calendar-view .calendar-month .event-chip {
+    min-height: 17px;
+    height: 17px;
+    font-size: 9px;
+  }
+
+  :host ::ng-deep .tender-projects-calendar-view .event-more {
+    font-size: 9px;
+    line-height: 11px;
+  }
+}
+
+@container tender-projects-page (max-width: 1280px) {
+  :host ::ng-deep engineers-salary-reference-page-design.tender-projects-page-design .wsh__toolbar {
+    height: auto !important;
+    min-height: 41px !important;
+    max-height: none !important;
+    align-items: flex-start;
+    flex-wrap: wrap !important;
+    row-gap: 6px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+  }
+
+  :host ::ng-deep engineers-salary-reference-page-design.tender-projects-page-design .wsh__toolbar-left,
+  :host ::ng-deep engineers-salary-reference-page-design.tender-projects-page-design .wsh__toolbar-right {
+    width: 100% !important;
+    flex: 1 0 100%;
+    flex-wrap: wrap !important;
+    justify-content: flex-start;
+    align-items: center;
+  }
+
+  :host ::ng-deep engineers-salary-reference-page-design.tender-projects-page-design .wsh__toolbar-right {
+    gap: 4px;
+  }
+
+  :host
+    ::ng-deep
+    engineers-salary-reference-page-design.tender-projects-page-design
+    .wsh__toolbar
+    .proj-toolbar-search {
+    margin-inline-start: 0;
+  }
+
+  :host
+    ::ng-deep
+    engineers-salary-reference-page-design.tender-projects-page-design
+    .wsh__toolbar
+    .proj-toolbar-search::before {
+    content: none;
+  }
+
+}
+
+:host ::ng-deep .tender-projects-calendar-view .calendar-agenda,
+:host ::ng-deep .tender-projects-calendar-view .calendar-year,
+:host ::ng-deep .tender-projects-calendar-view .calendar-quarter,
+:host ::ng-deep .tender-projects-calendar-view .calendar-list {
+  border-color: var(--app-color-outline-stroke);
+  background: transparent;
+}
+
+:host ::ng-deep .confirm-delete-overlay .modal-hdr {
+  padding: 9px 12px;
+  border-bottom: 1px solid color-mix(in oklab, rgb(var(--border-strong)) 38%, transparent);
+  background: var(--app-color-overlay-header);
+}
+
+:host ::ng-deep .confirm-delete-overlay .ttl .title {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  text-transform: none;
+}
+
+:host ::ng-deep .confirm-delete-overlay .body {
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: var(--app-color-overlay-body);
+}
+
+:host ::ng-deep .confirm-delete-overlay .confirm-delete {
+  position: relative;
+  width: 100%;
+  min-height: 100%;
+  box-sizing: border-box;
+  display: grid;
+  align-content: center;
+  gap: 12px;
+  padding: 14px 16px 16px;
+  justify-items: center;
+}
+
+:host ::ng-deep .confirm-delete-overlay .confirm-delete__close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  border: 1px solid var(--app-color-control-border);
+  background: var(--app-color-control-bg);
+  color: var(--app-color-text-soft);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition:
+    opacity 0.16s ease,
+    transform 0.16s ease,
+    background-color 0.16s ease,
+    border-color 0.16s ease;
+}
+
+:host ::ng-deep .confirm-delete-overlay .confirm-delete__close:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+:host ::ng-deep .confirm-delete-overlay .confirm-delete__summary {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  justify-items: center;
+  width: min(100%, 300px);
+  padding: 4px 2px;
+  border-radius: 12px;
+  background: transparent;
+}
+
+:host ::ng-deep .confirm-delete-overlay .confirm-delete__icon {
+  width: auto;
+  height: auto;
+  border-radius: 0;
+  border: 0;
+  background: transparent;
+  color: var(--app-color-danger-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.45rem;
+  line-height: 1;
+}
+
+:host ::ng-deep .confirm-delete-overlay .confirm-delete__copy {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  width: 100%;
+  text-align: center;
+}
+
+:host ::ng-deep .confirm-delete-overlay .confirm-delete__eyebrow {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, var(--app-color-danger-text) 52%, var(--app-color-text-high));
+}
+
+:host ::ng-deep .confirm-delete-overlay .confirm-delete__text {
+  margin: 0;
+  display: grid;
+  gap: 3px;
+  color: color-mix(in oklab, rgb(var(--fg)) 78%, transparent);
+  font-size: 0.94rem;
+  line-height: 1.45;
+}
+
+:host ::ng-deep .confirm-delete-overlay .confirm-delete__text .primary-line,
+:host ::ng-deep .confirm-delete-overlay .confirm-delete__text .secondary-line {
+  white-space: normal;
+}
+
+:host ::ng-deep .confirm-delete-overlay .confirm-delete__text .primary-line {
+  color: color-mix(in oklab, rgb(var(--fg)) 92%, transparent);
+}
+
+:host ::ng-deep .confirm-delete-overlay .confirm-delete__text strong {
+  color: var(--app-color-danger-text);
+  font-weight: 800;
+}
+
+:host ::ng-deep .confirm-delete-overlay .confirm-delete__field {
+  display: grid;
+  gap: 6px;
+  width: min(100%, 300px);
+}
+
+:host ::ng-deep .confirm-delete-overlay .confirm-delete__label {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in oklab, rgb(var(--fg)) 60%, transparent);
+  text-align: center;
+}
+
+:host ::ng-deep .confirm-delete-overlay .confirm-delete__code {
+  width: 100%;
+  min-height: 40px;
+  padding: 0 12px;
+  border-radius: 10px;
+  border: 1px solid var(--app-color-control-border);
+  background: var(--app-color-control-bg-strong);
+  color: var(--app-color-text-high);
+  font: inherit;
+  font-size: 0.84rem;
+  text-align: center;
+  outline: none;
+  transition:
+    border-color 0.16s ease,
+    box-shadow 0.16s ease,
+    background-color 0.16s ease;
+}
+
+:host ::ng-deep .confirm-delete-overlay .confirm-delete__code:focus {
+  border-color: var(--app-color-primary-border-strong);
+  box-shadow: 0 0 0 4px color-mix(in oklab, var(--app-color-primary-focus-ring) 36%, transparent);
+  background: var(--app-color-control-bg);
+}
+
+:host ::ng-deep .confirm-delete-overlay .confirm-delete__code::placeholder {
+  color: color-mix(in oklab, rgb(var(--fg)) 34%, transparent);
+}
+
+:host ::ng-deep .confirm-delete-overlay .confirm-delete__error {
+  margin: 0;
+  font-size: 0.74rem;
+  line-height: 1.45;
+  width: min(100%, 300px);
+  text-align: center;
+}
+
+:host ::ng-deep .confirm-delete-overlay .confirm-delete__error {
+  color: var(--app-color-danger-text);
+}
+
+:host ::ng-deep .confirm-delete-overlay .confirm-delete__actions {
+  display: grid;
+  width: min(100%, 260px);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  padding-top: 0;
+  align-items: center;
+}
+
+:host ::ng-deep .confirm-delete-overlay .confirm-delete__actions .btn {
+  width: 100%;
+  min-width: 0;
+  min-height: 40px;
+  padding: 0 12px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.82rem;
+  line-height: 1;
+}
+
+:host ::ng-deep .confirm-delete-overlay .confirm-delete__actions .btn.ghost {
+  color: var(--app-color-text-high);
+  border-color: var(--app-color-control-border);
+  background: var(--app-color-control-bg);
+}
+
+:host ::ng-deep .confirm-delete-overlay .btn.warning {
+  border: 1px solid var(--app-color-danger-border);
+  background: var(--app-color-danger-bg);
+  color: var(--app-color-danger-text);
+}
+
+@media (hover: hover) {
+  :host ::ng-deep .confirm-delete-overlay .confirm-delete__close {
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.92);
+  }
+
+  :host ::ng-deep .confirm-delete-overlay .confirm-delete:hover .confirm-delete__close,
+  :host ::ng-deep .confirm-delete-overlay .confirm-delete:focus-within .confirm-delete__close {
+    opacity: 1;
+    pointer-events: auto;
+    transform: scale(1);
+  }
+}
+
+:host ::ng-deep .confirm-delete-overlay .btn.warning:hover:not(:disabled) {
+  border-color: color-mix(in oklab, var(--app-color-danger-text) 58%, transparent);
+  background: var(--app-color-danger-bg-strong);
+}
+
+:host ::ng-deep .confirm-delete-overlay .btn.warning:disabled {
+  opacity: 0.6;
+}
+
+@media (max-width: 640px) {
+  :host ::ng-deep .confirm-delete-overlay .confirm-delete {
+    padding: 12px;
+  }
+
+  :host ::ng-deep .confirm-delete-overlay .confirm-delete__summary {
+    width: 100%;
+    padding: 4px 0;
+  }
+
+  :host ::ng-deep .confirm-delete-overlay .confirm-delete__actions {
+    grid-template-columns: 1fr;
+  }
+
+  :host ::ng-deep .confirm-delete-overlay .confirm-delete__actions .btn {
+    width: 100%;
+  }
+}

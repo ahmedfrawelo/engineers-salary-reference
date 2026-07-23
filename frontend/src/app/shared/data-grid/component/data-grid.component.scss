@@ -1,0 +1,603 @@
+@use '../styles';
+
+:host {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+}
+
+:host > .engineers-salary-reference-data-grid {
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+}
+
+:host .engineers-salary-reference-data-grid .data-grid-table tbody tr.data-row.append-row > td {
+  border: 0 !important;
+  border-color: transparent !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  background-image: none !important;
+}
+
+:host .engineers-salary-reference-data-grid .data-grid-table tbody tr.data-row.append-row > td.is-append-row,
+:host .engineers-salary-reference-data-grid .data-grid-table tbody tr.data-row.append-row > td.selection-cell,
+:host .engineers-salary-reference-data-grid .data-grid-table tbody tr.data-row.append-row > td.pinned-left,
+:host .engineers-salary-reference-data-grid .data-grid-table tbody tr.data-row.append-row > td.pinned-right {
+  border: 0 !important;
+  border-color: transparent !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  background-image: none !important;
+}
+
+:host .engineers-salary-reference-data-grid .data-grid-table tbody tr.data-row.append-row > td::before,
+:host .engineers-salary-reference-data-grid .data-grid-table tbody tr.data-row.append-row > td::after {
+  display: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+:host .engineers-salary-reference-data-grid .data-grid-table tbody tr.data-row.append-row > td .cell-content {
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  overflow: visible !important;
+}
+
+:host .engineers-salary-reference-data-grid .data-grid-table tbody tr.data-row.append-row > td {
+  overflow: visible !important;
+}
+
+:host .engineers-salary-reference-data-grid .data-grid-table tbody tr.data-row.append-row > td .append-row-hint {
+  position: relative;
+  z-index: 2;
+  max-width: max-content;
+}
+
+:host
+  .engineers-salary-reference-data-grid
+  .data-grid-table
+  tbody
+  tr.data-row.append-row
+  > td.selection-cell
+  .append-row-selection-hint {
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-left: 8px;
+  white-space: nowrap;
+}
+
+:host .engineers-salary-reference-data-grid .cell-editor-wrap {
+  display: grid;
+  gap: 4px;
+  position: relative;
+  width: 100%;
+  align-items: center;
+}
+
+:host .engineers-salary-reference-data-grid .cell-editor-wrap.wrap-editor {
+  height: auto;
+  min-height: 0;
+  align-items: start;
+}
+
+:host .engineers-salary-reference-data-grid .cell-editor-wrap:not(.wrap-editor) .cell-editor-input {
+  align-self: center;
+  height: var(--dg-body-row-height, 28px);
+  min-height: var(--dg-body-row-height, 28px);
+  line-height: normal;
+}
+
+:host .engineers-salary-reference-data-grid .cell-editor-input--multiline {
+  resize: none;
+  overflow: hidden;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+:host ::ng-deep .engineers-salary-reference-data-grid .data-grid-table td.search-select-cell {
+  padding-top: 0 !important;
+  padding-right: 0 !important;
+  padding-bottom: 0 !important;
+  padding-left: 0 !important;
+  padding-block: 0 !important;
+  padding-inline: 0 !important;
+}
+
+:host ::ng-deep .engineers-salary-reference-data-grid .data-grid-table td.date-editor-cell {
+  padding: 0 !important;
+}
+
+:host ::ng-deep .engineers-salary-reference-data-grid .data-grid-table td.date-editor-cell .cell-content {
+  padding: 0;
+  height: var(--dg-body-row-height, 28px);
+  min-height: 0;
+}
+
+:host ::ng-deep .engineers-salary-reference-data-grid .data-grid-table td.date-editor-cell .date-editor-wrap,
+:host ::ng-deep .engineers-salary-reference-data-grid .data-grid-table td.date-editor-cell .grid-cell-date-input,
+:host ::ng-deep .engineers-salary-reference-data-grid .data-grid-table td.date-editor-cell date-input,
+:host ::ng-deep .engineers-salary-reference-data-grid .data-grid-table td.date-editor-cell .date-field,
+:host ::ng-deep .engineers-salary-reference-data-grid .data-grid-table td.date-editor-cell .date-trigger {
+  width: 100%;
+  height: var(--dg-body-row-height, 28px);
+  min-height: 0;
+}
+
+:host ::ng-deep .engineers-salary-reference-data-grid .data-grid-table td.date-editor-cell .date-trigger {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: inherit;
+  font: inherit;
+  padding: 0;
+  gap: 0;
+  overflow: visible;
+}
+
+:host ::ng-deep .engineers-salary-reference-data-grid .data-grid-table td.date-editor-cell .date-trigger:focus-visible,
+:host ::ng-deep .engineers-salary-reference-data-grid .data-grid-table td.date-editor-cell .date-field.open .date-trigger {
+  border: 0;
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, rgb(var(--primary)) 55%, transparent);
+}
+
+:host ::ng-deep .engineers-salary-reference-data-grid .data-grid-table td.date-editor-cell .date-text {
+  min-width: 0;
+  padding-inline: 10px 6px;
+  font: inherit;
+  letter-spacing: 0;
+  line-height: var(--dg-body-row-height, 28px);
+}
+
+:host ::ng-deep .engineers-salary-reference-data-grid .data-grid-table td.date-editor-cell .date-icon {
+  flex: 0 0 26px;
+  width: 26px;
+  min-width: 26px;
+  height: var(--dg-body-row-height, 28px);
+  border-radius: 0;
+  border-left: 1px solid color-mix(in oklab, rgb(var(--border-strong)) 34%, transparent);
+  background: color-mix(in oklab, rgb(var(--surface)) 8%, transparent);
+  overflow: visible;
+}
+
+:host ::ng-deep .engineers-salary-reference-data-grid .data-grid-table td.date-editor-cell .date-icon i {
+  display: inline-flex;
+  width: 14px;
+  height: 14px;
+  align-items: center;
+  justify-content: center;
+}
+
+:host ::ng-deep .engineers-salary-reference-data-grid .data-grid-table td.date-editor-cell .date-icon svg {
+  width: 14px;
+  height: 14px;
+  overflow: visible;
+}
+
+:host
+  ::ng-deep
+  .engineers-salary-reference-data-grid
+  .data-grid-table
+  tbody:not(.grouped-display-body)
+  tr.data-row
+  > td.search-select-cell {
+  padding-top: 0 !important;
+  padding-right: 0 !important;
+  padding-bottom: 0 !important;
+  padding-left: 0 !important;
+  padding-block: 0 !important;
+  padding-inline: 0 !important;
+}
+
+:host ::ng-deep .engineers-salary-reference-data-grid .data-grid-table td.search-select-cell .cell-content {
+  padding: 0;
+  height: var(--dg-body-row-height, 28px);
+  min-height: 0;
+}
+
+:host ::ng-deep .engineers-salary-reference-data-grid .data-grid-table td.search-select-cell .grid-cell-search-select {
+  display: block;
+  width: 100%;
+  height: var(--dg-body-row-height, 28px);
+  min-width: 0;
+  color: inherit;
+  font: inherit;
+  font-weight: inherit;
+}
+
+:host ::ng-deep .engineers-salary-reference-data-grid .data-grid-table td.search-select-cell .ss,
+:host ::ng-deep .engineers-salary-reference-data-grid .data-grid-table td.search-select-cell .ss-origin,
+:host ::ng-deep .engineers-salary-reference-data-grid .data-grid-table td.search-select-cell .ss-inline-trigger {
+  width: 100%;
+  height: var(--dg-body-row-height, 28px);
+  min-height: 0;
+  min-width: 0;
+}
+
+:host ::ng-deep .engineers-salary-reference-data-grid .data-grid-table td.search-select-cell .ss-inline-trigger {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--dg-clickup-body-fg, var(--dg-fg-strong));
+  font: inherit;
+  font-weight: inherit;
+}
+
+:host ::ng-deep .engineers-salary-reference-data-grid .data-grid-table td.search-select-cell .ss-inline-trigger.focused,
+:host ::ng-deep .engineers-salary-reference-data-grid .data-grid-table td.search-select-cell .ss-inline-trigger:focus-within {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+:host ::ng-deep .engineers-salary-reference-data-grid .data-grid-table td.search-select-cell .ss-inline-input {
+  height: var(--dg-body-row-height, 28px);
+  padding: 0 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--dg-clickup-body-fg, var(--dg-fg-strong)) !important;
+  -webkit-text-fill-color: var(--dg-clickup-body-fg, var(--dg-fg-strong)) !important;
+  font: inherit;
+  font-weight: inherit;
+}
+
+:host ::ng-deep .engineers-salary-reference-data-grid .data-grid-table td.search-select-cell .ss-inline-suffix {
+  color: var(--dg-clickup-muted-value, var(--dg-fg-soft));
+}
+
+:host ::ng-deep .engineers-salary-reference-data-grid .data-grid-table td.search-select-cell .ss-inline-input::placeholder {
+  color: transparent;
+  opacity: 0;
+}
+
+:host ::ng-deep .engineers-salary-reference-data-grid .data-grid-table td.search-select-cell .ss-caret-trigger {
+  display: flex;
+  align-items: stretch;
+  align-self: stretch;
+  width: 38px;
+  min-width: 38px;
+  height: var(--dg-body-row-height, 28px);
+  min-height: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+:host ::ng-deep .engineers-salary-reference-data-grid .data-grid-table td.search-select-cell .ss-caret-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  box-sizing: border-box;
+  width: 38px;
+  height: var(--dg-body-row-height, 28px);
+  min-height: 0;
+  border-left: 1px solid var(--dg-clickup-grid-line, var(--app-color-grid-line-soft));
+  border-radius: 0;
+  background: transparent;
+}
+
+:host ::ng-deep .engineers-salary-reference-data-grid .data-grid-table td.search-select-cell .ss-caret {
+  border-color: var(--dg-primary-text, var(--app-color-primary-text));
+}
+
+::ng-deep .grid-cell-search-select-overlay .ss-panel.hybrid-panel.button-panel {
+  border: 1px solid var(--app-color-outline-stroke, rgb(255 255 255 / 0.12));
+  border-radius: 6px;
+  background: var(--app-color-panel-body, rgb(20 21 20));
+  box-shadow: none;
+}
+
+::ng-deep .grid-cell-search-select-overlay .ss-panel.hybrid-panel.button-panel .ss-search {
+  height: 38px;
+  padding-inline: 12px;
+  border-bottom-color: var(--app-color-divider, rgb(255 255 255 / 0.1));
+  font-size: 11px;
+}
+
+::ng-deep .grid-cell-search-select-overlay .ss-panel.hybrid-panel.button-panel .ss-list {
+  gap: 2px;
+  padding: 5px;
+}
+
+::ng-deep .grid-cell-search-select-overlay .ss-panel.hybrid-panel.button-panel .ss-item {
+  min-height: 32px;
+  padding: 7px 8px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.35;
+}
+
+::ng-deep .grid-cell-search-select-overlay .ss-item:hover,
+::ng-deep .grid-cell-search-select-overlay .ss-item.active {
+  border-color: var(--app-color-outline-stroke, rgb(255 255 255 / 0.12));
+  background: var(--app-color-toolbar-hover-bg, rgb(255 255 255 / 0.045));
+  color: var(--app-color-text-body, rgb(231 233 231));
+  box-shadow: none;
+}
+
+::ng-deep .grid-cell-search-select-overlay .ss-item.selected {
+  border-color: rgb(132 204 22 / 0.3) !important;
+  background: rgb(132 204 22 / 0.11) !important;
+  color: rgb(190 242 100) !important;
+  box-shadow: none !important;
+}
+
+:host ::ng-deep .engineers-salary-reference-data-grid .data-grid-table td.is-editing-cell,
+:host ::ng-deep .engineers-salary-reference-data-grid .data-grid-table td.is-editing-cell .cell-content,
+:host ::ng-deep .engineers-salary-reference-data-grid .data-grid-table td.is-editing-cell .cell-content.is-editing {
+  overflow: visible !important;
+}
+
+:host ::ng-deep .engineers-salary-reference-data-grid .data-grid-table td.is-editing-cell {
+  position: relative !important;
+  z-index: 8;
+}
+
+:host .engineers-salary-reference-data-grid .cell-editor-wrap.formula-capable .cell-editor-input {
+  border-color: rgb(var(--primary) / 0.26);
+  background: linear-gradient(135deg, rgb(var(--primary) / 0.06), rgb(var(--bg0) / 0.96));
+}
+
+:host .engineers-salary-reference-data-grid td.formula-selectable-cell {
+  cursor: cell;
+}
+
+:host .engineers-salary-reference-data-grid td.formula-reference-cell {
+  position: relative;
+  box-shadow: inset 0 0 0 1px rgb(var(--primary) / 0.52);
+  background: linear-gradient(180deg, rgb(var(--primary) / 0.08), rgb(var(--primary) / 0.03));
+}
+
+:host .engineers-salary-reference-data-grid td.formula-reference-cell::after {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  border: 1px dashed rgb(var(--primary) / 0.52);
+  border-radius: 6px;
+  pointer-events: none;
+}
+
+:host .engineers-salary-reference-data-grid td.formula-origin-cell {
+  box-shadow: inset 0 0 0 1px rgb(var(--primary) / 0.9);
+}
+
+:host .engineers-salary-reference-data-grid .cell-editor-hint {
+  display: block;
+  overflow: hidden;
+  color: rgb(var(--fg) / 0.54);
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+:host .formula-suggestions {
+  z-index: 40;
+  display: grid;
+  gap: 2px;
+  min-width: 240px;
+  max-height: 240px;
+  overflow: auto;
+  padding: 6px;
+  border: 1px solid rgb(var(--line) / 0.9);
+  border-radius: 10px;
+  background: rgb(var(--bg1) / 0.98);
+  box-shadow: 0 14px 28px rgb(0 0 0 / 0.28);
+}
+
+:host .engineers-salary-reference-data-grid .cell-editor-wrap.formula-panel-open {
+  z-index: 30;
+}
+
+:host .formula-suggestions--overlay {
+  position: fixed;
+}
+
+:host .formula-suggestions__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 4px 6px 8px;
+  color: rgb(var(--fg) / 0.62);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+:host .formula-suggestion {
+  display: grid;
+  gap: 2px;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: rgb(var(--fg) / 0.94);
+  text-align: left;
+  cursor: pointer;
+}
+
+:host .formula-suggestion:hover,
+:host .formula-suggestion.is-active {
+  background: linear-gradient(135deg, rgb(var(--primary) / 0.16), rgb(var(--primary) / 0.08));
+}
+
+:host .formula-suggestion__label {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+:host .formula-suggestion__detail {
+  color: rgb(var(--fg) / 0.56);
+  font-size: 10px;
+  font-weight: 600;
+}
+
+:host .column-type-submenu {
+  width: 360px;
+  padding: 8px;
+}
+
+:host .column-type-current {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid rgb(var(--primary) / 0.24);
+  border-radius: 8px;
+  background: rgb(var(--primary) / 0.09);
+}
+
+:host .column-type-current__mark,
+:host .column-type-choice__mark {
+  display: inline-grid;
+  place-items: center;
+  width: 34px;
+  height: 28px;
+  border: 1px solid rgb(var(--border) / 0.72);
+  border-radius: 6px;
+  background: rgb(var(--bg0) / 0.9);
+  color: rgb(var(--fg) / 0.72);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0;
+  line-height: 1;
+}
+
+:host .column-type-current__mark {
+  border-color: rgb(var(--primary) / 0.38);
+  color: rgb(var(--primary));
+}
+
+:host .column-type-current__copy,
+:host .column-type-choice__copy {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+
+:host .column-type-current__copy strong,
+:host .column-type-choice__copy strong {
+  color: rgb(var(--fg) / 0.94);
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+:host .column-type-current__copy span,
+:host .column-type-choice__copy small {
+  color: rgb(var(--fg) / 0.58);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+:host .column-type-managed-note {
+  margin: 8px 0 4px;
+  padding: 8px 10px;
+  border: 1px solid rgb(var(--border) / 0.6);
+  border-radius: 7px;
+  background: rgb(var(--bg1) / 0.72);
+  color: rgb(var(--fg) / 0.62);
+  font-size: 11px;
+  font-weight: 650;
+  line-height: 1.35;
+}
+
+:host .column-type-choice {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr) 18px;
+  align-items: center;
+  gap: 10px;
+  min-height: 54px;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  padding: 8px;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+:host .column-type-choice:hover {
+  border-color: rgb(var(--border) / 0.7);
+  background: rgb(var(--fg) / 0.055);
+}
+
+:host .column-type-choice.active {
+  border-color: rgb(var(--primary) / 0.42);
+  background: rgb(var(--primary) / 0.12);
+}
+
+:host .column-type-choice.active .column-type-choice__mark {
+  border-color: rgb(var(--primary) / 0.44);
+  color: rgb(var(--primary));
+}
+
+:host .column-type-choice:disabled {
+  cursor: not-allowed;
+  opacity: 0.52;
+}
+
+:host .column-type-choice:disabled:hover {
+  border-color: transparent;
+  background: transparent;
+}
+
+:host .column-type-choice__check {
+  color: rgb(var(--primary));
+  font-size: 13px;
+}
+
+:host .column-type-options-editor {
+  display: grid;
+  gap: 6px;
+  padding: 8px 10px;
+  color: rgb(var(--fg) / 0.72);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+:host .column-type-options-editor textarea {
+  min-height: 112px;
+  resize: vertical;
+  border: 1px solid rgb(var(--border) / 0.72);
+  border-radius: 6px;
+  padding: 8px;
+  background: rgb(var(--bg0) / 0.96);
+  color: rgb(var(--fg) / 0.94);
+  font: inherit;
+  line-height: 1.45;
+}
+
+:host .column-type-options-editor textarea:focus {
+  border-color: rgb(var(--primary) / 0.82);
+  outline: 2px solid rgb(var(--primary) / 0.16);
+}
+
+:host .column-type-save {
+  color: rgb(var(--primary));
+  font-weight: 700;
+}

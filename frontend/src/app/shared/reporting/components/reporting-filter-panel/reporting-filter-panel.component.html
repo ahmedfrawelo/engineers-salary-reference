@@ -1,0 +1,133 @@
+<section class="filters-card">
+  <div class="filters-head">
+    <div>
+      <span class="eyebrow">{{ eyebrow }}</span>
+      <h2>{{ title }}</h2>
+      @if (description) {
+        <p>{{ description }}</p>
+      }
+    </div>
+
+    <div class="filters-meta">
+      <span class="meta-pill">{{ filteredCount }} / {{ totalCount }}</span>
+      <button class="btn ghost" type="button" title="Reset filters" (click)="resetFilters.emit()">
+        <i appIcon="x-circle" aria-hidden="true"></i>
+        Reset
+      </button>
+    </div>
+  </div>
+
+  <div class="filters-grid">
+    <label class="field field--wide">
+      <span>Search</span>
+      <div class="field-input">
+        <i appIcon="search" aria-hidden="true"></i>
+        <input
+          type="search"
+          [ngModel]="searchValue"
+          (ngModelChange)="searchChange.emit($event)"
+          [placeholder]="searchPlaceholder"
+        />
+      </div>
+    </label>
+
+    @for (select of selects; track select.key) {
+      <label class="field">
+        <span>{{ select.label }}</span>
+        <select
+          [ngModel]="select.value"
+          (ngModelChange)="selectChange.emit({ key: select.key, value: $event })"
+        >
+          <option value="">{{ select.placeholder }}</option>
+          @for (option of select.options; track option.value) {
+            <option [value]="option.value">{{ option.label }}</option>
+          }
+        </select>
+      </label>
+    }
+
+    @for (date of dates; track date.key) {
+      <label class="field">
+        <span>{{ date.label }}</span>
+        <input
+          type="date"
+          [ngModel]="date.value"
+          (ngModelChange)="dateChange.emit({ key: date.key, value: $event })"
+        />
+      </label>
+    }
+  </div>
+
+  @if (chipGroups.length) {
+    <div class="chip-section">
+      @for (group of chipGroups; track group.key) {
+        <div class="chip-group">
+          <span class="chip-label">{{ group.label }}</span>
+          @for (option of group.options; track option.value) {
+            <button
+              class="chip"
+              type="button"
+              [class.active]="group.values.includes(option.value)"
+              [attr.aria-pressed]="group.values.includes(option.value)"
+              (click)="chipToggle.emit({ key: group.key, value: option.value })"
+            >
+              @if (option.tone) {
+                <span class="dot" [class]="option.tone"></span>
+              }
+              {{ option.label }}
+            </button>
+          }
+        </div>
+      }
+    </div>
+  }
+
+  @if (toggles.length || ranges.length) {
+    <div class="filters-footer">
+      @for (toggle of toggles; track toggle.key) {
+        <label class="toggle">
+          <input
+            type="checkbox"
+            [ngModel]="toggle.value"
+            (ngModelChange)="toggleChange.emit({ key: toggle.key, value: $event })"
+          />
+          <span class="toggle-track" aria-hidden="true"></span>
+          <span>{{ toggle.label }}</span>
+        </label>
+      }
+
+      @for (range of ranges; track range.key) {
+        <label class="slider">
+          <span>{{ range.label }}</span>
+          <input
+            type="range"
+            [min]="range.min"
+            [max]="range.max"
+            [ngModel]="range.value"
+            (ngModelChange)="rangeChange.emit({ key: range.key, value: toNumber($event) })"
+          />
+          <strong>{{ range.value }}{{ range.suffix || '' }}</strong>
+        </label>
+      }
+    </div>
+  }
+
+  @if (activeChips.length) {
+    <div class="active-chips">
+      <span class="chip-label">Active filters</span>
+      <div class="chip-wrap">
+        @for (chip of activeChips; track chip.key + chip.value) {
+          <button
+            class="chip active"
+            type="button"
+            [title]="'Remove ' + chip.label"
+            (click)="chipRemove.emit(chip)"
+          >
+            <span>{{ chip.label }}: {{ chip.value }}</span>
+            <i appIcon="x-lg" aria-hidden="true"></i>
+          </button>
+        }
+      </div>
+    </div>
+  }
+</section>

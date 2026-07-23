@@ -1,0 +1,335 @@
+<div
+  class="proj-menu-list proj-filter-menu-list"
+  [class.has-detailed-filters]="host?.sharedHasDetailedFilters?.()"
+  (click)="$event.stopPropagation()"
+>
+  <div class="proj-filter-head">
+    <div class="proj-filter-title">
+      <span>Filters</span>
+      <i appIcon="info-circle" aria-hidden="true"></i>
+    </div>
+    @if (savedFiltersEnabled()) {
+      <div class="proj-filter-head-actions">
+        <button
+          #savedFiltersTrigger
+          class="proj-filter-saved"
+          type="button"
+          aria-label="Saved filters"
+          [attr.aria-expanded]="savedFiltersPanelOpen"
+          [attr.aria-pressed]="savedFiltersPanelOpen"
+          (pointerdown)="$event.stopPropagation()"
+          (click)="toggleSavedFiltersPanel($event)"
+        >
+          <span>Saved filters</span>
+          <i
+            [appIcon]="savedFiltersPanelOpen ? 'chevron-up' : 'chevron-down'"
+            aria-hidden="true"
+          ></i>
+        </button>
+
+        @if (savedFiltersPanelOpen) {
+          <div
+            #savedFiltersPanel
+            class="proj-saved-filters-panel"
+            (pointerdown)="$event.stopPropagation()"
+            (click)="$event.stopPropagation()"
+          >
+            <div class="proj-saved-filters-panel-head">
+              <input
+                class="proj-saved-filters-name"
+                type="text"
+                placeholder="Filter name"
+                [value]="savedFilterName"
+                (input)="onSavedFilterNameInput($any($event.target).value || '')"
+              />
+              <button
+                class="proj-saved-filters-save"
+                type="button"
+                [disabled]="
+                  !host?.sharedCanSaveCurrentFilter?.() || host?.sharedSavedFiltersBusy?.()
+                "
+                (click)="saveCurrentSavedFilter($event)"
+              >
+                {{ host?.sharedSavedFiltersBusy?.() ? 'Saving...' : 'Save current' }}
+              </button>
+            </div>
+
+            @if (host?.sharedSavedFiltersError?.()) {
+              <p class="proj-saved-filters-feedback proj-saved-filters-feedback--error">
+                {{ host?.sharedSavedFiltersError?.() }}
+              </p>
+            } @else if (!host?.sharedCanSaveCurrentFilter?.()) {
+              <p class="proj-saved-filters-feedback">Add a complete filter to save it.</p>
+            }
+
+            <div class="proj-saved-filters-list">
+              @let savedFilterItems = savedFilters();
+              @let activeSavedFilterId = currentSavedFilterId();
+              @if (host?.sharedSavedFiltersLoading?.()) {
+                <p class="proj-saved-filters-empty">Loading saved filters...</p>
+              } @else if (savedFilterItems.length === 0) {
+                <p class="proj-saved-filters-empty">No saved filters yet.</p>
+              } @else {
+                @for (savedFilter of savedFilterItems; track savedFilter.id) {
+                  <div
+                    class="proj-saved-filter-item"
+                    [class.is-active]="activeSavedFilterId === savedFilter.id"
+                  >
+                    <button
+                      class="proj-saved-filter-item-main"
+                      type="button"
+                      [attr.aria-pressed]="activeSavedFilterId === savedFilter.id"
+                      (click)="applySavedFilter(savedFilter.id, $event)"
+                    >
+                      <span class="proj-saved-filter-item-name">{{ savedFilter.name }}</span>
+                      <span class="proj-saved-filter-item-meta">
+                        {{
+                          formatSavedFilterTimestamp(savedFilter.updatedAt ?? savedFilter.createdAt)
+                        }}
+                      </span>
+                    </button>
+
+                    <button
+                      class="proj-saved-filter-item-delete"
+                      type="button"
+                      aria-label="Delete saved filter"
+                      [disabled]="host?.sharedSavedFiltersBusy?.()"
+                      (click)="deleteSavedFilter(savedFilter.id, $event)"
+                    >
+                      <i appIcon="trash" aria-hidden="true"></i>
+                    </button>
+                  </div>
+                }
+              }
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+
+  <div class="proj-filter-body">
+    @if (hasFilterGroups()) {
+      <div class="proj-filter-groups-shell">
+        @for (group of host?.sharedToolbarFilterGroups; track group.id; let groupIndex = $index) {
+          <div class="proj-filter-group">
+            <div class="proj-filter-group-bridge">
+              @if (groupIndex === 0) {
+                <span class="proj-filter-group-shell-label">Where</span>
+              } @else if (groupIndex === 1) {
+                <div
+                  class="proj-filter-select-control proj-filter-join-select proj-filter-join-select--bridge"
+                >
+                  <search-select
+                    [options]="joinOptions"
+                    [value]="selectedJoinOption(group.joinWithPrev)"
+                    [displayFn]="joinDisplay"
+                    (valueChange)="onGroupJoinChange(group.id, $any($event))"
+                    [allowInlineSearch]="true"
+                    [allowClear]="false"
+                    [overlayPanelClass]="compactSelectOverlayPanelClass"
+                    overlayWidthAnchorSelector=".proj-filter-join-select"
+                    placeholder="AND"
+                    noResultsText="No joins"
+                  ></search-select>
+                </div>
+              } @else {
+                <span class="proj-filter-group-shell-label proj-filter-group-shell-label--muted">
+                  {{ outerGroupJoinLabel(groupIndex, group) }}
+                </span>
+              }
+            </div>
+
+            <div class="proj-filter-group-box">
+              <div class="proj-filter-group-content">
+                @for (filter of group.rows; track filter.id; let rowIndex = $index) {
+                  <div
+                    class="proj-filter-row"
+                    [class.has-field]="!!filter.field.trim()"
+                    [class.has-prefix]="rowIndex > 0"
+                    [class.has-join]="rowIndex > 0"
+                  >
+                    @if (rowIndex > 0) {
+                      <div class="proj-filter-row-prefix">
+                        @if (rowIndex === 1) {
+                          @let nestedJoin = host?.sharedFilterNestedJoin?.(group);
+                          <div class="proj-filter-select-control proj-filter-join-select">
+                            <search-select
+                              [options]="joinOptions"
+                              [value]="selectedJoinOption(nestedJoin)"
+                              [displayFn]="joinDisplay"
+                              (valueChange)="onNestedJoinChange(group.id, $any($event))"
+                              [allowInlineSearch]="true"
+                              [allowClear]="false"
+                              [overlayPanelClass]="compactSelectOverlayPanelClass"
+                              overlayWidthAnchorSelector=".proj-filter-join-select"
+                              placeholder="AND"
+                              noResultsText="No joins"
+                            ></search-select>
+                          </div>
+                        } @else {
+                          @let nestedJoin = host?.sharedFilterNestedJoin?.(group);
+                          <span class="proj-filter-join-display">
+                            {{ joinLabel(nestedJoin) }}
+                          </span>
+                        }
+                      </div>
+                    }
+
+                    @let fieldOptions = host?.sharedFilterColumns?.(filter.id) ?? [];
+                    <div class="proj-filter-select-control proj-filter-field-select">
+                      <search-select
+                        [options]="fieldOptions"
+                        [value]="selectedFieldOption(filter, fieldOptions)"
+                        [displayFn]="fieldDisplay"
+                        (valueChange)="onFieldChange(filter.id, $any($event))"
+                        [allowInlineSearch]="true"
+                        [allowClear]="false"
+                        [overlayPanelClass]="selectOverlayPanelClass"
+                        overlayWidthAnchorSelector=".proj-filter-row"
+                        placeholder="Search fields..."
+                        searchPlaceholder="Search fields..."
+                        noResultsText="No matching fields"
+                      ></search-select>
+                    </div>
+
+                    @if (filter.field.trim()) {
+                      @let operatorOptions = host?.sharedFilterOperatorOptions?.(filter) ?? [];
+                      <div class="proj-filter-select-control proj-filter-operator-select">
+                        <search-select
+                          [options]="operatorOptions"
+                          [value]="selectedOperatorOption(filter, operatorOptions)"
+                          [displayFn]="operatorDisplay"
+                          (valueChange)="onOperatorChange(filter.id, $any($event))"
+                          [allowInlineSearch]="true"
+                          [allowClear]="false"
+                          [overlayPanelClass]="selectOverlayPanelClass"
+                          overlayWidthAnchorSelector=".proj-filter-row"
+                          placeholder="Search operators..."
+                          searchPlaceholder="Search operators..."
+                          noResultsText="No operators"
+                        ></search-select>
+                      </div>
+
+                      @if (!host?.sharedFilterOperatorNeedsNoValue?.(filter.operator)) {
+                        @if (host?.sharedFilterValueUsesDropdown?.(filter)) {
+                          @let valueOptions = host?.sharedFilterValueOptions?.(filter) ?? [];
+                          <div
+                            class="proj-filter-select-control proj-filter-value-select"
+                            (pointerdown)="
+                              host?.primeSharedFilterValueOptionsForFilter?.(filter.id)
+                            "
+                            (focusin)="host?.primeSharedFilterValueOptionsForFilter?.(filter.id)"
+                          >
+                            <search-select
+                              [options]="valueOptions"
+                              [value]="selectedValueOption(filter, valueOptions)"
+                              [displayFn]="valueDisplay"
+                              (valueChange)="onValueChange(filter.id, $any($event))"
+                              [allowInlineSearch]="true"
+                              [allowClear]="false"
+                              [overlayPanelClass]="selectOverlayPanelClass"
+                              overlayWidthAnchorSelector=".proj-filter-row"
+                              placeholder="Search options..."
+                              searchPlaceholder="Search options..."
+                              [noResultsText]="
+                                host?.sharedFilterValueOptionsLoading?.(filter)
+                                  ? 'Loading...'
+                                  : 'No options'
+                              "
+                            ></search-select>
+                          </div>
+                        } @else {
+                          <input
+                            [attr.id]="'page-design-filter-value-' + filter.id"
+                            [attr.name]="'pageDesignFilterValue-' + filter.id"
+                            class="proj-filter-value"
+                            [type]="host?.sharedFilterValueInputType?.(filter)"
+                            [placeholder]="host?.sharedFilterValuePlaceholder?.(filter)"
+                            [value]="host?.sharedFilterValueInputValue?.(filter)"
+                            [attr.list]="host?.sharedFilterValueListId?.(filter)"
+                            (input)="
+                              host?.onSharedFilterValueInput?.(
+                                filter.id,
+                                $any($event.target).value || ''
+                              )
+                            "
+                          />
+                          <datalist [id]="host?.sharedFilterDatalistId?.(filter.id)">
+                            @for (
+                              suggestion of host?.sharedFilterValueSuggestions?.(filter);
+                              track suggestion
+                            ) {
+                              <option [value]="suggestion"></option>
+                            }
+                          </datalist>
+                        }
+                      } @else {
+                        <div class="proj-filter-value proj-filter-value--muted">
+                          No value needed
+                        </div>
+                      }
+                    }
+
+                    <button
+                      class="proj-filter-remove"
+                      type="button"
+                      aria-label="Remove filter"
+                      (click)="host?.removeSharedToolbarFilter?.(filter.id, $event)"
+                    >
+                      <i appIcon="trash" aria-hidden="true"></i>
+                    </button>
+                  </div>
+                }
+              </div>
+
+              <div class="proj-filter-group-actions">
+                <button
+                  class="proj-filter-nested"
+                  type="button"
+                  (mousedown)="host?.onSharedFilterPanelActionPointerDown?.($event)"
+                  (click)="host?.addSharedNestedFilter?.(group.id, $event)"
+                >
+                  Add nested filter
+                </button>
+
+                @if (group.rows.length > 1) {
+                  <button
+                    class="proj-filter-clear-group"
+                    type="button"
+                    (mousedown)="host?.onSharedFilterPanelActionPointerDown?.($event)"
+                    (click)="host?.clearSharedFilterGroup?.(group.id, $event)"
+                  >
+                    Clear group
+                  </button>
+                }
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+
+  <div class="proj-filter-footer">
+    <button
+      class="proj-filter-add"
+      type="button"
+      (mousedown)="host?.onSharedFilterPanelActionPointerDown?.($event)"
+      (click)="host?.addSharedToolbarFilter?.($event)"
+    >
+      <i appIcon="plus-lg" aria-hidden="true"></i>
+      <span>Add filter</span>
+    </button>
+    @if (host?.sharedHasActiveFilters?.()) {
+      <button
+        class="proj-filter-clear-link"
+        type="button"
+        (mousedown)="host?.onSharedFilterPanelActionPointerDown?.($event)"
+        (click)="host?.clearSharedToolbarFilters?.($event)"
+      >
+        Clear all
+      </button>
+    }
+  </div>
+</div>

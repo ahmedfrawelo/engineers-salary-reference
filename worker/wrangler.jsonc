@@ -1,0 +1,12 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "engineers-salary-api",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-07-15",
+  "workers_dev": true,
+  "observability": { "enabled": false },
+  "vars": {
+    "ENVIRONMENT": "production",
+    "ALLOWED_ORIGIN": "https://engineers-salary-reference.pages.dev"
+  }
+}

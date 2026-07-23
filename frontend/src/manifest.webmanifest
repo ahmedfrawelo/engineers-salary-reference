@@ -1,0 +1,15 @@
+{
+  "name": "ENGREF Engineering Intelligence",
+  "short_name": "ENGREF",
+  "icons": [
+    {
+      "src": "assets/brand/engref-favicon-v6.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "theme_color": "#84c718",
+  "background_color": "#101418",
+  "display": "standalone"
+}

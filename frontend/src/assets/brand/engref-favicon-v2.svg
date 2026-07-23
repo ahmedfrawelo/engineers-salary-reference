@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title id="title">ENGREF</title>
+  <rect width="64" height="64" rx="8" fill="#151815"/>
+  <path fill="#f2f5ec" d="M3 7h28v9H13v10h16v9H13v13h18v9H3V7Z"/>
+  <path fill="#8bd21b" d="M34 7h13c9 0 14 5 14 14 0 6-3 11-8 13l9 23H52l-7-19h-2v19h-9V7Zm9 9v14h4c4 0 6-3 6-7s-2-7-6-7h-4Z"/>
+</svg>

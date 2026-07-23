@@ -1,0 +1,1952 @@
+<section
+  class="calendar-shell"
+  [class.rtl]="rtl"
+  [class.with-side-panel]="showSidePanel"
+  [class.side-panel-left]="showSidePanel && calendarSidePanelPosition === 'left'"
+>
+  <ng-template #calendarSideTools>
+    <div class="calendar-side-tools__title">
+      <span>Analysis</span>
+      <small>{{ calendarSidePanelStatusLabel }}</small>
+    </div>
+    <div class="calendar-side-tools__actions">
+      <button
+        type="button"
+        class="calendar-side-panels"
+        title="Choose analysis cards"
+        aria-label="Choose analysis cards"
+        [attr.aria-expanded]="calendarSidePanelPickerOpen"
+        (click)="toggleCalendarSidePanelPicker($event)"
+      >
+        Cards
+      </button>
+      @if (calendarSidePanelItems.length) {
+        @if (calendarSidePanelAllCollapsed) {
+          <button
+            type="button"
+            class="calendar-side-toggle"
+            title="Expand all analysis cards"
+            (click)="expandAllCalendarSidePanelItems($event)"
+          >
+            Expand
+          </button>
+        } @else {
+          <button
+            type="button"
+            class="calendar-side-toggle"
+            title="Collapse all analysis cards"
+            (click)="collapseAllCalendarSidePanelItems($event)"
+          >
+            Collapse
+          </button>
+        }
+      }
+      @if (calendarSidePanelResetAvailable) {
+        <button type="button" class="calendar-side-reset" (click)="resetCalendarSidePanelOrder($event)">
+          Reset
+        </button>
+      }
+      <button
+        type="button"
+        class="calendar-side-grip"
+        title="Drag analysis column"
+        aria-label="Drag analysis column"
+        (pointerdown)="startCalendarSidePanelPositionDrag($event)"
+      >
+        <span></span>
+      </button>
+      <button
+        type="button"
+        class="calendar-side-swap"
+        [attr.title]="calendarSidePanelMoveTitle"
+        [attr.aria-label]="calendarSidePanelMoveTitle"
+        (click)="toggleCalendarSidePanelPosition($event)"
+      >
+        <i [appIcon]="calendarSidePanelMoveIcon" aria-hidden="true"></i>
+      </button>
+    </div>
+    @if (calendarSidePanelPickerOpen) {
+      <div class="calendar-side-picker" (click)="$event.stopPropagation()">
+        <div class="calendar-side-picker__head">
+          <span>Analysis cards</span>
+          <button type="button" (click)="showAllCalendarSidePanelItems($event)">Show all</button>
+        </div>
+        <div class="calendar-side-picker__list">
+          @for (option of calendarSidePanelOptions; track option.id) {
+            <label class="calendar-side-picker__option" [class.is-disabled]="!option.available">
+              <input
+                type="checkbox"
+                [checked]="option.enabled"
+                [disabled]="!option.available"
+                (change)="toggleCalendarSidePanelVisibility(option.id, $event)"
+              />
+              <span>{{ option.label }}</span>
+              @if (!option.available) {
+                <small>No data</small>
+              }
+            </label>
+          }
+        </div>
+      </div>
+    }
+  </ng-template>
+
+  <ng-template #calendarToolbar>
+    <header class="calendar-toolbar" [class.calendar-toolbar--compact]="!title">
+      <div class="calendar-toolbar__primary">
+        @if (title || calendarSubtitle) {
+          <div class="calendar-title" [class.calendar-title--range-only]="!title">
+            @if (title) {
+              <h3>{{ title }}</h3>
+            }
+            @if (calendarSubtitle) {
+              <p>{{ calendarSubtitle }}</p>
+            }
+          </div>
+        }
+
+        @if (showToday || showNav || showJump) {
+          <div class="calendar-controls">
+            @if (showToday) {
+              <button type="button" class="btn ghost" (click)="goToToday()">Today</button>
+            }
+            @if (showNav) {
+              <div class="calendar-nav">
+                <button
+                  type="button"
+                  class="icon-btn"
+                  aria-label="Previous period"
+                  [attr.title]="'Previous ' + (viewLabels[currentView] || currentView)"
+                  (click)="shiftCalendar(-1)"
+                >
+                  <i appIcon="chevron-left" aria-hidden="true"></i>
+                </button>
+                <button
+                  type="button"
+                  class="icon-btn"
+                  aria-label="Next period"
+                  [attr.title]="'Next ' + (viewLabels[currentView] || currentView)"
+                  (click)="shiftCalendar(1)"
+                >
+                  <i appIcon="chevron-right" aria-hidden="true"></i>
+                </button>
+              </div>
+            }
+            @if (showJump) {
+              <label class="filter-field jump-field">
+                <input
+                  type="date"
+                  [value]="jumpDate"
+                  aria-label="Jump to date"
+                  (change)="onJumpDateChange($any($event.target).value)"
+                />
+              </label>
+            }
+          </div>
+        }
+      </div>
+
+      @if (
+        (showViewToggle && viewOptions.length > 1) ||
+        enableFilters ||
+        enablePresets ||
+        enableExport ||
+        enableImport ||
+        enableQuickAdd ||
+        showTimeZone
+      ) {
+        <div class="calendar-toolbar__secondary">
+          @if (showViewToggle && viewOptions.length > 1) {
+            <nav class="calendar-view-tabs" aria-label="Calendar views">
+              @for (viewOption of viewOptions; track viewOption) {
+                <button
+                  type="button"
+                  class="calendar-view-tab"
+                  [class.active]="currentView === viewOption"
+                  [attr.aria-current]="currentView === viewOption ? 'page' : null"
+                  [attr.title]="viewLabels[viewOption] || viewOption"
+                  (click)="setView(viewOption)"
+                >
+                  {{ viewLabels[viewOption] || viewOption }}
+                </button>
+              }
+            </nav>
+          }
+
+          @if (enableFilters) {
+            <div class="calendar-filters">
+              <label class="filter-field search-field">
+                <input
+                  type="search"
+                  [value]="searchQuery"
+                  placeholder="Search events"
+                  aria-label="Search events"
+                  (input)="onCalendarSearchInput($any($event.target).value)"
+                />
+              </label>
+              <label class="filter-field">
+                <select
+                  [(ngModel)]="selectedType"
+                  aria-label="Filter by type"
+                  (ngModelChange)="onCalendarFilterChange()"
+                >
+                  <option value="all">All types</option>
+                  @for (type of typeOptions; track type) {
+                    <option [value]="type">{{ type }}</option>
+                  }
+                </select>
+              </label>
+              <label class="filter-field">
+                <select
+                  [(ngModel)]="selectedStatus"
+                  aria-label="Filter by status"
+                  (ngModelChange)="onCalendarFilterChange()"
+                >
+                  <option value="all">All statuses</option>
+                  @for (status of statusOptions; track status) {
+                    <option [value]="status">{{ status }}</option>
+                  }
+                </select>
+              </label>
+              @if (resources.length) {
+                <label class="filter-field">
+                  <select
+                    [(ngModel)]="selectedResource"
+                    [attr.aria-label]="'Filter by ' + resourceLabel"
+                    (ngModelChange)="onCalendarFilterChange()"
+                  >
+                    <option value="all">All {{ resourceLabel }}</option>
+                    @for (resource of resourceOptions; track resource) {
+                      <option [value]="resource.id">{{ resource.name }}</option>
+                    }
+                  </select>
+                </label>
+              }
+              @if (layers.length) {
+                <label class="filter-field">
+                  <select
+                    [(ngModel)]="selectedLayer"
+                    [attr.aria-label]="'Filter by ' + layerLabel"
+                    (ngModelChange)="onCalendarFilterChange()"
+                  >
+                    <option value="all">All {{ layerLabel }}</option>
+                    @for (layer of layerOptions; track layer) {
+                      <option [value]="layer">{{ layer }}</option>
+                    }
+                  </select>
+                </label>
+              }
+            </div>
+          }
+
+          @if (enablePresets || enableExport || enableImport || enableQuickAdd || showTimeZone) {
+            <div class="calendar-toolbar__actions">
+              @if (enablePresets) {
+                <div class="calendar-presets">
+                  <label class="filter-field">
+                    <select
+                      [value]="selectedPresetId"
+                      aria-label="Saved calendar presets"
+                      (change)="applyPreset($any($event.target).value)"
+                    >
+                      <option value="">View presets</option>
+                      @for (preset of presets; track preset.id) {
+                        <option [value]="preset.id">{{ preset.name }}</option>
+                      }
+                    </select>
+                  </label>
+                  <button type="button" class="btn sm ghost" (click)="savePreset()">Save</button>
+                  <button
+                    type="button"
+                    class="btn sm ghost"
+                    [disabled]="!selectedPresetId"
+                    (click)="deletePreset()"
+                  >
+                    Delete
+                  </button>
+                </div>
+              }
+
+              @if (enableQuickAdd) {
+                <div class="calendar-quick-add">
+                  <input
+                    type="text"
+                    [value]="quickAddText"
+                    placeholder="Quick add event"
+                    aria-label="Quick add event"
+                    (input)="quickAddText = $any($event.target).value"
+                    (keydown.enter)="applyQuickAdd()"
+                  />
+                  <button type="button" class="btn sm primary" (click)="applyQuickAdd()">Add</button>
+                </div>
+              }
+
+              @if (showTimeZone) {
+                <label class="filter-field calendar-timezone">
+                  <select
+                    [value]="selectedTimeZone"
+                    aria-label="Calendar time zone"
+                    (change)="onTimeZoneChange($any($event.target).value)"
+                  >
+                    @for (zone of resolvedTimeZones; track zone) {
+                      <option [value]="zone">{{ zone }}</option>
+                    }
+                  </select>
+                </label>
+              }
+
+              @if (enableExport || enableImport) {
+                <div class="calendar-toolbar__io">
+                  @if (enableExport) {
+                    <button type="button" class="btn sm ghost" (click)="exportIcs()">Export ICS</button>
+                    <button type="button" class="btn sm ghost" (click)="exportCsv()">Export CSV</button>
+                  }
+                  @if (enableImport) {
+                    <label class="btn sm ghost import-btn">
+                      <span>Import</span>
+                      <input
+                        type="file"
+                        accept=".ics,.csv"
+                        hidden
+                        (change)="onImport($event)"
+                      />
+                    </label>
+                  }
+                </div>
+              }
+            </div>
+          }
+        </div>
+      }
+
+      @if (showLegend && legend.length) {
+        <div class="calendar-legend">
+          @for (item of legend; track item.id) {
+            <span class="legend-pill">
+              <span
+                class="resource-dot"
+                [style.--resource-color]="item.color || null"
+              ></span>
+              <span>{{ item.label }}</span>
+            </span>
+          }
+        </div>
+      }
+
+    </header>
+  </ng-template>
+
+  <div
+    class="calendar-layout"
+    [class.with-side]="showSidePanel"
+    [class.side-left]="calendarSidePanelPosition === 'left'"
+    [class.side-dragging]="calendarSidePanelDragging"
+    [class.side-resizing]="calendarSidePanelResizing"
+    [class.side-drop-left]="calendarSidePanelDragPreviewPosition === 'left'"
+    [class.side-drop-right]="calendarSidePanelDragPreviewPosition === 'right'"
+    [style.--cal-side-min-width]="sidePanelMinWidth + 'px'"
+    [style.--cal-side-width]="calendarSidePanelWidth + 'px'"
+  >
+    <div class="calendar-main">
+      @if (showToolbar) {
+        <ng-container [ngTemplateOutlet]="calendarToolbar"></ng-container>
+      }
+      <div class="calendar-main__body">
+        @switch (currentView) {
+          @case ('month') {
+            <div
+              class="calendar-month"
+              [class.with-week-numbers]="showWeekNumbers"
+              [style.--week-number-col]="showWeekNumbers ? '44px' : '0px'"
+              [style.--month-week-count]="monthWeeks.length"
+            >
+              <div class="month-weeks">
+                @for (week of monthWeeks; track week.start; let weekIndex = $index) {
+                  <div class="month-week">
+                    <div class="week-days">
+                      @if (showWeekNumbers) {
+                        <div class="week-number">{{ week.weekNumber }}</div>
+                      }
+                      @for (day of week.days; track day.iso; let dayIndex = $index) {
+                        <article
+                          class="calendar-day"
+                          [class.first-week]="weekIndex === 0"
+                          [class.outside]="!day.inMonth"
+                          [class.today]="day.isToday"
+                          [class.weekend]="day.isWeekend"
+                          [class.selected]="isDateSelected(day.date)"
+                          (dragover)="onDayDragOver($event)"
+                          (drop)="onDayDrop($event, day.date)"
+                          (pointerdown)="onDaySelectStart($event, day.date)"
+                          (pointerenter)="onDaySelectEnter(day.date)"
+                          (click)="onDateSelect(day.date)"
+                        >
+                          <div class="day-head">
+                            @if (weekIndex === 0 && showWeekdayHeader) {
+                              <span class="day-weekday">{{ calendarWeekdayLabels[dayIndex] }}</span>
+                            }
+                            <div class="day-head__meta">
+                              <span class="day-number">{{ day.label }}</span>
+                              @if (day.eventHints.length) {
+                                <span class="day-type-hints" aria-label="Day event types">
+                                  @for (hint of day.eventHints; track hint.id) {
+                                    <span
+                                      class="day-type-hint"
+                                      [style.--item-color]="hint.color || null"
+                                      [attr.title]="hint.label"
+                                      [attr.aria-label]="hint.label"
+                                    ></span>
+                                  }
+                                </span>
+                              }
+                            </div>
+                            @if (day.events.length) {
+                              <span class="day-load">{{ day.events.length }}</span>
+                            }
+                          </div>
+                          @if (showHolidays && day.holidays.length) {
+                            <div class="day-holidays">
+                              @for (
+                                holiday of day.holidays | slice: 0 : maxHolidayLabels;
+                                track holiday
+                              ) {
+                                <span
+                                  class="holiday-pill"
+                                  [style.--holiday-color]="holiday.color || null"
+                                >
+                                  {{ holiday.label }}
+                                </span>
+                              }
+                            </div>
+                          }
+                          <div class="day-events">
+                            @for (event of day.events | slice: 0 : maxVisiblePerDay; track event.id) {
+                              <button
+                                type="button"
+                                class="event-chip"
+                                [ngClass]="event.typeClassName"
+                                [style.--event-color]="event.color || null"
+                                [class.conflict]="event.conflict"
+                                [attr.title]="event.tooltipText"
+                                [attr.draggable]="enableDragDrop ? true : null"
+                                (dragstart)="onEventDragStart($event, event)"
+                                (click)="onEventClick($event, event)"
+                              >
+                                <span
+                                  class="event-status"
+                                  [ngClass]="event.statusClassName"
+                                ></span>
+                                <span class="event-name">{{ event.title }}</span>
+                                @if (event.type) {
+                                  <span class="event-type">{{ event.type }}</span>
+                                }
+                              </button>
+                            }
+                            @if (day.moreCount) {
+                              <div class="event-more">+{{ day.moreCount }} more</div>
+                            }
+                          </div>
+                        </article>
+                      }
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+        @case ('week') {
+          <div class="calendar-week-view">
+            @if (showWeekdayHeader) {
+              <div class="week-header">
+                <div class="week-label"></div>
+                <div class="week-days">
+                  @for (day of weekDays; track day.iso) {
+                    <div class="week-day-label">
+                      <span>{{ formatWeekday(day.date) }}</span>
+                      <span class="day-date">{{ day.date | date: 'MMM d' }}</span>
+                      @if (showHolidays && day.holidays.length) {
+                        <span class="holiday-dot"></span>
+                      }
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+            @if (!groupByResource || !resourceGroups.length) {
+              <div class="week-all-day">
+                <div class="week-label">All day</div>
+                <div class="week-all-day-grid" (dragover)="onDayDragOver($event)">
+                  @for (day of weekDays; track day.iso) {
+                    <div
+                      class="all-day-cell"
+                      [class.selected]="isAllDaySelected(day.date)"
+                      (drop)="onDayDrop($event, day.date)"
+                      (pointerdown)="onAllDaySelectStart($event, day.date)"
+                      (pointerenter)="onAllDaySelectEnter(day.date)"
+                    ></div>
+                  }
+                  @for (bar of weekAllDayBars; track bar) {
+                    <button
+                      type="button"
+                      class="event-bar"
+                      [style.gridColumn]="bar.startIndex + 1 + ' / span ' + bar.span"
+                      [style.gridRow]="bar.row + 1"
+                      [ngClass]="bar.event.typeClassName"
+                      [style.--event-color]="bar.event.color || null"
+                      [class.conflict]="bar.event.conflict"
+                      [attr.title]="bar.event.tooltipText"
+                      [attr.draggable]="enableDragDrop ? true : null"
+                      (dragstart)="onEventDragStart($event, bar.event)"
+                      (click)="onEventClick($event, bar.event)"
+                    >
+                      <span class="event-status" [ngClass]="bar.event.statusClassName"></span>
+                      <span class="event-title">{{ bar.title }}</span>
+                      @if (enableResize) {
+                        <span
+                          class="bar-handle left"
+                          (pointerdown)="onBarResizeStart($event, bar.event, 'start')"
+                        ></span>
+                      }
+                      @if (enableResize) {
+                        <span
+                          class="bar-handle right"
+                          (pointerdown)="onBarResizeStart($event, bar.event, 'end')"
+                        ></span>
+                      }
+                    </button>
+                  }
+                </div>
+              </div>
+              <div
+                class="time-grid"
+                [class.work-hours]="showWorkingHours"
+                [style.--slot-count]="slotCount"
+                [style.--hour-count]="hourCount"
+                [style.--hour-height]="hourHeightCss"
+                [style.--work-start]="workStartPercent + '%'"
+                [style.--work-end]="workEndPercent + '%'"
+              >
+                <div class="time-labels">
+                  @for (label of timeLabels; track label) {
+                    <div class="time-label">{{ label }}</div>
+                  }
+                </div>
+                <div class="time-days">
+                  @for (col of timeGridDays; track col.date; let index = $index) {
+                    <div
+                      class="time-day"
+                      [class.today]="col.isToday"
+                      [class.weekend]="col.isWeekend"
+                      (dragover)="onTimeDragOver($event)"
+                      (drop)="onTimeDrop($event, col.date, $event.currentTarget)"
+                      (pointerdown)="onTimeSelectStart($event, col.date)"
+                      (click)="onTimeSlotClick($event, col.date)"
+                    >
+                      @if (isTimeSelectionActive(col.date)) {
+                        <div
+                          class="time-selection"
+                          [style.top.%]="getTimeSelectionTop(col.date)"
+                          [style.height.%]="getTimeSelectionHeight(col.date)"
+                        ></div>
+                      }
+                      @if (nowIndicator.show && nowIndicator.dayIndex === index) {
+                        <div class="now-indicator" [style.top.%]="nowIndicator.top"></div>
+                      }
+                      @for (item of col.timedEvents; track item.event.id) {
+                        <button
+                          type="button"
+                          class="time-event"
+                          [style.top.%]="item.top"
+                          [style.height.%]="item.height"
+                          [style.left.%]="item.left"
+                          [style.width.%]="item.width"
+                          [ngClass]="item.event.typeClassName"
+                          [style.--event-color]="item.event.color || null"
+                          [class.conflict]="item.event.conflict"
+                          [attr.title]="item.event.tooltipText"
+                          [attr.draggable]="enableDragDrop ? true : null"
+                          (dragstart)="onEventDragStart($event, item.event)"
+                          (click)="onEventClick($event, item.event)"
+                        >
+                          <span class="event-title">{{ item.event.title }}</span>
+                          <span class="event-time">{{ formatTimeRange(item.event) }}</span>
+                          @if (enableResize) {
+                            <span
+                              class="event-resize"
+                              (pointerdown)="onTimeResizeStart($event, item.event)"
+                            ></span>
+                          }
+                        </button>
+                      }
+                    </div>
+                  }
+                </div>
+              </div>
+            } @else {
+              @for (group of resourceGroups; track group.id) {
+                <div class="resource-section">
+                  <div class="resource-header">
+                    <span class="resource-dot" [style.--resource-color]="group.color || null"></span>
+                    <span>{{ group.name }}</span>
+                  </div>
+                  <div class="week-all-day">
+                    <div class="week-label">All day</div>
+                    <div class="week-all-day-grid" (dragover)="onDayDragOver($event)">
+                      @for (day of weekDays; track day.iso) {
+                        <div
+                          class="all-day-cell"
+                          [class.selected]="isAllDaySelected(day.date, group.id)"
+                          (drop)="onDayDrop($event, day.date, group.id)"
+                          (pointerdown)="onAllDaySelectStart($event, day.date, group.id)"
+                          (pointerenter)="onAllDaySelectEnter(day.date, group.id)"
+                        ></div>
+                      }
+                      @for (bar of group.allDayBars; track bar) {
+                        <button
+                          type="button"
+                          class="event-bar"
+                          [style.gridColumn]="bar.startIndex + 1 + ' / span ' + bar.span"
+                          [style.gridRow]="bar.row + 1"
+                          [ngClass]="bar.event.typeClassName"
+                          [style.--event-color]="bar.event.color || null"
+                          [class.conflict]="bar.event.conflict"
+                          [attr.title]="bar.event.tooltipText"
+                          [attr.draggable]="enableDragDrop ? true : null"
+                          (dragstart)="onEventDragStart($event, bar.event)"
+                          (click)="onEventClick($event, bar.event)"
+                        >
+                          <span class="event-status" [ngClass]="bar.event.statusClassName"></span>
+                          <span class="event-title">{{ bar.title }}</span>
+                          @if (enableResize) {
+                            <span
+                              class="bar-handle left"
+                              (pointerdown)="onBarResizeStart($event, bar.event, 'start')"
+                            ></span>
+                          }
+                          @if (enableResize) {
+                            <span
+                              class="bar-handle right"
+                              (pointerdown)="onBarResizeStart($event, bar.event, 'end')"
+                            ></span>
+                          }
+                        </button>
+                      }
+                    </div>
+                  </div>
+                  <div
+                    class="time-grid"
+                    [class.work-hours]="showWorkingHours"
+                    [style.--slot-count]="slotCount"
+                    [style.--hour-count]="hourCount"
+                    [style.--hour-height]="hourHeightCss"
+                    [style.--work-start]="workStartPercent + '%'"
+                    [style.--work-end]="workEndPercent + '%'"
+                  >
+                    <div class="time-labels">
+                      @for (label of timeLabels; track label) {
+                        <div class="time-label">{{ label }}</div>
+                      }
+                    </div>
+                    <div class="time-days">
+                      @for (col of group.timeGridDays; track col.date; let index = $index) {
+                        <div
+                          class="time-day"
+                          [class.today]="col.isToday"
+                          [class.weekend]="col.isWeekend"
+                          (dragover)="onTimeDragOver($event)"
+                          (drop)="onTimeDrop($event, col.date, $event.currentTarget, group.id)"
+                          (pointerdown)="onTimeSelectStart($event, col.date, group.id)"
+                          (click)="onTimeSlotClick($event, col.date, group.id)"
+                        >
+                          @if (isTimeSelectionActive(col.date, group.id)) {
+                            <div
+                              class="time-selection"
+                              [style.top.%]="getTimeSelectionTop(col.date, group.id)"
+                              [style.height.%]="getTimeSelectionHeight(col.date, group.id)"
+                            ></div>
+                          }
+                          @if (nowIndicator.show && nowIndicator.dayIndex === index) {
+                            <div class="now-indicator" [style.top.%]="nowIndicator.top"></div>
+                          }
+                          @for (item of col.timedEvents; track item.event.id) {
+                            <button
+                              type="button"
+                              class="time-event"
+                              [style.top.%]="item.top"
+                              [style.height.%]="item.height"
+                              [style.left.%]="item.left"
+                              [style.width.%]="item.width"
+                              [ngClass]="item.event.typeClassName"
+                              [style.--event-color]="item.event.color || null"
+                              [class.conflict]="item.event.conflict"
+                              [attr.title]="item.event.tooltipText"
+                              [attr.draggable]="enableDragDrop ? true : null"
+                              (dragstart)="onEventDragStart($event, item.event)"
+                              (click)="onEventClick($event, item.event)"
+                            >
+                              <span class="event-title">{{ item.event.title }}</span>
+                              <span class="event-time">{{ formatTimeRange(item.event) }}</span>
+                              @if (enableResize) {
+                                <span
+                                  class="event-resize"
+                                  (pointerdown)="onTimeResizeStart($event, item.event)"
+                                ></span>
+                              }
+                            </button>
+                          }
+                        </div>
+                      }
+                    </div>
+                  </div>
+                </div>
+              }
+            }
+          </div>
+        }
+        @case ('day') {
+          <div class="calendar-day-view">
+            @if (showWeekdayHeader) {
+              <div class="week-header">
+                <div class="week-label"></div>
+                <div class="week-days">
+                  @for (day of weekDays; track day.iso) {
+                    <div class="week-day-label">
+                      <span>{{ formatWeekday(day.date) }}</span>
+                      <span class="day-date">{{ day.date | date: 'MMM d' }}</span>
+                      @if (showHolidays && day.holidays.length) {
+                        <span class="holiday-dot"></span>
+                      }
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+            @if (!groupByResource || !resourceGroups.length) {
+              <div class="week-all-day">
+                <div class="week-label">All day</div>
+                <div class="week-all-day-grid" (dragover)="onDayDragOver($event)">
+                  @for (day of weekDays; track day.iso) {
+                    <div
+                      class="all-day-cell"
+                      [class.selected]="isAllDaySelected(day.date)"
+                      (drop)="onDayDrop($event, day.date)"
+                      (pointerdown)="onAllDaySelectStart($event, day.date)"
+                      (pointerenter)="onAllDaySelectEnter(day.date)"
+                    ></div>
+                  }
+                  @for (bar of weekAllDayBars; track bar) {
+                    <button
+                      type="button"
+                      class="event-bar"
+                      [style.gridColumn]="bar.startIndex + 1 + ' / span ' + bar.span"
+                      [style.gridRow]="bar.row + 1"
+                      [ngClass]="bar.event.typeClassName"
+                      [style.--event-color]="bar.event.color || null"
+                      [class.conflict]="bar.event.conflict"
+                      [attr.title]="bar.event.tooltipText"
+                      [attr.draggable]="enableDragDrop ? true : null"
+                      (dragstart)="onEventDragStart($event, bar.event)"
+                      (click)="onEventClick($event, bar.event)"
+                    >
+                      <span class="event-status" [ngClass]="bar.event.statusClassName"></span>
+                      <span class="event-title">{{ bar.title }}</span>
+                      @if (enableResize) {
+                        <span
+                          class="bar-handle left"
+                          (pointerdown)="onBarResizeStart($event, bar.event, 'start')"
+                        ></span>
+                      }
+                      @if (enableResize) {
+                        <span
+                          class="bar-handle right"
+                          (pointerdown)="onBarResizeStart($event, bar.event, 'end')"
+                        ></span>
+                      }
+                    </button>
+                  }
+                </div>
+              </div>
+              <div
+                class="time-grid"
+                [class.work-hours]="showWorkingHours"
+                [style.--slot-count]="slotCount"
+                [style.--hour-count]="hourCount"
+                [style.--hour-height]="hourHeightCss"
+                [style.--work-start]="workStartPercent + '%'"
+                [style.--work-end]="workEndPercent + '%'"
+              >
+                <div class="time-labels">
+                  @for (label of timeLabels; track label) {
+                    <div class="time-label">{{ label }}</div>
+                  }
+                </div>
+                <div class="time-days">
+                  @for (col of timeGridDays; track col.date; let index = $index) {
+                    <div
+                      class="time-day"
+                      [class.today]="col.isToday"
+                      [class.weekend]="col.isWeekend"
+                      (dragover)="onTimeDragOver($event)"
+                      (drop)="onTimeDrop($event, col.date, $event.currentTarget)"
+                      (pointerdown)="onTimeSelectStart($event, col.date)"
+                      (click)="onTimeSlotClick($event, col.date)"
+                    >
+                      @if (isTimeSelectionActive(col.date)) {
+                        <div
+                          class="time-selection"
+                          [style.top.%]="getTimeSelectionTop(col.date)"
+                          [style.height.%]="getTimeSelectionHeight(col.date)"
+                        ></div>
+                      }
+                      @if (nowIndicator.show && nowIndicator.dayIndex === index) {
+                        <div class="now-indicator" [style.top.%]="nowIndicator.top"></div>
+                      }
+                      @for (item of col.timedEvents; track item.event.id) {
+                        <button
+                          type="button"
+                          class="time-event"
+                          [style.top.%]="item.top"
+                          [style.height.%]="item.height"
+                          [style.left.%]="item.left"
+                          [style.width.%]="item.width"
+                          [ngClass]="item.event.typeClassName"
+                          [style.--event-color]="item.event.color || null"
+                          [class.conflict]="item.event.conflict"
+                          [attr.title]="item.event.tooltipText"
+                          [attr.draggable]="enableDragDrop ? true : null"
+                          (dragstart)="onEventDragStart($event, item.event)"
+                          (click)="onEventClick($event, item.event)"
+                        >
+                          <span class="event-title">{{ item.event.title }}</span>
+                          <span class="event-time">{{ formatTimeRange(item.event) }}</span>
+                          @if (enableResize) {
+                            <span
+                              class="event-resize"
+                              (pointerdown)="onTimeResizeStart($event, item.event)"
+                            ></span>
+                          }
+                        </button>
+                      }
+                    </div>
+                  }
+                </div>
+              </div>
+            } @else {
+              @for (group of resourceGroups; track group.id) {
+                <div class="resource-section">
+                  <div class="resource-header">
+                    <span class="resource-dot" [style.--resource-color]="group.color || null"></span>
+                    <span>{{ group.name }}</span>
+                  </div>
+                  <div class="week-all-day">
+                    <div class="week-label">All day</div>
+                    <div class="week-all-day-grid" (dragover)="onDayDragOver($event)">
+                      @for (day of weekDays; track day.iso) {
+                        <div
+                          class="all-day-cell"
+                          [class.selected]="isAllDaySelected(day.date, group.id)"
+                          (drop)="onDayDrop($event, day.date, group.id)"
+                          (pointerdown)="onAllDaySelectStart($event, day.date, group.id)"
+                          (pointerenter)="onAllDaySelectEnter(day.date, group.id)"
+                        ></div>
+                      }
+                      @for (bar of group.allDayBars; track bar) {
+                        <button
+                          type="button"
+                          class="event-bar"
+                          [style.gridColumn]="bar.startIndex + 1 + ' / span ' + bar.span"
+                          [style.gridRow]="bar.row + 1"
+                          [ngClass]="bar.event.typeClassName"
+                          [style.--event-color]="bar.event.color || null"
+                          [class.conflict]="bar.event.conflict"
+                          [attr.title]="bar.event.tooltipText"
+                          [attr.draggable]="enableDragDrop ? true : null"
+                          (dragstart)="onEventDragStart($event, bar.event)"
+                          (click)="onEventClick($event, bar.event)"
+                        >
+                          <span class="event-status" [ngClass]="bar.event.statusClassName"></span>
+                          <span class="event-title">{{ bar.title }}</span>
+                          @if (enableResize) {
+                            <span
+                              class="bar-handle left"
+                              (pointerdown)="onBarResizeStart($event, bar.event, 'start')"
+                            ></span>
+                          }
+                          @if (enableResize) {
+                            <span
+                              class="bar-handle right"
+                              (pointerdown)="onBarResizeStart($event, bar.event, 'end')"
+                            ></span>
+                          }
+                        </button>
+                      }
+                    </div>
+                  </div>
+                  <div
+                    class="time-grid"
+                    [class.work-hours]="showWorkingHours"
+                    [style.--slot-count]="slotCount"
+                    [style.--hour-count]="hourCount"
+                    [style.--hour-height]="hourHeightCss"
+                    [style.--work-start]="workStartPercent + '%'"
+                    [style.--work-end]="workEndPercent + '%'"
+                  >
+                    <div class="time-labels">
+                      @for (label of timeLabels; track label) {
+                        <div class="time-label">{{ label }}</div>
+                      }
+                    </div>
+                    <div class="time-days">
+                      @for (col of group.timeGridDays; track col.date; let index = $index) {
+                        <div
+                          class="time-day"
+                          [class.today]="col.isToday"
+                          [class.weekend]="col.isWeekend"
+                          (dragover)="onTimeDragOver($event)"
+                          (drop)="onTimeDrop($event, col.date, $event.currentTarget, group.id)"
+                          (pointerdown)="onTimeSelectStart($event, col.date, group.id)"
+                          (click)="onTimeSlotClick($event, col.date, group.id)"
+                        >
+                          @if (isTimeSelectionActive(col.date, group.id)) {
+                            <div
+                              class="time-selection"
+                              [style.top.%]="getTimeSelectionTop(col.date, group.id)"
+                              [style.height.%]="getTimeSelectionHeight(col.date, group.id)"
+                            ></div>
+                          }
+                          @if (nowIndicator.show && nowIndicator.dayIndex === index) {
+                            <div class="now-indicator" [style.top.%]="nowIndicator.top"></div>
+                          }
+                          @for (item of col.timedEvents; track item.event.id) {
+                            <button
+                              type="button"
+                              class="time-event"
+                              [style.top.%]="item.top"
+                              [style.height.%]="item.height"
+                              [style.left.%]="item.left"
+                              [style.width.%]="item.width"
+                              [ngClass]="item.event.typeClassName"
+                              [style.--event-color]="item.event.color || null"
+                              [class.conflict]="item.event.conflict"
+                              [attr.title]="item.event.tooltipText"
+                              [attr.draggable]="enableDragDrop ? true : null"
+                              (dragstart)="onEventDragStart($event, item.event)"
+                              (click)="onEventClick($event, item.event)"
+                            >
+                              <span class="event-title">{{ item.event.title }}</span>
+                              <span class="event-time">{{ formatTimeRange(item.event) }}</span>
+                              @if (enableResize) {
+                                <span
+                                  class="event-resize"
+                                  (pointerdown)="onTimeResizeStart($event, item.event)"
+                                ></span>
+                              }
+                            </button>
+                          }
+                        </div>
+                      }
+                    </div>
+                  </div>
+                </div>
+              }
+            }
+          </div>
+        }
+        @case ('agenda') {
+          <div class="calendar-agenda">
+            <div class="agenda-list">
+              @for (event of agendaEvents; track event.id) {
+                <article class="agenda-item">
+                  <div class="agenda-date">{{ event.rangeLabel }}</div>
+                  <div class="agenda-main">
+                    <span class="event-status" [ngClass]="event.statusClassName"></span>
+                    <span class="agenda-name">{{ event.title }}</span>
+                    @if (event.type) {
+                      <span class="legend-pill" [ngClass]="event.typeClassName">{{
+                        event.type
+                      }}</span>
+                    }
+                  </div>
+                  @if (event.meta) {
+                    <div class="agenda-meta">{{ event.meta }}</div>
+                  }
+                </article>
+              }
+              @if (!agendaEvents.length) {
+                <div class="empty-state">{{ emptyMessage }}</div>
+              }
+            </div>
+          </div>
+        }
+        @case ('year') {
+          <div class="calendar-year">
+            <div class="year-grid">
+              @for (month of yearMonths; track month.date) {
+                <div class="year-month">
+                  <div class="year-month-header">{{ month.label }}</div>
+                  <div class="year-weekdays">
+                    @for (label of calendarWeekdayLabels; track label) {
+                      <span>{{ label.slice(0, 1) }}</span>
+                    }
+                  </div>
+                  <div class="year-days">
+                    @for (day of month.days; track day.iso) {
+                      <button
+                        type="button"
+                        class="year-day"
+                        [class.outside]="!day.inMonth"
+                        [class.today]="day.isToday"
+                        [class.weekend]="day.isWeekend"
+                        [style.--heat]="day.heat + '%'"
+                        (click)="jumpFromYear(day.date)"
+                      >
+                        <span class="day-number">{{ day.date | date: 'd' }}</span>
+                        @if (day.count) {
+                          <span class="day-count">{{ day.count }}</span>
+                        }
+                        @if (showHolidays && day.hasHoliday) {
+                          <span class="holiday-dot"></span>
+                        }
+                      </button>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        }
+        @case ('quarter') {
+          <div class="calendar-quarter">
+            <div class="quarter-grid">
+              @for (month of quarterMonths; track month.date) {
+                <div class="quarter-month">
+                  <div class="year-month-header">{{ month.label }}</div>
+                  <div class="year-weekdays">
+                    @for (label of calendarWeekdayLabels; track label) {
+                      <span>{{ label.slice(0, 1) }}</span>
+                    }
+                  </div>
+                  <div class="year-days">
+                    @for (day of month.days; track day.iso) {
+                      <button
+                        type="button"
+                        class="year-day"
+                        [class.outside]="!day.inMonth"
+                        [class.today]="day.isToday"
+                        [class.weekend]="day.isWeekend"
+                        [style.--heat]="day.heat + '%'"
+                        (click)="jumpFromYear(day.date)"
+                      >
+                        <span class="day-number">{{ day.date | date: 'd' }}</span>
+                        @if (day.count) {
+                          <span class="day-count">{{ day.count }}</span>
+                        }
+                        @if (showHolidays && day.hasHoliday) {
+                          <span class="holiday-dot"></span>
+                        }
+                      </button>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        }
+        @case ('timeline') {
+          <div class="calendar-timeline">
+            <div class="timeline-header" [style.--timeline-days]="timelineDays.length">
+              <div class="timeline-resource-label">{{ resourceLabel }}</div>
+              <div class="timeline-days">
+                @for (day of timelineDays; track day.iso) {
+                  <div
+                    class="timeline-day"
+                    [class.today]="day.isToday"
+                    [class.weekend]="day.isWeekend"
+                  >
+                    <span>{{ formatWeekday(day.date) }}</span>
+                    <span class="day-date">{{ day.date | date: 'MMM d' }}</span>
+                    @if (showHolidays && day.holidays.length) {
+                      <span class="holiday-dot"></span>
+                    }
+                  </div>
+                }
+              </div>
+            </div>
+            @for (row of timelineRows; track row.id) {
+              <div class="timeline-row" [style.--timeline-days]="timelineDays.length">
+                <div class="timeline-resource">
+                  <span class="resource-dot" [style.--resource-color]="row.color || null"></span>
+                  <span>{{ row.name }}</span>
+                  <span class="timeline-meta">{{ row.eventCount }} events</span>
+                </div>
+                <div class="timeline-grid">
+                  @for (day of timelineDays; track day.iso) {
+                    <div
+                      class="timeline-cell"
+                      [class.today]="day.isToday"
+                      [class.weekend]="day.isWeekend"
+                      (dragover)="onDayDragOver($event)"
+                      (drop)="onTimelineDrop($event, day.date, row.id)"
+                      (click)="onTimelineCellClick(day.date, row.id)"
+                    ></div>
+                  }
+                  @for (bar of row.bars; track bar) {
+                    <button
+                      type="button"
+                      class="event-bar timeline-bar"
+                      [style.gridColumn]="bar.startIndex + 1 + ' / span ' + bar.span"
+                      [style.gridRow]="bar.row + 1"
+                      [ngClass]="bar.event.typeClassName"
+                      [style.--event-color]="bar.event.color || null"
+                      [class.conflict]="bar.event.conflict"
+                      [attr.title]="bar.event.tooltipText"
+                      [attr.draggable]="enableDragDrop ? true : null"
+                      (dragstart)="onEventDragStart($event, bar.event)"
+                      (click)="onEventClick($event, bar.event)"
+                    >
+                      <span class="event-status" [ngClass]="bar.event.statusClassName"></span>
+                      <span class="event-title">{{ bar.title }}</span>
+                    </button>
+                  }
+                </div>
+              </div>
+            }
+            @if (!timelineRows.length) {
+              <div class="empty-state">{{ emptyMessage }}</div>
+            }
+          </div>
+        }
+        @case ('list') {
+          <div class="calendar-list">
+            <engineers-salary-reference-data-grid
+              class="calendar-list-grid"
+              [columns]="listColumns"
+              [data]="listRows"
+              [config]="listConfig"
+            >
+            </engineers-salary-reference-data-grid>
+          </div>
+        }
+        }
+      </div>
+    </div>
+
+    @if (showSidePanel) {
+      <aside
+        class="calendar-side"
+        [class.calendar-side--left]="calendarSidePanelPosition === 'left'"
+      >
+        <div
+          class="calendar-side-resize"
+          role="separator"
+          aria-orientation="vertical"
+          aria-label="Resize analysis column"
+          title="Resize analysis column"
+          (pointerdown)="startCalendarSidePanelResize($event)"
+        ></div>
+        <div class="calendar-side-tools">
+          <ng-container [ngTemplateOutlet]="calendarSideTools"></ng-container>
+        </div>
+        <div
+          class="calendar-side__body"
+          cdkDropList
+          [cdkDropListData]="calendarSidePanelItems"
+          (cdkDropListDropped)="onCalendarSidePanelDrop($event)"
+        >
+          @for (panel of calendarSidePanelItems; track panel) {
+            @switch (panel) {
+              @case ('upcoming') {
+                <section
+                  class="calendar-insights upcoming"
+                  [class.is-collapsed]="calendarSidePanelCollapsedState.upcoming"
+                  cdkDrag
+                >
+                  <div class="insights-header">
+                    <button
+                    type="button"
+                    class="insight-drag-handle"
+                    aria-label="Reorder Upcoming"
+                    title="Reorder"
+                    cdkDragHandle
+                  >
+                    <span></span>
+                  </button>
+                  <div class="insights-header__title">
+                    <span>Upcoming</span>
+                    <small>Next items</small>
+                  </div>
+                  <button
+                    type="button"
+                    class="insight-collapse"
+                    [attr.aria-expanded]="!calendarSidePanelCollapsedState.upcoming"
+                    [attr.title]="calendarSidePanelCollapsedState.upcoming ? 'Expand' : 'Collapse'"
+                    (click)="toggleCalendarSidePanelCollapsed('upcoming', $event)"
+                  >
+                    <span></span>
+                  </button>
+                </div>
+                @if (!calendarSidePanelCollapsedState.upcoming) {
+                  @if (upcomingEvents.length) {
+                    <ul>
+                      @for (event of upcomingEvents; track event.id) {
+                        <li>
+                          <span class="event-status" [ngClass]="event.statusClassName"></span>
+                          <div>
+                            <div class="title">{{ event.title }}</div>
+                            <div class="meta">{{ event.rangeLabel }}</div>
+                          </div>
+                        </li>
+                      }
+                    </ul>
+                  } @else {
+                    <div class="insight-empty">No upcoming items</div>
+                  }
+                } @else {
+                  @if (upcomingEvents.length) {
+                    <div class="insight-collapsed-summary">{{ calendarSidePanelSummary.upcoming }}</div>
+                  }
+                }
+              </section>
+            }
+
+            @case ('insights') {
+              <section
+                class="calendar-insights calendar-insights--metrics calendar-insights--primary"
+                [class.is-collapsed]="calendarSidePanelCollapsedState.insights"
+                aria-label="Calendar insights"
+                cdkDrag
+              >
+                <div class="insights-header">
+                  <button
+                    type="button"
+                    class="insight-drag-handle"
+                    aria-label="Reorder Calendar insights"
+                    title="Reorder"
+                    cdkDragHandle
+                  >
+                    <span></span>
+                  </button>
+                  <div class="insights-header__title">
+                    <span>Calendar insights</span>
+                    <small>{{ calendarInsightRangeLabel }}</small>
+                  </div>
+                  <button
+                    type="button"
+                    class="insight-collapse"
+                    [attr.aria-expanded]="!calendarSidePanelCollapsedState.insights"
+                    [attr.title]="calendarSidePanelCollapsedState.insights ? 'Expand' : 'Collapse'"
+                    (click)="toggleCalendarSidePanelCollapsed('insights', $event)"
+                  >
+                    <span></span>
+                  </button>
+                </div>
+                @if (!calendarSidePanelCollapsedState.insights) {
+                  <div class="insight-metrics">
+                    @for (metric of calendarInsightMetrics; track metric.id) {
+                      <article
+                        class="insight-metric"
+                        [class.is-empty]="metric.empty"
+                        [ngClass]="'tone-' + (metric.tone || 'neutral')"
+                      >
+                        <span class="metric-label">{{ metric.label }}</span>
+                        <strong>{{ metric.value }}</strong>
+                        @if (metric.meta) {
+                          <small>{{ metric.meta }}</small>
+                        }
+                      </article>
+                    }
+                  </div>
+                } @else {
+                  <div class="insight-collapsed-summary">
+                    {{ calendarSidePanelSummary.insights }}
+                  </div>
+                }
+              </section>
+            }
+
+            @case ('health') {
+              <section
+                class="calendar-insights calendar-insights--metrics calendar-insights--health"
+                [class.is-collapsed]="calendarSidePanelCollapsedState.health"
+                cdkDrag
+              >
+                <div class="insights-header">
+                  <button
+                    type="button"
+                    class="insight-drag-handle"
+                    aria-label="Reorder Schedule health"
+                    title="Reorder"
+                    cdkDragHandle
+                  >
+                    <span></span>
+                  </button>
+                  <div class="insights-header__title">
+                    <span>Schedule health</span>
+                    <small>Load quality</small>
+                  </div>
+                  <button
+                    type="button"
+                    class="insight-collapse"
+                    [attr.aria-expanded]="!calendarSidePanelCollapsedState.health"
+                    [attr.title]="calendarSidePanelCollapsedState.health ? 'Expand' : 'Collapse'"
+                    (click)="toggleCalendarSidePanelCollapsed('health', $event)"
+                  >
+                    <span></span>
+                  </button>
+                </div>
+                @if (!calendarSidePanelCollapsedState.health) {
+                  <div class="insight-metrics insight-metrics--compact">
+                    @for (metric of calendarHealthMetrics; track metric.id) {
+                      <article
+                        class="insight-metric"
+                        [class.is-empty]="metric.empty"
+                        [ngClass]="'tone-' + (metric.tone || 'neutral')"
+                      >
+                        <span class="metric-label">{{ metric.label }}</span>
+                        <strong>{{ metric.value }}</strong>
+                        @if (metric.meta) {
+                          <small>{{ metric.meta }}</small>
+                        }
+                      </article>
+                    }
+                  </div>
+                } @else {
+                  <div class="insight-collapsed-summary">
+                    {{ calendarSidePanelSummary.health }}
+                  </div>
+                }
+              </section>
+            }
+
+            @case ('risk') {
+              <section
+                class="calendar-insights calendar-insights--metrics calendar-insights--compact-card"
+                [class.is-collapsed]="calendarSidePanelCollapsedState.risk"
+                cdkDrag
+              >
+                <div class="insights-header">
+                  <button
+                    type="button"
+                    class="insight-drag-handle"
+                    aria-label="Reorder Risk review"
+                    title="Reorder"
+                    cdkDragHandle
+                  >
+                    <span></span>
+                  </button>
+                  <div class="insights-header__title">
+                    <span>Risk review</span>
+                    <small>Attention quality</small>
+                  </div>
+                  <button
+                    type="button"
+                    class="insight-collapse"
+                    [attr.aria-expanded]="!calendarSidePanelCollapsedState.risk"
+                    [attr.title]="calendarSidePanelCollapsedState.risk ? 'Expand' : 'Collapse'"
+                    (click)="toggleCalendarSidePanelCollapsed('risk', $event)"
+                  >
+                    <span></span>
+                  </button>
+                </div>
+                @if (!calendarSidePanelCollapsedState.risk) {
+                  <div class="insight-metrics insight-metrics--compact">
+                    @for (metric of calendarRiskMetrics; track metric.id) {
+                      <article
+                        class="insight-metric"
+                        [class.is-empty]="metric.empty"
+                        [ngClass]="'tone-' + (metric.tone || 'neutral')"
+                      >
+                        <span class="metric-label">{{ metric.label }}</span>
+                        <strong>{{ metric.value }}</strong>
+                        @if (metric.meta) {
+                          <small>{{ metric.meta }}</small>
+                        }
+                      </article>
+                    }
+                  </div>
+                } @else {
+                  <div class="insight-collapsed-summary">
+                    {{ calendarSidePanelSummary.risk }}
+                  </div>
+                }
+              </section>
+            }
+
+            @case ('flow') {
+              <section
+                class="calendar-insights calendar-insights--metrics calendar-insights--compact-card"
+                [class.is-collapsed]="calendarSidePanelCollapsedState.flow"
+                cdkDrag
+              >
+                <div class="insights-header">
+                  <button
+                    type="button"
+                    class="insight-drag-handle"
+                    aria-label="Reorder Flow"
+                    title="Reorder"
+                    cdkDragHandle
+                  >
+                    <span></span>
+                  </button>
+                  <div class="insights-header__title">
+                    <span>Flow</span>
+                    <small>Progress mix</small>
+                  </div>
+                  <button
+                    type="button"
+                    class="insight-collapse"
+                    [attr.aria-expanded]="!calendarSidePanelCollapsedState.flow"
+                    [attr.title]="calendarSidePanelCollapsedState.flow ? 'Expand' : 'Collapse'"
+                    (click)="toggleCalendarSidePanelCollapsed('flow', $event)"
+                  >
+                    <span></span>
+                  </button>
+                </div>
+                @if (!calendarSidePanelCollapsedState.flow) {
+                  <div class="insight-metrics insight-metrics--compact">
+                    @for (metric of calendarFlowMetrics; track metric.id) {
+                      <article
+                        class="insight-metric"
+                        [class.is-empty]="metric.empty"
+                        [ngClass]="'tone-' + (metric.tone || 'neutral')"
+                      >
+                        <span class="metric-label">{{ metric.label }}</span>
+                        <strong>{{ metric.value }}</strong>
+                        @if (metric.meta) {
+                          <small>{{ metric.meta }}</small>
+                        }
+                      </article>
+                    }
+                  </div>
+                } @else {
+                  <div class="insight-collapsed-summary">
+                    {{ calendarSidePanelSummary.flow }}
+                  </div>
+                }
+              </section>
+            }
+
+            @case ('timing') {
+              @if (calendarTimingBreakdown.length) {
+                <section
+                  class="calendar-insights"
+                  [class.is-collapsed]="calendarSidePanelCollapsedState.timing"
+                  cdkDrag
+                >
+                  <div class="insights-header">
+                    <button
+                      type="button"
+                      class="insight-drag-handle"
+                      aria-label="Reorder Timing"
+                      title="Reorder"
+                      cdkDragHandle
+                    >
+                      <span></span>
+                    </button>
+                    <div class="insights-header__title">
+                      <span>Timing</span>
+                      <small>Due profile</small>
+                    </div>
+                    <button
+                      type="button"
+                      class="insight-collapse"
+                      [attr.aria-expanded]="!calendarSidePanelCollapsedState.timing"
+                      [attr.title]="calendarSidePanelCollapsedState.timing ? 'Expand' : 'Collapse'"
+                      (click)="toggleCalendarSidePanelCollapsed('timing', $event)"
+                    >
+                      <span></span>
+                    </button>
+                  </div>
+                  @if (!calendarSidePanelCollapsedState.timing) {
+                    <div class="breakdown-list compact">
+                      @for (item of calendarTimingBreakdown; track item.id) {
+                        <div class="breakdown-row" [style.--item-color]="item.color || null">
+                          <div class="breakdown-row__head">
+                            <span>{{ item.label }}</span>
+                            <strong>{{ item.count }}</strong>
+                          </div>
+                          <div class="breakdown-track">
+                            <span [style.width.%]="item.percent"></span>
+                          </div>
+                        </div>
+                      }
+                    </div>
+                  } @else {
+                    <div class="insight-collapsed-summary">
+                      {{ calendarSidePanelSummary.timing }}
+                    </div>
+                  }
+                </section>
+              }
+            }
+
+            @case ('eventMix') {
+              @if (calendarTypeBreakdown.length) {
+                <section
+                  class="calendar-insights"
+                  [class.is-collapsed]="calendarSidePanelCollapsedState.eventMix"
+                  cdkDrag
+                >
+                  <div class="insights-header">
+                    <button
+                      type="button"
+                      class="insight-drag-handle"
+                      aria-label="Reorder Event mix"
+                      title="Reorder"
+                      cdkDragHandle
+                    >
+                      <span></span>
+                    </button>
+                    <div class="insights-header__title">
+                      <span>Event mix</span>
+                      <small>By type</small>
+                    </div>
+                    <button
+                      type="button"
+                      class="insight-collapse"
+                      [attr.aria-expanded]="!calendarSidePanelCollapsedState.eventMix"
+                      [attr.title]="calendarSidePanelCollapsedState.eventMix ? 'Expand' : 'Collapse'"
+                      (click)="toggleCalendarSidePanelCollapsed('eventMix', $event)"
+                    >
+                      <span></span>
+                    </button>
+                  </div>
+                  @if (!calendarSidePanelCollapsedState.eventMix) {
+                    <div class="breakdown-list">
+                      @for (item of calendarTypeBreakdown; track item.id) {
+                        <div class="breakdown-row" [style.--item-color]="item.color || null">
+                          <div class="breakdown-row__head">
+                            <span>{{ item.label }}</span>
+                            <strong>{{ item.count }}</strong>
+                          </div>
+                          <div class="breakdown-track">
+                            <span [style.width.%]="item.percent"></span>
+                          </div>
+                        </div>
+                      }
+                    </div>
+                  } @else {
+                    <div class="insight-collapsed-summary">
+                      {{ calendarSidePanelSummary.eventMix }}
+                    </div>
+                  }
+                </section>
+              }
+            }
+
+            @case ('status') {
+              @if (calendarStatusBreakdown.length) {
+                <section
+                  class="calendar-insights"
+                  [class.is-collapsed]="calendarSidePanelCollapsedState.status"
+                  cdkDrag
+                >
+                  <div class="insights-header">
+                    <button
+                      type="button"
+                      class="insight-drag-handle"
+                      aria-label="Reorder Status"
+                      title="Reorder"
+                      cdkDragHandle
+                    >
+                      <span></span>
+                    </button>
+                    <div class="insights-header__title">
+                      <span>Status</span>
+                      <small>Current flow</small>
+                    </div>
+                    <button
+                      type="button"
+                      class="insight-collapse"
+                      [attr.aria-expanded]="!calendarSidePanelCollapsedState.status"
+                      [attr.title]="calendarSidePanelCollapsedState.status ? 'Expand' : 'Collapse'"
+                      (click)="toggleCalendarSidePanelCollapsed('status', $event)"
+                    >
+                      <span></span>
+                    </button>
+                  </div>
+                  @if (!calendarSidePanelCollapsedState.status) {
+                    <div class="breakdown-list compact">
+                      @for (item of calendarStatusBreakdown; track item.id) {
+                        <div class="breakdown-row" [style.--item-color]="item.color || null">
+                          <div class="breakdown-row__head">
+                            <span>{{ item.label }}</span>
+                            <strong>{{ item.count }}</strong>
+                          </div>
+                          <div class="breakdown-track">
+                            <span [style.width.%]="item.percent"></span>
+                          </div>
+                        </div>
+                      }
+                    </div>
+                  } @else {
+                    <div class="insight-collapsed-summary">
+                      {{ calendarSidePanelSummary.status }}
+                    </div>
+                  }
+                </section>
+              }
+            }
+
+            @case ('resources') {
+              @if (calendarResourceBreakdown.length) {
+                <section
+                  class="calendar-insights"
+                  [class.is-collapsed]="calendarSidePanelCollapsedState.resources"
+                  cdkDrag
+                >
+                  <div class="insights-header">
+                    <button
+                      type="button"
+                      class="insight-drag-handle"
+                      aria-label="Reorder resources"
+                      title="Reorder"
+                      cdkDragHandle
+                    >
+                      <span></span>
+                    </button>
+                    <div class="insights-header__title">
+                      <span>{{ resourceLabel }}</span>
+                      <small>Top load</small>
+                    </div>
+                    <button
+                      type="button"
+                      class="insight-collapse"
+                      [attr.aria-expanded]="!calendarSidePanelCollapsedState.resources"
+                      [attr.title]="calendarSidePanelCollapsedState.resources ? 'Expand' : 'Collapse'"
+                      (click)="toggleCalendarSidePanelCollapsed('resources', $event)"
+                    >
+                      <span></span>
+                    </button>
+                  </div>
+                  @if (!calendarSidePanelCollapsedState.resources) {
+                    <div class="breakdown-list compact">
+                      @for (item of calendarResourceBreakdown; track item.id) {
+                        <div class="breakdown-row" [style.--item-color]="item.color || null">
+                          <div class="breakdown-row__head">
+                            <span>{{ item.label }}</span>
+                            <strong>{{ item.count }}</strong>
+                          </div>
+                          <div class="breakdown-track">
+                            <span [style.width.%]="item.percent"></span>
+                          </div>
+                        </div>
+                      }
+                    </div>
+                  } @else {
+                    <div class="insight-collapsed-summary">
+                      {{ calendarSidePanelSummary.resources }}
+                    </div>
+                  }
+                </section>
+              }
+            }
+
+            @case ('weekdays') {
+              @if (calendarWeekdayBreakdown.length) {
+                <section
+                  class="calendar-insights"
+                  [class.is-collapsed]="calendarSidePanelCollapsedState.weekdays"
+                  cdkDrag
+                >
+                  <div class="insights-header">
+                    <button
+                      type="button"
+                      class="insight-drag-handle"
+                      aria-label="Reorder Weekdays"
+                      title="Reorder"
+                      cdkDragHandle
+                    >
+                      <span></span>
+                    </button>
+                    <div class="insights-header__title">
+                      <span>Weekdays</span>
+                      <small>Load spread</small>
+                    </div>
+                    <button
+                      type="button"
+                      class="insight-collapse"
+                      [attr.aria-expanded]="!calendarSidePanelCollapsedState.weekdays"
+                      [attr.title]="calendarSidePanelCollapsedState.weekdays ? 'Expand' : 'Collapse'"
+                      (click)="toggleCalendarSidePanelCollapsed('weekdays', $event)"
+                    >
+                      <span></span>
+                    </button>
+                  </div>
+                  @if (!calendarSidePanelCollapsedState.weekdays) {
+                    <div class="breakdown-list compact">
+                      @for (item of calendarWeekdayBreakdown; track item.id) {
+                        <div class="breakdown-row" [style.--item-color]="item.color || null">
+                          <div class="breakdown-row__head">
+                            <span>{{ item.label }}</span>
+                            <strong>{{ item.count }}</strong>
+                          </div>
+                          <div class="breakdown-track">
+                            <span [style.width.%]="item.percent"></span>
+                          </div>
+                        </div>
+                      }
+                    </div>
+                  } @else {
+                    <div class="insight-collapsed-summary">
+                      {{ calendarSidePanelSummary.weekdays }}
+                    </div>
+                  }
+                </section>
+              }
+            }
+          }
+          }
+        </div>
+      </aside>
+    }
+  </div>
+</section>
+
+@if (enableEditor) {
+  <overlay-panel
+    [open]="editorOpen"
+    [title]="editorTitle"
+    [subtitle]="editorSubtitle"
+    [panelClass]="'calendar-event-overlay'"
+    [draggable]="true"
+    [showSave]="true"
+    [showDelete]="editorMode === 'edit'"
+    [closeDanger]="false"
+    [saveAccent]="true"
+    [backdropBlur]="2"
+    [backdropTint]="0"
+    [minWidth]="420"
+    [maxWidth]="640"
+    (closed)="closeEditor()"
+    (save)="saveEditor()"
+    (delete)="deleteEditor()"
+  >
+    <form class="editor-form" (ngSubmit)="saveEditor()">
+      @if (eventTemplates.length) {
+        <label class="field full">
+          <span>Template</span>
+          <select
+            [(ngModel)]="editorModel.templateId"
+            name="templateId"
+            (ngModelChange)="applyTemplate($event)"
+          >
+            <option value="">Select template</option>
+            @for (item of eventTemplates; track item) {
+              <option [value]="item.id">{{ item.label }}</option>
+            }
+          </select>
+        </label>
+      }
+      <label class="field full">
+        <span>Title</span>
+        <input type="text" [(ngModel)]="editorModel.title" name="title" required />
+      </label>
+      <label class="field toggle">
+        <input type="checkbox" [(ngModel)]="editorModel.allDay" name="allDay" />
+        <span>All day</span>
+      </label>
+      <label class="field">
+        <span>Start date</span>
+        <input type="date" [(ngModel)]="editorModel.startDate" name="startDate" required />
+      </label>
+      @if (!editorModel.allDay) {
+        <label class="field">
+          <span>Start time</span>
+          <input type="time" [(ngModel)]="editorModel.startTime" name="startTime" required />
+        </label>
+      }
+      <label class="field">
+        <span>End date</span>
+        <input type="date" [(ngModel)]="editorModel.endDate" name="endDate" required />
+      </label>
+      @if (!editorModel.allDay) {
+        <label class="field">
+          <span>End time</span>
+          <input type="time" [(ngModel)]="editorModel.endTime" name="endTime" required />
+        </label>
+      }
+      <label class="field">
+        <span>Type</span>
+        <input type="text" [(ngModel)]="editorModel.type" name="type" />
+      </label>
+      <label class="field">
+        <span>Status</span>
+        <input type="text" [(ngModel)]="editorModel.status" name="status" />
+      </label>
+      <label class="field">
+        <span>Resource</span>
+        <select [(ngModel)]="editorModel.resourceId" name="resourceId">
+          <option value="">Unassigned</option>
+          @for (resource of resourceOptions; track resource) {
+            <option [value]="resource.id">{{ resource.name }}</option>
+          }
+        </select>
+      </label>
+      <label class="field">
+        <span>Layer</span>
+        <input type="text" [(ngModel)]="editorModel.layer" name="layer" />
+      </label>
+      <label class="field">
+        <span>Time zone</span>
+        <select [(ngModel)]="editorModel.timeZone" name="timeZone">
+          <option value="">Local</option>
+          @for (tz of resolvedTimeZones; track tz) {
+            <option [value]="tz">{{ tz }}</option>
+          }
+        </select>
+      </label>
+      <label class="field full">
+        <span>Location</span>
+        <input type="text" [(ngModel)]="editorModel.location" name="location" />
+      </label>
+      <label class="field full">
+        <span>Meta</span>
+        <input type="text" [(ngModel)]="editorModel.meta" name="meta" />
+      </label>
+      <label class="field full">
+        <span>Description</span>
+        <textarea rows="3" [(ngModel)]="editorModel.description" name="description"></textarea>
+      </label>
+      <label class="field full">
+        <span>Link</span>
+        <input type="url" [(ngModel)]="editorModel.url" name="url" />
+      </label>
+      <label class="field full">
+        <span>Exceptions (YYYY-MM-DD, comma separated)</span>
+        <input
+          type="text"
+          [(ngModel)]="editorModel.exceptions"
+          name="exceptions"
+          placeholder="2026-01-15, 2026-01-28"
+        />
+      </label>
+      <div class="recurrence-block">
+        <h4>Recurrence</h4>
+        <div class="recurrence-grid">
+          <label class="field">
+            <span>Repeat</span>
+            <select [(ngModel)]="editorModel.recurrenceFreq" name="recurrenceFreq">
+              <option value="none">None</option>
+              <option value="daily">Daily</option>
+              <option value="weekly">Weekly</option>
+              <option value="monthly">Monthly</option>
+              <option value="yearly">Yearly</option>
+            </select>
+          </label>
+          @if (editorModel.recurrenceFreq !== 'none') {
+            <label class="field">
+              <span>Interval</span>
+              <input
+                type="number"
+                min="1"
+                [(ngModel)]="editorModel.recurrenceInterval"
+                name="recurrenceInterval"
+              />
+            </label>
+          }
+          @if (editorModel.recurrenceFreq !== 'none') {
+            <label class="field">
+              <span>Count</span>
+              <input
+                type="number"
+                min="0"
+                [(ngModel)]="editorModel.recurrenceCount"
+                name="recurrenceCount"
+              />
+            </label>
+          }
+          @if (editorModel.recurrenceFreq !== 'none') {
+            <label class="field">
+              <span>Until</span>
+              <input type="date" [(ngModel)]="editorModel.recurrenceUntil" name="recurrenceUntil" />
+            </label>
+          }
+          @if (editorModel.recurrenceFreq !== 'none') {
+            <label class="field">
+              <span>By month (1-12)</span>
+              <input
+                type="text"
+                [(ngModel)]="editorModel.recurrenceByMonth"
+                name="recurrenceByMonth"
+                placeholder="1, 6, 12"
+              />
+            </label>
+          }
+          @if (editorModel.recurrenceFreq !== 'none') {
+            <label class="field">
+              <span>By month day</span>
+              <input
+                type="text"
+                [(ngModel)]="editorModel.recurrenceByMonthDay"
+                name="recurrenceByMonthDay"
+                placeholder="1, 15, 31"
+              />
+            </label>
+          }
+          @if (editorModel.recurrenceFreq !== 'none') {
+            <label class="field">
+              <span>By set pos</span>
+              <input
+                type="text"
+                [(ngModel)]="editorModel.recurrenceBySetPos"
+                name="recurrenceBySetPos"
+                placeholder="1, -1"
+              />
+            </label>
+          }
+          @if (editorModel.recurrenceFreq !== 'none') {
+            <label class="field">
+              <span>By hour</span>
+              <input
+                type="text"
+                [(ngModel)]="editorModel.recurrenceByHour"
+                name="recurrenceByHour"
+                placeholder="9, 14"
+              />
+            </label>
+          }
+          @if (editorModel.recurrenceFreq !== 'none') {
+            <label class="field">
+              <span>By minute</span>
+              <input
+                type="text"
+                [(ngModel)]="editorModel.recurrenceByMinute"
+                name="recurrenceByMinute"
+                placeholder="0, 30"
+              />
+            </label>
+          }
+        </div>
+        @if (editorModel.recurrenceFreq === 'weekly') {
+          <div class="weekday-pills">
+            @for (day of weekdayOptions; track day) {
+              <button
+                type="button"
+                class="weekday-pill"
+                [class.active]="editorModel.recurrenceWeekdays.includes(day.value)"
+                (click)="toggleRecurrenceWeekday(day.value)"
+              >
+                {{ day.label }}
+              </button>
+            }
+          </div>
+        }
+      </div>
+      @if (policyWarnings.length) {
+        <div class="policy-warnings">
+          <h4>Policy warnings</h4>
+          <ul>
+            @for (warning of policyWarnings; track warning) {
+              <li>{{ warning }}</li>
+            }
+          </ul>
+        </div>
+      }
+      <div class="editor-actions">
+        <button type="submit" class="btn primary">Save</button>
+        <button type="button" class="btn ghost" (click)="closeEditor()">Cancel</button>
+      </div>
+    </form>
+  </overlay-panel>
+}

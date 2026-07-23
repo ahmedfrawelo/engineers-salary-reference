@@ -1,0 +1,550 @@
+<overlay-panel
+  [open]="open"
+  [title]="''"
+  [showSave]="false"
+  [showDelete]="false"
+  [panelClass]="'task-panel task-panel-clickup task-panel-ref-size project-editor-panel'"
+  [variant]="'panel'"
+  [width]="1040"
+  [minHeight]="panelMinHeight"
+  [maxHeight]="panelMaxHeight"
+  [autoFitContent]="panelAutoFit"
+  [fitRatioWDesktop]="0.92"
+  [fitRatioHDesktop]="0.98"
+  [fitRatioWMobile]="0.985"
+  [fitRatioHMobile]="0.985"
+  [draggable]="false"
+  [anim]="'spring'"
+  [lockPosition]="true"
+  [closeDanger]="false"
+  [bodyPadding]="0"
+  [backdropTint]="0"
+  [backdropBlur]="2"
+  (closed)="onRequestClose()"
+>
+  <div panel-actions class="cu-top-header-strip cu-top-header-strip--editor project-editor-top">
+    <div class="cu-task-tabs cu-task-tabs--header" role="tablist" aria-label="Project panel views">
+      <button class="cu-task-tab active" type="button">{{ activeTabLabel }}</button>
+    </div>
+    @if (panelMetaStatus) {
+      <span class="panel-status">{{ panelMetaStatus }}</span>
+    }
+  </div>
+
+  <div class="cu-task-sheet cu-task-sheet--editor project-editor-shell">
+    <div class="panel-root project-editor-root" [class.has-overlay]="softWarn.show || closeConfirm">
+      @if (softWarn.show || closeConfirm) {
+        <div class="panel-overlay">
+          <div class="panel-dialog" [class.warn]="softWarn.show" [class.danger]="closeConfirm">
+            <div class="dialog-icon" [class.warn]="softWarn.show" [class.danger]="closeConfirm">
+              <i
+                [appIcon]="softWarn.show ? 'exclamation-triangle' : closeConfirm ? 'x-octagon' : ''"
+              ></i>
+            </div>
+            <div class="dialog-body">
+              @if (softWarn.show) {
+                <div class="dialog-title">Some fields are empty</div>
+                <div class="dialog-sub">
+                  You can still continue, but these fields are recommended.
+                </div>
+                <ul class="dialog-list">
+                  @for (it of softWarn.items; track it) {
+                    <li>{{ it }}</li>
+                  }
+                </ul>
+              }
+
+              @if (closeConfirm) {
+                <div class="dialog-title">Unsaved changes</div>
+                <div class="dialog-sub">You have changes that haven't been saved.</div>
+              }
+            </div>
+
+            @if (softWarn.show) {
+              <div class="dialog-actions">
+                <button class="btn sm ghost" type="button" (click)="dismissSoftWarn()">
+                  Review fields
+                </button>
+                <button class="btn sm accent" type="button" (click)="confirmSaveAnyway()">
+                  Continue anyway
+                </button>
+              </div>
+            }
+
+            @if (closeConfirm) {
+              <div class="dialog-actions">
+                <button class="btn sm ghost" type="button" (click)="closeConfirm = false">
+                  Keep editing
+                </button>
+                <button class="btn sm danger" type="button" (click)="forceClose()">
+                  Close anyway
+                </button>
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+      <form id="project-editor-form" (ngSubmit)="trySave()" class="project-editor-form">
+        <div class="cu-task-body cu-task-body--editor project-editor-body">
+          <div class="cu-task-main-zone cu-task-main-zone--editor project-main-zone">
+            <label
+              class="cu-title-input project-title-field"
+              [class.is-error]="titleError || titleTooLong"
+            >
+              <textarea
+                #titleInputArea
+                class="cu-title-textarea"
+                rows="1"
+                [ngModel]="model.title"
+                (ngModelChange)="setTitle($event)"
+                name="title"
+                [placeholder]="titlePlaceholder"
+                (input)="onTitleInput(titleInputArea)"
+                (keydown)="onTitleKeydown($event, titleInputArea)"
+                (focus)="onTitleInput(titleInputArea)"
+              ></textarea>
+            </label>
+            @if (titleError) {
+              <div class="hint">Title is required.</div>
+            }
+            @if (titleTooLong) {
+              <div class="hint">Title must be 200 characters or less.</div>
+            }
+
+            <div class="project-editor-inline-actions">
+              @if (!showDescriptionEditor) {
+                <button
+                  class="cu-description-trigger project-inline-trigger"
+                  type="button"
+                  (click)="openDescriptionEditor()"
+                >
+                  <i
+                    class="cu-description-trigger-icon"
+                    appIcon="file-earmark-text"
+                    aria-hidden="true"
+                  ></i>
+                  <span>Add description</span>
+                </button>
+              } @else {
+                <div
+                  #descriptionEditorShell
+                  class="cu-description-editor project-editor-rich-editor"
+                  (click)="focusTextarea(descriptionEditorInput)"
+                >
+                  <span class="cu-description-editor-prefix" aria-hidden="true">
+                    <i appIcon="plus"></i>
+                  </span>
+                  <textarea
+                    #descriptionEditorInput
+                    class="cu-description-editor-input"
+                    [(ngModel)]="model.description"
+                    name="description"
+                    rows="5"
+                    placeholder="Write project description"
+                  ></textarea>
+                </div>
+              }
+
+              @if (!showDelayReasonEditor) {
+                <button
+                  class="cu-description-trigger project-inline-trigger"
+                  type="button"
+                  (click)="openDelayReasonEditor()"
+                >
+                  <i
+                    class="cu-description-trigger-icon"
+                    appIcon="hourglass-split"
+                    aria-hidden="true"
+                  ></i>
+                  <span>Add delay reason</span>
+                </button>
+              } @else {
+                <div
+                  #delayReasonEditorShell
+                  class="cu-description-editor project-editor-rich-editor"
+                  (click)="focusTextarea(delayReasonEditorInput)"
+                >
+                  <span class="cu-description-editor-prefix" aria-hidden="true">
+                    <i appIcon="plus"></i>
+                  </span>
+                  <textarea
+                    #delayReasonEditorInput
+                    class="cu-description-editor-input"
+                    [(ngModel)]="model.delayReasons"
+                    name="delayReasons"
+                    rows="5"
+                    placeholder="Write delay reason"
+                  ></textarea>
+                </div>
+              }
+            </div>
+
+            <div class="cu-quick-fields project-quick-fields">
+              <div
+                class="project-quick-field project-quick-field--status project-quick-select"
+                [class.is-warn]="warn('status')"
+              >
+                <i
+                  class="project-quick-icon project-quick-icon--status"
+                  appIcon="tag"
+                  aria-hidden="true"
+                ></i>
+                <search-select
+                  overlayWidthAnchorSelector=".project-quick-field"
+                  [options]="statusOptions"
+                  [value]="model.status"
+                  (valueChange)="setStatus($event ?? '')"
+                  [allowInlineSearch]="true"
+                  [allowEdit]="true"
+                  [allowCreate]="true"
+                  createLabel="Add Status"
+                  (create)="onCreateStatus($event)"
+                  (rename)="onRenameStatus($event)"
+                  placeholder="Status"
+                  [allowClear]="false"
+                >
+                </search-select>
+              </div>
+
+              <div
+                class="project-quick-field project-quick-field--owner project-quick-select"
+                [class.is-warn]="warn('owner')"
+              >
+                <i
+                  class="project-quick-icon project-quick-icon--owner"
+                  appIcon="person"
+                  aria-hidden="true"
+                ></i>
+                <search-select
+                  overlayWidthAnchorSelector=".project-quick-field"
+                  [options]="ownerOptions"
+                  [value]="model.owner"
+                  (valueChange)="model.owner = $event ?? ''"
+                  [allowInlineSearch]="true"
+                  [allowEdit]="true"
+                  [allowCreate]="true"
+                  createLabel="Add Owner"
+                  (create)="onCreateOwner($event)"
+                  (rename)="onRenameOwner($event)"
+                  placeholder="Owner"
+                  [allowClear]="false"
+                >
+                </search-select>
+              </div>
+
+              <div
+                class="project-quick-field project-quick-field--owner-type project-quick-select"
+                [class.is-warn]="warn('ownerType')"
+              >
+                <i
+                  class="project-quick-icon project-quick-icon--owner-type"
+                  appIcon="briefcase"
+                  aria-hidden="true"
+                ></i>
+                <search-select
+                  overlayWidthAnchorSelector=".project-quick-field"
+                  [options]="ownerTypeOptions"
+                  [value]="model.ownerType"
+                  (valueChange)="model.ownerType = $event ?? ''"
+                  [allowInlineSearch]="true"
+                  [allowEdit]="true"
+                  [allowCreate]="true"
+                  createLabel="Add Owner Type"
+                  (create)="onCreateOwnerType($event)"
+                  (rename)="onRenameOwnerType($event)"
+                  placeholder="Owner Type"
+                  [allowClear]="false"
+                >
+                </search-select>
+              </div>
+
+              <div
+                class="project-quick-field project-quick-field--deadline project-quick-date"
+                [class.is-warn]="warn('deadline')"
+              >
+                <i
+                  class="project-quick-icon project-quick-icon--deadline"
+                  appIcon="calendar3"
+                  aria-hidden="true"
+                ></i>
+                <date-input [(value)]="model.deadline"></date-input>
+              </div>
+
+              <div
+                class="project-quick-field project-quick-field--country project-quick-select"
+                [class.is-warn]="warn('country')"
+              >
+                <i
+                  class="project-quick-icon project-quick-icon--country"
+                  appIcon="geo-alt"
+                  aria-hidden="true"
+                ></i>
+                <search-select
+                  overlayWidthAnchorSelector=".project-quick-field"
+                  [options]="countryOptions"
+                  [value]="model.country"
+                  (valueChange)="setCountry($event ?? '')"
+                  [allowInlineSearch]="true"
+                  [allowEdit]="true"
+                  [allowCreate]="true"
+                  createLabel="Add Country"
+                  (create)="onCreateCountry($event)"
+                  (rename)="onRenameCountry($event)"
+                  placeholder="Country"
+                  [allowClear]="false"
+                >
+                </search-select>
+              </div>
+
+              <div
+                class="project-quick-field project-quick-field--importance project-quick-select"
+                [class.is-warn]="warn('importance')"
+              >
+                <i
+                  class="project-quick-icon project-quick-icon--importance"
+                  appIcon="flag"
+                  aria-hidden="true"
+                ></i>
+                <search-select
+                  overlayWidthAnchorSelector=".project-quick-field"
+                  [options]="importanceOptions"
+                  [value]="importance"
+                  (valueChange)="setImportance($event ?? '')"
+                  [allowInlineSearch]="true"
+                  [allowEdit]="true"
+                  [allowCreate]="true"
+                  createLabel="Add Importance"
+                  (create)="onCreateImportance($event)"
+                  (rename)="onRenameImportance($event)"
+                  placeholder="Importance"
+                  [allowClear]="false"
+                >
+                </search-select>
+              </div>
+            </div>
+
+            @if (dateError) {
+              <div class="field-error date-error">{{ dateError }}</div>
+            }
+
+            <section class="project-editor-section">
+              <h4 class="project-editor-section-title">Project Details</h4>
+
+              <div class="project-editor-grid">
+                <div class="project-editor-field" [class.is-warn]="warn('assignTo')">
+                  <label><i appIcon="people" aria-hidden="true"></i><span>Assign To</span></label>
+                  <div class="project-editor-field-control project-editor-field-control-select">
+                    <search-select
+                      [options]="peopleOptions"
+                      [value]="model.assignTo"
+                      (valueChange)="model.assignTo = $event ?? ''"
+                      [allowInlineSearch]="true"
+                      [allowEdit]="true"
+                      [allowCreate]="true"
+                      createLabel="Add Assignee"
+                      (create)="onCreateAssignee($event)"
+                      (rename)="onRenameAssignee($event)"
+                      placeholder="Select assignee"
+                      [allowClear]="false"
+                    >
+                    </search-select>
+                  </div>
+                </div>
+
+                <div class="project-editor-field">
+                  <label
+                    ><i appIcon="person-badge" aria-hidden="true"></i><span>In Charge</span></label
+                  >
+                  <div class="project-editor-field-control project-editor-field-control-select">
+                    <search-select
+                      [options]="peopleOptions"
+                      [value]="model.inCharge"
+                      (valueChange)="model.inCharge = $event ?? ''"
+                      [allowInlineSearch]="true"
+                      [allowEdit]="true"
+                      [allowCreate]="true"
+                      createLabel="Add In Charge"
+                      (create)="onCreateInCharge($event)"
+                      (rename)="onRenameInCharge($event)"
+                      placeholder="Select in charge"
+                      [allowClear]="false"
+                    >
+                    </search-select>
+                  </div>
+                </div>
+
+                <div class="project-editor-field">
+                  <label
+                    ><i appIcon="calendar3" aria-hidden="true"></i><span>Start Date</span></label
+                  >
+                  <div class="project-editor-field-control project-editor-field-control-date">
+                    <date-input [(value)]="model.startDate"></date-input>
+                  </div>
+                </div>
+
+                <div class="project-editor-field">
+                  <label><i appIcon="calendar3" aria-hidden="true"></i><span>End Date</span></label>
+                  <div class="project-editor-field-control project-editor-field-control-date">
+                    <date-input [(value)]="model.endDate"></date-input>
+                  </div>
+                </div>
+
+                <div class="project-editor-field">
+                  <label
+                    ><i appIcon="calendar3" aria-hidden="true"></i><span>Accept Date</span></label
+                  >
+                  <div class="project-editor-field-control project-editor-field-control-date">
+                    <date-input [(value)]="model.acceptDate"></date-input>
+                  </div>
+                </div>
+
+                <div class="project-editor-field" [class.is-warn]="warn('ts')">
+                  <label
+                    ><i appIcon="kanban" aria-hidden="true"></i
+                    ><span>Tender Stage (TS)</span></label
+                  >
+                  <div class="project-editor-field-control project-editor-field-control-select">
+                    <search-select
+                      [options]="tsOptions"
+                      [value]="model.ts"
+                      (valueChange)="model.ts = $event ?? ''"
+                      [allowInlineSearch]="true"
+                      [allowEdit]="true"
+                      [allowCreate]="true"
+                      createLabel="Add Stage"
+                      (create)="onCreateStage($event)"
+                      (rename)="onRenameStage($event)"
+                      placeholder="Select tender stage"
+                      [allowClear]="false"
+                    >
+                    </search-select>
+                  </div>
+                </div>
+
+                <div class="project-editor-field" [class.is-warn]="warn('top')">
+                  <label
+                    ><i appIcon="briefcase" aria-hidden="true"></i
+                    ><span>Type Of Project (TOP)</span></label
+                  >
+                  <div class="project-editor-field-control project-editor-field-control-select">
+                    <search-select
+                      [options]="topOptions"
+                      [value]="model.top"
+                      (valueChange)="model.top = $event ?? ''"
+                      [allowInlineSearch]="true"
+                      [allowEdit]="true"
+                      [allowCreate]="true"
+                      createLabel="Add Type"
+                      (create)="onCreateType($event)"
+                      (rename)="onRenameType($event)"
+                      placeholder="Select project type"
+                      [allowClear]="false"
+                    >
+                    </search-select>
+                  </div>
+                </div>
+
+                <div class="project-editor-field">
+                  <label
+                    ><i appIcon="person-lines-fill" aria-hidden="true"></i
+                    ><span>Consultant</span></label
+                  >
+                  <input
+                    class="project-editor-input"
+                    type="text"
+                    [(ngModel)]="model.consultant"
+                    name="consultant"
+                    placeholder="Enter consultant"
+                  />
+                </div>
+
+                <div class="project-editor-field">
+                  <label
+                    ><i appIcon="clipboard-data" aria-hidden="true"></i
+                    ><span>Project Repeatability Percent</span></label
+                  >
+                  <input
+                    class="project-editor-input"
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    [(ngModel)]="model.prb"
+                    name="prb"
+                    placeholder="Enter project repeatability percent"
+                    (wheel)="onNumberWheel($event)"
+                  />
+                </div>
+
+                <div class="project-editor-field">
+                  <label><i appIcon="cash-stack" aria-hidden="true"></i><span>Price</span></label>
+                  <input
+                    class="project-editor-input"
+                    type="number"
+                    min="0"
+                    [(ngModel)]="model.price"
+                    name="price"
+                    placeholder="Enter price"
+                    (wheel)="onNumberWheel($event)"
+                  />
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </form>
+
+      <div class="cu-task-footer cu-task-footer--editor project-editor-footer">
+        <div class="cu-create-group cu-create-group--editor">
+          <div class="cu-footer-icons">
+            <button type="button" class="cu-footer-icon" disabled aria-label="Attachments">
+              <i class="cu-attach-icon" appIcon="paperclip" aria-hidden="true"></i>
+            </button>
+            <span class="cu-footer-alert" aria-hidden="true">
+              <i appIcon="bell" aria-hidden="true"></i>
+              <span>0</span>
+            </span>
+          </div>
+
+          @if (!editMode && !bulkEdit) {
+            <div class="project-create-field">
+              <div class="project-create-surface">
+                <button
+                  class="cu-create-btn cu-create-btn--editor project-create-btn project-create-btn--split"
+                  type="submit"
+                  form="project-editor-form"
+                >
+                  {{ primaryActionLabel }}
+                </button>
+                <details class="cu-create-menu cu-create-menu--editor project-create-menu">
+                  <summary aria-label="More create actions">
+                    <i
+                      class="project-create-menu-icon"
+                      [appIcon]="'chevron-down'"
+                      aria-hidden="true"
+                    ></i>
+                  </summary>
+                  <div class="cu-create-menu-list project-create-menu-list" role="menu">
+                    <button type="submit" form="project-editor-form">Create and open</button>
+                    <button type="submit" form="project-editor-form">
+                      Create and start another
+                    </button>
+                    <button type="submit" form="project-editor-form">Create and duplicate</button>
+                  </div>
+                </details>
+              </div>
+            </div>
+          } @else {
+            <button
+              class="cu-create-btn cu-create-btn--editor project-create-btn"
+              type="submit"
+              form="project-editor-form"
+            >
+              {{ primaryActionLabel }}
+            </button>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</overlay-panel>

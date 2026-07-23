@@ -1,0 +1,289 @@
+<section
+  class="activity"
+  [class.frameless]="!framed"
+  [class.compact]="density === 'compact'"
+  [style.height]="heightStyle"
+>
+  @if (showHeader) {
+    <header class="activity-hdr">
+      <div class="hdr-row">
+        <div class="ttl">Activity</div>
+        @if (summary) {
+          <div class="hdr-sub">
+            <span class="dot"></span>
+            <span class="last" [attr.title]="summary.fullTitle">{{ summary.title }}</span>
+            @if (summary.actor) {
+              <span class="by">by {{ displayActor(summary.actor) }}</span>
+            }
+            @if (summary.time) {
+              <span class="time" [attr.title]="summary.fullTime || ''">{{ summary.time }}</span>
+            }
+          </div>
+        }
+      </div>
+    </header>
+  }
+
+  @if (activities.length) {
+    <div class="filters">
+      <div class="filter-chips">
+        @for (f of visibleFilters; track f.id) {
+          <button
+            class="filter-chip"
+            type="button"
+            [class.active]="activeFilter === f.id"
+            (click)="setFilter(f.id)"
+          >
+            {{ f.label }}
+          </button>
+        }
+      </div>
+      <div class="filters-right">
+        <div class="search">
+          <i appIcon="search" aria-hidden="true"></i>
+          <input
+            type="text"
+            [value]="searchTerm"
+            (input)="onSearchInput($event)"
+            (keydown.escape)="clearSearch()"
+            placeholder="Search activity"
+            aria-label="Search activity"
+          />
+          @if (searchTerm) {
+            <button class="clear" type="button" (click)="clearSearch()">
+              <i appIcon="x-lg" aria-hidden="true"></i>
+            </button>
+          }
+        </div>
+      </div>
+    </div>
+  }
+
+  <div class="activity-list">
+    <div class="activity-list-content">
+      @for (g of groupedActivities; track g) {
+        <div class="group">
+          <div class="group-label">
+            <span>{{ g.label }}</span>
+            <span class="group-count">{{ g.items.length }}</span>
+          </div>
+          <div class="group-list">
+            @for (a of g.items; track trackByActivity(i, a); let i = $index) {
+              <div
+                class="item"
+                [class.tone-success]="a.tone === 'success'"
+                [class.tone-warning]="a.tone === 'warning'"
+                [class.tone-danger]="a.tone === 'danger'"
+                [class.tone-info]="a.tone === 'info'"
+                [class.tone-muted]="a.tone === 'muted'"
+              >
+                <div class="stamp">
+                  <i [appIcon]="a.icon || 'activity'" aria-hidden="true"></i>
+                </div>
+                <div class="body">
+                  <div class="line">
+                    <div
+                      class="title"
+                      [attr.title]="a.title || a.text || ''"
+                      [innerHTML]="highlight(a.title || a.text || 'Activity')"
+                    ></div>
+                    <div class="side">
+                      @if (a.badge) {
+                        <span
+                          class="badge"
+                          [class.tone-success]="a.tone === 'success'"
+                          [class.tone-warning]="a.tone === 'warning'"
+                          [class.tone-danger]="a.tone === 'danger'"
+                          [class.tone-info]="a.tone === 'info'"
+                          [class.tone-muted]="a.tone === 'muted'"
+                        >
+                          {{ a.badge }}
+                        </span>
+                      }
+                      @if (a.count && a.count > 1) {
+                        <span class="count-pill">x{{ a.count }}</span>
+                      }
+                      @if (a.when) {
+                        <span class="time" [attr.title]="a.fullTime || ''">{{ a.when }}</span>
+                      }
+                    </div>
+                  </div>
+                  @if (a.meta || a.actor) {
+                    <div class="meta">
+                      @if (a.meta) {
+                        <span
+                          class="meta-main"
+                          [attr.title]="a.meta"
+                          [innerHTML]="highlight(a.meta)"
+                        ></span>
+                      }
+                      @if (a.meta && a.actor) {
+                        <span class="meta-sep">|</span>
+                      }
+                      @if (a.actor) {
+                        <span class="actor">
+                          <span class="avatar">{{ initials(a.actor) }}</span>
+                          <span
+                            class="actor-name"
+                            [attr.title]="a.actor"
+                            [innerHTML]="highlight(displayActor(a.actor))"
+                          ></span>
+                        </span>
+                      }
+                    </div>
+                  }
+                  @if (a.detailLong) {
+                    <div
+                      class="detail"
+                      [class.expanded]="isExpanded(a)"
+                      [class.note]="a.kind === 'note'"
+                      [attr.title]="a.detailLong"
+                    >
+                      <span
+                        class="detail-text"
+                        [innerHTML]="
+                          formatDetailText(
+                            isExpanded(a) ? a.detailLong : a.detailShort || a.detailLong || '',
+                            a.kind
+                          )
+                        "
+                      ></span>
+                      <button class="detail-toggle" type="button" (click)="toggleDetail(a, $event)">
+                        {{ isExpanded(a) ? 'Show less' : 'Show more' }}
+                      </button>
+                    </div>
+                  }
+                  @if (!a.detailLong && a.detail) {
+                    <div
+                      class="detail"
+                      [class.note]="a.kind === 'note'"
+                      [attr.title]="a.detail"
+                      [innerHTML]="formatDetailText(a.detail, a.kind)"
+                    ></div>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      }
+      @if (loading && !activities.length) {
+        <div class="activity-state activity-state--loading" aria-hidden="true">
+          @for (placeholder of loadingPlaceholders; track placeholder) {
+            <div class="activity-skeleton">
+              <span class="activity-skeleton__stamp"></span>
+              <div class="activity-skeleton__body">
+                <span class="activity-skeleton__line short"></span>
+                <span class="activity-skeleton__line"></span>
+                <span class="activity-skeleton__line long"></span>
+              </div>
+            </div>
+          }
+        </div>
+      }
+      @if (!loading && !activities.length) {
+        <div class="activity-state">
+          <div class="activity-state__icon">
+            <i appIcon="activity" aria-hidden="true"></i>
+          </div>
+          <div class="activity-state__title">No activity yet</div>
+          <div class="activity-state__copy">
+            Updates, comments, and change history will appear here once the project starts moving.
+          </div>
+        </div>
+      }
+      @if (!loading && activities.length && !groupedActivities.length) {
+        <div class="activity-state">
+          <div class="activity-state__icon">
+            <i appIcon="search" aria-hidden="true"></i>
+          </div>
+          <div class="activity-state__title">No matches for this view</div>
+          <div class="activity-state__copy">
+            Adjust the active filters or search term to bring the timeline back.
+          </div>
+          <div class="activity-state__actions">
+            @if (activeFilter !== 'all') {
+              <button class="link" type="button" (click)="setFilter('all')">Clear filter</button>
+            }
+            @if (searchTerm) {
+              <button class="link" type="button" (click)="clearSearch()">Clear search</button>
+            }
+          </div>
+        </div>
+      }
+      @if (!loading && canShowMoreActivities) {
+        <div class="activity-more">
+          <button class="activity-more__btn" type="button" (click)="showMoreActivities()">
+            Show {{ remainingActivityCount > 24 ? 24 : remainingActivityCount }} more updates
+          </button>
+          <span class="activity-more__meta">{{ remainingActivityCount }} remaining</span>
+        </div>
+      }
+    </div>
+  </div>
+
+  @if (allowComment) {
+    <footer class="comment">
+      <div class="comment-bar">
+        <div class="comment-input">
+          <div class="comment-shell">
+            <span class="comment-icon" aria-hidden="true">
+              <i appIcon="chat-dots"></i>
+            </span>
+            <div
+              class="comment-tags"
+              cdkDropList
+              [cdkDropListData]="mentionSelected"
+              cdkDropListOrientation="horizontal"
+              (cdkDropListDropped)="onMentionDrop($event)"
+            >
+              @for (m of mentionSelected; track m; let idx = $index) {
+                <button class="mention-chip" type="button" cdkDrag>
+                  <span class="chip-dot"></span>
+                  <span class="chip-label" cdkDragHandle>{{ mentionHandle(m) }}</span>
+                  <span class="chip-remove" aria-hidden="true" (click)="removeMention(idx, $event)"
+                    >&times;</span
+                  >
+                </button>
+              }
+              <input
+                #i
+                class="comment-input-field"
+                [value]="commentText"
+                (focus)="composerFocus.emit()"
+                (input)="onCommentInput($event)"
+                (keydown)="onCommentKeydown($event, i)"
+                placeholder="Write comment..."
+              />
+            </div>
+          </div>
+          <button
+            class="btn fx-raise fx-ripple-soft send"
+            [disabled]="!commentText.trim() && !mentionSelected.length"
+            (click)="emitNote(i)"
+          >
+            Send
+          </button>
+        </div>
+        @if (mentionOpen) {
+          <div class="mention-menu">
+            @for (u of mentionFiltered; track u; let idx = $index) {
+              <button
+                class="mention-item"
+                type="button"
+                [class.active]="idx === mentionIndex"
+                (click)="selectMention(u, i)"
+              >
+                <span class="mention-avatar">{{ initials(u.name || u.email || '') }}</span>
+                <span class="mention-meta">
+                  <span class="mention-name">{{ u.name || mentionHandle(u) }}</span>
+                  <span class="mention-handle">{{ '@' + mentionHandle(u) }}</span>
+                </span>
+              </button>
+            }
+          </div>
+        }
+      </div>
+    </footer>
+  }
+</section>

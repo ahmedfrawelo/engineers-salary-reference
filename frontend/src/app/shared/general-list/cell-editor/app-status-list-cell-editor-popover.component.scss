@@ -1,0 +1,252 @@
+:host {
+  display: contents;
+  --tsl-panel-border: color-mix(in oklab, rgb(var(--border)) 58%, transparent);
+  --tsl-panel-divider: color-mix(in oklab, rgb(var(--border)) 42%, transparent);
+  --tsl-panel-bg: linear-gradient(
+    180deg,
+    color-mix(in oklab, rgb(var(--surface)) 95%, rgb(var(--bg0)) 5%),
+    color-mix(in oklab, rgb(var(--surface)) 92%, rgb(var(--bg0)) 8%)
+  );
+  --tsl-panel-bg-solid: color-mix(in oklab, rgb(var(--surface)) 94%, rgb(var(--bg0)) 6%);
+  --tsl-panel-shadow: 0 14px 30px rgb(0 0 0 / 0.34), inset 0 1px 0 rgb(255 255 255 / 0.03);
+  --tsl-panel-control-bg: color-mix(in oklab, rgb(var(--surface)) 89%, rgb(var(--bg1)) 11%);
+  --tsl-panel-control-border: color-mix(in oklab, rgb(var(--border)) 54%, transparent);
+  --tsl-panel-focus: rgb(var(--primary) / 0.18);
+}
+
+.lce-popover {
+  position: relative;
+  min-width: 248px;
+  max-width: min(92vw, 340px);
+  border-radius: 12px;
+  border: 1px solid var(--tsl-panel-border);
+  background: var(--tsl-panel-bg);
+  box-shadow: var(--tsl-panel-shadow);
+  overflow: hidden;
+}
+
+.lce-head {
+  min-height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px;
+  border-bottom: 1px solid var(--tsl-panel-divider);
+}
+
+.lce-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: rgb(var(--fg) / 0.8);
+}
+
+.lce-close {
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: rgb(var(--fg) / 0.6);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.lce-close:hover {
+  color: rgb(var(--fg) / 0.86);
+  background: var(--tsl-panel-control-bg);
+}
+
+.lce-search {
+  min-height: 38px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 10px;
+  border-bottom: 1px solid var(--tsl-panel-divider);
+}
+
+.lce-search i {
+  color: rgb(var(--fg) / 0.56);
+}
+
+.lce-search input {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: rgb(var(--fg) / 0.88);
+  font-size: 13px;
+}
+
+.lce-inline-edit,
+.lce-comment {
+  padding: 10px;
+  display: grid;
+  gap: 10px;
+}
+
+.lce-date-input input,
+.lce-text-input input,
+.lce-comment-input input {
+  width: 100%;
+  min-height: 28px;
+  border-radius: 9px;
+  border: 1px solid var(--tsl-panel-control-border);
+  background: var(--tsl-panel-control-bg);
+  color: rgb(var(--fg) / 0.92);
+  padding: 0 6px;
+  font-size: 12px;
+  outline: 0;
+}
+
+.lce-date-input input:focus,
+.lce-text-input input:focus,
+.lce-comment-input input:focus {
+  border-color: var(--tsl-panel-focus);
+}
+
+.lce-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.lce-ghost,
+.lce-primary {
+  min-height: 30px;
+  padding: 0 10px;
+  border-radius: 8px;
+  border: 1px solid var(--tsl-panel-control-border);
+  background: var(--tsl-panel-control-bg);
+  color: rgb(var(--fg) / 0.9);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.lce-primary {
+  border-color: rgb(var(--primary) / 0.32);
+  color: rgb(var(--primary));
+}
+
+.lce-options {
+  padding: 8px;
+  display: grid;
+  gap: 6px;
+  max-height: 320px;
+  overflow: auto;
+}
+
+.lce-section-title {
+  padding: 2px 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: rgb(var(--fg) / 0.56);
+}
+
+.lce-option-list {
+  display: grid;
+  gap: 4px;
+}
+
+.lce-option {
+  appearance: none;
+  width: 100%;
+  min-height: 34px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: rgb(var(--fg) / 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 0 10px;
+  text-align: start;
+  cursor: pointer;
+}
+
+.lce-option:hover {
+  background: color-mix(in oklab, var(--tsl-panel-bg-solid) 88%, rgb(var(--border-strong)) 12%);
+}
+
+.lce-option.active {
+  background: color-mix(in oklab, var(--tsl-panel-bg-solid) 86%, rgb(var(--primary)) 14%);
+}
+
+.lce-option-main {
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.lce-option-main i {
+  color: rgb(var(--fg) / 0.7);
+  font-size: 13px;
+}
+
+.lce-option-main i.cu-icon-backlog-ring {
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  flex: 0 0 auto;
+  vertical-align: middle;
+  position: relative;
+  border-radius: 50%;
+  box-sizing: border-box;
+  background: none;
+  font-size: 0 !important;
+  line-height: 0 !important;
+}
+
+.lce-option-main i.cu-icon-backlog-ring::before {
+  content: '' !important;
+}
+
+.lce-option-main i.cu-icon-backlog-ring::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  box-sizing: border-box;
+  background: currentColor;
+  opacity: 1;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cg fill='white' transform='translate(8 8)'%3E%3Crect x='-2' y='-7' width='4' height='2'/%3E%3Crect x='-2' y='-7' width='4' height='2' transform='rotate(72)'/%3E%3Crect x='-2' y='-7' width='4' height='2' transform='rotate(144)'/%3E%3Crect x='-2' y='-7' width='4' height='2' transform='rotate(216)'/%3E%3Crect x='-2' y='-7' width='4' height='2' transform='rotate(288)'/%3E%3C/g%3E%3C/svg%3E")
+    center / 100% 100% no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cg fill='white' transform='translate(8 8)'%3E%3Crect x='-2' y='-7' width='4' height='2'/%3E%3Crect x='-2' y='-7' width='4' height='2' transform='rotate(72)'/%3E%3Crect x='-2' y='-7' width='4' height='2' transform='rotate(144)'/%3E%3Crect x='-2' y='-7' width='4' height='2' transform='rotate(216)'/%3E%3Crect x='-2' y='-7' width='4' height='2' transform='rotate(288)'/%3E%3C/g%3E%3C/svg%3E")
+    center / 100% 100% no-repeat;
+}
+
+.lce-option-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.lce-option-meta {
+  color: rgb(var(--fg) / 0.58);
+  font-size: 12px;
+}
+
+.lce-check {
+  color: rgb(var(--primary));
+}
+
+.lce-empty {
+  min-height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgb(var(--fg) / 0.58);
+  font-size: 12px;
+}

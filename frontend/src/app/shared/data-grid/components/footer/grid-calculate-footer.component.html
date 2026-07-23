@@ -1,0 +1,192 @@
+@if (isEnabled()) {
+  <div class="grid-calculate-footer" [class.grid-calculate-footer--ready]="hasMeasuredLayout">
+    <div class="grid-calculate-footer__viewport">
+      <table
+        class="grid-calculate-footer__table"
+        [style.width.px]="layout.tableWidth"
+        [style.minWidth.px]="layout.tableWidth"
+      >
+        <colgroup>
+          @if (hasStandaloneScopeCell()) {
+            <col [style.width.px]="layout.selectionWidth" />
+          }
+
+          @for (column of columns; track trackByField($index, column); let i = $index) {
+            <col [style.width.px]="columnWidth(i)" />
+          }
+
+          @if (hasActionsCell()) {
+            <col [style.width.px]="layout.actionWidth" />
+          }
+        </colgroup>
+
+        <tbody>
+          <tr class="grid-calculate-footer__row">
+            @if (hasStandaloneScopeCell()) {
+              <td
+                class="grid-calculate-footer__cell grid-calculate-footer__cell--scope"
+                [class.pinned-left]="hasStandaloneScopeCell()"
+                [ngStyle]="scopeCellStyle()"
+              >
+                <button
+                  type="button"
+                  class="grid-calculate-footer__trigger grid-calculate-footer__trigger--scope"
+                  [class.is-open]="scopeMenuOpen"
+                  [attr.aria-expanded]="scopeMenuOpen"
+                  [attr.title]="scopeTitle()"
+                  (click)="toggleScopeMenu($event)"
+                >
+                  <span class="grid-calculate-footer__scope-badge">{{ scopeBadgeLabel() }}</span>
+                </button>
+              </td>
+            }
+
+            @for (column of columns; track trackByField($index, column); let first = $first) {
+              <td
+                class="grid-calculate-footer__cell"
+                [class.is-active]="isActive(column)"
+                [class.grid-calculate-footer__cell--inline-scope]="
+                  first && !hasStandaloneScopeCell()
+                "
+                [class.pinned-left]="column.pinned === 'left'"
+                [class.pinned-right]="column.pinned === 'right'"
+                [ngStyle]="cellStyle($index, column)"
+              >
+                @if (first && !hasStandaloneScopeCell()) {
+                  <div class="grid-calculate-footer__cell-content">
+                    <button
+                      type="button"
+                      class="grid-calculate-footer__trigger grid-calculate-footer__trigger--scope grid-calculate-footer__trigger--scope-inline"
+                      [class.is-open]="scopeMenuOpen"
+                      [attr.aria-expanded]="scopeMenuOpen"
+                      [attr.title]="scopeTitle()"
+                      (click)="toggleScopeMenu($event)"
+                    >
+                      <span class="grid-calculate-footer__scope-badge">{{
+                        scopeBadgeLabel()
+                      }}</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      class="grid-calculate-footer__trigger"
+                      [class.is-open]="isColumnMenuOpen(column)"
+                      [class.is-active]="isActive(column)"
+                      [attr.aria-expanded]="isColumnMenuOpen(column)"
+                      [attr.title]="primaryText(column)"
+                      (click)="toggleColumnMenu(column, $event)"
+                    >
+                      <span class="grid-calculate-footer__stat">
+                        <span
+                          class="grid-calculate-footer__stat-value"
+                          [class.is-placeholder]="isPlaceholder(column)"
+                        >
+                          {{ primaryText(column) }}
+                        </span>
+                      </span>
+                    </button>
+                  </div>
+                } @else {
+                  <button
+                    type="button"
+                    class="grid-calculate-footer__trigger"
+                    [class.is-open]="isColumnMenuOpen(column)"
+                    [class.is-active]="isActive(column)"
+                    [attr.aria-expanded]="isColumnMenuOpen(column)"
+                    [attr.title]="primaryText(column)"
+                    (click)="toggleColumnMenu(column, $event)"
+                  >
+                    <span class="grid-calculate-footer__stat">
+                      <span
+                        class="grid-calculate-footer__stat-value"
+                        [class.is-placeholder]="isPlaceholder(column)"
+                      >
+                        {{ primaryText(column) }}
+                      </span>
+                    </span>
+                  </button>
+                }
+              </td>
+            }
+
+            @if (hasActionsCell()) {
+              <td class="grid-calculate-footer__cell grid-calculate-footer__cell--actions"></td>
+            }
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+}
+
+@if (scopeMenuOpen) {
+  <div
+    class="grid-calculate-footer__panel grid-calculate-footer__panel--scope"
+    [style.left.px]="scopeMenuPosition.left"
+    [style.top.px]="scopeMenuPosition.top"
+    (click)="$event.stopPropagation()"
+    (pointerdown)="$event.stopPropagation()"
+  >
+    @for (option of scopeOptions(); track option.value) {
+      <button
+        type="button"
+        class="grid-calculate-footer__option"
+        [class.is-active]="(config?.scope ?? 'filtered') === option.value"
+        (click)="selectScope(option.value, $event)"
+      >
+        <span class="grid-calculate-footer__option-label">{{ option.label }}</span>
+        <span class="grid-calculate-footer__option-meta">{{
+          option.description || option.shortLabel || option.label
+        }}</span>
+      </button>
+    }
+  </div>
+}
+
+@if (activeColumn(); as column) {
+  <div
+    class="grid-calculate-footer__panel grid-calculate-footer__panel--operation"
+    [style.left.px]="menuPosition.left"
+    [style.top.px]="menuPosition.top"
+    (click)="$event.stopPropagation()"
+    (pointerdown)="$event.stopPropagation()"
+  >
+    <div class="grid-calculate-footer__panel-header">
+      <span class="grid-calculate-footer__panel-title">Calculate</span>
+      <span class="grid-calculate-footer__panel-subtitle" [attr.title]="column.header">{{
+        column.header
+      }}</span>
+    </div>
+
+    <label class="grid-calculate-footer__field">
+      <span class="grid-calculate-footer__field-label">Operation</span>
+      <span class="grid-calculate-footer__select-wrap">
+        <select
+          class="grid-calculate-footer__select"
+          [value]="operationSelectValue(column)"
+          (click)="$event.stopPropagation()"
+          (change)="updatePendingOperation($any($event.target).value)"
+        >
+          <option value="">Select calculation</option>
+          @for (option of operationOptionsFor(column); track option.value) {
+            <option [value]="option.value">{{ operationLabel(option.value) }}</option>
+          }
+          @if (currentOperation(column)) {
+            <option [value]="clearOperationValue">Clear calculation</option>
+          }
+        </select>
+      </span>
+    </label>
+
+    <div class="grid-calculate-footer__panel-actions">
+      <button
+        type="button"
+        class="grid-calculate-footer__apply"
+        [disabled]="!canApplyPendingOperation(column)"
+        (click)="applyPendingOperation(column, $event)"
+      >
+        Calculate
+      </button>
+    </div>
+  </div>
+}

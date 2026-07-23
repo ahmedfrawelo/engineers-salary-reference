@@ -1,0 +1,100 @@
+<div class="group-composer">
+  <button
+    *ngIf="!addingGroup"
+    class="group-composer__trigger"
+    type="button"
+    (click)="startAdding()"
+  >
+    <i appIcon="plus-circle"></i>
+    <span>{{ addLabel }}</span>
+  </button>
+
+  <div *ngIf="addingGroup" class="group-composer__panel">
+    <div class="group-composer__head">
+      <input
+        class="group-composer__name"
+        type="text"
+        [value]="groupDraft"
+        [placeholder]="namePlaceholder"
+        (input)="updateGroupDraft($any($event.target).value)"
+        (keydown.enter)="submit()"
+      />
+      <button
+        class="group-composer__ghost"
+        type="button"
+        [attr.aria-label]="suggestedTriggerAriaLabel"
+        (click)="toggleSuggestedGroups()"
+      >
+        <i appIcon="stars"></i>
+      </button>
+    </div>
+
+    <div *ngIf="suggestedGroupsOpen && suggestedGroups.length" class="group-composer__suggestions">
+      <button
+        *ngFor="let option of suggestedGroups; trackBy: trackBySuggestion"
+        class="group-composer__suggestion"
+        type="button"
+        (click)="selectSuggestedGroup(option)"
+      >
+        <i [appIcon]="option.icon"></i>
+        <span>{{ option.name }}</span>
+      </button>
+    </div>
+
+    <div class="group-composer__section">
+      <div class="group-composer__label">{{ colorTriggerAriaLabel }}</div>
+      <div class="group-composer__swatches">
+        <button
+          *ngFor="let color of colorOptions; trackBy: trackByValue"
+          class="group-composer__swatch"
+          type="button"
+          [class.is-active]="groupColorDraft === color"
+          [style.--swatch]="color"
+          (click)="selectColor(color)"
+        ></button>
+        <input
+          class="group-composer__picker"
+          type="color"
+          [value]="groupColorDraft"
+          (input)="updateGroupColor($any($event.target).value)"
+        />
+      </div>
+    </div>
+
+    <div class="group-composer__section">
+      <div class="group-composer__label">{{ selectedIconLabel }}</div>
+      <div class="group-composer__icons">
+        <button
+          *ngFor="let icon of iconOptions; trackBy: trackByValue"
+          class="group-composer__icon"
+          type="button"
+          [class.is-active]="groupIconDraft === icon"
+          (click)="selectIcon(icon)"
+        >
+          <i [appIcon]="icon"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="group-composer__actions">
+      <button
+        class="group-composer__primary"
+        type="button"
+        [attr.aria-label]="submitAriaLabel"
+        [disabled]="!groupDraft.trim()"
+        (click)="submit()"
+      >
+        <i [appIcon]="groupIconDraft"></i>
+        <span>Create</span>
+      </button>
+      <button
+        class="group-composer__ghost"
+        type="button"
+        [attr.aria-label]="cancelAriaLabel"
+        (click)="cancel()"
+      >
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>

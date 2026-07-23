@@ -1,0 +1,274 @@
+<section class="tab-grid tab-grid--insights">
+  <article class="panel panel-full panel-insights-summary">
+    <header class="section-head">
+      <h2>Performance snapshot</h2>
+      <p>Clear summary of score, risk, and delivery trend.</p>
+    </header>
+
+    <div class="insights-summary-grid">
+      @for (item of evaluationPulse; track item.label) {
+        <article class="quick-card">
+          <span class="overline">{{ item.label }}</span>
+          <strong
+            class="kpi-value"
+            [class.positive]="item.trend === 'positive'"
+            [class.neutral]="item.trend === 'neutral'"
+            [class.risk]="item.trend === 'risk'"
+          >
+            {{ item.value }}
+          </strong>
+          <p>{{ item.note }}</p>
+        </article>
+      }
+    </div>
+
+    <div class="insights-summary-charts">
+      <div class="chart-embed">
+        <engineers-salary-reference-line-chart
+          [height]="220"
+          [labels]="trendLabels"
+          [series]="trendSeries"
+          [compactTicks]="true"
+          [showLegend]="true"
+        >
+        </engineers-salary-reference-line-chart>
+      </div>
+      <div class="insights-side-stack">
+        <div class="chart-embed chart-embed--tight">
+          <engineers-salary-reference-gauge-chart [height]="164" [data]="overallGaugeData"></engineers-salary-reference-gauge-chart>
+        </div>
+        @if (feedbackSparklineValues.length) {
+          <div class="chart-embed chart-embed--tight">
+            <engineers-salary-reference-sparkline-chart [height]="66" [values]="feedbackSparklineValues">
+            </engineers-salary-reference-sparkline-chart>
+          </div>
+        }
+      </div>
+    </div>
+  </article>
+
+  <article class="panel panel-insights-competency">
+    <header class="section-head">
+      <h2>Competency scorecard</h2>
+      <p>Current score against targets by capability area.</p>
+    </header>
+
+    <div class="insights-competency-charts">
+      <div class="chart-embed chart-embed--tight">
+        <engineers-salary-reference-radar-chart
+          [height]="236"
+          [axes]="competencyRadarAxes"
+          [series]="competencyRadarSeries"
+          [max]="100"
+          [showLegend]="true"
+        >
+        </engineers-salary-reference-radar-chart>
+      </div>
+      <div class="chart-embed chart-embed--tight">
+        <engineers-salary-reference-bullet-chart [height]="236" [data]="competencyBulletData"></engineers-salary-reference-bullet-chart>
+      </div>
+      <div class="chart-embed chart-embed--tight">
+        <engineers-salary-reference-bar-chart
+          [height]="188"
+          [data]="competencyDeltaData"
+          [compactTicks]="true"
+          [showValues]="true"
+        >
+        </engineers-salary-reference-bar-chart>
+      </div>
+    </div>
+
+    <ul class="competency-list">
+      @for (item of competencyScores; track item.area) {
+        <li>
+          <div class="competency-head">
+            <strong>{{ item.area }}</strong>
+            <span>{{ item.score }}%</span>
+          </div>
+          <div class="competency-meta">
+            <span>Target {{ item.target }}%</span>
+            <span [class.positive]="item.delta >= 0" [class.risk]="item.delta < 0">
+              {{ item.delta >= 0 ? '+' : '' }}{{ item.delta }} pts
+            </span>
+          </div>
+        </li>
+      }
+    </ul>
+  </article>
+
+  <article class="panel panel-insights-goals">
+    <header class="section-head">
+      <h2>Goal execution</h2>
+      <p>Progress, health, and delivery split by strategic goal.</p>
+    </header>
+
+    <div class="insights-goals-charts">
+      <div class="chart-embed chart-embed--tight">
+        <engineers-salary-reference-radial-bar-chart [height]="198" [data]="goalsRadialData"></engineers-salary-reference-radial-bar-chart>
+      </div>
+      <div class="chart-embed chart-embed--tight">
+        <engineers-salary-reference-pie-chart
+          [height]="198"
+          [data]="goalHealthPieData"
+          [innerRadius]="0.58"
+          [showLegend]="true"
+          [showLabels]="false"
+        >
+        </engineers-salary-reference-pie-chart>
+      </div>
+    </div>
+
+    <div class="chart-embed chart-embed--tight">
+      <engineers-salary-reference-stacked-bar-chart
+        [height]="210"
+        [labels]="executionLabels"
+        [series]="executionSeries"
+      ></engineers-salary-reference-stacked-bar-chart>
+    </div>
+
+    <ul class="goal-list">
+      @for (goal of goalTrack; track goal.title) {
+        <li>
+          <div class="goal-head">
+            <strong>{{ goal.title }}</strong>
+            <span
+              class="status"
+              [class.positive]="goal.health === 'positive'"
+              [class.neutral]="goal.health === 'neutral'"
+              [class.risk]="goal.health === 'risk'"
+            >
+              {{
+                goal.health === 'positive' ? 'On track' : goal.health === 'risk' ? 'Risk' : 'Watch'
+              }}
+            </span>
+          </div>
+          <div class="meter-track">
+            <span
+              class="meter-fill"
+              [style.width.%]="goal.progress"
+              [class.positive]="goal.health === 'positive'"
+              [class.neutral]="goal.health === 'neutral'"
+              [class.risk]="goal.health === 'risk'"
+            ></span>
+          </div>
+          <div class="goal-meta">
+            <span>{{ goal.progress }}% complete</span>
+            <span>Owner: {{ goal.owner }}</span>
+            <span>Due {{ goal.due }}</span>
+          </div>
+        </li>
+      }
+    </ul>
+  </article>
+
+  <article class="panel panel-full panel-insights-signals">
+    <header class="section-head">
+      <h2>Execution signals</h2>
+      <p>Consistency and impact view across current objective set.</p>
+    </header>
+    <div class="insights-signals-grid">
+      <div class="chart-embed chart-embed--tight">
+        <engineers-salary-reference-heatmap-chart [height]="248" [data]="consistencyHeatmapData"></engineers-salary-reference-heatmap-chart>
+      </div>
+      <div class="chart-embed chart-embed--tight">
+        <engineers-salary-reference-scatter-chart [height]="248" [data]="impactScatterData"></engineers-salary-reference-scatter-chart>
+      </div>
+    </div>
+  </article>
+
+  <article class="panel panel-insights-essentials">
+    <header class="section-head">
+      <h2>Employee essentials</h2>
+      <p>Key day-to-day details for smooth execution.</p>
+    </header>
+    <ul class="essential-list">
+      @for (item of essentials; track item.label) {
+        <li>
+          <div class="essential-head">
+            <strong>{{ item.label }}</strong>
+            <span
+              class="status"
+              [class.positive]="item.tone === 'positive'"
+              [class.neutral]="item.tone === 'neutral'"
+              [class.risk]="item.tone === 'risk'"
+            >
+              {{ item.value }}
+            </span>
+          </div>
+          <p>{{ item.note }}</p>
+        </li>
+      }
+    </ul>
+  </article>
+
+  <article class="panel panel-insights-focus">
+    <header class="section-head">
+      <h2>Focus recommendations</h2>
+      <p>Most important actions for the next cycle.</p>
+    </header>
+    <ul class="focus-list">
+      @for (item of focusRecommendations; track item.title) {
+        <li>
+          <div class="focus-head">
+            <strong>{{ item.title }}</strong>
+            <span class="status neutral">{{ item.priority }}</span>
+          </div>
+          <p>{{ item.reason }}</p>
+          <small>{{ item.impact }}</small>
+        </li>
+      }
+    </ul>
+  </article>
+
+  <article class="panel panel-full panel-insights-actions">
+    <header class="section-head">
+      <h2>Coaching and action plan</h2>
+      <p>Feedback details and next concrete actions.</p>
+    </header>
+    <div class="actions-grid">
+      <section class="subpanel">
+        <h3>Feedback pulse</h3>
+        <ul class="feedback-list">
+          @for (item of feedbackPulse; track item.source) {
+            <li>
+              <div class="feedback-head">
+                <strong>{{ item.source }}</strong>
+                <span>{{ item.score }}%</span>
+              </div>
+              <div class="meter-track">
+                <span class="meter-fill" [style.width.%]="item.score"></span>
+              </div>
+              <p>{{ item.note }}</p>
+            </li>
+          }
+        </ul>
+      </section>
+
+      <section class="subpanel">
+        <h3>Next 30-day actions</h3>
+        <ul class="action-list">
+          @for (item of actionPlan; track item.title) {
+            <li>
+              <div class="action-head">
+                <strong>{{ item.title }}</strong>
+                <span
+                  class="status"
+                  [class.risk]="item.priority === 'High'"
+                  [class.neutral]="item.priority === 'Medium'"
+                  [class.positive]="item.priority === 'Normal'"
+                >
+                  {{ item.priority }}
+                </span>
+              </div>
+              <p>{{ item.impact }}</p>
+              <div class="action-meta">
+                <span>Owner: {{ item.owner }}</span>
+                <span>Due: {{ item.due }}</span>
+              </div>
+            </li>
+          }
+        </ul>
+      </section>
+    </div>
+  </article>
+</section>

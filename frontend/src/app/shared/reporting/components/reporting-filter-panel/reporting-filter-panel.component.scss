@@ -1,0 +1,276 @@
+@use '../../styles/reporting-design' as reporting;
+
+:host {
+  display: block;
+}
+
+.filters-card {
+  @include reporting.surface(14px);
+}
+
+.filters-head {
+  @include reporting.section-head;
+}
+
+.eyebrow,
+.chip-label {
+  @include reporting.eyebrow;
+}
+
+.filters-head h2 {
+  margin: 6px 0 0;
+  font-size: 17px;
+  letter-spacing: 0;
+}
+
+.filters-head p {
+  margin: 4px 0 0;
+  color: rgb(var(--fg) / 0.68);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.filters-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.meta-pill,
+.chip {
+  @include reporting.pill;
+}
+
+.filters-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.field--wide {
+  grid-column: 1 / -1;
+}
+
+.field span {
+  @include reporting.field-label;
+}
+
+.field input,
+.field select {
+  width: 100%;
+  height: 38px;
+  @include reporting.control;
+  padding: 0 12px;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    background 160ms ease;
+}
+
+.field input:focus,
+.field select:focus {
+  @include reporting.focus-ring;
+}
+
+.field-input {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 38px;
+  padding: 0 12px;
+  @include reporting.control;
+}
+
+.field-input input {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  box-shadow: none;
+}
+
+.field-input:focus-within {
+  @include reporting.focus-ring;
+}
+
+.chip-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.chip-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.chip {
+  cursor: pointer;
+  @include reporting.interactive;
+}
+
+.chip.active {
+  border-color: rgb(var(--primary) / 0.34);
+  background: rgb(var(--primary) / 0.12);
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: rgb(var(--fg) / 0.4);
+}
+
+.dot.success {
+  background: rgb(34 197 94);
+}
+
+.dot.primary {
+  background: rgb(56 189 248);
+}
+
+.dot.neutral {
+  background: rgb(148 163 184);
+}
+
+.dot.warning {
+  background: rgb(245 158 11);
+}
+
+.dot.danger {
+  background: rgb(239 68 68);
+}
+
+.filters-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid rgb(var(--border) / 0.14);
+}
+
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.slider input {
+  accent-color: rgb(var(--primary));
+}
+
+.toggle input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.toggle-track {
+  position: relative;
+  width: 34px;
+  height: 20px;
+  border-radius: 999px;
+  border: 1px solid rgb(var(--border) / 0.3);
+  background: rgb(var(--bg1) / 0.56);
+  transition:
+    border-color 160ms ease,
+    background 160ms ease;
+}
+
+.toggle-track::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: rgb(var(--fg) / 0.74);
+  transition:
+    transform 160ms ease,
+    background 160ms ease;
+}
+
+.toggle input:checked + .toggle-track {
+  border-color: rgb(var(--primary) / 0.44);
+  background: rgb(var(--primary) / 0.2);
+}
+
+.toggle input:checked + .toggle-track::after {
+  transform: translateX(14px);
+  background: rgb(var(--primary));
+}
+
+.toggle input:focus-visible + .toggle-track {
+  @include reporting.focus-ring;
+}
+
+.slider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-size: 12px;
+}
+
+.slider span {
+  @include reporting.field-label;
+}
+
+.active-chips {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid rgb(var(--border) / 0.14);
+}
+
+.chip-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.btn {
+  height: 34px;
+  padding: 0 12px;
+  border-radius: reporting.$radius;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid rgb(var(--border) / 0.24);
+  background: rgb(var(--bg1) / 0.42);
+  color: rgb(var(--fg));
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  @include reporting.interactive;
+}
+
+@media (max-width: 900px) {
+  .filters-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .field--wide {
+    grid-column: auto;
+  }
+}
+
+@media print {
+  :host {
+    display: none;
+  }
+}

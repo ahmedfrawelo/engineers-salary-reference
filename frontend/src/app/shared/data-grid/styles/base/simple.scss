@@ -1,0 +1,1961 @@
+// ===== ENGINEERS_SALARY_REFERENCE Data Grid Simple Theme =====
+
+:host {
+  display: block;
+  height: 100%;
+  --dg-hover: var(--app-color-grid-row-hover, var(--dg-shell-header-bg, transparent));
+  --dg-selected: var(--app-color-grid-row-selected, transparent);
+  --dg-group-header-accent: var(--app-grid-group-header-accent-rgb);
+  --dg-group-footer-accent: var(--app-grid-group-footer-accent-rgb);
+  --dg-grand-total-accent: var(--app-grid-grand-total-accent-rgb);
+  --dg-overlay-bg: var(--app-color-grid-overlay-bg, var(--app-color-overlay-body));
+  --dg-overlay-border: var(--app-color-grid-overlay-border, var(--app-color-control-border));
+  --dg-overlay-shadow: var(--app-shadow-grid-overlay, var(--app-shadow-overlay));
+  --dg-control-bg: var(--app-color-grid-control-bg, var(--app-color-control-bg));
+  --dg-control-bg-strong: var(--app-color-grid-control-bg-strong, var(--dg-control-bg));
+  --dg-control-border: var(--app-color-grid-control-border, var(--app-color-control-border));
+  --dg-control-border-strong: var(
+    --app-color-grid-control-border-strong,
+    var(--app-color-control-border)
+  );
+  --dg-control-placeholder: var(--app-color-grid-control-placeholder, var(--app-color-placeholder));
+  --dg-floating-toolbar-bg: var(--app-color-grid-floating-toolbar-bg, var(--dg-overlay-bg));
+  --dg-floating-toolbar-border: var(
+    --app-color-grid-floating-toolbar-border,
+    var(--dg-overlay-border)
+  );
+  --dg-floating-toolbar-shadow: var(--app-shadow-grid-floating-toolbar, var(--dg-overlay-shadow));
+  --dg-floating-toolbar-text: var(
+    --app-color-grid-floating-toolbar-text,
+    var(--app-color-grid-body-text)
+  );
+  --dg-floating-toolbar-chip-bg: var(
+    --app-color-grid-floating-toolbar-chip-bg,
+    var(--app-color-grid-pill-surface)
+  );
+  --dg-floating-toolbar-chip-border: var(
+    --app-color-grid-floating-toolbar-chip-border,
+    var(--app-color-grid-pill-border)
+  );
+  --dg-floating-toolbar-dismiss-fg: var(
+    --app-color-grid-floating-toolbar-dismiss-text,
+    var(--dg-floating-toolbar-text)
+  );
+  --dg-floating-toolbar-action-fg: var(
+    --app-color-grid-floating-toolbar-action-text,
+    var(--dg-floating-toolbar-text)
+  );
+  --dg-floating-toolbar-frame-border: var(
+    --app-color-grid-floating-toolbar-frame-border,
+    color-mix(in oklab, var(--dg-control-border) 84%, transparent)
+  );
+  --dg-floating-toolbar-divider: var(
+    --app-color-grid-floating-toolbar-divider,
+    color-mix(in oklab, var(--dg-floating-toolbar-text) 12%, transparent)
+  );
+  --dg-floating-toolbar-count-bg: var(
+    --app-color-grid-floating-toolbar-count-bg,
+    color-mix(in oklab, var(--dg-control-bg-strong) 74%, var(--dg-floating-toolbar-bg))
+  );
+  --dg-floating-toolbar-count-border: var(
+    --app-color-grid-floating-toolbar-count-border,
+    color-mix(in oklab, var(--dg-control-border-strong) 78%, transparent)
+  );
+  --dg-floating-toolbar-group-bg: var(
+    --app-color-grid-floating-toolbar-group-bg,
+    color-mix(in oklab, var(--dg-control-bg) 58%, transparent)
+  );
+  --dg-floating-toolbar-group-border: var(
+    --app-color-grid-floating-toolbar-group-border,
+    color-mix(in oklab, var(--dg-control-border) 76%, transparent)
+  );
+  --dg-floating-toolbar-action-bg: var(--app-color-grid-floating-toolbar-action-bg, transparent);
+  --dg-floating-toolbar-action-bg-hover: var(
+    --app-color-grid-floating-toolbar-action-bg-hover,
+    color-mix(in oklab, var(--dg-control-bg-strong) 68%, transparent)
+  );
+  --dg-floating-toolbar-action-bg-active: var(
+    --app-color-grid-floating-toolbar-action-bg-active,
+    color-mix(in oklab, var(--dg-control-bg-strong) 82%, transparent)
+  );
+  --dg-floating-toolbar-action-border: var(
+    --app-color-grid-floating-toolbar-action-border,
+    transparent
+  );
+  --dg-floating-toolbar-action-border-active: var(
+    --app-color-grid-floating-toolbar-action-border-active,
+    color-mix(in oklab, var(--dg-control-border-strong) 74%, transparent)
+  );
+  --dg-floating-toolbar-action-fg-strong: var(
+    --app-color-grid-floating-toolbar-action-text-strong,
+    color-mix(in oklab, var(--dg-floating-toolbar-text) 96%, transparent)
+  );
+  --dg-floating-toolbar-prominent-bg: var(
+    --app-color-grid-floating-toolbar-prominent-bg,
+    color-mix(in oklab, var(--dg-control-bg-strong) 82%, var(--dg-floating-toolbar-bg))
+  );
+  --dg-floating-toolbar-prominent-border: var(
+    --app-color-grid-floating-toolbar-prominent-border,
+    color-mix(in oklab, var(--dg-control-border-strong) 82%, transparent)
+  );
+  --dg-floating-toolbar-danger-bg: var(
+    --app-color-grid-floating-toolbar-danger-bg,
+    color-mix(in oklab, var(--dg-danger-bg-strong) 22%, var(--dg-floating-toolbar-bg))
+  );
+  --dg-floating-toolbar-danger-border: var(
+    --app-color-grid-floating-toolbar-danger-border,
+    color-mix(in oklab, var(--dg-danger-border) 66%, transparent)
+  );
+  --dg-floating-toolbar-danger-fg: var(
+    --app-color-grid-floating-toolbar-danger-text,
+    color-mix(in oklab, var(--dg-danger-text) 88%, var(--dg-floating-toolbar-text))
+  );
+  --dg-bottom-bar-bg: var(--app-color-grid-bottom-bar-bg, transparent);
+  --dg-bottom-bar-border: var(--app-color-grid-bottom-bar-border, var(--dg-control-border));
+  --dg-shell-header-hover-bg: var(--app-color-grid-header-hover-bg, transparent);
+  --dg-shell-header-state-line: var(--app-color-grid-header-state-line, var(--app-color-primary));
+  --dg-shell-header-state-line-muted: var(
+    --app-color-grid-header-state-line-muted,
+    var(--dg-shell-header-state-line)
+  );
+  --dg-shell-header-filtered-bg: var(--app-color-grid-header-filtered-bg, transparent);
+  --dg-shell-header-sorted-bg: var(--app-color-grid-header-sorted-bg, transparent);
+  --dg-shell-header-drop-bg: var(--app-color-grid-header-drop-bg, transparent);
+  --dg-shell-body-column-accent: var(
+    --app-color-grid-body-column-accent,
+    var(--dg-shell-header-state-line)
+  );
+  --dg-shell-body-column-accent-muted: var(
+    --app-color-grid-body-column-accent-muted,
+    var(--dg-shell-header-state-line-muted)
+  );
+  --dg-shell-row-hover-border: var(
+    --app-color-grid-row-hover-border,
+    var(--dg-shell-outline-color)
+  );
+  --dg-shell-sticky-divider: var(--app-color-grid-sticky-divider, var(--dg-shell-outline-color));
+  --dg-clickup-surface: var(--app-color-grid-surface, transparent);
+  --dg-clickup-surface-raised: var(--app-color-grid-surface-raised, transparent);
+  --dg-clickup-surface-footer: var(--app-color-grid-surface-footer, var(--dg-clickup-surface));
+  --dg-clickup-grid-outline: var(--app-color-grid-outline, var(--dg-shell-outline-color));
+  --dg-clickup-grid-line: var(--app-color-grid-line, var(--dg-shell-outline-color));
+  --dg-clickup-grid-line-soft: var(--app-color-grid-line-soft, var(--dg-clickup-grid-line));
+  --dg-clickup-grid-line-faint: var(--app-color-grid-line-faint, var(--dg-clickup-grid-line-soft));
+  --dg-clickup-row-hover: var(--app-color-grid-row-hover, var(--dg-shell-header-bg, transparent));
+  --dg-clickup-row-selected: var(--app-color-grid-row-selected, transparent);
+  --dg-clickup-header-cell-fg: var(
+    --dg-shell-header-cell-fg,
+    var(--dg-theme-header-cell-fg, var(--app-color-grid-header-cell-fg))
+  );
+  --dg-clickup-header-fg: var(
+    --dg-shell-header-text-fg,
+    var(--dg-theme-header-text-fg, var(--app-color-grid-header-text-fg))
+  );
+  --dg-clickup-body-fg: var(--app-color-grid-body-text, var(--app-color-panel-body-text));
+  --dg-clickup-body-fg-soft: var(--app-color-grid-body-text-soft, var(--app-color-text-soft));
+  --dg-clickup-link-fg: var(--app-color-grid-link, var(--app-color-link));
+  --dg-clickup-link-fg-hover: var(--app-color-grid-link-hover, var(--app-color-link-hover));
+  --dg-shell-link-hover-color: var(--dg-clickup-link-fg-hover);
+  --data-grid-link-hover-color: var(--dg-clickup-link-fg-hover);
+  --dg-clickup-pill-border: var(--app-color-grid-pill-border, var(--dg-clickup-grid-line-soft));
+  --dg-clickup-pill-shadow: none;
+  --dg-clickup-pill-surface: var(--app-color-grid-pill-surface, var(--dg-clickup-surface-raised));
+  --dg-clickup-pill-fg: var(--app-color-grid-pill-text, var(--dg-clickup-body-fg));
+  --dg-clickup-pill-height: var(--app-grid-pill-height, 21px);
+  --dg-clickup-pill-radius: var(--app-grid-pill-radius, 6px);
+  --dg-clickup-pill-padding-inline: var(--app-grid-pill-padding-inline, 7px);
+  --dg-clickup-pill-gap: var(--app-grid-pill-gap, 4px);
+  --dg-clickup-pill-font-size: var(--app-grid-pill-font-size, 10px);
+  --dg-clickup-pill-font-weight: var(--app-grid-pill-font-weight, 600);
+  --dg-clickup-pill-dot-size: var(--app-grid-pill-dot-size, 7px);
+  --dg-clickup-pill-dot-ring: var(--app-grid-pill-dot-ring, 1.5px);
+  --dg-clickup-pill-custom-bg: var(--app-color-grid-pill-custom-bg, var(--dg-clickup-pill-surface));
+  --dg-clickup-pill-custom-border: var(
+    --app-color-grid-pill-custom-border,
+    var(--dg-clickup-pill-border)
+  );
+  --dg-clickup-pill-tone-bg: var(--app-color-grid-pill-tone-bg, var(--dg-clickup-pill-surface));
+  --dg-clickup-pill-tone-border: var(
+    --app-color-grid-pill-tone-border,
+    var(--dg-clickup-pill-border)
+  );
+  --dg-clickup-muted-label: var(--app-color-grid-muted-label, var(--app-color-text-muted));
+  --dg-clickup-muted-value: var(--app-color-grid-muted-value, var(--app-color-text-soft));
+  --dg-clickup-muted-placeholder: var(
+    --app-color-grid-muted-placeholder,
+    var(--app-color-placeholder)
+  );
+  --dg-clickup-icon-fg: var(--app-color-grid-icon, var(--app-color-icon-neutral));
+  --dg-clickup-icon-fg-active: var(--app-color-grid-icon-active, var(--app-color-text-high));
+  --dg-clickup-icon-fg-strong: var(--app-color-grid-icon-strong, var(--app-color-text-high));
+  --dg-clickup-control-hover: var(--app-color-grid-control-hover, transparent);
+  --dg-clickup-control-focus: var(--app-color-grid-control-focus, transparent);
+  --dg-clickup-resize-line: var(--app-color-grid-resize-line, var(--dg-clickup-grid-line-soft));
+  --dg-clickup-resize-line-hover: var(
+    --app-color-grid-resize-line-hover,
+    var(--dg-clickup-resize-line)
+  );
+  --dg-clickup-resize-line-active: var(
+    --app-color-grid-resize-line-active,
+    var(--dg-clickup-resize-line-hover)
+  );
+  --dg-clickup-checkbox-bg: var(--dg-theme-checkbox-bg, var(--app-color-grid-checkbox-bg));
+  --dg-clickup-checkbox-bg-hover: var(
+    --dg-theme-checkbox-bg-hover,
+    var(--app-color-grid-checkbox-bg-hover)
+  );
+  --dg-clickup-checkbox-border: var(
+    --dg-theme-checkbox-border,
+    var(--app-color-grid-checkbox-border)
+  );
+  --dg-clickup-checkbox-border-strong: var(
+    --dg-theme-checkbox-border-strong,
+    var(--app-color-grid-checkbox-border-strong)
+  );
+  --dg-clickup-checkbox-check: var(--dg-theme-checkbox-check, var(--app-color-grid-checkbox-check));
+  --dg-clickup-checkbox-checked-bg: var(
+    --dg-theme-checkbox-checked-bg,
+    var(--app-color-grid-checkbox-checked-bg)
+  );
+  --dg-theme-row-index-fg: var(--app-color-grid-selection-index, var(--app-color-text-muted));
+  --dg-clickup-selection-index-fg: var(--dg-theme-row-index-fg);
+  --dg-clickup-page-text: var(--dg-clickup-muted-label);
+  --dg-clickup-page-text-strong: var(--dg-clickup-muted-value);
+  --dg-pill-tone-green: var(--app-color-grid-pill-tone-green);
+  --dg-pill-tone-yellow: var(--app-color-grid-pill-tone-yellow);
+  --dg-pill-tone-red: var(--app-color-grid-pill-tone-red);
+  --dg-pill-tone-blue: var(--app-color-grid-pill-tone-blue);
+  --dg-pill-tone-purple: var(--app-color-grid-pill-tone-purple);
+  --dg-pill-tone-teal: var(--app-color-grid-pill-tone-teal);
+  --dg-pill-tone-orange: var(--app-color-grid-pill-tone-orange);
+  --dg-pill-tone-gray: var(--app-color-grid-pill-tone-gray);
+  --dg-clickup-header-state-mixed-bg: var(
+    --app-color-grid-header-mixed-bg,
+    var(--dg-shell-header-sorted-bg)
+  );
+  --dg-clickup-header-state-mixed-line: var(--app-gradient-grid-header-state-combined-line);
+  --dg-clickup-header-icon-focus-shadow: var(--app-shadow-grid-header-icon-focus);
+  --dg-clickup-header-input-focus-shadow: var(--app-shadow-grid-header-input-focus);
+  --dg-clickup-quick-filter-clear-focus-shadow: var(--app-shadow-grid-quick-filter-clear-focus);
+  --dg-clickup-checkbox-focus-shadow: var(--app-shadow-grid-checkbox-focus);
+  --dg-clickup-calc-footer-trigger-focus-shadow: var(--app-shadow-grid-calc-footer-trigger-focus);
+  --dg-clickup-search-icon: var(--app-color-grid-search-icon, var(--dg-clickup-icon-fg));
+  --dg-clickup-search-icon-active: var(
+    --app-color-grid-search-icon-active,
+    var(--app-color-primary)
+  );
+  --dg-clickup-control-surface: var(--app-color-grid-control-surface, var(--app-color-control-bg));
+  --dg-clickup-control-surface-border: var(
+    --app-color-grid-control-surface-border,
+    var(--app-color-control-border)
+  );
+  --dg-clickup-control-surface-text: var(
+    --app-color-grid-control-surface-text,
+    var(--app-color-text-high)
+  );
+  --dg-clickup-control-surface-focus-border: var(
+    --app-color-grid-control-surface-focus-border,
+    var(--app-color-primary)
+  );
+  --dg-clickup-header-separator: var(
+    --app-color-grid-header-separator,
+    var(--dg-clickup-grid-line)
+  );
+  --dg-clickup-header-input-border: var(
+    --app-color-grid-header-input-border,
+    var(--dg-clickup-grid-line)
+  );
+  --dg-clickup-header-input-bg: var(
+    --app-color-grid-header-input-bg,
+    var(--dg-clickup-surface-raised)
+  );
+  --dg-clickup-quick-filter-border: var(
+    --app-color-grid-quick-filter-border,
+    var(--dg-clickup-grid-line)
+  );
+  --dg-clickup-quick-filter-bg: var(
+    --app-color-grid-quick-filter-bg,
+    var(--dg-clickup-surface-raised)
+  );
+  --dg-clickup-quick-filter-focus-bg: var(
+    --app-color-grid-quick-filter-focus-bg,
+    var(--dg-clickup-surface-raised)
+  );
+  --dg-clickup-footer-divider: var(--app-color-grid-footer-divider, var(--dg-clickup-grid-line));
+  --dg-clickup-menu-bg: var(--app-color-grid-menu-bg, var(--dg-overlay-bg));
+  --dg-clickup-menu-border: var(--app-color-grid-menu-border, var(--dg-overlay-border));
+  --dg-clickup-menu-shadow: var(--app-shadow-grid-menu, var(--app-shadow-overlay));
+  --dg-clickup-menu-active-outline: var(
+    --app-color-grid-menu-active-outline,
+    var(--app-color-primary)
+  );
+  --dg-clickup-menu-active-bg: var(--app-color-grid-menu-active-bg, var(--app-color-primary-bg));
+  --dg-clickup-menu-active-text: var(--app-color-grid-menu-active-text, var(--app-color-primary));
+  --dg-clickup-sort-badge-bg: var(--app-color-grid-sort-badge-bg, var(--app-color-primary));
+  --dg-clickup-prb-pill-bg: var(--app-color-grid-prb-pill-bg, var(--app-color-primary-bg));
+  --dg-clickup-prb-pill-border: var(
+    --app-color-grid-prb-pill-border,
+    var(--app-color-outline-strong)
+  );
+  --dg-clickup-prb-pill-fg: var(--app-color-grid-prb-pill-text, var(--app-color-text-high));
+  --dg-clickup-group-row-bg: var(--app-color-grid-group-row-bg, transparent);
+  --dg-clickup-group-row-border-top: var(--app-color-grid-group-row-border-top, transparent);
+  --dg-clickup-group-row-border-bottom: var(--app-color-grid-group-row-border-bottom, transparent);
+  --dg-clickup-group-row-edge: var(--app-color-grid-group-row-edge, transparent);
+  --dg-clickup-group-row-value-bg: var(--app-color-grid-group-row-value-bg, transparent);
+  --dg-clickup-group-row-value-border: var(--app-color-grid-group-row-value-border, transparent);
+  --dg-clickup-group-row-value-fg: var(
+    --app-color-grid-group-row-value-text,
+    var(--dg-clickup-body-fg)
+  );
+  --dg-clickup-group-row-count-bg: var(--app-color-grid-group-row-count-bg, transparent);
+  --dg-clickup-group-row-count-border: var(--app-color-grid-group-row-count-border, transparent);
+  --dg-clickup-group-row-count-fg: var(
+    --app-color-grid-group-row-count-text,
+    var(--dg-clickup-body-fg)
+  );
+  --dg-clickup-group-row-aggregate-bg: var(--app-color-grid-group-row-aggregate-bg, transparent);
+  --dg-clickup-group-row-aggregate-border: var(
+    --app-color-grid-group-row-aggregate-border,
+    transparent
+  );
+  --dg-clickup-group-row-aggregate-fg: var(
+    --app-color-grid-group-row-aggregate-text,
+    var(--dg-clickup-body-fg)
+  );
+  --dg-clickup-group-row-gradient: var(--app-gradient-grid-group-row);
+  --dg-clickup-group-footer-gradient: var(--app-gradient-grid-group-footer);
+}
+
+:host-context(html.theme-no-anim) ::ng-deep .engineers-salary-reference-data-grid,
+:host-context(html.theme-no-anim) ::ng-deep .engineers-salary-reference-data-grid *,
+:host-context(html.theme-no-anim) ::ng-deep .engineers-salary-reference-data-grid *::before,
+:host-context(html.theme-no-anim) ::ng-deep .engineers-salary-reference-data-grid *::after,
+:host-context(body.theme-switching) ::ng-deep .engineers-salary-reference-data-grid,
+:host-context(body.theme-switching) ::ng-deep .engineers-salary-reference-data-grid *,
+:host-context(body.theme-switching) ::ng-deep .engineers-salary-reference-data-grid *::before,
+:host-context(body.theme-switching) ::ng-deep .engineers-salary-reference-data-grid *::after {
+  transition: none !important;
+  animation: none !important;
+}
+
+:host ::ng-deep {
+  // ===== Main Container =====
+  .engineers-salary-reference-data-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: visible !important; // allow dropdowns/menus to escape the grid bounds
+    height: 100% !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    position: relative !important;
+    box-shadow: none !important;
+  }
+
+  // ===== Grid Content Area =====
+  .grid-container {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    overflow: auto !important;
+    background: transparent !important;
+  }
+
+  .virtual-scroll-viewport,
+  .table-scroll {
+    height: 100% !important;
+    width: 100% !important;
+  }
+
+  // ===== Search Box =====
+  .header-search-box {
+    position: static !important;
+    z-index: auto !important;
+    top: auto !important;
+    right: auto !important;
+    pointer-events: auto !important;
+  }
+
+  .header-search-box.search {
+    position: relative !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+
+  .header-search-box.search .bi {
+    position: absolute !important;
+    left: 10px !important;
+    font-size: 14px !important;
+    color: var(--dg-clickup-search-icon) !important;
+    pointer-events: none !important;
+  }
+
+  .header-search-box.search:focus-within .bi {
+    animation: search-pulse 1.2s ease-in-out infinite !important;
+    color: var(--dg-clickup-search-icon-active) !important;
+  }
+
+  .header-search-box.search.search-active .bi {
+    animation: search-pulse 1.2s ease-in-out infinite !important;
+    color: var(--dg-clickup-search-icon-active) !important;
+  }
+
+  .search-input {
+    height: 28px !important;
+    min-width: 200px !important;
+    padding: 0 10px !important;
+    border-radius: 8px !important;
+    background: var(--dg-clickup-control-surface) !important;
+    color: var(--dg-clickup-control-surface-text) !important;
+    border: 1px solid var(--dg-clickup-control-surface-border) !important;
+    font-size: 12px !important;
+
+    &::placeholder {
+      opacity: 0.6 !important;
+    }
+
+    &:focus {
+      outline: none !important;
+      border-color: var(--dg-clickup-control-surface-focus-border) !important;
+    }
+  }
+
+  .header-search-box.search .search-input {
+    padding-left: 32px !important;
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  // ===== Table =====
+  .data-grid-table,
+  .header-table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    font-family:
+      -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Helvetica, Arial,
+      sans-serif !important;
+    font-size: 12.5px !important;
+    background: transparent !important;
+
+    // ===== Headers =====
+    th {
+      background: var(--dg-shell-header-bg, transparent) !important;
+      color: var(--dg-clickup-header-cell-fg) !important;
+      font-family: var(
+        --dg-shell-header-cell-font-family,
+        var(--dg-theme-font-sans, var(--app-theme-font-sans, var(--app-font-family-sans)))
+      ) !important;
+      font-weight: var(--dg-shell-header-cell-font-weight, 700) !important;
+      font-size: var(--dg-shell-header-cell-font-size, 13px) !important;
+      height: var(--dg-shell-header-height, 32px) !important;
+      padding: 0 var(--dg-shell-header-cell-padding-inline, 8px) !important;
+      text-align: left !important;
+      vertical-align: middle !important;
+      border-top: 0 !important;
+      border-left: 0 !important;
+      border-inline-start: 0 !important;
+      border-right: 0 !important;
+      border-inline-end: 0 !important;
+      border-bottom: 0 !important;
+      position: relative !important;
+      cursor: pointer !important;
+      user-select: none !important;
+      white-space: nowrap !important;
+      box-sizing: border-box !important;
+      letter-spacing: 0 !important;
+      overflow: visible !important;
+      transition:
+        background-color 0.16s ease,
+        color 0.16s ease,
+        box-shadow 0.16s ease,
+        opacity 0.16s ease !important;
+      box-shadow:
+        inset -1px 0 0 var(--dg-clickup-grid-line),
+        inset 0 -1px 0 var(--dg-clickup-grid-line) !important;
+    }
+
+    thead tr.header-row th:last-child {
+      box-shadow: inset 0 -1px 0 var(--dg-clickup-grid-line) !important;
+    }
+
+    // ===== Rows =====
+    tbody {
+      tr {
+        background: transparent !important;
+        border-bottom: 0 !important;
+        overflow: visible !important;
+
+        &.selected {
+          background: transparent !important;
+          background-color: transparent !important;
+        }
+      }
+
+      td {
+        height: 38px !important;
+        padding: 0 10px !important;
+        font-size: 12.5px !important;
+        color: var(--dg-clickup-body-fg) !important;
+        font-weight: 400 !important;
+        text-align: left !important;
+        vertical-align: middle !important;
+        border-top: 0 !important;
+        border-left: 0 !important;
+        border-inline-start: 0 !important;
+        border-right: 1px solid var(--dg-clickup-grid-line) !important;
+        border-inline-end: 1px solid var(--dg-clickup-grid-line) !important;
+        border-bottom: 1px solid var(--dg-clickup-grid-line-soft) !important;
+      }
+
+      td.selection-cell {
+        border-top: 0 !important;
+        border-left: 0 !important;
+        border-inline-start: 0 !important;
+        border-right: 1px solid var(--dg-clickup-grid-line) !important;
+        border-inline-end: 1px solid var(--dg-clickup-grid-line) !important;
+        border-bottom: 1px solid var(--dg-clickup-grid-line-soft) !important;
+      }
+    }
+
+    tbody:not(.grouped-display-body) tr.data-row > td:not(:focus-visible) {
+      border-right: 0 !important;
+      border-inline-end: 0 !important;
+      border-bottom: 0 !important;
+      outline: 0 !important;
+      box-shadow:
+        inset -1px 0 0 var(--dg-clickup-grid-line),
+        inset 0 -1px 0 var(--dg-clickup-grid-line-soft) !important;
+    }
+
+    tbody:not(.grouped-display-body) tr.data-row > td:last-child:not(:focus-visible) {
+      box-shadow: inset 0 -1px 0 var(--dg-clickup-grid-line-soft) !important;
+    }
+
+    tbody:not(.grouped-display-body) tr.data-row > td.selection-cell:not(:focus-visible) {
+      box-shadow:
+        inset -1px 0 0 var(--dg-clickup-grid-line),
+        inset 0 -1px 0 var(--dg-clickup-grid-line-soft) !important;
+    }
+
+    tbody:not(.grouped-display-body) tr.data-row.append-row > td {
+      border-right: 0 !important;
+      border-inline-end: 0 !important;
+      border-bottom: 0 !important;
+      box-shadow: none !important;
+      background: transparent !important;
+      cursor: text !important;
+    }
+
+    tbody:not(.grouped-display-body) tr.data-row.append-row > td.selection-cell {
+      border-right: 0 !important;
+      border-inline-end: 0 !important;
+      box-shadow: none !important;
+    }
+
+    tbody:not(.grouped-display-body) tr.data-row.append-row > td:last-child,
+    tbody:not(.grouped-display-body) tr.data-row.append-row > td.row-actions-cell,
+    tbody:not(.grouped-display-body) tr.data-row.append-row > td.actions-cell {
+      border-right: 0 !important;
+      border-inline-end: 0 !important;
+      border-bottom: 0 !important;
+      outline: 0 !important;
+      box-shadow: none !important;
+      background: transparent !important;
+    }
+
+    tbody:not(.grouped-display-body) tr.data-row:hover > td,
+    tbody:not(.grouped-display-body) tr.data-row.is-hovered > td {
+      background: var(--dg-clickup-row-hover) !important;
+      background-color: var(--dg-clickup-row-hover) !important;
+    }
+
+    tbody:not(.grouped-display-body) tr.data-row.append-row:hover > td,
+    tbody:not(.grouped-display-body) tr.data-row.append-row.is-hovered > td {
+      background: transparent !important;
+      background-color: transparent !important;
+    }
+
+    // ===== Group Highlights =====
+    tr.group-row td {
+      background: var(--dg-clickup-group-row-bg) !important;
+      border-top: 1px solid var(--dg-clickup-group-row-border-top) !important;
+      border-bottom: 1px solid var(--dg-clickup-group-row-border-bottom) !important;
+      border-radius: 0 !important;
+      overflow: visible !important;
+      background-clip: border-box !important;
+      position: relative !important;
+    }
+
+    tr.group-row td:first-child {
+      border-left: 5px solid var(--dg-clickup-group-row-edge) !important;
+    }
+
+    tr.group-row .group-row-content {
+      width: 100% !important;
+      padding: 6px 10px !important;
+      border-radius: 0 !important;
+      background: transparent !important;
+      border: 0 !important;
+      box-shadow: none !important;
+      position: relative !important;
+      z-index: 1 !important;
+    }
+
+    tr.group-row .group-row-value {
+      display: inline-flex !important;
+      align-items: center !important;
+      padding: 3px 10px !important;
+      border-radius: 999px !important;
+      background: var(--dg-clickup-group-row-value-bg) !important;
+      border: 1px solid var(--dg-clickup-group-row-value-border) !important;
+      color: var(--dg-clickup-group-row-value-fg) !important;
+      -webkit-text-fill-color: var(--dg-clickup-group-row-value-fg) !important;
+      font-weight: 600 !important;
+    }
+
+    tr.group-row .group-row-count {
+      display: inline-flex !important;
+      align-items: center !important;
+      padding: 3px 10px !important;
+      border-radius: 999px !important;
+      background: var(--dg-clickup-group-row-count-bg) !important;
+      border: 1px solid var(--dg-clickup-group-row-count-border) !important;
+      color: var(--dg-clickup-group-row-count-fg) !important;
+      -webkit-text-fill-color: var(--dg-clickup-group-row-count-fg) !important;
+      font-weight: 600 !important;
+    }
+
+    tr.group-row .group-row-aggregate span {
+      display: inline-flex !important;
+      align-items: center !important;
+      padding: 2px 8px !important;
+      border-radius: 999px !important;
+      background: var(--dg-clickup-group-row-aggregate-bg) !important;
+      border: 1px solid var(--dg-clickup-group-row-aggregate-border) !important;
+      color: var(--dg-clickup-group-row-aggregate-fg) !important;
+      -webkit-text-fill-color: var(--dg-clickup-group-row-aggregate-fg) !important;
+      font-weight: 600 !important;
+    }
+
+    tr.group-row td::before {
+      content: none !important;
+      position: absolute;
+      inset: 4px 6px;
+      border-radius: 0;
+      background: var(--dg-clickup-group-row-gradient);
+      opacity: 1;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    tbody tr.group-footer-row td {
+      background: transparent !important;
+      border-top: 1px solid var(--dg-clickup-grid-line) !important;
+      border-left: 0 !important;
+      border-inline-start: 0 !important;
+      border-bottom: 0 !important;
+      border-right: 1px solid var(--dg-clickup-grid-line) !important;
+      border-inline-end: 1px solid var(--dg-clickup-grid-line) !important;
+      border-radius: 0 !important;
+      overflow: visible !important;
+      background-clip: border-box !important;
+      position: relative !important;
+    }
+
+    tbody tr.group-footer-row td:first-child {
+      border-left: 0 !important;
+    }
+
+    tbody tr.group-footer-row td:last-child {
+      border-right: 0 !important;
+      border-inline-end: 0 !important;
+    }
+
+    tbody tr.group-footer-row .aggregate-value {
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 6px !important;
+      padding: 3px 10px !important;
+      border-radius: 999px !important;
+      background: transparent !important;
+      border: 1px solid var(--dg-clickup-pill-border) !important;
+      color: var(--dg-clickup-pill-fg) !important;
+      -webkit-text-fill-color: var(--dg-clickup-pill-fg) !important;
+      font-weight: 600 !important;
+      position: relative !important;
+      z-index: 1 !important;
+    }
+
+    tbody tr.group-footer-row td::before {
+      content: none !important;
+      position: absolute;
+      inset: 4px 6px;
+      border-radius: 0;
+      background: var(--dg-clickup-group-footer-gradient);
+      opacity: 1;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    tfoot tr.footer-row td {
+      background: transparent !important;
+      border-top: 1px solid var(--dg-clickup-grid-line) !important;
+      border-left: 0 !important;
+      border-inline-start: 0 !important;
+      border-right: 1px solid var(--dg-clickup-grid-line) !important;
+      border-inline-end: 1px solid var(--dg-clickup-grid-line) !important;
+      border-bottom: 0 !important;
+      border-radius: 0 !important;
+      overflow: visible !important;
+      background-clip: border-box !important;
+      position: relative !important;
+    }
+
+    tfoot tr.grand-total-row td {
+      background: transparent !important;
+      border-top: 1px solid var(--dg-clickup-grid-line) !important;
+      border-left: 0 !important;
+      border-inline-start: 0 !important;
+      border-right: 1px solid var(--dg-clickup-grid-line) !important;
+      border-inline-end: 1px solid var(--dg-clickup-grid-line) !important;
+      border-bottom: 0 !important;
+      border-radius: 0 !important;
+      overflow: visible !important;
+      background-clip: border-box !important;
+      position: relative !important;
+    }
+
+    tfoot tr.footer-row td:first-child,
+    tfoot tr.grand-total-row td:first-child {
+      border-left: 0 !important;
+      border-inline-start: 0 !important;
+    }
+
+    tfoot tr.footer-row td:last-child,
+    tfoot tr.grand-total-row td:last-child {
+      border-right: 0 !important;
+      border-inline-end: 0 !important;
+    }
+
+    tfoot tr.grand-total-row .aggregate-value {
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 6px !important;
+      padding: 3px 10px !important;
+      border-radius: 999px !important;
+      background: transparent !important;
+      border: 1px solid var(--dg-clickup-pill-border) !important;
+      color: var(--dg-clickup-pill-fg) !important;
+      -webkit-text-fill-color: var(--dg-clickup-pill-fg) !important;
+      font-weight: 600 !important;
+      position: relative !important;
+      z-index: 1 !important;
+    }
+
+    tbody tr.group-footer-row .aggregate-label,
+    tfoot tr.grand-total-row .aggregate-label {
+      color: var(--dg-clickup-muted-label) !important;
+      -webkit-text-fill-color: var(--dg-clickup-muted-label) !important;
+      font-size: 9px !important;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    tfoot tr.grand-total-row td::before,
+    tfoot tr.footer-row td::before {
+      content: none !important;
+      position: absolute;
+      inset: 4px 6px;
+      border-radius: 0;
+      opacity: 1;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    tfoot tr.footer-row td::before {
+      background: transparent;
+    }
+
+    tfoot tr.grand-total-row td::before {
+      background: transparent;
+    }
+
+    thead tr.header-row th.selection-cell.pinned-left,
+    thead tr.quick-filter-row th.selection-cell.pinned-left {
+      position: sticky !important;
+      left: 0 !important;
+      z-index: 16 !important;
+      background: var(--dg-shell-header-bg, transparent) !important;
+      background-color: var(--dg-shell-header-bg, transparent) !important;
+      background-clip: padding-box !important;
+      transform: none !important;
+      will-change: auto !important;
+      backface-visibility: hidden !important;
+    }
+
+    thead tr.header-row th.pinned-left:not(.selection-cell),
+    thead tr.header-row th.pinned-right:not(.selection-cell),
+    thead tr.quick-filter-row th.pinned-left:not(.selection-cell),
+    thead tr.quick-filter-row th.pinned-right:not(.selection-cell) {
+      position: sticky !important;
+      z-index: 18 !important;
+      isolation: isolate !important;
+      overflow: hidden !important;
+      background: var(--dg-shell-header-bg, transparent) !important;
+      background-color: var(--dg-shell-header-bg, transparent) !important;
+      background-clip: padding-box !important;
+      transform: none !important;
+      backface-visibility: hidden !important;
+    }
+
+    thead tr.header-row th.pinned-left:not(.selection-cell),
+    thead tr.quick-filter-row th.pinned-left:not(.selection-cell) {
+      box-shadow:
+        inset -1px 0 0 var(--dg-shell-sticky-divider, var(--dg-clickup-grid-line)),
+        inset 0 -1px 0 var(--dg-clickup-grid-line) !important;
+    }
+
+    thead tr.header-row th.pinned-right:not(.selection-cell),
+    thead tr.quick-filter-row th.pinned-right:not(.selection-cell) {
+      box-shadow:
+        inset 1px 0 0 var(--dg-shell-sticky-divider, var(--dg-clickup-grid-line)),
+        inset 0 -1px 0 var(--dg-clickup-grid-line) !important;
+    }
+
+    tbody:not(.grouped-display-body) tr.data-row > td.selection-cell.pinned-left {
+      position: sticky !important;
+      left: 0 !important;
+      z-index: 14 !important;
+      background: var(--app-color-canvas, transparent) !important;
+      background-color: var(--app-color-canvas, transparent) !important;
+      background-image: none !important;
+      background-clip: padding-box !important;
+      box-sizing: border-box !important;
+    }
+
+    tbody:not(.grouped-display-body) tr.data-row > td.pinned-left:not(.selection-cell),
+    tbody:not(.grouped-display-body) tr.data-row > td.pinned-right:not(.selection-cell) {
+      position: sticky !important;
+      z-index: 13 !important;
+      isolation: isolate !important;
+      overflow: hidden !important;
+      background: var(--dg-clickup-surface, var(--app-color-canvas, transparent)) !important;
+      background-color: var(--dg-clickup-surface, var(--app-color-canvas, transparent)) !important;
+      background-clip: padding-box !important;
+    }
+
+    tbody:not(.grouped-display-body) tr.data-row:hover > td.pinned-left:not(.selection-cell),
+    tbody:not(.grouped-display-body) tr.data-row:hover > td.pinned-right:not(.selection-cell),
+    tbody:not(.grouped-display-body) tr.data-row.is-hovered > td.pinned-left:not(.selection-cell),
+    tbody:not(.grouped-display-body) tr.data-row.is-hovered > td.pinned-right:not(.selection-cell) {
+      background: var(--dg-clickup-row-hover) !important;
+      background-color: var(--dg-clickup-row-hover) !important;
+    }
+
+    tbody:not(.grouped-display-body) tr.data-row.append-row > td.pinned-left:not(.selection-cell),
+    tbody:not(.grouped-display-body) tr.data-row.append-row > td.pinned-right:not(.selection-cell) {
+      background: transparent !important;
+      background-color: transparent !important;
+    }
+
+    tfoot tr.footer-row > td.selection-cell.pinned-left,
+    tfoot tr.grand-total-row > td.selection-cell.pinned-left {
+      position: sticky !important;
+      left: 0 !important;
+      z-index: 15 !important;
+      background: var(--dg-clickup-surface-footer) !important;
+      background-color: var(--dg-clickup-surface-footer) !important;
+      background-clip: padding-box !important;
+    }
+
+    tbody tr.group-footer-row > td.pinned-left:not(.selection-cell),
+    tbody tr.group-footer-row > td.pinned-right:not(.selection-cell),
+    tfoot tr.footer-row > td.pinned-left:not(.selection-cell),
+    tfoot tr.footer-row > td.pinned-right:not(.selection-cell),
+    tfoot tr.grand-total-row > td.pinned-left:not(.selection-cell),
+    tfoot tr.grand-total-row > td.pinned-right:not(.selection-cell) {
+      position: sticky !important;
+      z-index: 14 !important;
+      isolation: isolate !important;
+      overflow: hidden !important;
+      background: var(--dg-clickup-surface-footer, var(--app-color-canvas, transparent)) !important;
+      background-color: var(
+        --dg-clickup-surface-footer,
+        var(--app-color-canvas, transparent)
+      ) !important;
+      background-clip: padding-box !important;
+      backface-visibility: hidden !important;
+    }
+
+    tbody tr.group-footer-row > td.pinned-left:not(.selection-cell),
+    tfoot tr.footer-row > td.pinned-left:not(.selection-cell),
+    tfoot tr.grand-total-row > td.pinned-left:not(.selection-cell) {
+      box-shadow:
+        inset -1px 0 0 var(--dg-shell-sticky-divider, var(--dg-clickup-grid-line)),
+        inset 0 1px 0 var(--dg-clickup-grid-line-soft) !important;
+    }
+
+    tbody tr.group-footer-row > td.pinned-right:not(.selection-cell),
+    tfoot tr.footer-row > td.pinned-right:not(.selection-cell),
+    tfoot tr.grand-total-row > td.pinned-right:not(.selection-cell) {
+      box-shadow:
+        inset 1px 0 0 var(--dg-shell-sticky-divider, var(--dg-clickup-grid-line)),
+        inset 0 1px 0 var(--dg-clickup-grid-line-soft) !important;
+    }
+
+    tbody:not(.grouped-display-body) tr.data-row:hover > td.selection-cell.pinned-left,
+    tbody:not(.grouped-display-body) tr.data-row.is-hovered > td.selection-cell.pinned-left {
+      background: var(--dg-clickup-row-hover) !important;
+      background-color: var(--dg-clickup-row-hover) !important;
+    }
+
+    tbody:not(.grouped-display-body) tr.data-row.selected > td.selection-cell.pinned-left,
+    tbody:not(.grouped-display-body) tr.data-row > td.selection-cell.is-selected.pinned-left {
+      background: var(--app-color-canvas, transparent) !important;
+      background-color: var(--app-color-canvas, transparent) !important;
+    }
+
+    tbody:not(.grouped-display-body) tr.data-row.append-row > td.selection-cell.pinned-left {
+      background: transparent !important;
+      background-color: transparent !important;
+    }
+
+    th.text-left,
+    tbody td.text-left {
+      text-align: left !important;
+    }
+
+    th.text-center,
+    tbody td.text-center {
+      text-align: center !important;
+    }
+
+    th.text-right,
+    tbody td.text-right {
+      text-align: right !important;
+    }
+
+    th:last-child,
+    tbody td:last-child,
+    tfoot td:last-child {
+      border-right: none !important;
+      border-inline-end: 0 !important;
+    }
+
+    th:last-child {
+      box-shadow: inset 0 -1px 0 var(--dg-clickup-grid-line) !important;
+    }
+  }
+
+  .engineers-salary-reference-data-grid:not(.has-pinned-data-columns)
+    .header-table
+    thead
+    tr.header-row
+    th.selection-cell.pinned-left,
+  .engineers-salary-reference-data-grid:not(.has-pinned-data-columns)
+    .header-table
+    thead
+    tr.quick-filter-row
+    th.selection-cell.pinned-left {
+    transform: translate3d(var(--dg-grid-scroll-left, 0px), 0, 0) !important;
+    will-change: transform !important;
+  }
+
+  .header-table thead tr.header-row th.selection-cell,
+  .header-table thead tr.quick-filter-row th.selection-cell {
+    cursor: default !important;
+  }
+
+  .header-table thead tr.header-row th.actions-cell,
+  .header-table thead tr.header-row th.row-actions-cell,
+  .header-table thead tr.header-row th.header-actions {
+    color: var(--dg-clickup-header-fg) !important;
+    text-align: center !important;
+  }
+
+  .header-table thead tr.header-row th.is-filtered {
+    background: var(--dg-shell-header-filtered-bg) !important;
+  }
+
+  .header-table thead tr.header-row th.is-sorted {
+    background: var(--dg-shell-header-sorted-bg) !important;
+  }
+
+  .header-table thead tr.header-row th.is-sorted.is-filtered {
+    background: var(--dg-clickup-header-state-mixed-bg) !important;
+  }
+
+  .header-table thead tr.header-row th.is-filtered .header-text,
+  .header-table thead tr.header-row th.is-sorted .header-text {
+    color: var(--dg-clickup-header-cell-fg) !important;
+  }
+
+  .header-table thead tr.header-row th.is-filtered::after,
+  .header-table thead tr.header-row th.is-sorted::after {
+    content: '' !important;
+    position: absolute !important;
+    inset-inline: var(--dg-shell-header-cell-padding-inline, 8px) !important;
+    inset-block-end: 0 !important;
+    height: 1px !important;
+    pointer-events: none !important;
+    border-radius: 999px !important;
+    background: var(--dg-shell-header-state-line-muted) !important;
+  }
+
+  .header-table thead tr.header-row th.is-sorted::after {
+    background: var(--dg-shell-header-state-line) !important;
+  }
+
+  .header-table thead tr.header-row th.is-sorted.is-filtered::after {
+    background: var(--app-gradient-grid-header-state-combined-line) !important;
+  }
+
+  .header-table thead tr.header-row th.dragging-column {
+    cursor: grabbing !important;
+  }
+
+  .engineers-salary-reference-data-grid.is-column-reordering,
+  .engineers-salary-reference-data-grid.is-column-reordering .header-table thead tr.header-row th {
+    cursor: grabbing !important;
+    user-select: none !important;
+  }
+
+  .dg-column-drag-card {
+    position: fixed !important;
+    z-index: var(--dg-shell-header-drag-card-z-index, 2147483000) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    inline-size: clamp(
+      var(--dg-shell-header-drag-card-min-width, 112px),
+      var(--dg-column-drag-card-width, 136px),
+      var(--dg-shell-header-drag-card-max-width, 220px)
+    ) !important;
+    min-inline-size: var(--dg-shell-header-drag-card-min-width, 112px) !important;
+    max-inline-size: var(--dg-shell-header-drag-card-max-width, 220px) !important;
+    min-block-size: 0 !important;
+    padding-block: var(--dg-shell-header-drag-card-padding-block, 0) !important;
+    padding-inline: var(--dg-shell-header-drag-card-padding-inline, 12px) !important;
+    border: 1px solid var(--dg-shell-header-drag-card-border, var(--dg-clickup-grid-line)) !important;
+    border-radius: var(--dg-shell-header-drag-card-radius, 2px) !important;
+    background: var(
+      --dg-shell-header-drag-card-bg,
+      var(--dg-shell-header-bg, transparent)
+    ) !important;
+    background-color: var(
+      --dg-shell-header-drag-card-bg,
+      var(--dg-shell-header-bg, transparent)
+    ) !important;
+    color: var(--dg-shell-header-drag-card-color, var(--dg-clickup-text-strong)) !important;
+    font-family: var(--dg-shell-header-text-font-family, inherit) !important;
+    font-size: var(
+      --dg-shell-header-drag-card-font-size,
+      var(--dg-shell-header-text-font-size)
+    ) !important;
+    font-weight: var(--dg-shell-header-drag-card-font-weight, 500) !important;
+    line-height: var(--dg-shell-header-drag-card-line-height, 1.2) !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    box-sizing: border-box !important;
+    box-shadow: none !important;
+    pointer-events: none !important;
+    transform: translate3d(-50%, 0, 0) !important;
+    will-change: transform, inset-inline-start, inset-block-start !important;
+    contain: paint !important;
+  }
+
+  .dg-column-drop-marker {
+    position: fixed !important;
+    z-index: var(--dg-shell-header-drop-guide-z-index, 2147482999) !important;
+    inline-size: var(
+      --dg-shell-header-drop-guide-width,
+      var(--dg-shell-header-drop-indicator-width, 2px)
+    ) !important;
+    border-radius: var(--dg-shell-header-drop-indicator-radius, 999px) !important;
+    background: var(--dg-shell-header-drop-guide-color, var(--dg-clickup-grid-line)) !important;
+    pointer-events: none !important;
+    box-shadow: none !important;
+    transform: translate3d(-50%, 0, 0) !important;
+    will-change: left, top, height !important;
+    contain: paint !important;
+  }
+
+  .header-table thead tr.header-row th.drop-target {
+    background: var(
+      --dg-shell-header-drop-target-bg,
+      var(--dg-clickup-row-hover, transparent)
+    ) !important;
+    background-color: var(
+      --dg-shell-header-drop-target-bg,
+      var(--dg-clickup-row-hover, transparent)
+    ) !important;
+    box-shadow:
+      inset 0 0 0 1px var(--dg-shell-header-drop-target-border, var(--dg-clickup-grid-line)),
+      inset 0 -1px 0 var(--dg-clickup-grid-line) !important;
+  }
+
+  .header-table thead tr.header-row th.drop-target::before {
+    content: '' !important;
+    position: absolute !important;
+    inset-block: var(--dg-shell-header-drop-target-guide-inset, 7px) !important;
+    inline-size: var(
+      --dg-shell-header-drop-guide-width,
+      var(--dg-shell-header-drop-indicator-width, 2px)
+    ) !important;
+    border-radius: var(--dg-shell-header-drop-indicator-radius, 999px) !important;
+    background: var(--dg-shell-header-drop-guide-color, var(--dg-clickup-grid-line)) !important;
+    pointer-events: none !important;
+    z-index: 3 !important;
+  }
+
+  .header-table thead tr.header-row th.drop-target[data-drop-edge='before']::before {
+    inset-inline-start: 0 !important;
+  }
+
+  .header-table thead tr.header-row th.drop-target[data-drop-edge='after']::before {
+    inset-inline-end: 0 !important;
+  }
+
+  .dg-column-drag-native-image {
+    inline-size: 1px !important;
+    block-size: 1px !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+
+  .header-table thead tr.quick-filter-row th {
+    height: 34px !important;
+    min-height: 34px !important;
+    max-height: 34px !important;
+    padding: 4px var(--dg-shell-header-cell-padding-inline, 8px) !important;
+    cursor: default !important;
+    background: var(--dg-shell-header-bg, transparent) !important;
+    box-shadow:
+      inset -1px 0 0 var(--dg-clickup-grid-line),
+      inset 0 -1px 0 var(--dg-clickup-grid-line-soft) !important;
+  }
+
+  .header-table thead tr.quick-filter-row th:last-child {
+    box-shadow: inset 0 -1px 0 var(--dg-clickup-grid-line-soft) !important;
+  }
+
+  // ===== Header Content (Filter/Sort Icons) =====
+  .header-content {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: var(--dg-shell-header-icon-gap, 4px) !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-width: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+  }
+
+  .header-table thead tr.header-row th.has-header-select,
+  .data-grid-table thead tr.header-row th.has-header-select {
+    cursor: default !important;
+  }
+
+  search-select.grid-header-select {
+    flex: 1 1 auto !important;
+    display: block !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    height: 100% !important;
+  }
+
+  .header-table th.text-left .header-content,
+  .data-grid-table thead th.text-left .header-content {
+    justify-content: flex-start !important;
+  }
+
+  .header-table th.text-center .header-content,
+  .data-grid-table thead th.text-center .header-content {
+    justify-content: center !important;
+  }
+
+  .header-table th.text-right .header-content,
+  .data-grid-table thead th.text-right .header-content {
+    justify-content: flex-end !important;
+  }
+
+  .header-text {
+    flex: 1 1 0 !important;
+    display: block !important;
+    text-align: inherit !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    height: var(--dg-shell-header-text-height, 16px) !important;
+    font-family: var(
+      --dg-shell-header-text-font-family,
+      var(--dg-theme-font-sans, var(--app-theme-font-sans, var(--app-font-family-sans)))
+    ) !important;
+    font-weight: var(--dg-shell-header-text-font-weight, 500) !important;
+    font-size: var(--dg-shell-header-text-font-size, 12px) !important;
+    text-transform: none !important;
+    letter-spacing: 0 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    outline: none !important;
+    margin-right: 0 !important;
+    line-height: var(--dg-shell-header-text-line-height, 1.3333333333) !important;
+    color: var(--dg-clickup-header-fg) !important;
+    box-sizing: border-box !important;
+  }
+
+  .header-text.text-left {
+    text-align: left !important;
+  }
+
+  .header-text.text-center {
+    text-align: center !important;
+  }
+
+  .header-text.text-right {
+    text-align: right !important;
+  }
+
+  .header-icons {
+    display: flex !important;
+    align-items: center !important;
+    gap: var(--dg-shell-header-icon-cluster-gap, 2px) !important;
+    flex: 0 0 auto !important;
+    flex-shrink: 0 !important;
+    min-width: 0 !important;
+    margin-left: 0 !important;
+  }
+
+  .header-edit-btn,
+  .header-filter-btn,
+  .header-sort-btn {
+    flex-shrink: 0 !important;
+    width: var(--dg-shell-header-icon-button-size, 16px) !important;
+    min-width: var(--dg-shell-header-icon-button-size, 16px) !important;
+    height: var(--dg-shell-header-icon-button-size, 16px) !important;
+    min-height: var(--dg-shell-header-icon-button-size, 16px) !important;
+    padding: 0 !important;
+    border: none !important;
+    background: transparent !important;
+    cursor: pointer !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 2px !important;
+    border-radius: 6px !important;
+    outline: none !important;
+    transition:
+      background-color 0.16s ease,
+      opacity 0.16s ease,
+      color 0.16s ease !important;
+    position: relative !important;
+    color: var(--dg-clickup-icon-fg) !important;
+
+    &:focus-visible {
+      outline: none !important;
+      background: var(--dg-clickup-control-focus) !important;
+      box-shadow: var(--dg-clickup-header-icon-focus-shadow) !important;
+      color: var(--dg-clickup-icon-fg-strong) !important;
+    }
+
+    &.active {
+      color: var(--dg-clickup-icon-fg-active) !important;
+    }
+
+    svg {
+      width: var(--dg-shell-header-icon-size, 12px) !important;
+      height: var(--dg-shell-header-icon-size, 12px) !important;
+      fill: currentColor !important;
+      opacity: 0.88 !important;
+    }
+  }
+
+  .header-sort-btn:not(.visible) {
+    display: none !important;
+  }
+
+  // Hide the header filter affordance completely. Filtering remains accessible through the
+  // existing grid filtering flows outside the header icon itself.
+  .header-filter-btn {
+    display: none !important;
+  }
+
+  // Sort button only visible when active (has sort direction)
+  .header-sort-btn {
+    opacity: 0.76 !important;
+    visibility: visible !important;
+  }
+
+  .header-edit-btn {
+    opacity: 0.72 !important;
+    visibility: visible !important;
+  }
+
+  .sort-order-badge {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-width: 14px !important;
+    height: 14px !important;
+    padding: 0 3px !important;
+    font-size: 9px !important;
+    font-weight: 700 !important;
+    line-height: 1 !important;
+    color: var(--dg-clickup-checkbox-check) !important;
+    background: var(--dg-clickup-sort-badge-bg) !important;
+    border-radius: 3px !important;
+    margin-left: 2px !important;
+  }
+
+  .header-separator {
+    flex-shrink: 0 !important;
+    color: var(--dg-clickup-header-separator) !important;
+    opacity: 0.7 !important;
+    margin: 0 var(--dg-shell-header-icon-gap, 4px) !important;
+    font-size: 14px !important;
+    font-weight: 300 !important;
+  }
+
+  .header-text-input {
+    width: 100% !important;
+    height: 24px !important;
+    min-width: 0 !important;
+    padding: 0 8px !important;
+    border-radius: 6px !important;
+    border: 1px solid var(--dg-clickup-header-input-border) !important;
+    background: var(--dg-clickup-header-input-bg) !important;
+    color: var(--dg-clickup-body-fg) !important;
+    font-family: var(
+      --dg-shell-header-text-font-family,
+      var(--dg-theme-font-sans, var(--app-theme-font-sans, var(--app-font-family-sans)))
+    ) !important;
+    font-size: var(--dg-shell-header-text-font-size, 12px) !important;
+    font-weight: 500 !important;
+    text-transform: none !important;
+    letter-spacing: 0 !important;
+    line-height: 1.2 !important;
+    outline: none !important;
+    box-shadow: none !important;
+
+    &::placeholder {
+      color: var(--dg-clickup-muted-placeholder) !important;
+    }
+
+    &:focus {
+      border-color: var(--dg-shell-header-state-line-muted) !important;
+      box-shadow: var(--dg-clickup-header-input-focus-shadow) !important;
+    }
+  }
+
+  .quick-filter-cell {
+    position: relative !important;
+    display: flex !important;
+    align-items: center !important;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .quick-filter-input {
+    width: 100% !important;
+    min-width: 0 !important;
+    height: 24px !important;
+    padding: 0 26px 0 8px !important;
+    border-radius: 6px !important;
+    border: 1px solid var(--dg-clickup-quick-filter-border) !important;
+    background: var(--dg-clickup-quick-filter-bg) !important;
+    color: var(--dg-clickup-body-fg) !important;
+    font-family: var(
+      --dg-shell-header-text-font-family,
+      var(--dg-theme-font-sans, var(--app-theme-font-sans, var(--app-font-family-sans)))
+    ) !important;
+    font-size: 11.5px !important;
+    font-weight: 500 !important;
+    line-height: 1.2 !important;
+    outline: none !important;
+    box-shadow: none !important;
+
+    &::placeholder {
+      color: var(--dg-clickup-muted-placeholder) !important;
+    }
+
+    &:focus {
+      border-color: var(--dg-shell-header-state-line-muted) !important;
+      background: var(--dg-clickup-quick-filter-focus-bg) !important;
+      box-shadow: var(--dg-clickup-header-input-focus-shadow) !important;
+    }
+  }
+
+  .quick-filter-clear {
+    position: absolute !important;
+    inset-inline-end: 6px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    width: 16px !important;
+    height: 16px !important;
+    padding: 0 !important;
+    border: none !important;
+    background: transparent !important;
+    color: var(--dg-clickup-icon-fg) !important;
+    border-radius: 4px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    opacity: 0.82 !important;
+
+    &:focus-visible {
+      outline: none !important;
+      background: var(--dg-clickup-control-focus) !important;
+      box-shadow: var(--dg-clickup-quick-filter-clear-focus-shadow) !important;
+      color: var(--dg-clickup-icon-fg-strong) !important;
+    }
+
+    svg {
+      width: 10px !important;
+      height: 10px !important;
+      fill: currentColor !important;
+    }
+  }
+
+  // ===== Resize Handle =====
+  .resize-handle {
+    position: absolute !important;
+    top: 0 !important;
+    right: -7px !important;
+    width: 14px !important;
+    height: 100% !important;
+    cursor: ew-resize !important;
+    z-index: 10 !important;
+    background: transparent !important;
+    transition: background 0.15s ease !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    &::before {
+      content: '' !important;
+      position: absolute !important;
+      top: 50% !important;
+      left: calc(50% - 0.5px) !important;
+      transform: translate(-50%, -50%) !important;
+      width: 1px !important;
+      height: 54% !important;
+      background: var(--dg-clickup-resize-line) !important;
+      border-radius: 1px !important;
+      transition: all 0.2s ease !important;
+      pointer-events: none !important;
+      opacity: 0 !important;
+    }
+
+    &:active {
+      background: transparent !important;
+
+      &::before {
+        background: var(--dg-clickup-resize-line-active) !important;
+        width: 5px !important;
+        height: 58% !important;
+        box-shadow: none !important;
+        border-radius: 999px !important;
+      }
+    }
+  }
+
+  .header-table th .resize-handle:hover::before {
+    opacity: 1 !important;
+    background: var(--dg-clickup-resize-line-hover) !important;
+    width: 5px !important;
+    height: 52% !important;
+    box-shadow: none !important;
+    border-radius: 999px !important;
+  }
+
+  .header-table th .resize-handle:active::before,
+  .header-table th.is-resizing-column .resize-handle::before {
+    opacity: 1 !important;
+  }
+
+  // ===== Selection Checkbox =====
+  .selection-cell {
+    width: var(--dg-selection-column-width, 44px) !important;
+    min-width: var(--dg-selection-column-width, 44px) !important;
+    max-width: var(--dg-selection-column-width, 44px) !important;
+    text-align: center !important;
+    padding: 0 !important;
+    position: relative !important;
+    vertical-align: middle !important;
+
+    .selection-cell-inner {
+      position: relative !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    .selection-cell-index,
+    .selection-cell-control {
+      position: absolute !important;
+      inset: 0 !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+    }
+
+    .selection-cell-index {
+      color: var(--dg-clickup-selection-index-fg) !important;
+      font-family: var(
+        --dg-theme-font-sans,
+        var(--app-theme-font-sans, var(--app-font-family-sans))
+      ) !important;
+      font-size: 11px !important;
+      font-weight: 500 !important;
+      line-height: 1 !important;
+      letter-spacing: 0 !important;
+      font-variant-numeric: tabular-nums !important;
+      white-space: nowrap !important;
+      text-align: center !important;
+      user-select: none !important;
+      pointer-events: none !important;
+      opacity: 1 !important;
+    }
+
+    .selection-cell-control {
+      opacity: 0 !important;
+      pointer-events: none !important;
+    }
+
+    &.is-append-row {
+      .selection-cell-index,
+      .selection-cell-control {
+        opacity: 0 !important;
+      }
+    }
+
+    input[type='checkbox'] {
+      cursor: pointer !important;
+      width: var(--dg-selection-control-size, 14px) !important;
+      height: var(--dg-selection-control-size, 14px) !important;
+      margin: 0 !important;
+      display: block !important;
+      appearance: none !important;
+      -webkit-appearance: none !important;
+      -moz-appearance: none !important;
+      position: absolute !important;
+      top: 50% !important;
+      right: auto !important;
+      bottom: auto !important;
+      left: 50% !important;
+      transform: translate(-50%, -50%) !important;
+      border: 1px solid var(--dg-clickup-checkbox-border) !important;
+      border-radius: var(--dg-theme-checkbox-radius, 4px) !important;
+      background: var(--dg-clickup-checkbox-bg) !important;
+      color: var(--dg-clickup-checkbox-check) !important;
+      font-size: 14px !important;
+      font-family: var(
+        --dg-theme-font-sans,
+        var(--app-theme-font-sans, var(--app-font-family-sans))
+      ) !important;
+      font-weight: 700 !important;
+      white-space: nowrap !important;
+      line-height: 1 !important;
+      transition: all 0.2s ease !important;
+      box-shadow: none !important;
+
+      &:focus-visible {
+        outline: none !important;
+        border-color: var(--dg-clickup-checkbox-border-strong) !important;
+        box-shadow: var(--dg-clickup-checkbox-focus-shadow) !important;
+      }
+
+      &:checked {
+        background: var(--dg-clickup-checkbox-checked-bg) !important;
+        border-color: var(--dg-clickup-checkbox-checked-bg) !important;
+        box-shadow: none !important;
+
+        &::after {
+          content: '' !important;
+          position: absolute !important;
+          top: 47% !important;
+          left: 50% !important;
+          width: 6px !important;
+          height: 3px !important;
+          border-left: 1.5px solid var(--dg-clickup-checkbox-check) !important;
+          border-bottom: 1.5px solid var(--dg-clickup-checkbox-check) !important;
+          transform: translate(-50%, -50%) rotate(-45deg) !important;
+          background: transparent !important;
+          border-radius: 0 !important;
+        }
+      }
+
+      &:indeterminate {
+        background: var(--dg-clickup-checkbox-checked-bg) !important;
+        border-color: var(--dg-clickup-checkbox-checked-bg) !important;
+
+        &::after {
+          content: '' !important;
+          position: absolute !important;
+          top: 50% !important;
+          left: 50% !important;
+          width: 6px !important;
+          height: 1.5px !important;
+          transform: translate(-50%, -50%) !important;
+          border: 0 !important;
+          background: var(--dg-clickup-checkbox-check) !important;
+          border-radius: 999px !important;
+        }
+      }
+    }
+  }
+
+  .data-grid-table tbody tr.data-row > td.selection-cell {
+    cursor: pointer !important;
+    background: var(--app-color-canvas, transparent) !important;
+    background-color: var(--app-color-canvas, transparent) !important;
+    background-image: none !important;
+    background-clip: padding-box !important;
+  }
+
+  .data-grid-table tbody tr.data-row.append-row > td.selection-cell {
+    cursor: text !important;
+    background: var(--app-color-canvas, transparent) !important;
+    background-color: var(--app-color-canvas, transparent) !important;
+    background-image: none !important;
+    background-clip: padding-box !important;
+  }
+
+  .data-grid-table tbody tr.data-row > td.selection-cell .selection-cell-layout {
+    position: relative !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    min-width: 100% !important;
+    height: 100% !important;
+    min-height: inherit !important;
+  }
+
+  .data-grid-table tbody tr.data-row > td.selection-cell .selection-row-index {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    min-width: 100% !important;
+    height: 100% !important;
+    color: var(--dg-clickup-selection-index-fg) !important;
+    font-family: var(
+      --dg-theme-font-sans,
+      var(--app-theme-font-sans, var(--app-font-family-sans))
+    ) !important;
+    font-size: 11px !important;
+    font-weight: 500 !important;
+    line-height: 1 !important;
+    font-variant-numeric: tabular-nums !important;
+    white-space: nowrap !important;
+    text-align: center !important;
+    user-select: none !important;
+    pointer-events: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transition:
+      opacity 0.16s ease,
+      visibility 0.16s ease !important;
+  }
+
+  .data-grid-table tbody tr.data-row > td.selection-cell .selection-row-checkbox {
+    position: absolute !important;
+    inset: 0 !important;
+    margin: auto !important;
+    transform: none !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: var(--dg-selection-control-size, 14px) !important;
+    min-width: var(--dg-selection-control-size, 14px) !important;
+    height: var(--dg-selection-control-size, 14px) !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    z-index: 2 !important;
+    transition:
+      opacity 0.16s ease,
+      visibility 0.16s ease !important;
+  }
+
+  .data-grid-table
+    tbody
+    tr.data-row
+    > td.selection-cell
+    .selection-row-checkbox
+    input[type='checkbox'] {
+    position: static !important;
+    top: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    left: auto !important;
+    transform: none !important;
+  }
+
+  .data-grid-table tbody tr.data-row > td.selection-cell.is-append-row .selection-cell-layout {
+    visibility: hidden !important;
+  }
+
+  .data-grid-table tbody tr.data-row:hover > td.selection-cell .selection-row-index,
+  .data-grid-table tbody tr.data-row.is-hovered > td.selection-cell .selection-row-index,
+  .data-grid-table tbody tr.data-row > td.selection-cell.is-row-hovered .selection-row-index,
+  .data-grid-table tbody tr.data-row > td.selection-cell.is-selected .selection-row-index,
+  .data-grid-table
+    tbody
+    tr.data-row
+    > td.selection-cell:has(input.grid-checkbox:focus-visible)
+    .selection-row-index {
+    opacity: 0 !important;
+    visibility: hidden !important;
+  }
+
+  // ===== Grouping Surfaces (force app-theme tokens) =====
+  .engineers-salary-reference-data-grid.grouping-mode-active .table-scroll,
+  .engineers-salary-reference-data-grid.grouping-mode-active .table-scroll-shell {
+    background: var(--app-color-grid-group-backdrop-bg, var(--app-color-grid-surface)) !important;
+  }
+
+  .engineers-salary-reference-data-grid.grouping-mode-active .data-grid-table tr.group-row .group-row-content {
+    background: var(--app-color-grid-group-header-bg, var(--app-color-grid-header-bg)) !important;
+  }
+
+  .engineers-salary-reference-data-grid.grouping-mode-active .data-grid-table .group-items-scroll {
+    background: var(--app-color-grid-group-card-bg) !important;
+  }
+
+  .engineers-salary-reference-data-grid.grouping-mode-active .data-grid-table .group-items-inner {
+    background: var(
+      --app-color-grid-group-body-bg,
+      var(--app-color-grid-group-table-body-bg)
+    ) !important;
+  }
+
+  .data-grid-table tbody tr.data-row:hover > td.selection-cell .selection-row-checkbox,
+  .data-grid-table tbody tr.data-row.is-hovered > td.selection-cell .selection-row-checkbox,
+  .data-grid-table tbody tr.data-row > td.selection-cell.is-row-hovered .selection-row-checkbox,
+  .data-grid-table tbody tr.data-row > td.selection-cell.is-selected .selection-row-checkbox,
+  .data-grid-table
+    tbody
+    tr.data-row
+    > td.selection-cell:has(input.grid-checkbox:focus-visible)
+    .selection-row-checkbox {
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+  }
+
+  .engineers-salary-reference-data-grid:has(> .grid-footer-stack)
+    .data-grid-table
+    tbody:not(.grouped-display-body)
+    tr.data-row:last-of-type
+    > td:not(:focus-visible) {
+    box-shadow: inset -1px 0 0 var(--dg-clickup-grid-line) !important;
+  }
+
+  .engineers-salary-reference-data-grid:has(> .grid-footer-stack)
+    .data-grid-table
+    tbody:not(.grouped-display-body)
+    tr.data-row:last-of-type
+    > td:last-child:not(:focus-visible) {
+    box-shadow: none !important;
+  }
+
+  .engineers-salary-reference-data-grid:has(> .grid-footer-stack)
+    .data-grid-table
+    tbody:not(.grouped-display-body)
+    tr.data-row:last-of-type
+    > td.selection-cell:not(:focus-visible) {
+    box-shadow: inset -1px 0 0 var(--dg-clickup-grid-line) !important;
+  }
+
+  // ===== Pagination Footer =====
+  .grid-pagination-footer {
+    position: relative !important;
+    z-index: 6000 !important;
+    overflow: visible !important;
+    flex: 0 0 auto !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 8px !important;
+    background: transparent !important;
+    backdrop-filter: none !important;
+    border-top: 0 !important;
+    padding: 4px 10px 6px !important;
+
+    .pagination-left {
+      display: flex !important;
+      align-items: center !important;
+      gap: 10px !important;
+      flex-wrap: nowrap !important;
+
+      .grid-action-slot-footer {
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        margin-right: 8px !important;
+        padding-right: 8px !important;
+        border-right: 1px solid var(--dg-clickup-footer-divider) !important;
+      }
+
+      .grid-action-slot-footer:empty {
+        display: none !important;
+      }
+    }
+
+    .pagination-right {
+      display: flex !important;
+      align-items: center !important;
+      gap: 6px !important;
+      margin-inline-start: auto !important;
+
+      .page-indicator {
+        opacity: 0.76 !important;
+        padding: 0 8px !important;
+        font-size: 11px !important;
+        color: var(--dg-clickup-page-text) !important;
+      }
+
+      .pagination-btn {
+        height: 20px !important;
+        padding: 0 6px !important;
+        border-radius: 6px !important;
+        background: transparent !important;
+        border: 1px solid transparent !important;
+        color: var(--dg-clickup-page-text) !important;
+        font-size: 10px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 4px !important;
+        cursor: pointer !important;
+
+        &:disabled {
+          opacity: 0.3 !important;
+          cursor: not-allowed !important;
+        }
+      }
+    }
+  }
+
+  // ===== Page Size Dropdown =====
+  .size-dd {
+    position: relative !important;
+
+    .btn {
+      padding-inline-end: 26px !important;
+    }
+
+    .menu {
+      position: absolute !important;
+      right: 0 !important;
+      bottom: calc(100% + 8px) !important;
+      list-style: none !important;
+      margin: 0 !important;
+      padding: 6px !important;
+      min-width: 120px !important;
+      border-radius: 12px !important;
+      background: var(--dg-clickup-menu-bg) !important;
+      border: 1px solid var(--dg-clickup-menu-border) !important;
+      box-shadow: var(--dg-clickup-menu-shadow) !important;
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 2px !important;
+      z-index: 3000 !important;
+
+      li {
+        height: 34px !important;
+        display: flex !important;
+        align-items: center !important;
+        padding: 0 10px !important;
+        border-radius: 10px !important;
+        cursor: pointer !important;
+        font-weight: 600 !important;
+
+        &.active {
+          outline: 1px solid var(--dg-clickup-menu-active-outline) !important;
+          background: var(--dg-clickup-menu-active-bg) !important;
+          color: var(--dg-clickup-menu-active-text) !important;
+        }
+      }
+    }
+  }
+
+  // ===== Button Styles =====
+  .btn {
+    background: var(--dg-clickup-control-surface) !important;
+    border: 1px solid var(--dg-clickup-control-surface-border) !important;
+    color: var(--dg-clickup-control-surface-text) !important;
+    padding: 0 12px !important;
+    border-radius: 8px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    cursor: pointer !important;
+
+    &.sm {
+      font-size: 12.5px !important;
+    }
+
+    &.ghost {
+      background: transparent !important;
+    }
+
+    &.h-ctrl {
+      height: 34px !important;
+      border-radius: 10px !important;
+    }
+  }
+
+  // ===== Hide Unwanted Elements =====
+  .debug-chip,
+  .freshness-indicator,
+  .headline-row,
+  .mega-menu-overlay,
+  .row-group-panel {
+    display: none !important;
+  }
+}
+
+:host-context(html.theme-no-anim) ::ng-deep .engineers-salary-reference-data-grid .selection-cell,
+:host-context(html.theme-no-anim) ::ng-deep .engineers-salary-reference-data-grid .selection-cell::before,
+:host-context(html.theme-no-anim) ::ng-deep .engineers-salary-reference-data-grid .selection-cell::after,
+:host-context(html.theme-no-anim) ::ng-deep .engineers-salary-reference-data-grid .selection-cell input[type='checkbox'],
+:host-context(html.theme-no-anim)
+  ::ng-deep
+  .engineers-salary-reference-data-grid
+  .selection-cell
+  input[type='checkbox']::before,
+:host-context(html.theme-no-anim)
+  ::ng-deep
+  .engineers-salary-reference-data-grid
+  .selection-cell
+  input[type='checkbox']::after,
+:host-context(body.theme-switching) ::ng-deep .engineers-salary-reference-data-grid .selection-cell,
+:host-context(body.theme-switching) ::ng-deep .engineers-salary-reference-data-grid .selection-cell::before,
+:host-context(body.theme-switching) ::ng-deep .engineers-salary-reference-data-grid .selection-cell::after,
+:host-context(body.theme-switching)
+  ::ng-deep
+  .engineers-salary-reference-data-grid
+  .selection-cell
+  input[type='checkbox'],
+:host-context(body.theme-switching)
+  ::ng-deep
+  .engineers-salary-reference-data-grid
+  .selection-cell
+  input[type='checkbox']::before,
+:host-context(body.theme-switching)
+  ::ng-deep
+  .engineers-salary-reference-data-grid
+  .selection-cell
+  input[type='checkbox']::after {
+  transition: none !important;
+  animation: none !important;
+}

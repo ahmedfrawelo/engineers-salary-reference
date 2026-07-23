@@ -1,0 +1,352 @@
+<main class="auth-page" [class.signup-mode]="isSignupMode">
+  <section class="access-console" aria-label="ENGREF secure access">
+    <section class="brand-stage" aria-label="ENGREF overview">
+      <header class="brand-head">
+        <img src="assets/brand/engineers-reference-wordmark.svg" alt="ENGREF" />
+      </header>
+
+      <div class="brand-copy">
+        <div class="brand-kicker">
+          <span>{{ isSignupMode ? 'Approval workflow' : 'ENGREF' }}</span>
+          <span>{{ isSignupMode ? 'Access request' : 'Secure access' }}</span>
+        </div>
+        <h1>
+          @if (isSignupMode) {
+            <span>Request workspace</span>
+            <span>access</span>
+          } @else {
+            <span>Controlled workspace</span>
+            <span>access</span>
+          }
+        </h1>
+        <p>
+          @if (isSignupMode) {
+            Submit an access request for Engineers Reference review before entering the workspace.
+          } @else {
+            Continue to projects, approvals, documents, supplier data, and operational workflows.
+          }
+        </p>
+      </div>
+
+      <div class="workspace-preview" aria-hidden="true">
+        <div class="preview-head">
+          <span>Workspace status</span>
+          <strong>{{ isSignupMode ? 'Review queue' : 'Online' }}</strong>
+        </div>
+        <div class="preview-grid">
+          <div>
+            <span>Projects</span>
+            <strong>{{ isSignupMode ? 'Pending' : 'Ready' }}</strong>
+          </div>
+          <div>
+            <span>Approvals</span>
+            <strong>Controlled</strong>
+          </div>
+          <div>
+            <span>Documents</span>
+            <strong>Secured</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="policy-strip" aria-hidden="true">
+        <span>Admin governed</span>
+        <span>Audit ready</span>
+        <span>Company access</span>
+      </div>
+
+      <aside
+        class="quote-panel"
+        [class.visible]="quoteVisible()"
+        [attr.dir]="isArabicQuote() ? 'rtl' : 'ltr'"
+        aria-live="polite"
+      >
+        <span>{{ isArabicQuote() ? 'اقتباس اليوم' : 'Daily quote' }}</span>
+        <p>{{ displayQuote() }}</p>
+      </aside>
+    </section>
+
+    <section
+      class="form-stage"
+      role="region"
+      [attr.aria-label]="isSignupMode ? 'Sign up panel' : 'Sign in panel'"
+    >
+      <header class="panel-head">
+        <span>{{ isSignupMode ? 'Create request' : 'Authorized users' }}</span>
+        <h2>{{ isSignupMode ? 'Create account request' : 'Sign in' }}</h2>
+        <p>
+          @if (isSignupMode) {
+            Google and email requests both wait for admin approval.
+          } @else {
+            Use Google or your Engineers Reference credentials.
+          }
+        </p>
+      </header>
+
+      <div class="access-state" aria-label="Access state">
+        <div>
+          <span>Mode</span>
+          <strong>{{ isSignupMode ? 'Request' : 'Login' }}</strong>
+        </div>
+        <div>
+          <span>Status</span>
+          <strong>{{ isSignupMode ? 'Approval needed' : 'Protected' }}</strong>
+        </div>
+      </div>
+
+      @if (googleAuthEnabled) {
+        <button
+          type="button"
+          class="google-btn"
+          (click)="continueWithGoogle($event)"
+          [disabled]="loading() || googleLoading()"
+          [attr.aria-busy]="googleLoading() ? 'true' : null"
+        >
+          <span class="google-mark">
+            <img src="assets/brand/google-g.svg" alt="" aria-hidden="true" />
+          </span>
+          <span>{{ googleLoading() ? 'Opening Google...' : 'Continue with Google' }}</span>
+        </button>
+
+        <div class="divider"><span>or</span></div>
+      }
+
+      <form [formGroup]="form" (ngSubmit)="submit($event)" novalidate>
+        @if (isSignupMode) {
+          <div
+            floatingOutlineLabel
+            class="field"
+            [class.filled]="hasValue('fullName')"
+            [class.invalid]="isFieldInvalid('fullName')"
+          >
+            <input
+              id="fullName"
+              class="input"
+              type="text"
+              formControlName="fullName"
+              placeholder="Enter your full name"
+              autocomplete="name"
+              aria-label="Full name"
+              [attr.aria-invalid]="isFieldInvalid('fullName')"
+            />
+            <label class="field-legend" for="fullName">Full name</label>
+          </div>
+        }
+
+        <div
+          floatingOutlineLabel
+          class="field"
+          [class.filled]="hasValue('email')"
+          [class.invalid]="isFieldInvalid('email')"
+        >
+          <input
+            id="email"
+            class="input"
+            type="email"
+            formControlName="email"
+            placeholder="Enter your email"
+            autocomplete="email"
+            aria-label="Email"
+            autocapitalize="none"
+            spellcheck="false"
+            [attr.aria-invalid]="isFieldInvalid('email')"
+          />
+          <label class="field-legend" for="email">Email</label>
+        </div>
+
+        @if (isSignupMode) {
+          <div
+            floatingOutlineLabel
+            class="field has-eye"
+            [class.filled]="hasValue('password')"
+            [class.invalid]="isFieldInvalid('password')"
+          >
+            <input
+              id="password"
+              class="input"
+              [type]="showPassword() ? 'text' : 'password'"
+              formControlName="password"
+              placeholder="Create a strong password"
+              autocomplete="new-password"
+              aria-label="Password"
+              [attr.aria-invalid]="isFieldInvalid('password')"
+            />
+            <label class="field-legend" for="password">Password</label>
+            <button
+              type="button"
+              class="eye"
+              (click)="togglePassword('main')"
+              [attr.aria-pressed]="showPassword()"
+              [attr.aria-label]="showPassword() ? 'Hide password' : 'Show password'"
+            >
+              @if (!showPassword()) {
+                <hugeicons-icon
+                  [icon]="passwordHiddenIcon"
+                  [size]="18"
+                  [strokeWidth]="1.9"
+                  aria-hidden="true"
+                ></hugeicons-icon>
+              }
+              @if (showPassword()) {
+                <hugeicons-icon
+                  [icon]="passwordVisibleIcon"
+                  [size]="18"
+                  [strokeWidth]="1.9"
+                  aria-hidden="true"
+                ></hugeicons-icon>
+              }
+            </button>
+          </div>
+
+          <div
+            floatingOutlineLabel
+            class="field has-eye"
+            [class.filled]="hasValue('confirmPassword')"
+            [class.invalid]="isConfirmPasswordInvalid()"
+          >
+            <input
+              id="confirmPassword"
+              class="input"
+              [type]="showConfirmPassword() ? 'text' : 'password'"
+              formControlName="confirmPassword"
+              placeholder="Repeat your password"
+              autocomplete="new-password"
+              aria-label="Confirm password"
+              [attr.aria-invalid]="isConfirmPasswordInvalid()"
+            />
+            <label class="field-legend" for="confirmPassword">Confirm password</label>
+            <button
+              type="button"
+              class="eye"
+              (click)="togglePassword('confirm')"
+              [attr.aria-pressed]="showConfirmPassword()"
+              [attr.aria-label]="showConfirmPassword() ? 'Hide password' : 'Show password'"
+            >
+              @if (!showConfirmPassword()) {
+                <hugeicons-icon
+                  [icon]="passwordHiddenIcon"
+                  [size]="18"
+                  [strokeWidth]="1.9"
+                  aria-hidden="true"
+                ></hugeicons-icon>
+              }
+              @if (showConfirmPassword()) {
+                <hugeicons-icon
+                  [icon]="passwordVisibleIcon"
+                  [size]="18"
+                  [strokeWidth]="1.9"
+                  aria-hidden="true"
+                ></hugeicons-icon>
+              }
+            </button>
+          </div>
+        } @else {
+          <div
+            floatingOutlineLabel
+            class="field has-eye"
+            [class.filled]="hasValue('password')"
+            [class.invalid]="isFieldInvalid('password')"
+          >
+            <input
+              id="password"
+              class="input"
+              [type]="showPassword() ? 'text' : 'password'"
+              formControlName="password"
+              placeholder="Enter your password"
+              autocomplete="current-password"
+              aria-label="Password"
+              [attr.aria-invalid]="isFieldInvalid('password')"
+            />
+            <label class="field-legend" for="password">Password</label>
+            <button
+              type="button"
+              class="eye"
+              (click)="togglePassword('main')"
+              [attr.aria-pressed]="showPassword()"
+              [attr.aria-label]="showPassword() ? 'Hide password' : 'Show password'"
+            >
+              @if (!showPassword()) {
+                <hugeicons-icon
+                  [icon]="passwordHiddenIcon"
+                  [size]="18"
+                  [strokeWidth]="1.9"
+                  aria-hidden="true"
+                ></hugeicons-icon>
+              }
+              @if (showPassword()) {
+                <hugeicons-icon
+                  [icon]="passwordVisibleIcon"
+                  [size]="18"
+                  [strokeWidth]="1.9"
+                  aria-hidden="true"
+                ></hugeicons-icon>
+              }
+            </button>
+          </div>
+        }
+
+        @if (!isSignupMode) {
+          <div class="login-tools">
+            <button
+              type="button"
+              class="chip"
+              [class.active]="form.controls.remember.value"
+              (click)="form.controls.remember.setValue(!form.controls.remember.value)"
+            >
+              <span class="dot"></span>
+              <span class="txt">Remember me</span>
+            </button>
+            <a class="text-link" routerLink="/login/forgot-password">Forgot password?</a>
+          </div>
+        }
+
+        @if (isSignupMode) {
+          <label class="terms-control" [class.invalid]="isTermsInvalid()">
+            <input type="checkbox" formControlName="acceptTerms" />
+            <span>
+              <strong>Admin approval required</strong>
+              I agree to submit this request for Engineers Reference review.
+            </span>
+          </label>
+        }
+
+        <button
+          class="btn"
+          [class.needs-terms]="isSignupMode && !form.controls.acceptTerms.value"
+          type="submit"
+          [class.armed]="form.valid && (!isSignupMode || !!form.controls.acceptTerms.value)"
+          [disabled]="loading()"
+          [attr.aria-busy]="loading() ? 'true' : null"
+        >
+          <span>
+            {{
+              loading()
+                ? isSignupMode
+                  ? 'Sending request...'
+                  : 'Signing in...'
+                : isSignupMode
+                  ? 'Send request'
+                  : 'Sign in'
+            }}
+          </span>
+        </button>
+      </form>
+
+      <div class="switch-row">
+        @if (isSignupMode) {
+          Already approved?
+          <a routerLink="/login">Sign in</a>
+        } @else {
+          @if (selfRegistrationEnabled) {
+              New to Engineers Reference?
+            <a routerLink="/signup">Create an account</a>
+          } @else {
+            Account access is managed by administrators.
+          }
+        }
+      </div>
+
+      <footer class="page-foot">&copy; {{ year }} ENGREF - All rights reserved</footer>
+    </section>
+  </section>
+</main>

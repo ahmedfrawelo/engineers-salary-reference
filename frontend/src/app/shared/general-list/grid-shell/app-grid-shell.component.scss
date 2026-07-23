@@ -1,0 +1,59 @@
+:host {
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+}
+
+.tgs-shell {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.tgs-header:empty,
+.tgs-actions:empty {
+  display: none;
+}
+
+.tgs-header:not(:has(> *)),
+.tgs-actions:not(:has(> *)) {
+  display: none !important;
+}
+
+.tgs-header,
+.tgs-actions {
+  flex: 0 0 auto;
+}
+
+.tgs-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.tgs-body > * {
+  min-height: 0;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.tgs-body-loading {
+  overflow: auto;
+}

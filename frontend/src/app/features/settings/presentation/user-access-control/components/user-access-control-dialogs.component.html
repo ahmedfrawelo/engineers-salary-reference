@@ -1,0 +1,188 @@
+﻿@if (deleteCandidate()) {
+  <div class="modal-backdrop" (click)="closeDeleteModal()">
+    <div class="modal-card" role="dialog" aria-modal="true" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Delete user?</h3>
+        <button type="button" class="btn-icon" (click)="closeDeleteModal()" [disabled]="saving()">
+          <hugeicons-icon
+            class="access-huge-icon"
+            [icon]="hugeIcons.close"
+            [size]="18"
+            [strokeWidth]="2"
+            aria-hidden="true"
+          ></hugeicons-icon>
+        </button>
+      </div>
+      <p class="modal-body">
+        You are about to remove
+        <strong>{{ deleteCandidate()?.name || 'this user' }}</strong>
+        @if (deleteCandidate()?.email) {
+          <span>({{ deleteCandidate()?.email }})</span>
+        }
+        from the workspace. The account will be suspended and can be restored later if needed.
+      </p>
+      <div class="modal-actions">
+        <button
+          type="button"
+          class="btn-sm btn-ghost"
+          (click)="closeDeleteModal()"
+          [disabled]="saving()"
+        >
+          Cancel
+        </button>
+        <button
+          type="button"
+          class="btn-sm btn-danger"
+          (click)="confirmDeleteUser()"
+          [disabled]="saving() || !canDeleteAccessControlUser()"
+        >
+          {{ saving() ? 'Deleting...' : 'Delete' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (hardDeleteCandidate()) {
+  <div class="modal-backdrop" (click)="closeHardDeleteModal()">
+    <div class="modal-card" role="dialog" aria-modal="true" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Permanently delete user?</h3>
+        <button
+          type="button"
+          class="btn-icon"
+          (click)="closeHardDeleteModal()"
+          [disabled]="saving()"
+        >
+          <hugeicons-icon
+            class="access-huge-icon"
+            [icon]="hugeIcons.close"
+            [size]="18"
+            [strokeWidth]="2"
+            aria-hidden="true"
+          ></hugeicons-icon>
+        </button>
+      </div>
+      <p class="modal-body">
+        You are about to permanently remove
+        <strong>{{ hardDeleteCandidate()?.name || 'this user' }}</strong>
+        @if (hardDeleteCandidate()?.email) {
+          <span>({{ hardDeleteCandidate()?.email }})</span>
+        }
+        from the database. <strong>This action cannot be undone.</strong>
+        All data associated with this account will be lost.
+      </p>
+      <div class="modal-actions">
+        <button
+          type="button"
+          class="btn-sm btn-ghost"
+          (click)="closeHardDeleteModal()"
+          [disabled]="saving()"
+        >
+          Cancel
+        </button>
+        <button
+          type="button"
+          class="btn-sm btn-danger"
+          (click)="confirmHardDelete()"
+          [disabled]="saving() || !canDeleteAccessControlUser()"
+        >
+          {{ saving() ? 'Deleting...' : 'Delete permanently' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (deleteRoleCandidate()) {
+  <div class="modal-backdrop" (click)="closeDeleteRoleModal()">
+    <div class="modal-card" role="dialog" aria-modal="true" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Delete role?</h3>
+        <button
+          type="button"
+          class="btn-icon"
+          (click)="closeDeleteRoleModal()"
+          [disabled]="rolesLoading()"
+        >
+          <hugeicons-icon
+            class="access-huge-icon"
+            [icon]="hugeIcons.close"
+            [size]="18"
+            [strokeWidth]="2"
+            aria-hidden="true"
+          ></hugeicons-icon>
+        </button>
+      </div>
+      <p class="modal-body">
+        You are about to permanently delete the role
+        <strong>{{ deleteRoleCandidate()?.name }}</strong
+        >. Users assigned to this role will lose the associated permissions.
+      </p>
+      <div class="modal-actions">
+        <button
+          type="button"
+          class="btn-sm btn-ghost"
+          (click)="closeDeleteRoleModal()"
+          [disabled]="rolesLoading()"
+        >
+          Cancel
+        </button>
+        <button
+          type="button"
+          class="btn-sm btn-danger"
+          (click)="confirmDeleteRole()"
+          [disabled]="rolesLoading() || !canManageAccessControlRoles()"
+        >
+          {{ rolesLoading() ? 'Deleting...' : 'Delete role' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (bulkDeleteCount()) {
+  <div class="modal-backdrop" (click)="closeBulkDeleteModal()">
+    <div class="modal-card" role="dialog" aria-modal="true" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Delete selected users?</h3>
+        <button
+          type="button"
+          class="btn-icon"
+          (click)="closeBulkDeleteModal()"
+          [disabled]="saving()"
+        >
+          <hugeicons-icon
+            class="access-huge-icon"
+            [icon]="hugeIcons.close"
+            [size]="18"
+            [strokeWidth]="2"
+            aria-hidden="true"
+          ></hugeicons-icon>
+        </button>
+      </div>
+      <p class="modal-body">
+        You are about to delete <strong>{{ bulkDeleteCount() }}</strong> users. The accounts will be
+        suspended and can be restored later if needed.
+      </p>
+      <div class="modal-actions">
+        <button
+          type="button"
+          class="btn-sm btn-ghost"
+          (click)="closeBulkDeleteModal()"
+          [disabled]="saving()"
+        >
+          Cancel
+        </button>
+        <button
+          type="button"
+          class="btn-sm btn-danger"
+          (click)="confirmBulkDelete()"
+          [disabled]="saving()"
+        >
+          {{ saving() ? 'Deleting...' : 'Delete' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

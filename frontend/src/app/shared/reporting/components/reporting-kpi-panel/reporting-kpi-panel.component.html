@@ -1,0 +1,29 @@
+<section class="kpi-panel">
+  <div class="kpi-grid">
+    @for (kpi of kpis; track kpi.label) {
+      <article class="kpi-card" [class]="'kpi-card tone-' + kpi.tone">
+        <div class="kpi-card__top">
+          <span class="kpi-label">{{ kpi.label }}</span>
+          @if (kpi.delta) {
+            <span class="kpi-delta" [class]="kpi.trend || 'flat'">
+              <i
+                [appIcon]="
+                  kpi.trend === 'up'
+                    ? 'arrow-up-right'
+                    : kpi.trend === 'down'
+                      ? 'arrow-down-right'
+                      : 'dash-lg'
+                "
+                aria-hidden="true"
+              ></i>
+              {{ kpi.delta }}
+            </span>
+          }
+        </div>
+
+        <strong class="kpi-value">{{ kpi.value }}</strong>
+        <small class="kpi-note">{{ kpi.note }}</small>
+      </article>
+    }
+  </div>
+</section>

@@ -1,0 +1,130 @@
+﻿<overlay-panel
+  page-overlay
+  [open]="createUserPanelOpen()"
+  [title]="'Create workspace user'"
+  [subtitle]="'Add a new seat from the shared access-control workspace.'"
+  [panelClass]="'access-create-overlay'"
+  [draggable]="false"
+  [closeDanger]="false"
+  [minWidth]="520"
+  [maxWidth]="860"
+  [maxHeight]="760"
+  [fitRatioWDesktop]="0.62"
+  [fitRatioHDesktop]="0.88"
+  [fitRatioWMobile]="0.94"
+  [fitRatioHMobile]="0.94"
+  (closed)="closeCreateUserPanel()"
+>
+  <div class="access-create-form">
+    @if (error()) {
+      <div class="access-inline-message access-inline-message--error">
+        <div class="access-inline-message__copy">
+          <hugeicons-icon
+            class="access-huge-icon"
+            [icon]="hugeIcons.alert"
+            [size]="16"
+            [strokeWidth]="1.9"
+            aria-hidden="true"
+          ></hugeicons-icon>
+          <span>{{ error() }}</span>
+        </div>
+        <div class="access-inline-message__actions">
+          @if (restoreCandidate() && canEditAccessControlUser()) {
+            <button
+              type="button"
+              class="btn-sm btn-ghost"
+              (click)="submitRestoreDeletedUserFromPanel()"
+              [disabled]="saving() || restoring()"
+            >
+              {{ restoring() ? 'Restoring...' : 'Restore user' }}
+            </button>
+          }
+        </div>
+      </div>
+    }
+
+    <section class="access-create-form__section">
+      <div class="access-create-form__section-head">
+        <p class="access-section-kicker">Directory intake</p>
+        <h2 class="access-create-form__section-title">Workspace user</h2>
+        <p class="muted">Add the core identity for the new workspace seat from one shared panel.</p>
+      </div>
+
+      <div class="access-create-form__grid access-create-form__grid--identity">
+        <label class="field">
+          <span>Name*</span>
+          <input type="text" placeholder="Full name" [(ngModel)]="profile.name" />
+        </label>
+        <label class="field">
+          <span>Email*</span>
+          <input type="email" placeholder="user@email.com" [(ngModel)]="profile.email" />
+        </label>
+        <label class="field">
+          <span>Phone</span>
+          <input type="tel" placeholder="e.g. +966 5x xxx xxxx" [(ngModel)]="profile.phoneNumber" />
+        </label>
+        <label class="field">
+          <span>Password*</span>
+          <input
+            type="password"
+            placeholder="Set a temporary password"
+            [(ngModel)]="profile.password"
+          />
+        </label>
+      </div>
+    </section>
+
+    <section class="access-create-form__section">
+      <div class="access-create-form__section-head">
+        <h3 class="access-create-form__section-title">Access assignment</h3>
+        <p class="muted">Choose the invitation status and initial role before save.</p>
+      </div>
+
+      <div class="access-create-form__grid access-create-form__grid--access">
+        <label class="field">
+          <span>Status</span>
+          <app-custom-dropdown
+            [options]="createStatusOptions"
+            [value]="profile.status"
+            (valueChange)="profile.status = $event"
+            placeholder="Select status"
+          >
+          </app-custom-dropdown>
+        </label>
+        <label class="field">
+          <span>Role</span>
+          <app-custom-dropdown
+            [options]="roleDropdownOptions()"
+            [value]="profile.role"
+            (valueChange)="profile.role = $event"
+            placeholder="Select role"
+          >
+          </app-custom-dropdown>
+        </label>
+      </div>
+    </section>
+
+    <p class="access-create-form__note">
+      Password must include uppercase, lowercase, and number characters.
+    </p>
+
+    <div class="access-create-form__actions">
+      <button
+        type="button"
+        class="btn-sm btn-primary"
+        (click)="submitCreateUserFromPanel()"
+        [disabled]="saving() || restoring()"
+      >
+        {{ saving() ? 'Creating...' : 'Create user' }}
+      </button>
+      <button
+        type="button"
+        class="btn-sm btn-ghost"
+        (click)="resetCreateUserDraft()"
+        [disabled]="saving() || restoring()"
+      >
+        Clear
+      </button>
+    </div>
+  </div>
+</overlay-panel>

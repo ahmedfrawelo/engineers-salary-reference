@@ -1,0 +1,279 @@
+@use 'sass:list';
+
+@mixin stretch-underline-tabs-theme(
+  $tabs-selector: '.tabs-nav',
+  $tab-selector: '.tab-btn',
+  $icon-selector: '.tab-icon',
+  $label-selector: '.tab-label',
+  $badge-selector: '.tab-badge',
+  $indicator-selector: '.stretch-tabs-indicator',
+  $enter-keyframes-name: stretch-tabs-enter,
+  $badge-keyframes-name: stretch-tabs-badge-pop,
+  $tab-stagger-delays: (
+    0.02s,
+    0.05s,
+    0.08s,
+    0.11s
+  ),
+  $tabs-gap: var(--supplier-dossier-tabs-gap, 8px),
+  $tabs-padding-bottom: var(--supplier-dossier-tabs-padding-bottom, 10px),
+  $tabs-justify: center,
+  $tabs-divider: var(--supplier-dossier-outline, 1px solid var(--app-color-divider)),
+  $tabs-divider-bleed: calc(var(--stretch-tabs-current-inline-padding, 0px) * -1),
+  $tab-height: var(--supplier-dossier-tab-height, 42px),
+  $tab-padding: var(--supplier-dossier-tab-padding, 4px 20px 13px),
+  $tab-gap: var(--supplier-dossier-tab-gap, 9px),
+  $tab-color: var(--supplier-dossier-tab-color, var(--app-color-tab-inactive)),
+  $tab-hover-color: var(--app-color-tab-hover),
+  $tab-active-color: var(--supplier-dossier-tab-active-color, var(--app-color-tab-active)),
+  $icon-width: 24px,
+  $icon-size: var(--supplier-dossier-tab-icon-size, 15px),
+  $label-size: var(--supplier-dossier-tab-label-size, 14px),
+  $label-weight: var(--supplier-dossier-tab-label-weight, 700),
+  $badge-min-width: 20px,
+  $badge-height: 20px,
+  $badge-padding: 0 6px,
+  $badge-background: var(--supplier-dossier-tab-badge-bg, var(--app-color-tab-badge-bg)),
+  $badge-active-background: color-mix(in oklab, var(--app-color-primary) 18%, transparent),
+  $badge-color: var(--supplier-dossier-tab-badge-color, var(--app-color-tab-badge-text)),
+  $badge-font-size: var(--supplier-dossier-tab-badge-size, 11px),
+  $badge-font-weight: var(--supplier-dossier-tab-badge-weight, 800),
+  $indicator-height: 2px,
+  $indicator-color: var(--app-color-tab-indicator)
+) {
+  @keyframes #{$enter-keyframes-name} {
+    from {
+      opacity: 0;
+      transform: translateY(-6px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes #{$badge-keyframes-name} {
+    from {
+      opacity: 0;
+      transform: translateY(4px) scale(0.98);
+    }
+
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  #{$tabs-selector} {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: $tabs-justify;
+    flex-wrap: wrap;
+    gap: $tabs-gap;
+    flex: 0 0 auto;
+    min-width: 0;
+    padding-bottom: $tabs-padding-bottom;
+    border-bottom: 0;
+  }
+
+  #{$tabs-selector}::after {
+    content: '';
+    position: absolute;
+    right: $tabs-divider-bleed;
+    bottom: 0;
+    left: $tabs-divider-bleed;
+    border-bottom: $tabs-divider;
+    pointer-events: none;
+  }
+
+  #{$indicator-selector} {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: $indicator-height;
+    border-radius: 999px;
+    background: $indicator-color;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 1;
+    will-change: left, width;
+    transition: none;
+  }
+
+  #{$indicator-selector}.is-visible {
+    opacity: 1;
+  }
+
+  #{$tab-selector} {
+    position: relative;
+    flex: 0 0 auto;
+    height: $tab-height;
+    min-height: $tab-height;
+    padding: $tab-padding;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: $tab-color;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: $tab-gap;
+    line-height: 1;
+    box-sizing: border-box;
+    cursor: pointer;
+    isolation: isolate;
+    z-index: 2;
+    animation: #{$enter-keyframes-name} 0.28s cubic-bezier(0.22, 0.82, 0.36, 1) both;
+    transition: color 0.18s ease;
+  }
+
+  @for $i from 1 through list.length($tab-stagger-delays) {
+    #{$tab-selector}:nth-child(#{$i}) {
+      animation-delay: list.nth($tab-stagger-delays, $i);
+    }
+  }
+
+  #{$tab-selector}:hover,
+  #{$tab-selector}:focus-visible {
+    outline: none;
+    background: transparent;
+    box-shadow: none;
+    transform: none;
+    color: $tab-hover-color;
+  }
+
+  #{$tab-selector}.active {
+    background: transparent;
+    box-shadow: none;
+    transform: none;
+    color: $tab-active-color;
+  }
+
+  #{$icon-selector} {
+    width: $icon-width;
+    font-size: $icon-size;
+    display: grid;
+    place-items: center;
+    align-self: center;
+    line-height: 1;
+    color: currentColor;
+    transition: color 0.18s ease;
+  }
+
+  #{$label-selector} {
+    display: block;
+    white-space: nowrap;
+    font-size: $label-size;
+    font-weight: $label-weight;
+    line-height: 1;
+    letter-spacing: 0.01em;
+    color: currentColor;
+    transition: color 0.18s ease;
+  }
+
+  #{$badge-selector} {
+    min-width: $badge-min-width;
+    height: $badge-height;
+    padding: $badge-padding;
+    border-radius: 999px;
+    border: 0;
+    background: $badge-background;
+    color: $badge-color;
+    font-size: $badge-font-size;
+    font-weight: $badge-font-weight;
+    line-height: $badge-height;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    animation: #{$badge-keyframes-name} 0.15s ease-out;
+    transition:
+      transform 0.18s ease,
+      background-color 0.18s ease,
+      color 0.18s ease;
+  }
+
+  #{$tab-selector}:hover #{$badge-selector} {
+    transform: translateY(-1px);
+  }
+
+  #{$tab-selector}.active #{$badge-selector} {
+    background: $badge-active-background;
+    color: var(--app-color-primary);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #{$indicator-selector},
+    #{$tab-selector},
+    #{$icon-selector},
+    #{$label-selector},
+    #{$badge-selector} {
+      animation: none;
+      transition: none;
+    }
+  }
+}
+
+@mixin app-navigation-tabs-theme(
+  $tabs-selector: '.tabs',
+  $tab-selector: '.tab',
+  $icon-selector: '.tab-icon',
+  $label-selector: '.tab-label',
+  $badge-selector: '.tab-badge',
+  $indicator-selector: '.stretch-tabs-indicator',
+  $enter-keyframes-name: app-navigation-tabs-enter,
+  $badge-keyframes-name: app-navigation-tabs-badge-pop,
+  $tab-stagger-delays: (
+    0.02s,
+    0.05s,
+    0.08s,
+    0.11s
+  ),
+  $tabs-gap: 4px,
+  $tabs-padding-bottom: 8px,
+  $tabs-justify: flex-start,
+  $tabs-divider: 1px solid color-mix(in oklab, rgb(var(--border)) 55%, transparent),
+  $tabs-divider-bleed: calc(var(--stretch-tabs-current-inline-padding) * -1),
+  $tab-height: 32px,
+  $tab-padding: 0 8px,
+  $tab-gap: 0,
+  $tab-color: color-mix(in oklab, rgb(var(--fg)) 72%, transparent),
+  $tab-hover-color: color-mix(in oklab, rgb(var(--fg)) 92%, rgb(var(--primary)) 8%),
+  $tab-active-color: rgb(var(--primary)),
+  $icon-width: 24px,
+  $icon-size: 15px,
+  $label-size: 10px,
+  $label-weight: 650,
+  $indicator-height: 2px,
+  $indicator-color: rgb(var(--primary))
+) {
+  @include stretch-underline-tabs-theme(
+    $tabs-selector: $tabs-selector,
+    $tab-selector: $tab-selector,
+    $icon-selector: $icon-selector,
+    $label-selector: $label-selector,
+    $badge-selector: $badge-selector,
+    $indicator-selector: $indicator-selector,
+    $enter-keyframes-name: $enter-keyframes-name,
+    $badge-keyframes-name: $badge-keyframes-name,
+    $tab-stagger-delays: $tab-stagger-delays,
+    $tabs-gap: $tabs-gap,
+    $tabs-padding-bottom: $tabs-padding-bottom,
+    $tabs-justify: $tabs-justify,
+    $tabs-divider: $tabs-divider,
+    $tabs-divider-bleed: $tabs-divider-bleed,
+    $tab-height: $tab-height,
+    $tab-padding: $tab-padding,
+    $tab-gap: $tab-gap,
+    $tab-color: $tab-color,
+    $tab-hover-color: $tab-hover-color,
+    $tab-active-color: $tab-active-color,
+    $icon-width: $icon-width,
+    $icon-size: $icon-size,
+    $label-size: $label-size,
+    $label-weight: $label-weight,
+    $indicator-height: $indicator-height,
+    $indicator-color: $indicator-color
+  );
+}

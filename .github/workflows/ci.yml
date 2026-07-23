@@ -1,0 +1,91 @@
+name: CI
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  backend:
+    name: Backend tests
+    runs-on: ubuntu-latest
+    services:
+      sqlserver:
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        env:
+          ACCEPT_EULA: Y
+          MSSQL_SA_PASSWORD: Ci!${{ github.run_id }}aB9
+        ports:
+          - 1433:1433
+        options: >-
+          --health-cmd "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P 'Ci!${{ github.run_id }}aB9' -C -Q 'SELECT 1'"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 12
+    env:
+      TEST_SQL_CONNECTION_STRING: Server=localhost,1433;User ID=sa;Password=Ci!${{ github.run_id }}aB9;Encrypt=False;TrustServerCertificate=True;MultipleActiveResultSets=true
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore
+        run: dotnet restore EngineersSalary.slnx
+
+      - name: Build
+        run: dotnet build EngineersSalary.slnx --configuration Release --no-restore
+
+      - name: Dependency vulnerability audit
+        run: dotnet list EngineersSalary.slnx package --vulnerable --include-transitive
+
+      - name: Test
+        run: dotnet test EngineersSalary.slnx --no-build --configuration Release
+
+  frontend:
+    name: Frontend tests and build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install
+        run: npm ci
+
+      - name: Dependency vulnerability audit
+        run: npm audit --omit=dev --audit-level=high
+
+      - name: Architecture
+        run: npm run architecture:check
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Test
+        run: npm test -- --watch=false
+
+      - name: Production build
+        run: npm run build:prod

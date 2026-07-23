@@ -1,0 +1,133 @@
+/* Unified shell footer visuals: pagination and aggregate/footer strips. */
+
+:host([data-grid-layout-preset='default']) .grid-pagination-footer,
+:host([data-grid-layout-preset='default']) .grid-pagination-footer {
+  height: var(--dg-shell-footer-height) !important;
+  min-height: var(--dg-shell-footer-height) !important;
+  max-height: var(--dg-shell-footer-height) !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  box-sizing: border-box !important;
+}
+
+:host([data-grid-layout-preset='default']) .grid-footer-stack {
+  background: var(--dg-shell-body-surface-bg) !important;
+  background-color: var(--dg-shell-body-surface-bg) !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+:host([data-grid-layout-preset='default'])
+  .grid-footer-stack.has-aggregate-band,
+:host([data-grid-layout-preset='default'])
+  .grid-footer-stack:has(> .grid-pagination-aggregate-band) {
+  flex: 0 0 calc(var(--dg-shell-footer-height) * 2) !important;
+  height: calc(var(--dg-shell-footer-height) * 2) !important;
+  min-height: calc(var(--dg-shell-footer-height) * 2) !important;
+  max-height: calc(var(--dg-shell-footer-height) * 2) !important;
+}
+
+:host([data-grid-layout-preset='default']) .grid-footer-stack > *,
+:host([data-grid-layout-preset='default']) .grid-footer-stack > * {
+  border: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+:host([data-grid-layout-preset='default']) .grid-footer-stack > :not(:first-child),
+:host([data-grid-layout-preset='default']) .grid-footer-stack > :not(:first-child) {
+  border-top: 0 !important;
+}
+
+:host([data-grid-layout-preset='default']) .grid-footer-stack .grid-pagination-footer,
+:host([data-grid-layout-preset='default']) .grid-footer-stack .grid-pagination-footer,
+:host([data-grid-layout-preset='default']) .grid-pagination-aggregate-band,
+:host([data-grid-layout-preset='default']) .grid-pagination-aggregate-band,
+:host([data-grid-layout-preset='default']) .grid-calculate-footer__viewport,
+:host([data-grid-layout-preset='default']) .grid-calculate-footer__viewport,
+:host([data-grid-layout-preset='default']) .grid-calculate-footer__row .grid-calculate-footer__cell,
+:host([data-grid-layout-preset='default'])
+  .grid-calculate-footer__row
+  .grid-calculate-footer__cell {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: 0 !important;
+  height: var(--dg-shell-footer-height) !important;
+  min-height: var(--dg-shell-footer-height) !important;
+  max-height: var(--dg-shell-footer-height) !important;
+  box-shadow: none !important;
+  box-sizing: border-box !important;
+}
+
+:host .grid-bottom-scrollbar-band,
+:host ::ng-deep .grid-bottom-scrollbar-band {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  flex: 0 0 auto;
+  min-height: calc(var(--scrollbar-size, 8px) + 2px);
+  align-items: stretch;
+  background: var(--dg-shell-body-surface-bg) !important;
+  border-top: 0 !important;
+  box-sizing: border-box;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+:host(.has-x-scroll) .grid-bottom-scrollbar-band,
+:host(.has-x-scroll) ::ng-deep .grid-bottom-scrollbar-band {
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
+:host .grid-bottom-scrollbar-spacer,
+:host ::ng-deep .grid-bottom-scrollbar-spacer {
+  flex: 0 0 var(--dg-pinned-left-width, 0px);
+  min-height: var(--scrollbar-size, 8px);
+  background: var(--dg-shell-body-surface-bg) !important;
+  box-shadow: inset -1px 0 0 var(--dg-shell-outline-color);
+}
+
+:host .grid-bottom-scrollbar-strip,
+:host ::ng-deep .grid-bottom-scrollbar-strip {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  overscroll-behavior-x: contain;
+  background: var(--dg-shell-body-surface-bg) !important;
+  scrollbar-gutter: stable !important;
+  scrollbar-width: thin;
+}
+
+:host .grid-bottom-scrollbar-track,
+:host ::ng-deep .grid-bottom-scrollbar-track {
+  height: 1px;
+  min-height: 1px;
+}
+
+:host .grid-bottom-scrollbar-strip::-webkit-scrollbar,
+:host ::ng-deep .grid-bottom-scrollbar-strip::-webkit-scrollbar {
+  height: var(--scrollbar-size, 8px);
+}
+
+:host .grid-bottom-scrollbar-strip::-webkit-scrollbar-track,
+:host ::ng-deep .grid-bottom-scrollbar-strip::-webkit-scrollbar-track {
+  background: var(--dg-bottom-scrollbar-track) !important;
+  border-radius: 999px !important;
+}
+
+:host .grid-bottom-scrollbar-strip::-webkit-scrollbar-thumb,
+:host ::ng-deep .grid-bottom-scrollbar-strip::-webkit-scrollbar-thumb {
+  background: var(--dg-bottom-scrollbar-thumb) !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+}
+
+:host .grid-bottom-scrollbar-strip::-webkit-scrollbar-thumb:hover,
+:host ::ng-deep .grid-bottom-scrollbar-strip::-webkit-scrollbar-thumb:hover {
+  background: var(--dg-bottom-scrollbar-thumb-hover) !important;
+}

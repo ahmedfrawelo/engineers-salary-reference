@@ -1,0 +1,426 @@
+<ng-content select="[page-overlay]"></ng-content>
+
+@if (!hideHeader) {
+  <header class="wsh__header" #pageHeader>
+    <div class="wsh__header-actions">
+      <ng-content select="[header-actions]"></ng-content>
+    </div>
+  </header>
+}
+
+<div
+  class="wsh__toolbar proj-page-tools"
+  #pageToolbar
+  role="toolbar"
+  [attr.aria-label]="toolbarAriaLabel"
+>
+  <div class="wsh__toolbar-left proj-page-tools__left">
+    @if (sharedTenderGridToolbar) {
+      @let groupLabel = sharedGroupLabel();
+      @let groupIcon = sharedGroupIcon();
+      @let groupOptions = sharedGroupOptions();
+      @let groupSelections = sharedGroupSelectionsUi();
+      @let groupField = sharedGroupByField();
+      @let groupingActive = sharedGroupingActive();
+      @let groupingExpanded = groupingActive ? sharedGroupingExpandedAll() : false;
+      <div class="proj-cu-chip-row">
+        @if (sharedTenderGridToolbarShowGrouping) {
+          <engineers-salary-reference-shared-group-menu
+            #sharedGroupMenuCmp
+            [label]="groupLabel"
+            [icon]="groupIcon"
+            [enableMultiGrouping]="true"
+            [options]="groupOptions"
+            [orderOptions]="sharedGroupOrderOptions"
+            [groupSelections]="groupSelections"
+            [selectedValue]="groupField"
+            [selectedOrder]="sharedGroupOrder"
+            (groupSelectionsChange)="setSharedGroupSelections($any($event))"
+            (reset)="resetSharedGroupingUi()"
+            (menuOpened)="onSharedGroupMenuOpened()"
+          ></engineers-salary-reference-shared-group-menu>
+        }
+
+        @if (sharedTenderGridToolbarShowColumns) {
+          <button
+            class="proj-cu-chip proj-menu-summary"
+            type="button"
+            data-shared-columns-panel-toggle
+            [class.is-active]="sharedColumnsPanelOpen"
+            [attr.aria-pressed]="sharedColumnsPanelOpen"
+            (pointerdown)="onSharedColumnsPointerDown($event)"
+            (click)="onSharedColumnsClick($event)"
+          >
+            <hugeicons-icon
+              [icon]="columnsToolbarIcon"
+              [size]="16"
+              [strokeWidth]="1.9"
+              aria-hidden="true"
+            ></hugeicons-icon>
+            <span>Columns</span>
+          </button>
+        }
+
+        @if (sharedTenderGridToolbarShowGroupExpansion && groupingActive) {
+          <button
+            class="proj-cu-chip proj-menu-summary"
+            type="button"
+            [class.is-active]="groupingExpanded"
+            [attr.aria-pressed]="groupingExpanded"
+            (click)="toggleSharedGroupExpansion()"
+          >
+            <hugeicons-icon
+              [icon]="groupingExpanded ? collapseGroupsToolbarIcon : expandGroupsToolbarIcon"
+              [size]="16"
+              [strokeWidth]="1.9"
+              aria-hidden="true"
+            ></hugeicons-icon>
+            <span>{{ groupingExpanded ? 'Collapse all' : 'Expand all' }}</span>
+          </button>
+        }
+      </div>
+    }
+    <ng-content select="[toolbar-left]"></ng-content>
+  </div>
+  <div class="wsh__toolbar-right proj-page-tools__right">
+    @if (sharedToolbarSelectionActions && sharedToolbarSelectionCount > 0) {
+      <div class="proj-toolbar-selection-actions" aria-label="Selection actions">
+        <button
+          class="btn sm proj-toolbar-btn proj-toolbar-btn--selection"
+          type="button"
+          (click)="emitSharedSelectionEdit()"
+        >
+          <hugeicons-icon
+            [icon]="editToolbarIcon"
+            [size]="16"
+            [strokeWidth]="1.9"
+            aria-hidden="true"
+          ></hugeicons-icon>
+          <span>Edit</span>
+        </button>
+        @if (sharedToolbarSelectionShowDelete) {
+          <button
+            class="btn sm proj-toolbar-btn proj-toolbar-btn--selection proj-toolbar-btn--danger"
+            type="button"
+            (click)="emitSharedSelectionDelete()"
+          >
+            <hugeicons-icon
+              [icon]="deleteToolbarIcon"
+              [size]="16"
+              [strokeWidth]="1.9"
+              aria-hidden="true"
+            ></hugeicons-icon>
+            <span>Delete</span>
+          </button>
+        }
+      </div>
+    }
+    @if (sharedTenderGridToolbar) {
+      <ng-content select="[toolbar-before-views]"></ng-content>
+
+      @if (sharedTenderGridToolbarShowViews) {
+        <button
+          class="btn sm proj-toolbar-btn proj-toolbar-btn--views"
+          type="button"
+          #sharedViewsBtn
+          (pointerdown)="onSharedViewsPointerDown($event, sharedViewsBtn)"
+          (click)="onSharedViewsClick($event, sharedViewsBtn)"
+        >
+          <hugeicons-icon
+            [icon]="viewsToolbarIcon"
+            [size]="16"
+            [strokeWidth]="1.9"
+            aria-hidden="true"
+          ></hugeicons-icon>
+          <span>Views</span>
+        </button>
+      }
+
+      @let activeFilterCount = sharedActiveFilterCount();
+      @let hasActiveFilters = activeFilterCount > 0;
+      @let filterButtonActive = hasActiveFilters || sharedFilterPanelOpen;
+      <div
+        class="proj-menu proj-filter-menu"
+        #sharedFiltersMenu
+        [class.is-open]="sharedFilterPanelOpen"
+      >
+        <button
+          class="proj-cu-chip proj-menu-summary proj-filter-summary"
+          type="button"
+          [class.is-active]="filterButtonActive"
+          [attr.aria-label]="'Filters (' + activeFilterCount + ')'"
+          [attr.aria-expanded]="sharedFilterPanelOpen"
+          [attr.aria-pressed]="filterButtonActive"
+          aria-haspopup="dialog"
+          (pointerdown)="onSharedFilterTriggerPointerDown($event)"
+          (click)="onSharedFilterTriggerClick($event)"
+        >
+          <hugeicons-icon
+            [icon]="filterToolbarIcon"
+            [size]="16"
+            [strokeWidth]="1.9"
+            aria-hidden="true"
+          ></hugeicons-icon>
+          <span>Filter</span>
+          @if (activeFilterCount) {
+            <span class="proj-filter-summary-count">{{ activeFilterCount }}</span>
+          }
+        </button>
+
+        @if (sharedFilterPanelOpen) {
+          <engineers-salary-reference-shared-filter-menu [host]="sharedFilterPanelHost"></engineers-salary-reference-shared-filter-menu>
+        }
+      </div>
+
+      @if (sharedTenderGridToolbarShowClosed) {
+        <span class="proj-cu-chip proj-cu-chip--static">
+          <hugeicons-icon
+            [icon]="closedToolbarIcon"
+            [size]="16"
+            [strokeWidth]="1.9"
+            aria-hidden="true"
+          ></hugeicons-icon>
+          <span>Closed</span>
+        </span>
+      }
+
+      @if (sharedTenderGridToolbarShowAssignee && !sharedToolbarAssigneeFilter) {
+        <span class="proj-cu-chip proj-cu-chip--static">
+          <hugeicons-icon
+            [icon]="assigneeToolbarIcon"
+            [size]="16"
+            [strokeWidth]="1.9"
+            aria-hidden="true"
+          ></hugeicons-icon>
+          <span>Assignee</span>
+        </span>
+      }
+    }
+    @if (sharedToolbarActionsBeforeSearch.length) {
+      @for (action of sharedToolbarActionsBeforeSearch; track action.id) {
+        <button
+          class="btn sm proj-toolbar-btn"
+          type="button"
+          [ngClass]="sharedToolbarActionClass(action)"
+          [disabled]="!!action.disabled"
+          [attr.data-shared-toolbar-action]="action.keepSurfacesOpen ? '' : null"
+          [attr.aria-label]="action.ariaLabel || action.label"
+          [attr.aria-pressed]="action.active ? true : null"
+          (click)="emitSharedToolbarAction(action)"
+        >
+          @if (action.hugeIcon) {
+            <hugeicons-icon
+              class="proj-toolbar-huge-icon"
+              [icon]="action.hugeIcon"
+              [size]="action.hugeIconSize || 16"
+              [strokeWidth]="action.hugeIconStrokeWidth || 1.8"
+              aria-hidden="true"
+            ></hugeicons-icon>
+          } @else if (action.icon) {
+            <i [appIcon]="action.icon" aria-hidden="true"></i>
+          }
+          <span>{{ action.label }}</span>
+        </button>
+      }
+    }
+    @if (sharedToolbarAssigneeFilter) {
+      <app-assignee-filter-menu
+        [triggerLabel]="sharedToolbarAssigneeFilter.triggerLabel || 'Assignee'"
+        [title]="sharedToolbarAssigneeFilter.title || 'Assignees'"
+        [searchPlaceholder]="
+          sharedToolbarAssigneeFilter.searchPlaceholder || 'Search by user or team'
+        "
+        [allLabel]="sharedToolbarAssigneeFilter.allLabel || 'All assignees'"
+        [mineLabel]="sharedToolbarAssigneeFilter.mineLabel || 'Assigned to me'"
+        [unassignedLabel]="sharedToolbarAssigneeFilter.unassignedLabel || 'Unassigned'"
+        [emptyLabel]="sharedToolbarAssigneeFilter.emptyLabel || 'No assignees found.'"
+        [showMine]="!!sharedToolbarAssigneeFilter.showMine"
+        [allCount]="sharedToolbarAssigneeFilter.allCount || 0"
+        [mineCount]="sharedToolbarAssigneeFilter.mineCount || 0"
+        [unassignedCount]="sharedToolbarAssigneeFilter.unassignedCount || 0"
+        [options]="sharedToolbarAssigneeFilter.options"
+        [selection]="sharedToolbarAssigneeFilter.selection"
+        [drawerTopInset]="sharedColumnsPanelTopInset"
+        [drawerZIndex]="140"
+        (panelOpened)="onSharedToolbarExternalPanelOpened()"
+        (selectionChange)="onSharedToolbarAssigneeSelectionChange($event)"
+      ></app-assignee-filter-menu>
+    }
+    @if (sharedToolbarMineQuickFilter) {
+      <app-mine-quick-filter-menu
+        [initials]="sharedToolbarMineQuickFilter.initials"
+        [tooltip]="sharedToolbarMineQuickFilter.tooltip || 'Filter for your tasks'"
+        [title]="sharedToolbarMineQuickFilter.title || 'Tasks where I have assigned'"
+        [panelAriaLabel]="
+          sharedToolbarMineQuickFilter.panelAriaLabel || 'Tasks where I have assigned'
+        "
+        [clearAriaLabel]="sharedToolbarMineQuickFilter.clearAriaLabel || 'Clear your tasks filter'"
+        [active]="sharedToolbarMineQuickFilter.active"
+        [open]="sharedToolbarMineQuickFilter.open"
+        [showClear]="sharedToolbarMineQuickFilter.showClear"
+        [options]="sharedToolbarMineQuickFilter.options"
+        (triggerClick)="onSharedToolbarMineQuickToggle()"
+        (clearClick)="onSharedToolbarMineQuickClear($event)"
+        (optionToggle)="onSharedToolbarMineQuickOptionToggle($event)"
+      ></app-mine-quick-filter-menu>
+    }
+    <ng-content select="[toolbar-right-before-shared]"></ng-content>
+    @if (sharedToolbarAvatarSearch || sharedTenderGridToolbar) {
+      @let toolbarSearchClass = sharedToolbarSearchClass();
+      @let toolbarSearchHasValue = !!sharedToolbarSearchTerm.trim();
+      @if (!sharedToolbarSearchOnly && !sharedToolbarMineQuickFilter) {
+        <span class="proj-avatar-chip" aria-hidden="true">{{ sharedToolbarAvatarText }}</span>
+      }
+      <div
+        class="proj-toolbar-search"
+        [ngClass]="toolbarSearchClass"
+        [class.is-open]="sharedToolbarSearchOpen"
+        [class.has-value]="toolbarSearchHasValue"
+      >
+        <button
+          class="proj-toolbar-icon proj-toolbar-search-toggle"
+          type="button"
+          aria-label="Toggle search"
+          [attr.aria-expanded]="sharedToolbarSearchOpen"
+          (pointerdown)="onSharedToolbarSearchTogglePointerDown($event)"
+          (keydown.enter)="onSharedToolbarSearchToggleKeydown($event)"
+          (keydown.space)="onSharedToolbarSearchToggleKeydown($event)"
+        >
+          <hugeicons-icon
+            [icon]="searchToolbarIcon"
+            [size]="16"
+            [strokeWidth]="1.95"
+            aria-hidden="true"
+          ></hugeicons-icon>
+        </button>
+        @if (sharedToolbarSearchOpen) {
+          <input
+            #sharedToolbarSearchInput
+            id="page-design-toolbar-search"
+            name="pageDesignToolbarSearch"
+            class="proj-toolbar-search-input"
+            type="search"
+            [placeholder]="sharedToolbarSearchPlaceholder"
+            [value]="sharedToolbarSearchTerm"
+            (input)="onSharedToolbarSearchInput($any($event.target).value || '')"
+            (keydown)="onSharedToolbarSearchKeydown($event)"
+          />
+          @if (toolbarSearchHasValue) {
+            <button
+              class="proj-toolbar-search-clear"
+              type="button"
+              aria-label="Clear search"
+              (click)="clearSharedToolbarSearch($event)"
+            >
+              <hugeicons-icon
+                [icon]="clearSearchToolbarIcon"
+                [size]="14"
+                [strokeWidth]="2.1"
+                aria-hidden="true"
+              ></hugeicons-icon>
+            </button>
+          }
+        }
+      </div>
+    }
+    @if (sharedToolbarShowCustomize) {
+      <button
+        class="btn sm proj-toolbar-btn proj-toolbar-btn--soft-rect"
+        type="button"
+        data-shared-customize-panel-toggle
+        [class.is-active]="sharedToolbarCustomizeActive || (sharedToolbarCustomizeTreatOpenAsActive && sharedCustomizePanelOpen)"
+        [attr.aria-label]="sharedToolbarCustomizeLabel"
+        [attr.aria-pressed]="sharedToolbarCustomizeActive || (sharedToolbarCustomizeTreatOpenAsActive && sharedCustomizePanelOpen)"
+        (pointerdown)="onSharedToolbarCustomizePointerDown($event)"
+        (click)="onSharedToolbarCustomizeClick($event)"
+      >
+        <hugeicons-icon
+          [icon]="customizeToolbarIcon"
+          [size]="16"
+          [strokeWidth]="1.9"
+          aria-hidden="true"
+        ></hugeicons-icon>
+        <span>{{ sharedToolbarCustomizeLabel }}</span>
+      </button>
+    }
+    @if (sharedToolbarActions.length) {
+      @for (action of sharedToolbarActions; track action.id) {
+        <button
+          class="btn sm proj-toolbar-btn"
+          type="button"
+          [ngClass]="sharedToolbarActionClass(action)"
+          [disabled]="!!action.disabled"
+          [attr.data-shared-toolbar-action]="action.keepSurfacesOpen ? '' : null"
+          [attr.aria-label]="action.ariaLabel || action.label"
+          [attr.aria-pressed]="action.active ? true : null"
+          (click)="emitSharedToolbarAction(action)"
+        >
+          @if (action.hugeIcon) {
+            <hugeicons-icon
+              class="proj-toolbar-huge-icon"
+              [icon]="action.hugeIcon"
+              [size]="action.hugeIconSize || 16"
+              [strokeWidth]="action.hugeIconStrokeWidth || 1.8"
+              aria-hidden="true"
+            ></hugeicons-icon>
+          } @else if (action.icon) {
+            <i [appIcon]="action.icon" aria-hidden="true"></i>
+          }
+          <span>{{ action.label }}</span>
+        </button>
+      }
+    }
+    <ng-content select="[toolbar-right]"></ng-content>
+  </div>
+</div>
+
+@if (sharedColumnsPanelOpen) {
+  <engineers-salary-reference-shared-columns-panel
+    [open]="true"
+    [showBack]="sharedColumnsFromCustomize"
+    [shownColumns]="sharedShownColumnsPanelOptions()"
+    [hiddenColumns]="sharedHiddenColumnsPanelOptions()"
+    [zIndex]="140"
+    [topInset]="sharedColumnsPanelTopInset"
+    [ignoreOutsideSelectors]="'[data-shared-columns-panel-toggle], [data-shared-customize-panel-toggle]'"
+    (back)="onSharedColumnsBack()"
+    (closed)="closeSharedColumnsPanel()"
+    (showAll)="showAllSharedColumns()"
+    (hideAll)="hideAllSharedColumns()"
+    (reset)="resetSharedColumns()"
+    (shownOrderChange)="applySharedShownColumnsOrder($any($event))"
+    (hiddenOrderChange)="applySharedHiddenColumnsOrder($any($event))"
+    (toggleColumn)="toggleSharedColumnByField($event)"
+  ></engineers-salary-reference-shared-columns-panel>
+}
+
+@if (sharedCustomizePanelOpen) {
+  <engineers-salary-reference-shared-customize-panel
+    [open]="true"
+    [zIndex]="140"
+    [topInset]="sharedColumnsPanelTopInset"
+    [title]="sharedCustomizePanelTitle"
+    [showDefaultContent]="sharedCustomizePanelShowDefaultContent"
+    [actionIcon]="sharedCustomizePanelActionIcon"
+    [actionLabel]="sharedCustomizePanelActionLabel"
+    [actionDisabled]="sharedCustomizePanelActionDisabled"
+    [actionMenuItems]="sharedCustomizePanelActionMenuItems"
+    [ignoreOutsideSelectors]="'[data-shared-customize-panel-toggle], [data-shared-toolbar-action], .cdk-overlay-container'"
+    [fieldsSummary]="sharedCustomizeFieldsSummary()"
+    [filterSummary]="sharedCustomizeFilterSummary()"
+    [groupSummary]="sharedCustomizeGroupSummary()"
+    (closed)="closeSharedCustomizePanel()"
+    (action)="sharedCustomizePanelActionTriggered.emit()"
+    (actionMenu)="sharedCustomizePanelActionMenuTriggered.emit($event)"
+    (openFields)="openSharedColumnsFromCustomize()"
+    (openFilters)="openSharedFiltersFromCustomize()"
+    (openGroup)="openSharedGroupFromCustomize()"
+  >
+    <ng-content select="[customize-panel-header-actions]"></ng-content>
+    <ng-content select="[customize-panel]"></ng-content>
+  </engineers-salary-reference-shared-customize-panel>
+}
+
+<div class="table-area">
+  <ng-content select="[page-table]"></ng-content>
+</div>

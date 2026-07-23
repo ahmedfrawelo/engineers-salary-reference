@@ -1,0 +1,53 @@
+@mixin circular-fill-checkbox(
+  $selector: '.row-check',
+  $size: 16px,
+  $border-color: color-mix(in oklab, rgb(var(--border-strong)) 68%, transparent),
+  $background: color-mix(in oklab, rgb(var(--surface)) 96%, rgb(var(--bg1)) 4%),
+  $checked-background: color-mix(in oklab, rgb(var(--primary)) 72%, rgb(var(--surface)) 28%)
+) {
+  #{$selector} {
+    position: relative;
+    width: $size;
+    height: $size;
+    flex: 0 0 $size;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+  #{$selector} input {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  #{$selector} > span {
+    width: $size;
+    height: $size;
+    border-radius: 999px;
+    border: 1px solid $border-color;
+    background: $background;
+    transition:
+      border-color 0.14s ease,
+      background 0.14s ease,
+      box-shadow 0.14s ease;
+  }
+
+  #{$selector} > span::after {
+    content: none;
+  }
+
+  #{$selector} input:checked + span {
+    border-color: color-mix(in oklab, rgb(var(--primary)) 72%, transparent);
+    background: $checked-background;
+    box-shadow: 0 0 0 1px rgb(var(--primary) / 0.2) inset;
+  }
+
+  #{$selector} input:focus-visible + span {
+    outline: 1px solid rgb(var(--primary) / 0.58);
+    outline-offset: 1px;
+  }
+}

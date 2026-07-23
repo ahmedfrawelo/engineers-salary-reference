@@ -1,0 +1,208 @@
+.empty-state,
+.error-state {
+  min-height: 220px;
+  display: grid;
+  place-items: center;
+  gap: 10px;
+  padding: 24px;
+  text-align: center;
+  border-radius: 16px;
+  border: 1px dashed rgb(var(--border) / 0.45);
+  background: color-mix(in oklab, rgb(var(--surface)) 92%, rgb(var(--bg1)) 8%);
+}
+
+.access-deleted-drawer-surface .access-deleted-drawer__empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 180px;
+  margin: 12px 16px 0;
+  padding: 24px 20px;
+  border: 0;
+  border-radius: 18px;
+  background: transparent;
+  box-shadow: none;
+  text-align: center;
+}
+
+.access-deleted-drawer-surface .access-user-drawer__body {
+  display: flex !important;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  gap: 0 !important;
+  padding: 0 !important;
+  overflow: hidden;
+}
+
+.access-deleted-drawer-surface .access-inline-message {
+  margin: 12px 16px 0;
+}
+
+.access-deleted-drawer-surface .access-deleted-drawer__empty-state,
+.access-deleted-drawer-surface .access-deleted-drawer__list {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.access-deleted-drawer-surface .access-deleted-drawer__list {
+  overflow: auto;
+}
+
+.access-deleted-drawer-surface .access-deleted-drawer__empty-state .muted {
+  max-width: 260px;
+  margin: 0;
+  color: rgb(var(--muted) / 0.82);
+}
+
+.empty-title {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.access-roster-empty {
+  width: min(100%, 520px);
+  min-height: 220px;
+  margin: 32px auto 0;
+  padding: 16px 8px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  gap: 10px;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  text-align: center;
+}
+
+.access-roster-empty .empty-sub {
+  max-width: 400px;
+  margin: 0;
+  color: rgb(var(--muted) / 0.84);
+  line-height: 1.6;
+}
+
+.access-roster-empty--first-load {
+  min-height: 280px;
+  gap: 12px;
+}
+
+.workspace-loading-shell {
+  flex: 1 1 auto;
+  min-height: clamp(280px, 48vh, 560px);
+  width: 100%;
+}
+
+.access-empty-state__actions {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.error-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  background: rgb(196 52 52 / 0.12);
+  color: rgb(255 120 120);
+  font-size: 1.2rem;
+}
+
+.access-audit-state {
+  flex: 1 1 auto;
+  justify-content: center;
+  padding: 18px 0;
+  border-radius: 0;
+  border-top: 1px solid rgb(var(--border) / 0.18);
+  border-bottom: 1px solid rgb(var(--border) / 0.18);
+  background: transparent;
+}
+
+.access-audit-state__icon {
+  width: 68px;
+  height: 68px;
+  border-radius: 22px;
+  display: grid;
+  place-items: center;
+  background: rgb(var(--primary) / 0.14);
+  color: rgb(var(--primary));
+  font-size: 1.5rem;
+}
+
+.access-audit-state__checks {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.access-audit-card {
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border: 1px solid rgb(var(--border) / 0.22);
+  background: rgb(var(--bg0));
+}
+
+.access-audit-card__label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: rgb(var(--primary));
+  font-weight: 700;
+}
+
+.pill.inline.ghost {
+  min-height: 32px;
+  border-radius: 999px;
+  padding: 0 12px;
+  display: inline-flex;
+  align-items: center;
+  background: rgb(var(--fg) / 0.06);
+  color: rgb(var(--muted));
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1400;
+  background: rgb(0 0 0 / 0.48);
+  display: grid;
+  place-items: center;
+  padding: 20px;
+}
+
+.modal-card {
+  width: min(460px, calc(100vw - 32px));
+  padding: 18px;
+  border-radius: 16px;
+  border: 1px solid rgb(var(--border) / 0.4);
+  background: color-mix(in oklab, rgb(var(--surface)) 90%, rgb(var(--bg1)) 10%);
+  box-shadow: 0 18px 40px rgb(0 0 0 / 0.26);
+}
+
+.modal-header {
+  justify-content: space-between;
+}
+
+.modal-header h3,
+.modal-body {
+  margin: 0;
+}
+
+.modal-body {
+  color: rgb(var(--muted));
+  line-height: 1.6;
+}
+
+.modal-actions {
+  justify-content: flex-end;
+  margin-top: 14px;
+}

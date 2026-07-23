@@ -1,0 +1,318 @@
+@use 'sass:list';
+
+@mixin animated-tab-buttons(
+  $tabs-selector: '.tabs-nav',
+  $tab-selector: '.tab-btn',
+  $icon-selector: '.tab-icon',
+  $label-selector: '.tab-label',
+  $badge-selector: '.tab-badge',
+  $enter-keyframes-name: engineers-salary-reference-tab-enter,
+  $badge-keyframes-name: engineers-salary-reference-tab-pop,
+  $tab-stagger-delays: (
+    0.02s,
+    0.05s,
+    0.08s,
+    0.11s
+  ),
+  $tabs-position: static,
+  $tabs-z-index: auto,
+  $tabs-gap: 8px,
+  $tabs-margin: 0,
+  $tabs-padding: 0,
+  $tabs-background: transparent,
+  $tabs-border-bottom: 0,
+  $tab-min-height: null,
+  $tab-padding: 12px 16px,
+  $tab-radius: 10px,
+  $tab-border: 1px solid color-mix(in oklab, rgb(var(--border-strong)) 30%, transparent),
+  $tab-background: rgb(var(--bg1)),
+  $tab-color: rgb(var(--fg)),
+  $tab-font-size: 0.9rem,
+  $tab-font-weight: 600,
+  $tab-hover-transform: translateX(4px) scale(1.02),
+  $tab-hover-background: linear-gradient(
+      90deg,
+      rgb(var(--primary) / 0.14) 0%,
+      rgb(var(--primary) / 0.08) 100%
+    ),
+  $tab-hover-shadow: (
+    -3px 0 0 0 rgb(var(--primary)) inset,
+    0 0 0 1px rgb(var(--primary) / 0.2) inset,
+    0 3px 10px rgb(var(--primary) / 0.15),
+    0 1px 3px rgb(0 0 0 / 0.08)
+  ),
+  $tab-active-transform: translateX(4px),
+  $tab-active-background: transparent,
+  $tab-active-border-color: transparent,
+  $tab-active-shadow: none,
+  $tab-active-color: rgb(var(--fg)),
+  $icon-size: 18px,
+  $icon-width: 26px,
+  $icon-hover-transform: scale(1.12) rotate(-3deg),
+  $icon-hover-color: rgb(var(--primary)),
+  $icon-hover-filter: brightness(1.2) drop-shadow(0 0 4px rgb(var(--primary) / 0.5)),
+  $icon-active-color: rgb(var(--primary)),
+  $icon-active-filter: brightness(1.2) drop-shadow(0 0 4px rgb(var(--primary) / 0.4)),
+  $label-hover-transform: translateX(3px),
+  $label-hover-color: rgb(var(--primary)),
+  $label-hover-weight: 600,
+  $label-active-transform: translateX(2px),
+  $label-active-color: rgb(var(--primary)),
+  $label-active-weight: 650,
+  $badge-min-width: 18px,
+  $badge-height: 18px,
+  $badge-padding: 0 5px,
+  $badge-background: rgb(var(--primary)),
+  $badge-color: #fff,
+  $badge-font-size: 0.7rem,
+  $badge-font-weight: 700,
+  $badge-hover-transform: scale(1.1)
+) {
+  @keyframes #{$badge-keyframes-name} {
+    from {
+      opacity: 0;
+      transform: translateY(4px) scale(0.98);
+    }
+
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes #{$enter-keyframes-name} {
+    from {
+      opacity: 0;
+      transform: translateX(-18px) scale(0.92);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateX(0) scale(1);
+    }
+  }
+
+  #{$tabs-selector} {
+    position: $tabs-position;
+    z-index: $tabs-z-index;
+    display: flex;
+    gap: $tabs-gap;
+    margin: $tabs-margin;
+    padding: $tabs-padding;
+    border-bottom: $tabs-border-bottom;
+    background: $tabs-background;
+  }
+
+  #{$tab-selector} {
+    flex: 1 1 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: $tab-padding;
+    border: $tab-border;
+    border-radius: $tab-radius;
+    background: $tab-background;
+    color: $tab-color;
+    font-size: $tab-font-size;
+    font-weight: $tab-font-weight;
+    cursor: pointer;
+    outline: 0;
+    position: relative;
+    isolation: isolate;
+    z-index: 2;
+    -webkit-tap-highlight-color: transparent;
+    animation: #{$enter-keyframes-name} 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    transition:
+      transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+      background-color 0.2s ease,
+      border-color 0.2s ease,
+      box-shadow 0.25s ease;
+
+    @if $tab-min-height != null {
+      min-height: $tab-min-height;
+    }
+  }
+
+  #{$tab-selector}:focus,
+  #{$tab-selector}:focus-visible {
+    outline: 0;
+  }
+
+  @for $i from 1 through list.length($tab-stagger-delays) {
+    #{$tab-selector}:nth-child(#{$i}) {
+      animation-delay: list.nth($tab-stagger-delays, $i);
+    }
+  }
+
+  #{$tab-selector}:hover:not(.active) {
+    background: $tab-hover-background;
+    transform: $tab-hover-transform;
+    box-shadow: $tab-hover-shadow;
+  }
+
+  #{$icon-selector} {
+    width: $icon-width;
+    font-size: $icon-size;
+    display: grid;
+    place-items: center;
+    transition:
+      transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+      color 0.2s ease,
+      filter 0.2s ease;
+  }
+
+  #{$label-selector} {
+    white-space: nowrap;
+    transition:
+      transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+      color 0.2s ease,
+      font-weight 0.2s ease;
+  }
+
+  #{$tab-selector}:hover:not(.active) #{$icon-selector} {
+    color: $icon-hover-color !important;
+    transform: $icon-hover-transform;
+    filter: $icon-hover-filter;
+  }
+
+  #{$tab-selector}:hover:not(.active) #{$label-selector} {
+    transform: $label-hover-transform;
+    color: $label-hover-color !important;
+    font-weight: $label-hover-weight;
+  }
+
+  #{$tab-selector}.active {
+    border-color: $tab-active-border-color;
+    color: $tab-active-color;
+    background: $tab-active-background;
+    box-shadow: $tab-active-shadow;
+    transform: $tab-active-transform;
+  }
+
+  #{$tab-selector}.active #{$label-selector} {
+    color: $label-active-color !important;
+    font-weight: $label-active-weight;
+    transform: $label-active-transform;
+  }
+
+  #{$tab-selector}.active #{$icon-selector} {
+    color: $icon-active-color !important;
+    filter: $icon-active-filter;
+  }
+
+  #{$badge-selector} {
+    min-width: $badge-min-width;
+    height: $badge-height;
+    padding: $badge-padding;
+    border-radius: 999px;
+    border: 0;
+    background: $badge-background;
+    color: $badge-color;
+    font-size: $badge-font-size;
+    font-weight: $badge-font-weight;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    animation: #{$badge-keyframes-name} 0.15s ease-out;
+    transition: transform 0.2s ease;
+  }
+
+  #{$tab-selector}:hover #{$badge-selector} {
+    transform: $badge-hover-transform;
+  }
+}
+
+@mixin animated-action-buttons(
+  $group-selector: '.actions',
+  $button-selector: '.action-btn',
+  $group-gap: 8px,
+  $group-wrap: nowrap,
+  $button-min-height: 34px,
+  $button-padding: 0 13px,
+  $button-radius: 10px,
+  $button-border: 1px solid color-mix(in oklab, rgb(var(--border-strong)) 30%, transparent),
+  $button-background: rgb(var(--bg1)),
+  $button-color: rgb(var(--fg)),
+  $button-font-size: 12px,
+  $button-font-weight: 600,
+  $button-letter-spacing: 0,
+  $button-transition: (
+    transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.25s ease
+  ),
+  $hover-border: color-mix(in oklab, rgb(var(--primary)) 28%, rgb(var(--border-strong)) 72%),
+  $hover-background: rgb(var(--bg1)),
+  $hover-color: rgb(var(--primary)),
+  $hover-shadow: none,
+  $hover-transform: translateX(3px),
+  $focus-outline: none,
+  $focus-shadow: 0 0 0 1px rgb(var(--primary) / 0.18),
+  $active-transform: translateX(2px) scale(0.99),
+  $active-shadow: none,
+  $disabled-opacity: 0.56
+) {
+  #{$group-selector} {
+    display: inline-flex;
+    align-items: center;
+    gap: $group-gap;
+    flex-wrap: $group-wrap;
+  }
+
+  #{$group-selector} #{$button-selector} {
+    flex: 0 0 auto;
+    min-height: $button-min-height;
+    padding: $button-padding;
+    border-radius: $button-radius;
+    border: $button-border;
+    background: $button-background;
+    color: $button-color;
+    font-size: $button-font-size;
+    font-weight: $button-font-weight;
+    letter-spacing: $button-letter-spacing;
+    box-shadow: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: $button-transition;
+  }
+
+  #{$group-selector} #{$button-selector}:hover,
+  #{$group-selector} #{$button-selector}:focus-visible {
+    border-color: $hover-border;
+    background: $hover-background;
+    color: $hover-color;
+    box-shadow: $hover-shadow;
+    transform: $hover-transform;
+  }
+
+  #{$group-selector} #{$button-selector}:focus-visible {
+    outline: $focus-outline;
+    box-shadow: $focus-shadow;
+  }
+
+  #{$group-selector} #{$button-selector}:active {
+    transform: $active-transform;
+    box-shadow: $active-shadow;
+  }
+
+  #{$group-selector} #{$button-selector}:disabled {
+    opacity: $disabled-opacity;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #{$group-selector} #{$button-selector} {
+      transition: none;
+    }
+
+    #{$group-selector} #{$button-selector}:hover,
+    #{$group-selector} #{$button-selector}:focus-visible,
+    #{$group-selector} #{$button-selector}:active {
+      transform: none;
+    }
+  }
+}

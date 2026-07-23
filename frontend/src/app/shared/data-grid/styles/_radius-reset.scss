@@ -1,0 +1,55 @@
+:host,
+:host ::ng-deep {
+  .engineers-salary-reference-data-grid,
+  .engineers-salary-reference-data-grid *,
+  .grid-calculate-footer,
+  .grid-calculate-footer *,
+  .column-context-menu,
+  .column-context-menu *,
+  .group-context-menu,
+  .group-context-menu *,
+  .empty-group-context-menu,
+  .empty-group-context-menu *,
+  .cell-context-menu,
+  .cell-context-menu *,
+  .filter-menu,
+  .filter-menu *,
+  .column-menu,
+  .column-menu *,
+  .column-visibility-panel,
+  .column-visibility-panel *,
+  .grouping-help-dialog,
+  .grouping-help-dialog *,
+  .grid-calculate-footer__viewport,
+  .grid-calculate-footer__viewport *,
+  .grid-pagination-footer,
+  .grid-pagination-footer *,
+  .grid-skeleton-loader,
+  .grid-skeleton-loader *,
+  img,
+  button,
+  input,
+  textarea,
+  select {
+    border-radius: 0 !important;
+  }
+
+  .engineers-salary-reference-data-grid ::-webkit-scrollbar-thumb,
+  .engineers-salary-reference-data-grid ::-webkit-scrollbar-track,
+  .grid-calculate-footer ::-webkit-scrollbar-thumb,
+  .grid-calculate-footer ::-webkit-scrollbar-track {
+    border-radius: 0 !important;
+  }
+
+  .engineers-salary-reference-data-grid .header-table th,
+  .engineers-salary-reference-data-grid .header-table thead > tr.header-row > th {
+    vertical-align: middle !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+
+  .engineers-salary-reference-data-grid .header-table th .header-content {
+    align-items: center !important;
+    padding-top: 0 !important;
+  }
+}

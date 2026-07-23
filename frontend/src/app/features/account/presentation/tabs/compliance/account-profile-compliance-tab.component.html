@@ -1,0 +1,58 @@
+<section class="tab-grid tab-grid--compliance">
+  <article class="panel panel-compliance-documents">
+    <header class="section-head">
+      <h2>Compliance and documents</h2>
+      <p>Regulatory attestations and policy acknowledgements.</p>
+    </header>
+    <ul class="document-list">
+      @for (doc of documents; track doc.name) {
+        <li>
+          <div>
+            <strong>{{ doc.name }}</strong>
+            <p>{{ doc.updated }}</p>
+          </div>
+          <span
+            class="status"
+            [class.current]="doc.status === 'Current'"
+            [class.pending]="doc.status === 'Pending review'"
+          >
+            {{ doc.status }}
+          </span>
+        </li>
+      }
+    </ul>
+  </article>
+
+  <article class="panel panel-compliance-snapshot">
+    <header class="section-head">
+      <h2>Employment snapshot</h2>
+      <p>Core operating details for governance review.</p>
+    </header>
+    <dl class="detail-grid">
+      <div>
+        <dt>Manager</dt>
+        <dd>{{ model.manager }}</dd>
+      </div>
+      <div>
+        <dt>Career level</dt>
+        <dd>{{ model.level }}</dd>
+      </div>
+      <div>
+        <dt>Employment type</dt>
+        <dd>{{ model.employmentType }}</dd>
+      </div>
+      <div>
+        <dt>Joined ENGINEERS_SALARY_REFERENCE</dt>
+        <dd>{{ model.joinDate }}</dd>
+      </div>
+      <div>
+        <dt>Work mode</dt>
+        <dd>{{ model.workMode }}</dd>
+      </div>
+      <div>
+        <dt>Coverage cadence</dt>
+        <dd>{{ model.coverage }}</dd>
+      </div>
+    </dl>
+  </article>
+</section>

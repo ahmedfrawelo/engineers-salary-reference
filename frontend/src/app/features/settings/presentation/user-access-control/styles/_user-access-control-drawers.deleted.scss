@@ -1,0 +1,198 @@
+.access-user-drawer__head {
+  gap: 12px !important;
+}
+
+.access-deleted-drawer__head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: 10px !important;
+  padding-block: 14px !important;
+}
+
+.access-deleted-drawer__head-main {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  gap: 14px;
+}
+
+.access-deleted-drawer__title-wrap {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.access-deleted-drawer__title {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 24px;
+  letter-spacing: -0.01em;
+}
+
+.access-deleted-drawer__title-icon {
+  flex: 0 0 auto;
+  color: rgb(var(--fg) / 0.92);
+}
+
+.access-deleted-drawer__close {
+  flex: 0 0 auto;
+  margin-inline-start: auto;
+}
+
+.access-deleted-drawer__search {
+  align-self: stretch;
+  width: 100%;
+  min-width: 0;
+}
+
+.access-deleted-drawer__search .columns-drawer-search-input {
+  width: 100%;
+}
+
+.access-user-drawer__head-actions {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+
+.access-user-drawer__identity {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  min-width: 0;
+}
+
+.access-user-drawer__identity-main {
+  min-width: 0;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.access-deleted-drawer__loading {
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: 0 16px 16px;
+}
+
+.access-deleted-drawer__loading-grid {
+  display: block;
+  flex: 1 1 auto;
+  min-height: 100%;
+  width: 100%;
+  background: transparent;
+}
+
+:host ::ng-deep .access-deleted-drawer__loading-grid .tgs-shell,
+:host ::ng-deep .access-deleted-drawer__loading-grid .tgs-body,
+:host ::ng-deep .access-deleted-drawer__loading-grid .tgs-body-loading,
+:host ::ng-deep .access-deleted-drawer__loading-grid app-shell-skeleton,
+:host ::ng-deep .access-deleted-drawer__loading-grid .ssk {
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 1 auto !important;
+  min-height: 100% !important;
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+:host ::ng-deep .access-deleted-drawer__loading-grid .ssk {
+  padding: 0 !important;
+  gap: 14px !important;
+  justify-content: space-between;
+  min-height: 0 !important;
+}
+
+:host ::ng-deep .access-deleted-drawer__loading-grid .ssk-list-row {
+  flex: 1 1 0;
+  min-height: 52px;
+  grid-template-columns: 36px minmax(0, 1fr) 88px;
+  align-content: center;
+}
+
+.access-deleted-drawer__empty-state {
+  min-height: 180px;
+  margin: 12px 16px 0;
+  border: 1px solid rgb(var(--border) / 0.14);
+  border-radius: 18px;
+  background: transparent;
+  box-shadow: none;
+}
+
+.access-deleted-drawer__empty-state .muted {
+  color: rgb(var(--muted) / 0.82);
+}
+
+.access-deleted-drawer__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.access-deleted-drawer__item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgb(var(--border) / 0.5);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.access-deleted-drawer__actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.access-deleted-drawer__avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgb(var(--danger, 220 38 38) / 0.1);
+  color: rgb(var(--danger, 220 38 38));
+  font-size: 0.8rem;
+  font-weight: 700;
+  flex: 0 0 36px;
+}
+
+.access-deleted-drawer__info {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  strong {
+    font-size: 0.9rem;
+    color: rgb(var(--fg));
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  span.muted {
+    font-size: 0.78rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .tool-chip {
+    font-size: 0.73rem;
+    width: fit-content;
+  }
+}

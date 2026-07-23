@@ -1,0 +1,1005 @@
+.engineers-salary-reference-data-grid {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) !important;
+  grid-template-rows: auto minmax(0, 1fr) auto auto !important;
+  align-content: stretch !important;
+  min-height: 0 !important;
+  min-width: 0 !important;
+  height: 100% !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+  padding-bottom: 0 !important;
+  --dg-shell-divider-width: var(--dg-grid-divider-width, var(--app-outline-width, 1px));
+  --dg-shell-surface-bg: transparent;
+  --dg-shell-header-bg: var(--dg-theme-header-bg, transparent);
+  --dg-shell-footer-bg: transparent;
+  --dg-shell-header-fg: var(
+    --dg-shell-header-text-fg,
+    var(--dg-theme-header-text-fg, var(--app-color-grid-header-text-fg, var(--dg-fg-soft)))
+  );
+  --dg-body-row-min-height: var(--dg-grid-row-height, 28px);
+  --dg-body-row-height: var(--dg-grid-row-height, 28px);
+  --dg-body-cell-padding-block: 4px;
+  --dg-body-cell-padding-inline: 10px;
+  --dg-selection-column-width: var(--app-grid-selection-column-width, 44px);
+  --dg-row-actions-column-width: var(--app-grid-row-actions-column-width, 120px);
+  --dg-selection-control-size: 14px;
+  --dg-shell-header-height: var(--dg-theme-header-cell-height, 32px);
+  --dg-shell-header-text-height: var(--dg-theme-header-text-height, 16px);
+  --dg-shell-header-text-size: var(--dg-theme-header-text-size, 12px);
+  --dg-shell-header-text-line-height: var(--dg-theme-header-text-line-height, 1.3333333333);
+  --dg-shell-header-cell-padding-inline: var(--dg-theme-header-cell-padding-inline, 8px);
+  --dg-shell-header-icon-gap: var(--dg-theme-header-icon-gap, 4px);
+  --dg-shell-header-icon-cluster-gap: var(--dg-theme-header-icon-cluster-gap, 2px);
+  --dg-shell-header-icon-button-size: var(--dg-theme-header-icon-button-size, 16px);
+  --dg-shell-header-icon-size: var(--dg-theme-header-icon-size, 12px);
+  --dg-shell-footer-height: 31px;
+  --dg-shell-footer-padding-inline: 8px;
+  --dg-shell-body-surface-bg: var(--app-color-grid-surface, var(--app-color-surface, transparent));
+  --dg-shell-body-bg: var(--app-bg-gradient, none), var(--app-color-canvas, transparent);
+  --dg-shell-pagination-button-height: 24px;
+  --dg-shell-pagination-button-padding-inline: 8px;
+  --dg-shell-divider-width: var(--app-outline-width, 1px);
+  --dg-group-shell-inline-gutter: 8px;
+  --dg-group-shell-inline-start: var(--dg-group-shell-inline-gutter);
+  --dg-group-shell-inline-size: calc(
+    var(--dg-group-shell-viewport-width, 100%) - (var(--dg-group-shell-inline-gutter) * 2)
+  );
+  --dg-shell-outline-w: 1px;
+  --dg-shell-outline-start-w: var(--dg-shell-outline-w);
+  --dg-shell-outline-color: var(
+    --dg-clickup-grid-line,
+    var(--dg-clickup-grid-outline, var(--app-color-grid-outline, var(--app-color-outline-stroke)))
+  );
+}
+
+.engineers-salary-reference-data-grid > .grid-bottom-scrollbar-band {
+  grid-row: 4 !important;
+  display: flex !important;
+  flex: 0 0 auto !important;
+  align-items: stretch !important;
+  min-width: 0 !important;
+  min-height: calc(var(--scrollbar-size, 8px) + 2px) !important;
+  inline-size: 100% !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  background: var(--dg-shell-body-surface-bg) !important;
+  border-top: 0 !important;
+  border-inline-start: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+:host(.has-x-scroll) .engineers-salary-reference-data-grid > .grid-bottom-scrollbar-band {
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
+.engineers-salary-reference-data-grid > .grid-bottom-scrollbar-band > .grid-bottom-scrollbar-spacer {
+  flex: 0 0 0 !important;
+  inline-size: 0 !important;
+  width: 0 !important;
+  min-width: 0 !important;
+  max-width: 0 !important;
+  min-height: var(--scrollbar-size, 8px) !important;
+  background: var(--dg-shell-body-surface-bg) !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  overflow: hidden !important;
+}
+
+.engineers-salary-reference-data-grid > .grid-bottom-scrollbar-band > .grid-bottom-scrollbar-strip {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  margin-inline-start: 0 !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  overscroll-behavior-x: contain !important;
+  background: var(--dg-shell-body-surface-bg) !important;
+  scrollbar-gutter: auto !important;
+  scrollbar-width: thin !important;
+}
+
+.engineers-salary-reference-data-grid
+  > .grid-bottom-scrollbar-band
+  > .grid-bottom-scrollbar-strip
+  > .grid-bottom-scrollbar-track {
+  height: 1px !important;
+  min-height: 1px !important;
+}
+
+.engineers-salary-reference-data-grid > .grid-bottom-scrollbar-band > .grid-bottom-scrollbar-strip::-webkit-scrollbar {
+  height: var(--scrollbar-size, 8px) !important;
+}
+
+.engineers-salary-reference-data-grid
+  > .grid-bottom-scrollbar-band
+  > .grid-bottom-scrollbar-strip::-webkit-scrollbar-button {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  background: transparent !important;
+}
+
+.engineers-salary-reference-data-grid
+  > .grid-bottom-scrollbar-band
+  > .grid-bottom-scrollbar-strip::-webkit-scrollbar-track {
+  background: var(--dg-bottom-scrollbar-track) !important;
+  border-radius: 999px !important;
+}
+
+.engineers-salary-reference-data-grid
+  > .grid-bottom-scrollbar-band
+  > .grid-bottom-scrollbar-strip::-webkit-scrollbar-thumb {
+  background: var(--dg-bottom-scrollbar-thumb) !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+}
+
+.engineers-salary-reference-data-grid
+  > .grid-bottom-scrollbar-band
+  > .grid-bottom-scrollbar-strip::-webkit-scrollbar-thumb:hover {
+  background: var(--dg-bottom-scrollbar-thumb-hover) !important;
+}
+
+.engineers-salary-reference-data-grid
+  > .grid-bottom-scrollbar-band
+  > .grid-bottom-scrollbar-strip::-webkit-scrollbar-corner {
+  background: transparent !important;
+}
+
+:host-context(body.tender-projects-page) .engineers-salary-reference-data-grid,
+:host-context(body.tender-suppliers-page) .engineers-salary-reference-data-grid,
+:host-context(body.tender-reports-page) .engineers-salary-reference-data-grid {
+  --dg-shell-outline-start-w: 0px;
+}
+
+.engineers-salary-reference-data-grid .selection-insights-panel {
+  display: none !important;
+}
+
+.engineers-salary-reference-data-grid > .grid-header-section {
+  grid-row: 1 !important;
+  min-height: 0 !important;
+  height: auto !important;
+  position: relative !important;
+  z-index: 50 !important;
+  background: transparent !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  gap: 0 !important;
+  overflow: hidden !important;
+  display: block !important;
+  align-self: stretch !important;
+  align-items: stretch !important;
+  justify-content: flex-start !important;
+  background: transparent !important;
+}
+
+.engineers-salary-reference-data-grid > .grid-container {
+  grid-row: 2 !important;
+  position: relative !important;
+  z-index: 1 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  min-width: 0 !important;
+  inline-size: 100% !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+  scrollbar-gutter: auto;
+  background: var(--dg-shell-body-bg, transparent) !important;
+  background-repeat: no-repeat !important;
+  background-size: cover !important;
+  background-attachment: fixed !important;
+}
+
+.engineers-salary-reference-data-grid .table-scroll-shell {
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  min-width: 0 !important;
+  inline-size: 100% !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+  position: relative !important;
+  background: var(--dg-shell-body-bg, transparent) !important;
+  background-repeat: no-repeat !important;
+  background-size: cover !important;
+  background-attachment: fixed !important;
+  border-inline-start: 0 !important;
+  border-inline-end: 0 !important;
+  border-block-end: 0 !important;
+}
+
+.engineers-salary-reference-data-grid:has(> .grid-footer-stack) .table-scroll-shell,
+.engineers-salary-reference-data-grid:has(> .grid-pagination-footer) .table-scroll-shell {
+  border-block-end: 0 !important;
+}
+
+.engineers-salary-reference-data-grid .fixed-table-header {
+  position: relative;
+  z-index: 2;
+  margin: 0 !important;
+  padding: 0 !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  box-sizing: border-box !important;
+  inline-size: 100% !important;
+  width: 100% !important;
+  margin-inline-end: 0 !important;
+  min-width: 0 !important;
+  padding-inline-end: var(--dg-vscrollbar-comp, 0px) !important;
+  border-top: 0 !important;
+  border-inline-start: 0 !important;
+  border-inline-end: 0 !important;
+  border-bottom: 0 !important;
+  background: var(--dg-shell-header-bg, transparent) !important;
+  overflow-x: hidden !important;
+  overflow-y: hidden !important;
+}
+
+.engineers-salary-reference-data-grid .fixed-table-header::before {
+  content: '' !important;
+  position: absolute !important;
+  inset-block: 0 !important;
+  inset-inline-start: 0 !important;
+  width: var(--dg-shell-outline-w, 1px) !important;
+  min-width: var(--dg-shell-outline-w, 1px) !important;
+  box-sizing: border-box !important;
+  pointer-events: none !important;
+  background: var(--dg-shell-header-bg, transparent) !important;
+  z-index: 1 !important;
+}
+
+.engineers-salary-reference-data-grid .fixed-table-header::after {
+  content: '' !important;
+  position: absolute !important;
+  inset-block: 0 !important;
+  inset-inline-end: 0 !important;
+  width: max(var(--dg-vscrollbar-comp, 0px), var(--dg-shell-outline-w, 1px)) !important;
+  min-width: max(var(--dg-vscrollbar-comp, 0px), var(--dg-shell-outline-w, 1px)) !important;
+  box-sizing: border-box !important;
+  pointer-events: none !important;
+  background: var(--dg-shell-header-bg, transparent) !important;
+  border-inline-start: 0 !important;
+  border-bottom: 1px solid var(--dg-clickup-grid-line, var(--dg-shell-outline-color)) !important;
+  z-index: 1 !important;
+}
+
+.engineers-salary-reference-data-grid .grid-header-section .fixed-table-header {
+  display: block !important;
+  align-self: stretch !important;
+  margin-block-start: 0 !important;
+  inset-block-start: 0 !important;
+}
+
+.engineers-salary-reference-data-grid.grouping-mode-active .grid-header-section .fixed-table-header {
+  position: sticky !important;
+  left: 0 !important;
+  box-sizing: border-box !important;
+  margin-inline-start: var(--dg-group-shell-inline-start) !important;
+  margin-inline-end: 0 !important;
+  inline-size: var(--dg-group-shell-inline-size) !important;
+  width: var(--dg-group-shell-inline-size) !important;
+  max-width: var(--dg-group-shell-inline-size) !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+  border-inline-start: 0 !important;
+  border-inline-end: 0 !important;
+  z-index: 1 !important;
+}
+
+.engineers-salary-reference-data-grid.grouping-mode-active:not(.has-pinned-data-columns)
+  .grid-header-section
+  .fixed-table-header
+  .header-table {
+  min-width: var(--dg-grid-table-width, 100%) !important;
+  width: var(--dg-grid-table-width, 100%) !important;
+  transform: translate3d(calc(var(--dg-group-scroll-left, 0px) * -1), 0, 0) !important;
+  will-change: transform !important;
+  backface-visibility: hidden !important;
+}
+
+.engineers-salary-reference-data-grid.layout-preset-default:not(.grouping-mode-active):not(.has-pinned-data-columns)
+  .grid-header-section
+  .fixed-table-header
+  .header-table {
+  transform: translate3d(calc(var(--dg-grid-scroll-left, 0px) * -1), 0, 0) !important;
+  will-change: transform !important;
+  backface-visibility: hidden !important;
+}
+
+.engineers-salary-reference-data-grid.has-pinned-data-columns .grid-header-section .fixed-table-header .header-table {
+  transform: none !important;
+  will-change: auto !important;
+}
+
+.engineers-salary-reference-data-grid.grouping-mode-active .table-scroll > .data-grid-table,
+.engineers-salary-reference-data-grid.grouping-mode-active .virtual-scroll-viewport > .data-grid-table {
+  width: var(--dg-grid-table-width, 100%) !important;
+  min-width: var(--dg-grid-table-width, 100%) !important;
+}
+
+.engineers-salary-reference-data-grid.grouping-mode-active > .grid-header-section {
+  background: transparent !important;
+  box-sizing: border-box !important;
+}
+
+.engineers-salary-reference-data-grid.grouping-mode-active .grid-header-bar {
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+
+.engineers-salary-reference-data-grid.grouping-mode-active > .grid-header-section::before {
+  content: none !important;
+}
+
+.engineers-salary-reference-data-grid.grouping-mode-active {
+  --dg-shell-body-bg: var(--app-color-grid-group-backdrop-bg, var(--app-color-canvas, transparent));
+}
+
+.engineers-salary-reference-data-grid .table-scroll,
+.engineers-salary-reference-data-grid .virtual-scroll-viewport {
+  margin: 0 !important;
+  padding: 0 !important;
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  min-width: 0 !important;
+  height: auto !important;
+  inline-size: 100% !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  max-height: none !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  position: relative !important;
+  scrollbar-gutter: stable !important;
+  background: var(--dg-shell-body-bg, transparent) !important;
+  background-repeat: no-repeat !important;
+  background-size: cover !important;
+  background-attachment: fixed !important;
+}
+
+.engineers-salary-reference-data-grid .table-scroll-shell > .table-scroll {
+  flex: 1 1 auto !important;
+}
+
+.engineers-salary-reference-data-grid .grid-body {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  min-width: 0 !important;
+  height: auto !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  max-height: none !important;
+  overflow: hidden !important;
+  background: var(--dg-shell-body-bg, transparent) !important;
+  background-repeat: no-repeat !important;
+  background-size: cover !important;
+  background-attachment: fixed !important;
+}
+
+.engineers-salary-reference-data-grid .data-grid-table,
+.engineers-salary-reference-data-grid .header-table {
+  margin: 0 !important;
+  width: var(--dg-grid-table-width, 100%) !important;
+  min-width: var(--dg-grid-table-width, 100%) !important;
+  table-layout: fixed !important;
+  border-spacing: 0 !important;
+}
+
+.engineers-salary-reference-data-grid .header-table {
+  background: linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent calc(100% - 1px),
+    var(--dg-clickup-grid-line, var(--dg-shell-outline-color)) calc(100% - 1px),
+    var(--dg-clickup-grid-line, var(--dg-shell-outline-color)) 100%
+  ) !important;
+  background-repeat: no-repeat !important;
+}
+
+.engineers-salary-reference-data-grid .table-scroll > .data-grid-table,
+.engineers-salary-reference-data-grid .virtual-scroll-viewport > .data-grid-table {
+  position: relative !important;
+}
+
+.engineers-salary-reference-data-grid .grid-filler {
+  position: absolute !important;
+  inset-inline-start: var(--dg-grid-table-width, 100%) !important;
+  inline-size: max(0px, calc(100% - var(--dg-grid-table-width, 100%))) !important;
+  min-inline-size: 0 !important;
+  box-sizing: border-box !important;
+  pointer-events: none !important;
+  z-index: 0 !important;
+}
+
+.engineers-salary-reference-data-grid .grid-filler-header {
+  inset-block-start: 0 !important;
+  block-size: var(--dg-shell-header-height) !important;
+  background:
+    linear-gradient(
+      to right,
+      var(--dg-clickup-grid-line, var(--dg-shell-outline-color)) 0 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to bottom,
+      var(--dg-shell-header-bg, transparent) 0,
+      var(--dg-shell-header-bg, transparent) calc(100% - 1px),
+      var(--dg-clickup-grid-line, var(--dg-shell-outline-color)) calc(100% - 1px),
+      var(--dg-clickup-grid-line, var(--dg-shell-outline-color)) 100%
+    ) !important;
+}
+
+.engineers-salary-reference-data-grid .grid-filler-body {
+  inset-block-start: 0 !important;
+  block-size: var(--dg-grid-filler-height, 0px) !important;
+  background:
+    linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent var(--dg-grid-filler-hover-top, 0px),
+      var(--dg-grid-filler-hover-bg, transparent) var(--dg-grid-filler-hover-top, 0px),
+      var(--dg-grid-filler-hover-bg, transparent)
+        calc(var(--dg-grid-filler-hover-top, 0px) + var(--dg-grid-filler-hover-height, 0px)),
+      transparent
+        calc(var(--dg-grid-filler-hover-top, 0px) + var(--dg-grid-filler-hover-height, 0px))
+    ),
+    linear-gradient(
+      to right,
+      var(--dg-clickup-grid-line, var(--dg-shell-outline-color)) 0 1px,
+      transparent 1px
+    ),
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent calc(var(--dg-grid-filler-row-height, var(--dg-body-row-height)) - 1px),
+      var(--dg-clickup-grid-line, var(--dg-shell-outline-color))
+        calc(var(--dg-grid-filler-row-height, var(--dg-body-row-height)) - 1px),
+      var(--dg-clickup-grid-line, var(--dg-shell-outline-color))
+        var(--dg-grid-filler-row-height, var(--dg-body-row-height))
+    ) !important;
+}
+
+.engineers-salary-reference-data-grid .data-grid-table tbody tr.data-row {
+  min-height: var(--dg-body-row-min-height) !important;
+  height: var(--dg-body-row-height) !important;
+}
+
+.engineers-salary-reference-data-grid .data-grid-table tbody tr.data-row > td {
+  min-height: var(--dg-body-row-min-height) !important;
+  height: var(--dg-body-row-height) !important;
+  padding-block: var(--dg-body-cell-padding-block) !important;
+  padding-inline: var(--dg-body-cell-padding-inline) !important;
+  line-height: 1.15 !important;
+}
+
+.engineers-salary-reference-data-grid .data-grid-table tbody tr.data-row > td.search-select-cell {
+  padding-block: 0 !important;
+  padding-inline: 0 !important;
+}
+
+.engineers-salary-reference-data-grid .header-table tr.header-row {
+  height: var(--dg-shell-header-height) !important;
+  min-height: var(--dg-shell-header-height) !important;
+  max-height: var(--dg-shell-header-height) !important;
+}
+
+.engineers-salary-reference-data-grid .header-table th {
+  height: var(--dg-shell-header-height) !important;
+  min-height: var(--dg-shell-header-height) !important;
+  max-height: var(--dg-shell-header-height) !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  padding-inline: var(--dg-shell-header-cell-padding-inline) !important;
+  vertical-align: middle !important;
+}
+
+.engineers-salary-reference-data-grid .header-table th .header-content {
+  gap: var(--dg-shell-header-icon-gap) !important;
+  padding: 0 !important;
+  min-height: 0 !important;
+  height: 100% !important;
+  align-items: center !important;
+}
+
+.engineers-salary-reference-data-grid .header-table th .header-text {
+  height: var(--dg-shell-header-text-height) !important;
+  font-size: var(--dg-shell-header-text-size) !important;
+  line-height: var(--dg-shell-header-text-line-height) !important;
+}
+
+.engineers-salary-reference-data-grid .header-table th .header-icons {
+  gap: var(--dg-shell-header-icon-cluster-gap, var(--dg-shell-header-icon-gap)) !important;
+}
+
+.engineers-salary-reference-data-grid .header-table th .header-edit-btn,
+.engineers-salary-reference-data-grid .header-table th .header-sort-btn,
+.engineers-salary-reference-data-grid .header-table th .header-filter-btn {
+  width: var(--dg-shell-header-icon-button-size) !important;
+  min-width: var(--dg-shell-header-icon-button-size) !important;
+  height: var(--dg-shell-header-icon-button-size) !important;
+  min-height: var(--dg-shell-header-icon-button-size) !important;
+}
+
+.engineers-salary-reference-data-grid .header-table th .header-edit-btn svg,
+.engineers-salary-reference-data-grid .header-table th .header-sort-btn svg,
+.engineers-salary-reference-data-grid .header-table th .header-filter-btn svg {
+  width: var(--dg-shell-header-icon-size, 12px) !important;
+  height: var(--dg-shell-header-icon-size, 12px) !important;
+}
+
+.engineers-salary-reference-data-grid .grid-header-bar {
+  display: block !important;
+  min-height: 0 !important;
+  height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+  overflow: visible !important;
+  background: var(--dg-shell-body-bg, transparent) !important;
+}
+
+.engineers-salary-reference-data-grid .grid-header-bar > * {
+  display: none !important;
+}
+
+.engineers-salary-reference-data-grid .grid-header-bar > .column-context-backdrop,
+.engineers-salary-reference-data-grid .grid-header-bar > .column-context-menu,
+.engineers-salary-reference-data-grid .grid-header-bar > .group-context-menu,
+.engineers-salary-reference-data-grid .grid-header-bar > .empty-group-context-menu,
+.engineers-salary-reference-data-grid .grid-header-bar > .grouping-help-dialog,
+.engineers-salary-reference-data-grid .grid-header-bar > .cell-context-backdrop,
+.engineers-salary-reference-data-grid .grid-header-bar > .cell-context-menu {
+  display: block !important;
+}
+
+.engineers-salary-reference-data-grid > .grid-footer-stack {
+  grid-row: 3 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  align-self: stretch !important;
+  inline-size: 100% !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+  background: transparent !important;
+  border-inline-start: 0 !important;
+  border-left: 0 !important;
+  border-inline-end: 0 !important;
+  border-bottom: 0 !important;
+}
+
+.engineers-salary-reference-data-grid > .grid-footer-stack.has-aggregate-band,
+.engineers-salary-reference-data-grid > .grid-footer-stack:has(> .grid-pagination-aggregate-band) {
+  flex: 0 0 calc(var(--dg-shell-footer-height) * 2) !important;
+  min-height: calc(var(--dg-shell-footer-height) * 2) !important;
+  max-height: calc(var(--dg-shell-footer-height) * 2) !important;
+}
+
+.engineers-salary-reference-data-grid > .grid-footer-stack > .grid-footer-custom-band {
+  width: 100% !important;
+  min-width: 0 !important;
+  flex: 0 0 auto !important;
+}
+
+.engineers-salary-reference-data-grid > .grid-footer-stack > .grid-footer-custom-band:not(:empty) {
+  border-top: 1px solid var(--dg-clickup-grid-line, var(--dg-shell-outline-color)) !important;
+}
+
+.engineers-salary-reference-data-grid > .grid-footer-stack > .grid-footer-custom-band:empty {
+  display: none !important;
+}
+
+.engineers-salary-reference-data-grid > .grid-footer-stack > .grid-pagination-aggregate-band {
+  inline-size: 100% !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  flex: 0 0 var(--dg-shell-footer-height) !important;
+  height: var(--dg-shell-footer-height) !important;
+  min-height: var(--dg-shell-footer-height) !important;
+  max-height: var(--dg-shell-footer-height) !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+  background: transparent !important;
+  border-top: 0 !important;
+  border-bottom: 0 !important;
+}
+
+.engineers-salary-reference-data-grid > .grid-pagination-footer,
+.engineers-salary-reference-data-grid > .grid-footer-stack > .grid-pagination-footer {
+  grid-row: 3 !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) !important;
+  column-gap: 8px !important;
+  inline-size: 100% !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  position: relative !important;
+  bottom: auto !important;
+  inset-block-end: auto !important;
+  align-self: stretch !important;
+  justify-self: stretch !important;
+  flex: 0 0 var(--dg-shell-footer-height) !important;
+  height: var(--dg-shell-footer-height) !important;
+  min-height: var(--dg-shell-footer-height) !important;
+  max-height: var(--dg-shell-footer-height) !important;
+  padding-block: 0 !important;
+  padding-inline: var(--dg-shell-footer-padding-inline) !important;
+  margin: 0 !important;
+  overflow: visible !important;
+  align-items: center !important;
+  box-sizing: border-box !important;
+  z-index: 3 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  border-top: 1px solid var(--dg-clickup-grid-line, var(--dg-shell-outline-color)) !important;
+  border-inline-start: 0 !important;
+  border-inline-end: 0 !important;
+  border-bottom: 0 !important;
+}
+
+.engineers-salary-reference-data-grid > .grid-footer-stack > .grid-pagination-footer {
+  border-inline-start: 0 !important;
+  border-left: 0 !important;
+  border-inline-end: 0 !important;
+  border-right: 0 !important;
+  border-bottom: 0 !important;
+}
+
+.engineers-salary-reference-data-grid > .grid-pagination-footer::before,
+.engineers-salary-reference-data-grid > .grid-pagination-footer::after,
+.engineers-salary-reference-data-grid > .grid-footer-stack > .grid-pagination-footer::before,
+.engineers-salary-reference-data-grid > .grid-footer-stack > .grid-pagination-footer::after {
+  display: none !important;
+}
+
+.engineers-salary-reference-data-grid > .grid-pagination-footer .pagination-left,
+.engineers-salary-reference-data-grid > .grid-footer-stack > .grid-pagination-footer .pagination-left {
+  grid-column: 1 !important;
+  gap: 8px !important;
+  min-width: 0 !important;
+  padding-inline-start: 0 !important;
+  padding-left: 0 !important;
+  margin-inline-start: 0 !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  display: flex !important;
+  flex: 1 1 auto !important;
+  justify-content: flex-start !important;
+  align-items: center !important;
+  align-self: center !important;
+  justify-self: start !important;
+  overflow: visible !important;
+  box-sizing: border-box !important;
+  position: static !important;
+  padding-block: 0 !important;
+  transform: none !important;
+}
+
+.engineers-salary-reference-data-grid > .grid-pagination-footer .pagination-right,
+.engineers-salary-reference-data-grid > .grid-footer-stack > .grid-pagination-footer .pagination-right {
+  grid-column: 2 !important;
+  display: flex !important;
+  flex: 0 0 auto !important;
+  justify-content: center !important;
+  gap: 4px !important;
+  min-width: 0 !important;
+  margin-inline: 0 !important;
+  margin: 0 !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  align-items: center !important;
+  align-self: center !important;
+  justify-self: center !important;
+  padding-inline-end: 0 !important;
+  box-sizing: border-box !important;
+  position: static !important;
+  padding-block: 0 !important;
+  transform: none !important;
+}
+
+.engineers-salary-reference-data-grid > .grid-pagination-footer .pagination-left > *,
+.engineers-salary-reference-data-grid > .grid-pagination-footer .pagination-right > *,
+.engineers-salary-reference-data-grid > .grid-footer-stack > .grid-pagination-footer .pagination-left > *,
+.engineers-salary-reference-data-grid > .grid-footer-stack > .grid-pagination-footer .pagination-right > * {
+  align-self: center !important;
+}
+
+.engineers-salary-reference-data-grid > .grid-pagination-footer .pagination-right .pagination-btn,
+.engineers-salary-reference-data-grid > .grid-footer-stack > .grid-pagination-footer .pagination-right .pagination-btn {
+  height: 20px !important;
+  min-height: 20px !important;
+  line-height: 1 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 !important;
+  padding: 0 6px !important;
+  border-radius: 6px !important;
+  font-size: 10px !important;
+  border-width: var(--dg-shell-divider-width) !important;
+  border-color: var(--dg-shell-outline-color, var(--dg-border-strong)) !important;
+}
+
+.engineers-salary-reference-data-grid > .grid-pagination-footer .pagination-right .page-indicator,
+.engineers-salary-reference-data-grid > .grid-footer-stack > .grid-pagination-footer .pagination-right .page-indicator {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding-inline: 6px !important;
+  white-space: nowrap !important;
+}
+
+:host([data-grid-layout-preset='default']) .engineers-salary-reference-data-grid {
+  display: grid !important;
+  grid-template-rows:
+    minmax(var(--dg-shell-header-height), auto)
+    minmax(0, 1fr)
+    auto
+    auto !important;
+  overflow: hidden !important;
+  min-height: 0 !important;
+  height: 100% !important;
+}
+
+:host([data-grid-layout-preset='default']) .engineers-salary-reference-data-grid > .grid-container {
+  grid-row: 2 !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+
+:host([data-grid-layout-preset='default']) .engineers-salary-reference-data-grid > .grid-container > .table-scroll,
+:host([data-grid-layout-preset='default'])
+  .engineers-salary-reference-data-grid
+  > .grid-container
+  > .table-scroll-shell
+  > .table-scroll,
+:host([data-grid-layout-preset='default'])
+  .engineers-salary-reference-data-grid
+  > .grid-container
+  > .virtual-scroll-viewport {
+  min-height: 0 !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+}
+
+:host([data-grid-layout-preset='default'])
+  .engineers-salary-reference-data-grid
+  > .grid-container
+  > .table-scroll-shell
+  > .table-scroll::-webkit-scrollbar,
+:host([data-grid-layout-preset='default'])
+  .engineers-salary-reference-data-grid
+  > .grid-container
+  > .table-scroll::-webkit-scrollbar,
+:host([data-grid-layout-preset='default'])
+  .engineers-salary-reference-data-grid
+  > .grid-container
+  > .virtual-scroll-viewport::-webkit-scrollbar {
+  width: var(--scrollbar-size, 8px) !important;
+  height: 0 !important;
+}
+
+.engineers-salary-reference-data-grid.layout-preset-default > .grid-container::-webkit-scrollbar:horizontal,
+.engineers-salary-reference-data-grid.layout-preset-default
+  > .grid-container
+  > .table-scroll-shell
+  > .table-scroll::-webkit-scrollbar:horizontal,
+.engineers-salary-reference-data-grid.layout-preset-default
+  > .grid-container
+  > .table-scroll::-webkit-scrollbar:horizontal,
+.engineers-salary-reference-data-grid.layout-preset-default
+  > .grid-container
+  > .virtual-scroll-viewport::-webkit-scrollbar:horizontal {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+.engineers-salary-reference-data-grid.layout-preset-default > .grid-container::-webkit-scrollbar-track:horizontal,
+.engineers-salary-reference-data-grid.layout-preset-default
+  > .grid-container
+  > .table-scroll-shell
+  > .table-scroll::-webkit-scrollbar-track:horizontal,
+.engineers-salary-reference-data-grid.layout-preset-default
+  > .grid-container
+  > .table-scroll::-webkit-scrollbar-track:horizontal,
+.engineers-salary-reference-data-grid.layout-preset-default
+  > .grid-container
+  > .virtual-scroll-viewport::-webkit-scrollbar-track:horizontal,
+.engineers-salary-reference-data-grid.layout-preset-default > .grid-container::-webkit-scrollbar-thumb:horizontal,
+.engineers-salary-reference-data-grid.layout-preset-default
+  > .grid-container
+  > .table-scroll-shell
+  > .table-scroll::-webkit-scrollbar-thumb:horizontal,
+.engineers-salary-reference-data-grid.layout-preset-default
+  > .grid-container
+  > .table-scroll::-webkit-scrollbar-thumb:horizontal,
+.engineers-salary-reference-data-grid.layout-preset-default
+  > .grid-container
+  > .virtual-scroll-viewport::-webkit-scrollbar-thumb:horizontal {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+}
+
+:host([data-grid-layout-preset='default']) .engineers-salary-reference-data-grid > .grid-footer-stack {
+  grid-row: 3 !important;
+  position: relative !important;
+  inset-block-end: auto !important;
+  bottom: auto !important;
+  margin: 0 !important;
+  margin-top: 0 !important;
+  z-index: 3 !important;
+}
+
+:host([data-grid-layout-preset='default']) .engineers-salary-reference-data-grid > .grid-bottom-scrollbar-band {
+  grid-row: 4 !important;
+  position: relative !important;
+  inset-block-end: auto !important;
+  bottom: auto !important;
+  margin: 0 !important;
+  min-width: 0 !important;
+  width: 100% !important;
+  z-index: 3 !important;
+}
+
+:host([data-grid-layout-preset='default']) .engineers-salary-reference-data-grid > .grid-pagination-footer,
+:host([data-grid-layout-preset='default'])
+  .engineers-salary-reference-data-grid
+  > .grid-footer-stack
+  > .grid-pagination-footer {
+  grid-row: 3 !important;
+  position: relative !important;
+  inset-block-end: auto !important;
+  bottom: auto !important;
+  margin: 0 !important;
+  margin-top: 0 !important;
+  flex: 0 0 var(--dg-shell-footer-height) !important;
+  min-height: var(--dg-shell-footer-height) !important;
+  z-index: 3 !important;
+  border-inline-start: 0 !important;
+  border-left: 0 !important;
+}
+
+:host([data-grid-layout-preset='default']) .header-table,
+:host([data-grid-layout-preset='default']) .data-grid-table {
+  width: var(--dg-grid-table-width, 100%) !important;
+  min-width: var(--dg-grid-table-width, 100%) !important;
+}
+
+:host([data-grid-layout-preset='default']) .table-scroll::-webkit-scrollbar,
+:host([data-grid-layout-preset='default']) .virtual-scroll-viewport::-webkit-scrollbar {
+  width: var(--scrollbar-size, 8px) !important;
+  height: 0 !important;
+}
+
+.header-focus-reset {
+  outline: none !important;
+  outline-width: 0 !important;
+  outline-style: none !important;
+}
+
+.row-actions-col {
+  width: var(--dg-row-actions-column-width) !important;
+}
+
+.engineers-salary-reference-data-grid .header-table thead tr.header-row th.actions-cell,
+.engineers-salary-reference-data-grid .header-table thead tr.header-row th.row-actions-cell,
+.engineers-salary-reference-data-grid .data-grid-table tbody tr.data-row > td.actions-cell,
+.engineers-salary-reference-data-grid .data-grid-table tbody tr.data-row > td.row-actions-cell,
+.engineers-salary-reference-data-grid .data-grid-table tbody tr.group-row > td.row-actions-cell,
+.engineers-salary-reference-data-grid .data-grid-table tbody tr.group-footer-row > td.row-actions-cell {
+  width: var(--dg-row-actions-column-width) !important;
+  min-width: var(--dg-row-actions-column-width) !important;
+  max-width: var(--dg-row-actions-column-width) !important;
+}
+
+.subgroup-table {
+  table-layout: fixed !important;
+}
+
+.grid-container {
+  position: relative;
+  flex: 1;
+  direction: ltr;
+  overflow-x: auto;
+  overflow-y: auto;
+  background: transparent;
+  color: inherit;
+  scrollbar-width: thin;
+  scrollbar-color: var(--dg-clickup-resize-line, var(--dg-clickup-muted-label)) transparent;
+
+  // Hide the original thead inside the scrollable table
+  .data-grid-table thead {
+    display: none !important;
+  }
+
+  &.virtual-scroll {
+    overflow: hidden;
+    max-height: none;
+  }
+}
+
+.grid-container::-webkit-scrollbar {
+  width: 8px;
+  height: 0;
+}
+
+:host([data-grid-layout-preset='default']) .engineers-salary-reference-data-grid > .grid-container::-webkit-scrollbar {
+  width: var(--scrollbar-size, 8px) !important;
+  height: 0 !important;
+}
+
+.engineers-salary-reference-data-grid.layout-preset-default > .grid-container::-webkit-scrollbar:horizontal {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+.grid-container::-webkit-scrollbar-thumb {
+  background: var(--dg-clickup-resize-line, var(--dg-clickup-muted-label));
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.grid-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.grid-container::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+.engineers-salary-reference-data-grid.layout-preset-default > .grid-container {
+  overflow-x: hidden !important;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+.engineers-salary-reference-data-grid.layout-preset-default > .grid-container > .table-scroll,
+.engineers-salary-reference-data-grid.layout-preset-default > .grid-container > .table-scroll-shell > .table-scroll,
+.engineers-salary-reference-data-grid.layout-preset-default > .grid-container > .virtual-scroll-viewport {
+  overflow-x: hidden !important;
+}
+
+.engineers-salary-reference-data-grid.layout-preset-default > .grid-container::-webkit-scrollbar,
+.engineers-salary-reference-data-grid.layout-preset-default > .grid-container::-webkit-scrollbar:horizontal,
+.engineers-salary-reference-data-grid.layout-preset-default
+  > .grid-container
+  > .table-scroll::-webkit-scrollbar:horizontal,
+.engineers-salary-reference-data-grid.layout-preset-default
+  > .grid-container
+  > .table-scroll-shell
+  > .table-scroll::-webkit-scrollbar:horizontal,
+.engineers-salary-reference-data-grid.layout-preset-default
+  > .grid-container
+  > .virtual-scroll-viewport::-webkit-scrollbar:horizontal {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}

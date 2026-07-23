@@ -1,0 +1,110 @@
+@if (vm(); as model) {
+  <section class="profile-page">
+    <div class="profile-sticky-stack">
+      <header class="profile-top-card panel">
+        <div class="profile-top-card__header">
+          <div class="identity">
+            <div class="avatar">{{ model.initials }}</div>
+            <div class="identity-copy">
+              <h1>{{ model.name }}</h1>
+              <p class="overline">{{ model.level }}</p>
+              <p class="profile-role">{{ model.jobTitle }} - {{ model.department }}</p>
+              <p class="profile-summary">{{ model.summary }}</p>
+            </div>
+          </div>
+
+          @if (primaryRole(); as roleInfo) {
+            <div class="identity-access" aria-label="Access role">
+              <span class="role-meaning__label">Access</span>
+              <span class="role-meaning__badge">{{ roleInfo.label }}</span>
+            </div>
+          }
+        </div>
+
+        <section class="profile-view-shell" aria-label="Profile sections">
+          <nav class="profile-view-bar">
+            @for (tab of tabs(); track tab.id) {
+              <button
+                type="button"
+                class="view-tab"
+                [class.active]="activeTab() === tab.id"
+                (click)="setActiveTab(tab.id)"
+              >
+                <i [attr.class]="'bi view-tab-icon ' + tab.icon" aria-hidden="true"></i>
+                <span class="view-tab-label">{{ tab.label }}</span>
+                @if (tab.count; as count) {
+                  <span class="view-tab-count">{{ count }}</span>
+                }
+              </button>
+            }
+          </nav>
+        </section>
+      </header>
+    </div>
+
+    <div class="profile-scroll-region">
+      @switch (activeTab()) {
+        @case ('overview') {
+          <feature-account-profile-overview-tab
+            [model]="model"
+            [headlineStats]="headlineStats()"
+            [readiness]="readiness()"
+            [highlights]="highlights"
+            [recognitions]="recognitions"
+          ></feature-account-profile-overview-tab>
+        }
+
+        @case ('performance') {
+          <feature-account-profile-performance-tab
+            [quickSignals]="quickSignals()"
+            [initiatives]="initiatives"
+            [keyMetrics]="keyMetrics"
+          ></feature-account-profile-performance-tab>
+        }
+
+        @case ('insights') {
+          <feature-account-profile-insights-tab
+            [evaluationPulse]="evaluationPulse"
+            [competencyScores]="competencyScores"
+            [trendPoints]="trendPoints"
+            [goalTrack]="goalTrack"
+            [feedbackPulse]="feedbackPulse"
+            [actionPlan]="actionPlan"
+            [essentials]="essentials"
+            [focusRecommendations]="focusRecommendations"
+          ></feature-account-profile-insights-tab>
+        }
+
+        @case ('development') {
+          <feature-account-profile-development-tab
+            [availability]="availability"
+            [learning]="learning"
+            [certifications]="certifications"
+            [wellbeingNote]="model.wellbeingNote"
+          ></feature-account-profile-development-tab>
+        }
+
+        @case ('network') {
+          <feature-account-profile-network-tab
+            [supportContacts]="supportContacts"
+            [engagements]="engagements"
+          ></feature-account-profile-network-tab>
+        }
+
+        @case ('compliance') {
+          <feature-account-profile-compliance-tab
+            [documents]="documents"
+            [model]="model"
+          ></feature-account-profile-compliance-tab>
+        }
+      }
+
+      @if (!hasUser()) {
+        <footer class="profile-notice panel">
+          <strong>Profile not linked</strong>
+          <span>Sign in to sync your live workspace data. Displaying reference profile.</span>
+        </footer>
+      }
+    </div>
+  </section>
+}

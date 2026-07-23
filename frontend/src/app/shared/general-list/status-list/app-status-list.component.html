@@ -1,0 +1,1287 @@
+@let columns = resolvedColumns();
+@let gridColumns = gridTemplate(columns);
+@let tableWidth = gridTableWidth(columns);
+@let stretchedTableWidth = stretchToContainer ? '100%' : tableWidth;
+<div
+  class="tsl-shared-scroll"
+  #sharedScroll
+  cdkScrollable
+  (wheel)="onSharedScrollWheel($event)"
+  (scroll)="onSharedScrollSync()"
+>
+  <section
+    class="tsl-list"
+    cdkDropList
+    cdkDropListOrientation="vertical"
+    [cdkDropListData]="displayGroups()"
+    [cdkDropListDisabled]="!groupReorderEnabled || displayGroups().length < 2"
+    (cdkDropListDropped)="onGroupsDropped($event)"
+  >
+    @for (group of displayGroups(); track trackGroup($index, group)) {
+      <section
+        class="tsl-group"
+        [ngClass]="{
+          'tsl-group-custom': isCustomListGroupId(group.id),
+          'tsl-group-empty': groupCount(group) === 0 && !hasQuickAddDraft(group.id)
+        }"
+        cdkDrag
+        cdkDragLockAxis="y"
+        [cdkDragData]="group"
+        [style.width]="stretchedTableWidth"
+        [cdkDragDisabled]="
+          !groupReorderEnabled || displayGroups().length < 2 || isCustomListGroupId(group.id)
+        "
+        [cdkDragPreviewClass]="'list-group-drag-preview'"
+      >
+        <ng-template cdkDragPreview>
+          <section class="tsl-group-drag-chip list-group-drag-preview">
+            <span
+              class="tsl-group-pill"
+              [ngClass]="group.toneClass"
+              [ngStyle]="groupPillStyle(group)"
+            >
+              @if (groupStatusIcon(group); as icon) {
+                <i class="tsl-group-pill-icon" [appIcon]="icon" aria-hidden="true"></i>
+              }
+              {{ groupDisplayName(group) }}
+            </span>
+            <span class="tsl-group-count">{{ groupCount(group) }}</span>
+          </section>
+        </ng-template>
+
+        <ng-template cdkDragPlaceholder>
+          <section class="tsl-group-drag-placeholder" aria-hidden="true"></section>
+        </ng-template>
+
+        <header class="tsl-group-head">
+          <div class="tsl-group-head-leading">
+            <button
+              class="tsl-group-grip"
+              type="button"
+              cdkDragHandle
+              [attr.aria-label]="'Move ' + group.name"
+              [disabled]="
+                !groupReorderEnabled || displayGroups().length < 2 || isCustomListGroupId(group.id)
+              "
+              (click)="$event.stopPropagation()"
+            >
+              <i appIcon="grip-vertical" aria-hidden="true"></i>
+            </button>
+            <button
+              class="tsl-group-toggle"
+              type="button"
+              (click)="onGroupToggle(group.id)"
+              [attr.aria-expanded]="!isCollapsed(group.id)"
+              [attr.aria-label]="'Toggle ' + group.name"
+            >
+              <i
+                [appIcon]="isCollapsed(group.id) ? 'caret-right-fill' : 'caret-down-fill'"
+                aria-hidden="true"
+              ></i>
+            </button>
+
+            @if (isGroupRenaming(group.id)) {
+              <label class="tsl-group-rename" (click)="$event.stopPropagation()">
+                <input
+                  type="text"
+                  autofocus
+                  [value]="groupRenameDraft()"
+                  [attr.aria-label]="'Rename ' + groupDisplayName(group)"
+                  (input)="onGroupRenameDraftChange($any($event.target).value)"
+                  (keydown.enter)="commitGroupRename(group); $event.preventDefault()"
+                  (keydown.escape)="cancelGroupRename(); $event.preventDefault()"
+                />
+                <button
+                  class="tsl-group-rename-save"
+                  type="button"
+                  (click)="commitGroupRename(group)"
+                  [attr.aria-label]="'Save status name'"
+                >
+                  <i appIcon="check-lg" aria-hidden="true"></i>
+                </button>
+              </label>
+            } @else {
+              <button
+                class="tsl-group-pill tsl-group-pill-btn"
+                type="button"
+                [ngClass]="group.toneClass"
+                [ngStyle]="groupPillStyle(group)"
+                [attr.aria-label]="'Rename ' + groupDisplayName(group)"
+                (click)="startGroupRename(group)"
+              >
+                @if (groupStatusIcon(group); as icon) {
+                  <i class="tsl-group-pill-icon" [appIcon]="icon" aria-hidden="true"></i>
+                }
+                {{ groupDisplayName(group) }}
+              </button>
+              <span class="tsl-group-count">{{ groupCount(group) }}</span>
+            }
+          </div>
+
+          @if (groupActionsEnabled) {
+            <div class="tsl-group-actions">
+              <div class="tsl-group-menu" [class.is-open]="isGroupMenuOpen(group.id)">
+                <button
+                  class="tsl-group-act tsl-group-menu-trigger"
+                  type="button"
+                  [attr.aria-expanded]="isGroupMenuOpen(group.id)"
+                  [attr.aria-label]="'Open group options for ' + groupDisplayName(group)"
+                  (click)="toggleGroupMenu($event, group.id)"
+                >
+                  <i appIcon="three-dots" aria-hidden="true"></i>
+                </button>
+
+                @if (isGroupMenuOpen(group.id)) {
+                  <div class="tsl-group-menu-list" (click)="$event.stopPropagation()">
+                    <div class="tsl-group-menu-label">Group options</div>
+
+                    <button
+                      class="tsl-group-menu-item"
+                      type="button"
+                      (click)="startGroupRename(group)"
+                    >
+                      <i appIcon="pencil" aria-hidden="true"></i>
+                      <span>Rename</span>
+                    </button>
+
+                    <button
+                      class="tsl-group-menu-item"
+                      type="button"
+                      (click)="onGroupActionSelected('newStatus', group.id)"
+                    >
+                      <i appIcon="plus-lg" aria-hidden="true"></i>
+                      <span>New status</span>
+                    </button>
+
+                    <button
+                      class="tsl-group-menu-item"
+                      type="button"
+                      (click)="onGroupActionSelected('editStatuses', group.id)"
+                    >
+                      <i appIcon="gear" aria-hidden="true"></i>
+                      <span>Edit statuses</span>
+                    </button>
+
+                    <div class="tsl-group-menu-sep"></div>
+
+                    <button
+                      class="tsl-group-menu-item"
+                      type="button"
+                      (click)="onGroupToggle(group.id)"
+                    >
+                      <i appIcon="arrow-up-circle" aria-hidden="true"></i>
+                      <span>Collapse group</span>
+                    </button>
+
+                    <button
+                      class="tsl-group-menu-item"
+                      type="button"
+                      (click)="onGroupActionSelected('hideStatus', group.id)"
+                    >
+                      <i appIcon="eye-slash" aria-hidden="true"></i>
+                      <span>Hide status</span>
+                    </button>
+
+                    <div class="tsl-group-menu-sep"></div>
+
+                    @if (selectionEnabled) {
+                      <button
+                        class="tsl-group-menu-item"
+                        type="button"
+                        (click)="selectAllRowsInGroup(group.id)"
+                      >
+                        <i appIcon="check2-all" aria-hidden="true"></i>
+                        <span>Select all</span>
+                      </button>
+                    }
+
+                    <button
+                      class="tsl-group-menu-item"
+                      type="button"
+                      (click)="onGroupActionSelected('collapseAllGroups', group.id)"
+                    >
+                      <i appIcon="arrows-collapse" aria-hidden="true"></i>
+                      <span>Collapse all groups</span>
+                    </button>
+
+                    <div class="tsl-group-menu-sep"></div>
+
+                    <button
+                      class="tsl-group-menu-item"
+                      type="button"
+                      (click)="onGroupActionSelected('automateStatus', group.id)"
+                    >
+                      <i appIcon="lightning-charge" aria-hidden="true"></i>
+                      <span>Automate status</span>
+                    </button>
+                  </div>
+                }
+              </div>
+              @if (addRowEnabled) {
+                <button class="tsl-group-act" type="button" (click)="onGroupAdd(group.id)">
+                  <i appIcon="plus-lg" aria-hidden="true"></i>
+                </button>
+              }
+            </div>
+          }
+        </header>
+
+        @if (!isCollapsed(group.id)) {
+          <div class="tsl-grid-scroll">
+            <div
+              class="tsl-grid-table"
+              [style.width]="stretchedTableWidth"
+              [style.--tsl-grid-columns]="gridColumns"
+            >
+              <div
+                class="tsl-grid-head"
+                cdkDropList
+                cdkDropListOrientation="horizontal"
+                [cdkDropListData]="columns"
+                (cdkDropListDropped)="onColumnsDropped($event)"
+                [style.gridTemplateColumns]="gridColumns"
+              >
+                @if (hasLeadingControlTrack()) {
+                  <div class="tsl-head-ctrl" aria-hidden="true"></div>
+                }
+                @for (column of columns; track trackColumn($index, column)) {
+                  <div
+                    class="tsl-head-col"
+                    cdkDrag
+                    [cdkDragDisabled]="column === 'name'"
+                    cdkDragPreviewContainer="parent"
+                    [cdkDragPreviewClass]="'list-col-drag-preview'"
+                    cdkDragLockAxis="x"
+                    [cdkDragData]="column"
+                    [class.is-locked]="column === 'name'"
+                    [class.is-resizing]="isResizingColumn(column)"
+                    #columnEl
+                  >
+                    <span class="tsl-head-label">{{ columnHeader(column) }}</span>
+                    <button
+                      class="tsl-head-sort"
+                      type="button"
+                      [class.is-active]="isColumnSorted(column)"
+                      [attr.aria-label]="'Sort by ' + columnHeader(column)"
+                      (mousedown)="$event.stopPropagation()"
+                      (click)="onColumnSortToggle($event, column)"
+                    >
+                      <i [appIcon]="sortIconClass(column)" aria-hidden="true"></i>
+                    </button>
+                    <button
+                      class="tsl-col-resize"
+                      type="button"
+                      [class.is-resizing]="isResizingColumn(column)"
+                      [attr.aria-label]="'Resize ' + columnHeader(column) + ' column'"
+                      (mousedown)="startColumnResize($event, column, columnEl)"
+                      (click)="stopColumnResizeClick($event)"
+                    >
+                      <span aria-hidden="true"></span>
+                    </button>
+                  </div>
+                }
+                @if (hasTrailingActionTrack()) {
+                  @if (columnManagementEnabled) {
+                    <button
+                      class="tsl-head-add tsl-head-add-btn"
+                      type="button"
+                      aria-label="Open columns panel"
+                      (click)="onColumnsPanelRequest($event)"
+                    >
+                      <i appIcon="plus-circle" aria-hidden="true"></i>
+                    </button>
+                  } @else {
+                    <div class="tsl-head-add" aria-hidden="true"></div>
+                  }
+                }
+              </div>
+
+              @let groupRows = rowsForGroup(group);
+              <div
+                class="tsl-grid-body"
+                cdkDropList
+                [id]="dropListId(group.id)"
+                [cdkDropListConnectedTo]="connectedDropListIds()"
+                [cdkDropListData]="groupRows"
+                [class.is-drag-active]="isRowDragActive()"
+                [class.is-receiving]="isDropListReceiving(group.id)"
+                [class.hide-placeholder]="hidePlaceholderInGroup(group.id)"
+                (cdkDropListEntered)="onRowsListEntered(group.id)"
+                (cdkDropListDropped)="onRowsDropped(group.id, $event)"
+              >
+                @if (hasQuickAddDraft(group.id)) {
+                  <div
+                    class="tsl-grid-row tsl-grid-row-quick"
+                    [style.gridTemplateColumns]="gridColumns"
+                  >
+                    @if (hasLeadingControlTrack()) {
+                      <div class="tsl-cell row-ctrl" aria-hidden="true"></div>
+                    }
+                    <div
+                      class="tsl-cell quick-compose"
+                      [style.gridColumn]="quickComposeGridColumn()"
+                    >
+                      <div class="quick-compose-main">
+                        <span class="quick-compose-bullet" aria-hidden="true">
+                          <i appIcon="record-circle"></i>
+                        </span>
+                        <input
+                          class="tsl-quick-add-input"
+                          type="text"
+                          autofocus
+                          placeholder="Task Name or type '/' for commands"
+                          [value]="quickAddTitle(group.id)"
+                          (input)="onQuickAddTitleChange(group.id, $any($event.target).value)"
+                          (keydown.enter)="commitQuickAdd(group); $event.preventDefault()"
+                          (keydown.escape)="cancelQuickAdd(group.id); $event.preventDefault()"
+                        />
+                        <div class="quick-compose-actions">
+                          <button
+                            class="quick-meta-pill"
+                            type="button"
+                            cdkOverlayOrigin
+                            #quickComposePickerOrigin="cdkOverlayOrigin"
+                            [attr.aria-expanded]="hasOpenQuickComposePicker()"
+                            (click)="
+                              toggleQuickComposePicker($event, group.id, quickComposePickerOrigin)
+                            "
+                          >
+                            <i appIcon="record-circle"></i>
+                            <span>{{ quickComposeTypeLabel(group.id) }}</span>
+                          </button>
+                          <button class="quick-meta-icon" type="button" aria-label="Task option">
+                            <i appIcon="slash-lg"></i>
+                          </button>
+                          <button
+                            class="quick-meta-icon"
+                            type="button"
+                            aria-label="Assignee option"
+                          >
+                            <i appIcon="person-plus"></i>
+                          </button>
+                          <button
+                            class="quick-meta-icon"
+                            type="button"
+                            aria-label="Due date option"
+                          >
+                            <i appIcon="calendar-plus"></i>
+                          </button>
+                          <button
+                            class="quick-meta-icon"
+                            type="button"
+                            aria-label="Priority option"
+                          >
+                            <i appIcon="flag"></i>
+                          </button>
+                          <button class="quick-meta-icon" type="button" aria-label="Tag option">
+                            <i appIcon="tag"></i>
+                          </button>
+                          <button
+                            class="quick-act quick-cancel"
+                            type="button"
+                            (click)="cancelQuickAdd(group.id)"
+                          >
+                            Cancel
+                          </button>
+                          <button
+                            class="quick-act quick-save"
+                            type="button"
+                            (click)="commitQuickAdd(group)"
+                          >
+                            Save
+                            <i appIcon="arrow-return-left" aria-hidden="true"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                }
+
+                @for (
+                  localRow of localRows(group.id);
+                  track localRow.id;
+                  let isLastLocalRow = $last
+                ) {
+                  <div
+                    class="tsl-grid-row tsl-grid-row-local"
+                    [class.tsl-grid-row--tail]="!groupRows.length && isLastLocalRow"
+                    [style.gridTemplateColumns]="gridColumns"
+                  >
+                    @if (hasLeadingControlTrack()) {
+                      <div class="tsl-cell row-ctrl" aria-hidden="true"></div>
+                    }
+                    @for (column of columns; track trackColumn($index, column)) {
+                      @if (column === 'name') {
+                        <div class="tsl-cell name">
+                          <div class="row-name-block">
+                            <span class="row-name">{{ localRow.title }}</span>
+                          </div>
+                        </div>
+                      } @else if (column === 'assignee') {
+                        <div class="tsl-cell assignee">
+                          <span class="row-avatar">{{ localRow.ownerInitials || '--' }}</span>
+                          <span class="truncate">{{ localRow.owner || 'Unassigned' }}</span>
+                        </div>
+                      } @else if (column === 'dueDate') {
+                        <div class="tsl-cell due" [class.overdue]="localRow.dueOverdue">
+                          <span class="tsl-cell-text">{{ localRow.dueLabel || '--' }}</span>
+                        </div>
+                      } @else if (column === 'priority') {
+                        <div class="tsl-cell">
+                          <span class="priority-pill" [ngClass]="localRow.priorityClass">
+                            {{ localRow.priorityLabel || '--' }}
+                          </span>
+                        </div>
+                      } @else if (column === 'status') {
+                        <div class="tsl-cell">
+                          <span class="status-pill" [ngClass]="localRow.statusClass">
+                            {{ localRow.statusLabel || '--' }}
+                          </span>
+                        </div>
+                      } @else if (column === 'comments') {
+                        <div class="tsl-cell comments-cell">
+                          <i appIcon="chat-left" aria-hidden="true"></i>
+                          <span>{{ localRow.commentsCount ?? 0 }}</span>
+                        </div>
+                      } @else {
+                        <div class="tsl-cell" [ngClass]="rowCellClass(column)">
+                          <span class="tsl-cell-text">{{ rowValue(localRow, column) }}</span>
+                        </div>
+                      }
+                    }
+                    @if (hasTrailingActionTrack()) {
+                      <div class="tsl-cell add-col-cell" aria-hidden="true"></div>
+                    }
+                  </div>
+                }
+
+                @for (row of groupRows; track trackRow($index, row); let isLastRow = $last) {
+                  <div
+                    class="tsl-grid-row"
+                    [class.tsl-grid-row--tail]="isLastRow"
+                    [class.tsl-grid-row--selected]="isRowSelected(row.id)"
+                    cdkDrag
+                    cdkDragLockAxis="y"
+                    [cdkDragData]="row"
+                    [cdkDragDisabled]="!rowDragEnabled || isLocalRow(row.id)"
+                    [cdkDragPreviewClass]="'list-row-drag-preview'"
+                    [style.gridTemplateColumns]="gridColumns"
+                    (cdkDragStarted)="onRowDragStarted(group.id)"
+                    (cdkDragEnded)="onRowDragEnded()"
+                  >
+                    @if (hasLeadingControlTrack()) {
+                      <div
+                        class="tsl-cell row-ctrl"
+                        [class.row-ctrl--draggable]="rowDragEnabled"
+                        [class.row-ctrl--selectable]="selectionEnabled"
+                        (click)="$event.stopPropagation()"
+                      >
+                        <span class="row-ordinal" aria-hidden="true">{{ $index + 1 }}</span>
+                        @if (rowDragEnabled) {
+                          <button
+                            class="row-drag-handle"
+                            type="button"
+                            cdkDragHandle
+                            [attr.aria-label]="'Move ' + (row.title || itemLabel)"
+                            tabindex="-1"
+                            (click)="$event.stopPropagation()"
+                          >
+                            <i appIcon="grip-vertical" aria-hidden="true"></i>
+                          </button>
+                        }
+                        @if (selectionEnabled) {
+                          <label class="row-check" (mousedown)="$event.stopPropagation()">
+                            <input
+                              type="checkbox"
+                              [checked]="isRowSelected(row.id)"
+                              (click)="$event.stopPropagation()"
+                              (change)="onRowSelectionToggle($event, row.id)"
+                            />
+                            <span aria-hidden="true"></span>
+                          </label>
+                        }
+                      </div>
+                    }
+                    @for (column of columns; track trackColumn($index, column)) {
+                      @if (column === 'name') {
+                        <div
+                          class="tsl-cell name tsl-cell-open-task"
+                          role="button"
+                          tabindex="0"
+                          [attr.aria-label]="'Open ' + itemLabel + ' ' + (row.title || 'details')"
+                          (click)="onNameCellActivate($event, group.id, row)"
+                          (keydown.enter)="onNameCellActivate($event, group.id, row)"
+                          (keydown.space)="onNameCellActivate($event, group.id, row)"
+                        >
+                          <div class="row-name-block">
+                            <span class="row-name">{{ row.title }}</span>
+                          </div>
+                        </div>
+                      } @else if (column === 'assignee') {
+                        <div
+                          class="tsl-cell assignee tsl-cell-hoverable has-state-icon"
+                          cdkOverlayOrigin
+                          #assigneeEditorOrigin="cdkOverlayOrigin"
+                          [class.tsl-cell-editable]="isCellEditable('assignee')"
+                          [class.is-cell-readonly]="!isCellEditable('assignee')"
+                          [class.is-cell-editor-open]="isCellEditorActive(row.id, 'assignee')"
+                          (click)="
+                            onCellEditorTrigger(
+                              $event,
+                              group.id,
+                              row,
+                              'assignee',
+                              assigneeEditorOrigin
+                            )
+                          "
+                        >
+                          <span class="row-avatar">{{ row.ownerInitials || '--' }}</span>
+                          <span class="truncate">{{ row.owner || 'Unassigned' }}</span>
+                          @if (isCellEditable('assignee')) {
+                            <i appIcon="pencil" class="tsl-cell-state-icon" aria-hidden="true"></i>
+                          } @else {
+                            <i
+                              appIcon="pencil"
+                              class="tsl-cell-state-icon tsl-cell-state-icon-readonly"
+                              aria-hidden="true"
+                            ></i>
+                          }
+                        </div>
+                      } @else if (column === 'dueDate') {
+                        <div
+                          class="tsl-cell due tsl-cell-hoverable has-state-icon"
+                          cdkOverlayOrigin
+                          #dueDateEditorOrigin="cdkOverlayOrigin"
+                          [class.overdue]="row.dueOverdue"
+                          [class.tsl-cell-editable]="isCellEditable('dueDate')"
+                          [class.is-cell-readonly]="!isCellEditable('dueDate')"
+                          [class.is-cell-editor-open]="isCellEditorActive(row.id, 'dueDate')"
+                          (click)="
+                            onCellEditorTrigger(
+                              $event,
+                              group.id,
+                              row,
+                              'dueDate',
+                              dueDateEditorOrigin
+                            )
+                          "
+                        >
+                          <span class="tsl-cell-text">{{ row.dueLabel || '--' }}</span>
+                          @if (isCellEditable('dueDate')) {
+                            <i appIcon="pencil" class="tsl-cell-state-icon" aria-hidden="true"></i>
+                          } @else {
+                            <i
+                              appIcon="pencil"
+                              class="tsl-cell-state-icon tsl-cell-state-icon-readonly"
+                              aria-hidden="true"
+                            ></i>
+                          }
+                        </div>
+                      } @else if (column === 'priority') {
+                        <div
+                          class="tsl-cell tsl-cell-hoverable has-state-icon"
+                          cdkOverlayOrigin
+                          #priorityEditorOrigin="cdkOverlayOrigin"
+                          [class.tsl-cell-editable]="isCellEditable('priority')"
+                          [class.is-cell-readonly]="!isCellEditable('priority')"
+                          [class.is-cell-editor-open]="isCellEditorActive(row.id, 'priority')"
+                          (click)="
+                            onCellEditorTrigger(
+                              $event,
+                              group.id,
+                              row,
+                              'priority',
+                              priorityEditorOrigin
+                            )
+                          "
+                        >
+                          <span class="priority-pill" [ngClass]="row.priorityClass">
+                            {{ row.priorityLabel || '--' }}
+                          </span>
+                          @if (isCellEditable('priority')) {
+                            <i appIcon="pencil" class="tsl-cell-state-icon" aria-hidden="true"></i>
+                          } @else {
+                            <i
+                              appIcon="pencil"
+                              class="tsl-cell-state-icon tsl-cell-state-icon-readonly"
+                              aria-hidden="true"
+                            ></i>
+                          }
+                        </div>
+                      } @else if (column === 'status') {
+                        <div
+                          class="tsl-cell tsl-cell-hoverable has-state-icon"
+                          cdkOverlayOrigin
+                          #statusEditorOrigin="cdkOverlayOrigin"
+                          [class.tsl-cell-editable]="isCellEditable('status')"
+                          [class.is-cell-readonly]="!isCellEditable('status')"
+                          [class.is-cell-editor-open]="isCellEditorActive(row.id, 'status')"
+                          (click)="
+                            onCellEditorTrigger($event, group.id, row, 'status', statusEditorOrigin)
+                          "
+                        >
+                          <span class="status-pill" [ngClass]="row.statusClass">
+                            {{ row.statusLabel || '--' }}
+                          </span>
+                          @if (isCellEditable('status')) {
+                            <i appIcon="pencil" class="tsl-cell-state-icon" aria-hidden="true"></i>
+                          } @else {
+                            <i
+                              appIcon="pencil"
+                              class="tsl-cell-state-icon tsl-cell-state-icon-readonly"
+                              aria-hidden="true"
+                            ></i>
+                          }
+                        </div>
+                      } @else if (column === 'comments') {
+                        <div
+                          class="tsl-cell comments-cell tsl-cell-hoverable has-state-icon"
+                          cdkOverlayOrigin
+                          #commentsEditorOrigin="cdkOverlayOrigin"
+                          [class.tsl-cell-editable]="isCellEditable('comments')"
+                          [class.is-cell-readonly]="!isCellEditable('comments')"
+                          [class.is-cell-editor-open]="isCellEditorActive(row.id, 'comments')"
+                          (click)="
+                            onCellEditorTrigger(
+                              $event,
+                              group.id,
+                              row,
+                              'comments',
+                              commentsEditorOrigin
+                            )
+                          "
+                        >
+                          <i appIcon="chat-left" aria-hidden="true"></i>
+                          <span>{{ row.commentsCount ?? 0 }}</span>
+                          @if (isCellEditable('comments')) {
+                            <i appIcon="pencil" class="tsl-cell-state-icon" aria-hidden="true"></i>
+                          } @else {
+                            <i
+                              appIcon="pencil"
+                              class="tsl-cell-state-icon tsl-cell-state-icon-readonly"
+                              aria-hidden="true"
+                            ></i>
+                          }
+                        </div>
+                      } @else {
+                        <div
+                          class="tsl-cell tsl-cell-hoverable has-state-icon"
+                          cdkOverlayOrigin
+                          #cellEditorOrigin="cdkOverlayOrigin"
+                          [class.tsl-cell-editable]="isCellEditable(column)"
+                          [class.is-cell-readonly]="!isCellEditable(column)"
+                          [class.is-cell-editor-open]="isCellEditorActive(row.id, column)"
+                          [ngClass]="rowCellClass(column)"
+                          (click)="
+                            onCellEditorTrigger($event, group.id, row, column, cellEditorOrigin)
+                          "
+                        >
+                          <span class="tsl-cell-text">{{ rowValue(row, column) }}</span>
+                          @if (isCellEditable(column)) {
+                            <i appIcon="pencil" class="tsl-cell-state-icon" aria-hidden="true"></i>
+                          } @else {
+                            <i
+                              appIcon="pencil"
+                              class="tsl-cell-state-icon tsl-cell-state-icon-readonly"
+                              aria-hidden="true"
+                            ></i>
+                          }
+                        </div>
+                      }
+                    }
+                    @if (hasTrailingActionTrack()) {
+                      <div class="tsl-cell add-col-cell">
+                        @if (rowMenuEnabled) {
+                          <button
+                            class="tsl-row-act"
+                            type="button"
+                            cdkOverlayOrigin
+                            #rowMenuOrigin="cdkOverlayOrigin"
+                            [class.is-open]="isRowMenuOpen(row.id)"
+                            [attr.aria-expanded]="isRowMenuOpen(row.id)"
+                            [attr.aria-label]="
+                              'Open ' + itemLabel + ' menu for ' + (row.title || itemLabel)
+                            "
+                            (click)="onRowMenuTrigger($event, group.id, row, rowMenuOrigin)"
+                          >
+                            <i appIcon="three-dots" aria-hidden="true"></i>
+                          </button>
+                        }
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+
+              @if (addRowEnabled && !hasQuickAddDraft(group.id)) {
+                <div
+                  class="tsl-grid-row tsl-grid-row-add"
+                  [style.gridTemplateColumns]="gridColumns"
+                >
+                  @if (hasLeadingControlTrack()) {
+                    <div class="tsl-cell row-ctrl" aria-hidden="true"></div>
+                  }
+                  @for (column of columns; track trackColumn($index, column)) {
+                    @if (column === 'name') {
+                      <div class="tsl-cell name tsl-add-row-main">
+                        <button class="tsl-add-row" type="button" (click)="onAddRow(group.id)">
+                          <i appIcon="plus-lg" aria-hidden="true"></i>
+                          <span>{{ addRowLabel }}</span>
+                          <i
+                            appIcon="chevron-down"
+                            class="tsl-add-row-caret"
+                            aria-hidden="true"
+                          ></i>
+                        </button>
+                      </div>
+                    } @else {
+                      <div class="tsl-cell tsl-add-calc-cell">
+                        <button
+                          class="tsl-add-calc-pill tsl-add-calc-btn"
+                          type="button"
+                          cdkOverlayOrigin
+                          #calcMenuOrigin="cdkOverlayOrigin"
+                          [class.is-open]="isCalcMenuOpen(group.id, column)"
+                          [attr.aria-expanded]="isCalcMenuOpen(group.id, column)"
+                          [attr.aria-label]="'Open calculate menu for ' + columnHeader(column)"
+                          (click)="onCalcMenuTrigger($event, group.id, column, calcMenuOrigin)"
+                        >
+                          <span>Calculate</span>
+                          <i appIcon="chevron-down" aria-hidden="true"></i>
+                        </button>
+                      </div>
+                    }
+                  }
+                  @if (hasTrailingActionTrack()) {
+                    <div class="tsl-cell add-col-cell" aria-hidden="true"></div>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+        }
+      </section>
+    }
+
+    @if (showAddListControl && groupReorderEnabled && addRowEnabled) {
+      <div class="tsl-add-list-row" [style.width]="stretchedTableWidth">
+        <app-group-composer
+          class="tsl-add-list-composer"
+          [addLabel]="addListLabel"
+          [suggestedTriggerAriaLabel]="'Suggested lists'"
+          [colorTriggerAriaLabel]="'Pick list color'"
+          [submitAriaLabel]="'Create list'"
+          [cancelAriaLabel]="'Cancel list'"
+          [paletteStorageKey]="customListPaletteStorageKey"
+          [existingNames]="customListGroupNames"
+          [revealOnHover]="true"
+          (createGroup)="onListComposerCreate($event)"
+        ></app-group-composer>
+      </div>
+    }
+  </section>
+</div>
+
+@if (stickyHorizontalRail) {
+  <div class="tsl-bottom-scroll-shell">
+    <div class="tsl-bottom-scroll" #bottomScrollRail (scroll)="onBottomRailScrollSync()">
+      <div class="tsl-bottom-scroll-size" [style.width]="tableWidth"></div>
+    </div>
+  </div>
+}
+
+@if (hasOpenRowMenu()) {
+  <ng-template
+    cdkConnectedOverlay
+    [cdkConnectedOverlayOpen]="hasOpenRowMenu()"
+    [cdkConnectedOverlayOrigin]="rowMenuOrigin()"
+    [cdkConnectedOverlayPositions]="rowMenuPositions"
+    [cdkConnectedOverlayPush]="true"
+    [cdkConnectedOverlayViewportMargin]="12"
+    [cdkConnectedOverlayFlexibleDimensions]="false"
+    [cdkConnectedOverlayGrowAfterOpen]="false"
+    [cdkConnectedOverlayHasBackdrop]="false"
+    cdkConnectedOverlayPanelClass="tsl-row-menu-overlay-pane"
+    (positionChange)="onRowMenuOverlayPositionChange($event)"
+    (detach)="closeRowMenu()"
+  >
+    <section
+      class="tsl-row-menu-popover"
+      [class.submenu-open-right]="isRowMenuSubmenuRight()"
+      [class.attach-left]="isRowMenuAttachedLeft()"
+      [class.attach-right]="!isRowMenuAttachedLeft()"
+      role="menu"
+      aria-label="Task actions"
+      (pointerdown)="$event.stopPropagation()"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="tsl-row-menu-top">
+        <button class="tsl-row-menu-top-item" type="button" (click)="onRowMenuAction('copyLink')">
+          Copy link
+        </button>
+        <button class="tsl-row-menu-top-item" type="button" (click)="onRowMenuAction('copyId')">
+          Copy ID
+        </button>
+        <button class="tsl-row-menu-top-item" type="button" (click)="onRowMenuAction('newTab')">
+          New tab
+        </button>
+      </div>
+
+      <button class="tsl-row-menu-item" type="button" (click)="onRowMenuAction('addColumn')">
+        <i appIcon="layout-three-columns" aria-hidden="true"></i>
+        <span>Add a column</span>
+      </button>
+
+      <div class="tsl-row-menu-sep"></div>
+
+      <div
+        class="tsl-row-menu-item-wrap has-submenu"
+        [class.is-open]="isRowSubmenuOpen('favorite')"
+        (mouseenter)="onRowSubmenuEnter('favorite')"
+        (mouseleave)="onRowSubmenuLeave('favorite')"
+      >
+        <button
+          class="tsl-row-menu-item has-chevron"
+          type="button"
+          aria-haspopup="menu"
+          (click)="toggleRowSubmenu($event, 'favorite')"
+        >
+          <i appIcon="star" aria-hidden="true"></i>
+          <span>Favorite</span>
+          <i appIcon="chevron-right" class="tsl-row-menu-chevron" aria-hidden="true"></i>
+        </button>
+        <section class="tsl-row-submenu" role="menu" aria-label="Favorite options">
+          <button class="tsl-row-submenu-item" type="button" (click)="onRowMenuAction('favorite')">
+            <i appIcon="layout-sidebar" aria-hidden="true"></i>
+            <span>Sidebar</span>
+          </button>
+          <button class="tsl-row-submenu-item" type="button" (click)="onRowMenuAction('favorite')">
+            <i appIcon="layout-text-window-reverse" aria-hidden="true"></i>
+            <span>Top</span>
+          </button>
+          <button class="tsl-row-submenu-item" type="button" (click)="onRowMenuAction('favorite')">
+            <i appIcon="layout-text-window" aria-hidden="true"></i>
+            <span>Bottom</span>
+          </button>
+        </section>
+      </div>
+      <button class="tsl-row-menu-item" type="button" (click)="onRowMenuAction('rename')">
+        <i appIcon="pencil" aria-hidden="true"></i>
+        <span>Rename</span>
+      </button>
+      <div
+        class="tsl-row-menu-item-wrap has-submenu"
+        [class.is-open]="isRowSubmenuOpen('convertTo')"
+        (mouseenter)="onRowSubmenuEnter('convertTo')"
+        (mouseleave)="onRowSubmenuLeave('convertTo')"
+      >
+        <button
+          class="tsl-row-menu-item has-chevron"
+          type="button"
+          aria-haspopup="menu"
+          (click)="toggleRowSubmenu($event, 'convertTo')"
+        >
+          <i appIcon="arrow-repeat" aria-hidden="true"></i>
+          <span>Convert to</span>
+          <i appIcon="chevron-right" class="tsl-row-menu-chevron" aria-hidden="true"></i>
+        </button>
+        <section class="tsl-row-submenu" role="menu" aria-label="Convert to options">
+          <button
+            class="tsl-row-submenu-item"
+            type="button"
+            (click)="onRowMenuAction('convertToList')"
+          >
+            <i appIcon="list-ul" aria-hidden="true"></i>
+            <span>List</span>
+          </button>
+          <button
+            class="tsl-row-submenu-item"
+            type="button"
+            (click)="onRowMenuAction('convertToSubtask')"
+          >
+            <i appIcon="diagram-2" aria-hidden="true"></i>
+            <span>Subtask</span>
+          </button>
+        </section>
+      </div>
+      <div
+        class="tsl-row-menu-item-wrap has-submenu"
+        [class.is-open]="isRowSubmenuOpen('taskType')"
+        (mouseenter)="onRowSubmenuEnter('taskType')"
+        (mouseleave)="onRowSubmenuLeave('taskType')"
+      >
+        <button
+          class="tsl-row-menu-item has-chevron"
+          type="button"
+          aria-haspopup="menu"
+          (click)="toggleRowSubmenu($event, 'taskType')"
+        >
+          <i appIcon="box" aria-hidden="true"></i>
+          <span>Task Type</span>
+          <i appIcon="chevron-right" class="tsl-row-menu-chevron" aria-hidden="true"></i>
+        </button>
+        <section class="tsl-row-submenu" role="menu" aria-label="Task type options">
+          <button class="tsl-row-submenu-item" type="button" (click)="onRowMenuAction('taskType')">
+            <i appIcon="record-circle" aria-hidden="true"></i>
+            <span>Task</span>
+          </button>
+          <button class="tsl-row-submenu-item" type="button" (click)="onRowMenuAction('taskType')">
+            <i appIcon="diamond" aria-hidden="true"></i>
+            <span>Milestone</span>
+          </button>
+          <button class="tsl-row-submenu-item" type="button" (click)="onRowMenuAction('taskType')">
+            <i appIcon="ui-checks-grid" aria-hidden="true"></i>
+            <span>Form Response</span>
+          </button>
+          <button class="tsl-row-submenu-item" type="button" (click)="onRowMenuAction('taskType')">
+            <i appIcon="journal-text" aria-hidden="true"></i>
+            <span>Meeting Note</span>
+          </button>
+        </section>
+      </div>
+      <button class="tsl-row-menu-item" type="button" (click)="onRowMenuAction('duplicate')">
+        <i appIcon="files" aria-hidden="true"></i>
+        <span>Duplicate</span>
+      </button>
+      <div
+        class="tsl-row-menu-item-wrap has-submenu"
+        [class.is-open]="isRowSubmenuOpen('remindInbox')"
+        (mouseenter)="onRowSubmenuEnter('remindInbox')"
+        (mouseleave)="onRowSubmenuLeave('remindInbox')"
+      >
+        <button
+          class="tsl-row-menu-item has-chevron"
+          type="button"
+          aria-haspopup="menu"
+          (click)="toggleRowSubmenu($event, 'remindInbox')"
+        >
+          <i appIcon="bell" aria-hidden="true"></i>
+          <span>Remind me in Inbox</span>
+          <i appIcon="chevron-right" class="tsl-row-menu-chevron" aria-hidden="true"></i>
+        </button>
+        <section
+          class="tsl-row-submenu tsl-row-submenu-remind"
+          role="menu"
+          aria-label="Reminder options"
+        >
+          <div class="tsl-row-submenu-search">
+            <input type="text" value="" placeholder='Try "Tomorrow at 2 PM"...' readonly />
+          </div>
+          <button
+            class="tsl-row-submenu-item"
+            type="button"
+            (click)="onRowMenuAction('remindInbox')"
+          >
+            <i appIcon="calendar2-plus" aria-hidden="true"></i>
+            <span>Later</span>
+          </button>
+          <button
+            class="tsl-row-submenu-item"
+            type="button"
+            (click)="onRowMenuAction('remindInbox')"
+          >
+            <i appIcon="brightness-alt-high" aria-hidden="true"></i>
+            <span>Tomorrow</span>
+          </button>
+          <button
+            class="tsl-row-submenu-item"
+            type="button"
+            (click)="onRowMenuAction('remindInbox')"
+          >
+            <i appIcon="calendar-event" aria-hidden="true"></i>
+            <span>Next week</span>
+          </button>
+          <div class="tsl-row-submenu-sep"></div>
+          <div class="tsl-row-submenu-calendar">
+            <div class="tsl-row-submenu-calendar-head">
+              <span>Feb 2026</span>
+              <span>Today</span>
+            </div>
+            <div class="tsl-row-submenu-calendar-grid" aria-hidden="true">
+              <span></span><span></span><span></span><span></span><span></span
+              ><span class="day active">13</span><span></span> <span>15</span><span>16</span
+              ><span>17</span><span>18</span><span>19</span><span>20</span><span>21</span>
+              <span>22</span><span>23</span><span>24</span><span>25</span><span>26</span
+              ><span>27</span><span>28</span>
+            </div>
+          </div>
+        </section>
+      </div>
+      <button class="tsl-row-menu-item" type="button" (click)="onRowMenuAction('unfollowTask')">
+        <i appIcon="bell-slash" aria-hidden="true"></i>
+        <span>Unfollow task</span>
+      </button>
+      <button class="tsl-row-menu-item" type="button" (click)="onRowMenuAction('sendEmail')">
+        <i appIcon="envelope" aria-hidden="true"></i>
+        <span>Send email to task</span>
+      </button>
+      <div
+        class="tsl-row-menu-item-wrap has-submenu"
+        [class.is-open]="isRowSubmenuOpen('addTo')"
+        (mouseenter)="onRowSubmenuEnter('addTo')"
+        (mouseleave)="onRowSubmenuLeave('addTo')"
+      >
+        <button
+          class="tsl-row-menu-item has-chevron"
+          type="button"
+          aria-haspopup="menu"
+          (click)="toggleRowSubmenu($event, 'addTo')"
+        >
+          <i appIcon="list-task" aria-hidden="true"></i>
+          <span>Add To</span>
+          <i appIcon="chevron-right" class="tsl-row-menu-chevron" aria-hidden="true"></i>
+        </button>
+        <section class="tsl-row-submenu" role="menu" aria-label="Add to options">
+          <button class="tsl-row-submenu-item" type="button" (click)="onRowMenuAction('addTo')">
+            <i appIcon="list" aria-hidden="true"></i>
+            <span>Another List</span>
+          </button>
+          <button class="tsl-row-submenu-item" type="button" (click)="onRowMenuAction('addTo')">
+            <i appIcon="person" aria-hidden="true"></i>
+            <span>Personal List</span>
+          </button>
+        </section>
+      </div>
+      <button class="tsl-row-menu-item" type="button" (click)="onRowMenuAction('merge')">
+        <i appIcon="sign-merge-right" aria-hidden="true"></i>
+        <span>Merge</span>
+      </button>
+      <button class="tsl-row-menu-item" type="button" (click)="onRowMenuAction('move')">
+        <i appIcon="box-arrow-right" aria-hidden="true"></i>
+        <span>Move</span>
+      </button>
+      <button class="tsl-row-menu-item" type="button" (click)="onRowMenuAction('startTimer')">
+        <i appIcon="stopwatch" aria-hidden="true"></i>
+        <span>Start timer</span>
+      </button>
+
+      <div class="tsl-row-menu-sep"></div>
+
+      <button class="tsl-row-menu-item" type="button" (click)="onRowMenuAction('dependencies')">
+        <i appIcon="link-45deg" aria-hidden="true"></i>
+        <span>Dependencies</span>
+      </button>
+      <div
+        class="tsl-row-menu-item-wrap has-submenu"
+        [class.is-open]="isRowSubmenuOpen('templates')"
+        (mouseenter)="onRowSubmenuEnter('templates')"
+        (mouseleave)="onRowSubmenuLeave('templates')"
+      >
+        <button
+          class="tsl-row-menu-item has-chevron"
+          type="button"
+          aria-haspopup="menu"
+          (click)="toggleRowSubmenu($event, 'templates')"
+        >
+          <i appIcon="magic" aria-hidden="true"></i>
+          <span>Templates</span>
+          <i appIcon="chevron-right" class="tsl-row-menu-chevron" aria-hidden="true"></i>
+        </button>
+        <section class="tsl-row-submenu" role="menu" aria-label="Template options">
+          <button class="tsl-row-submenu-item" type="button" (click)="onRowMenuAction('templates')">
+            <i appIcon="file-earmark-text" aria-hidden="true"></i>
+            <span>Use template</span>
+          </button>
+          <button class="tsl-row-submenu-item" type="button" (click)="onRowMenuAction('templates')">
+            <i appIcon="plus-square" aria-hidden="true"></i>
+            <span>Save as template</span>
+          </button>
+        </section>
+      </div>
+
+      <div class="tsl-row-menu-sep"></div>
+
+      <button class="tsl-row-menu-item" type="button" (click)="onRowMenuAction('archive')">
+        <i appIcon="archive" aria-hidden="true"></i>
+        <span>Archive</span>
+      </button>
+      <button class="tsl-row-menu-item danger" type="button" (click)="onRowMenuAction('delete')">
+        <i appIcon="trash" aria-hidden="true"></i>
+        <span>Delete</span>
+      </button>
+      <div class="tsl-row-menu-foot">
+        <button
+          class="tsl-row-menu-share"
+          type="button"
+          (click)="onRowMenuAction('sharePermissions')"
+        >
+          Sharing &amp; Permissions
+        </button>
+      </div>
+    </section>
+  </ng-template>
+}
+
+@if (hasOpenCalcMenu()) {
+  <ng-template
+    cdkConnectedOverlay
+    [cdkConnectedOverlayOpen]="hasOpenCalcMenu()"
+    [cdkConnectedOverlayOrigin]="calcMenuOrigin()"
+    [cdkConnectedOverlayPositions]="calcMenuPositions"
+    [cdkConnectedOverlayPush]="true"
+    [cdkConnectedOverlayViewportMargin]="12"
+    [cdkConnectedOverlayFlexibleDimensions]="false"
+    [cdkConnectedOverlayGrowAfterOpen]="false"
+    [cdkConnectedOverlayHasBackdrop]="false"
+    cdkConnectedOverlayPanelClass="tsl-calc-menu-overlay-pane"
+    (detach)="closeCalcMenu()"
+  >
+    <section
+      class="tsl-calc-menu-popover"
+      role="menu"
+      aria-label="Calculate options"
+      (pointerdown)="$event.stopPropagation()"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="tsl-calc-menu-title">CALCULATE</div>
+      <div class="tsl-calc-menu-column">{{ calcMenuColumnLabel() }}</div>
+      <label class="tsl-calc-menu-field">
+        <span class="tsl-calc-menu-label">Operation</span>
+        <div class="tsl-calc-menu-select-wrap">
+          <button
+            class="tsl-calc-menu-select-btn"
+            type="button"
+            [class.is-open]="isCalcMenuOptionsOpen()"
+            (click)="toggleCalcMenuOptions($event)"
+          >
+            <span>{{ calcOperationLabel(calcMenuSelectedOperation()) }}</span>
+            <i appIcon="chevron-down" aria-hidden="true"></i>
+          </button>
+          @if (isCalcMenuOptionsOpen()) {
+            <div class="tsl-calc-menu-options" role="listbox">
+              @for (operation of calcOperationOptions; track operation.value) {
+                <button
+                  class="tsl-calc-menu-option"
+                  type="button"
+                  [class.is-selected]="isCalcOperationSelected(operation.value)"
+                  (click)="selectCalcMenuOperation($event, operation.value)"
+                >
+                  <span>{{ operation.label }}</span>
+                  @if (isCalcOperationSelected(operation.value)) {
+                    <i appIcon="check2" aria-hidden="true"></i>
+                  }
+                </button>
+              }
+            </div>
+          }
+        </div>
+      </label>
+      <button class="tsl-calc-menu-apply" type="button" (click)="onCalcMenuApply()">
+        Calculate
+      </button>
+    </section>
+  </ng-template>
+}
+
+@if (hasOpenQuickComposePicker()) {
+  <ng-template
+    cdkConnectedOverlay
+    [cdkConnectedOverlayOpen]="hasOpenQuickComposePicker()"
+    [cdkConnectedOverlayOrigin]="quickComposePickerOrigin()"
+    [cdkConnectedOverlayPositions]="quickComposePickerPositions"
+    [cdkConnectedOverlayPush]="true"
+    [cdkConnectedOverlayViewportMargin]="10"
+    [cdkConnectedOverlayFlexibleDimensions]="true"
+    [cdkConnectedOverlayGrowAfterOpen]="false"
+    [cdkConnectedOverlayHasBackdrop]="false"
+    cdkConnectedOverlayPanelClass="tsl-quick-meta-overlay-pane"
+    (detach)="closeQuickComposePicker()"
+  >
+    <section
+      class="tsl-quick-meta-popover"
+      role="menu"
+      aria-label="Quick task options"
+      (pointerdown)="$event.stopPropagation()"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="tsl-quick-meta-tabs">
+        <button
+          class="tsl-quick-meta-tab"
+          type="button"
+          [class.is-active]="quickComposePickerTab() === 'status'"
+          (click)="setQuickComposePickerTab('status')"
+        >
+          Status
+        </button>
+        <button
+          class="tsl-quick-meta-tab"
+          type="button"
+          [class.is-active]="quickComposePickerTab() === 'taskType'"
+          (click)="setQuickComposePickerTab('taskType')"
+        >
+          Task Type
+        </button>
+      </div>
+
+      <label class="tsl-quick-meta-search">
+        <input
+          type="search"
+          placeholder="Search..."
+          [value]="quickComposePickerSearch()"
+          (input)="onQuickComposePickerSearch($any($event.target).value)"
+        />
+      </label>
+
+      @let pickerSections = quickComposePickerSections();
+      <div class="tsl-quick-meta-list">
+        @for (section of pickerSections; track section.key + '-' + $index) {
+          @if (section.key) {
+            <div class="tsl-quick-meta-section">{{ section.key }}</div>
+          }
+          @for (option of section.options; track option.value + '-' + option.label) {
+            <button
+              class="tsl-quick-meta-item"
+              type="button"
+              [class.is-active]="quickComposePickerIsActive(option.value)"
+              (click)="onQuickComposePickerSelect(option.value)"
+            >
+              <span class="tsl-quick-meta-item-main">
+                @if (option.icon) {
+                  <i [appIcon]="option.icon" aria-hidden="true"></i>
+                }
+                <span>{{ option.label }}</span>
+              </span>
+              @if (quickComposePickerIsActive(option.value)) {
+                <i appIcon="check2" aria-hidden="true"></i>
+              }
+            </button>
+          }
+        }
+        @if (!pickerSections.length) {
+          <div class="tsl-quick-meta-empty">No matches</div>
+        }
+      </div>
+    </section>
+  </ng-template>
+}
+
+@if (hasOpenCellEditor()) {
+  <ng-template
+    cdkConnectedOverlay
+    [cdkConnectedOverlayOpen]="hasOpenCellEditor()"
+    [cdkConnectedOverlayOrigin]="cellEditorOrigin()"
+    [cdkConnectedOverlayPositions]="cellEditorPositions"
+    [cdkConnectedOverlayPush]="true"
+    [cdkConnectedOverlayViewportMargin]="12"
+    [cdkConnectedOverlayFlexibleDimensions]="true"
+    [cdkConnectedOverlayGrowAfterOpen]="true"
+    [cdkConnectedOverlayHasBackdrop]="false"
+    cdkConnectedOverlayPanelClass="tsl-cell-editor-overlay-pane"
+    (detach)="closeCellEditor()"
+  >
+    <app-status-list-cell-editor-popover
+      [open]="hasOpenCellEditor()"
+      [width]="cellEditorWidth()"
+      [title]="cellEditorTitle()"
+      [column]="cellEditorColumn()"
+      [type]="cellEditorType()"
+      [value]="cellEditorValue()"
+      [placeholder]="cellEditorPlaceholder()"
+      [options]="cellEditorOptions()"
+      [searchable]="cellEditorSearchable()"
+      (pick)="onCellEditorPick($event)"
+      (commentAdd)="onCellEditorCommentAdd($event)"
+      (closed)="closeCellEditor()"
+    ></app-status-list-cell-editor-popover>
+  </ng-template>
+}

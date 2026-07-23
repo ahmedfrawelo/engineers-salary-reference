@@ -1,0 +1,303 @@
+<app-side-drawer
+  [open]="open"
+  [width]="width"
+  [zIndex]="zIndex"
+  [topInset]="topInset"
+  [backdropTint]="0"
+  [backdropBlur]="0"
+  [ignoreOutsideSelectors]="ignoreOutsideSelectors"
+  [motionPreset]="'instant'"
+  [panelClass]="panelClass"
+  (closed)="closePanel()"
+>
+  <section
+    class="columns-drawer-surface"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="sharedColumnsDrawerTitle"
+  >
+    <div class="columns-drawer-head columns-drawer-head--clickup">
+      <div class="columns-drawer-head-main">
+        <div class="columns-drawer-title-wrap">
+          @if (showBack) {
+            <button
+              class="columns-drawer-back"
+              type="button"
+              aria-label="Back to customize"
+              (click)="back.emit()"
+            >
+              <hugeicons-icon
+                class="columns-huge-icon"
+                [icon]="backIcon"
+                [size]="16"
+                [strokeWidth]="1.9"
+                aria-hidden="true"
+              ></hugeicons-icon>
+            </button>
+          }
+          <div class="columns-drawer-title" id="sharedColumnsDrawerTitle">Fields</div>
+        </div>
+        <button
+          class="columns-drawer-close"
+          type="button"
+          aria-label="Close columns panel"
+          (click)="closePanel()"
+        >
+          <hugeicons-icon
+            class="columns-huge-icon"
+            [icon]="closeIcon"
+            [size]="16"
+            [strokeWidth]="1.9"
+            aria-hidden="true"
+          ></hugeicons-icon>
+        </button>
+      </div>
+
+      <label class="columns-drawer-search columns-drawer-search--clickup">
+        <hugeicons-icon
+          class="columns-huge-icon"
+          [icon]="searchIcon"
+          [size]="15"
+          [strokeWidth]="1.9"
+          aria-hidden="true"
+        ></hugeicons-icon>
+        <input
+          id="sharedColumnsPanelSearch"
+          name="sharedColumnsPanelSearch"
+          class="columns-drawer-search-input"
+          type="search"
+          placeholder="Search for new or existing fields"
+          [value]="searchTerm"
+          (input)="onSearchInput($any($event.target).value || '')"
+        />
+        <span class="columns-drawer-search-actions">
+          @if (hasSearch) {
+            <button
+              class="columns-drawer-search-clear"
+              type="button"
+              aria-label="Clear columns search"
+              (click)="clearSearch()"
+            >
+              <hugeicons-icon
+                class="columns-huge-icon"
+                [icon]="clearSearchIcon"
+                [size]="14"
+                [strokeWidth]="1.9"
+                aria-hidden="true"
+              ></hugeicons-icon>
+            </button>
+          }
+          <button class="columns-drawer-search-reset" type="button" (click)="reset.emit()">
+            Reset
+          </button>
+        </span>
+      </label>
+    </div>
+
+    <div class="columns-drawer-body columns-drawer-body--clickup" cdkDropListGroup>
+      <section class="columns-clickup-section">
+        <div class="columns-clickup-section-head">
+          <button
+            class="columns-clickup-section-toggle"
+            type="button"
+            [attr.aria-expanded]="shownExpanded"
+            (click)="toggleSection('shown')"
+          >
+            <span>Shown</span>
+            <hugeicons-icon
+              class="columns-huge-icon"
+              [icon]="shownExpanded ? expandIcon : collapseIcon"
+              [size]="14"
+              [strokeWidth]="1.9"
+              aria-hidden="true"
+            ></hugeicons-icon>
+          </button>
+          <button class="columns-clickup-text-action" type="button" (click)="hideAll.emit()">
+            Hide all
+          </button>
+        </div>
+
+        @if (shownExpanded) {
+          <div
+            class="columns-clickup-list"
+            cdkDropList
+            [cdkDropListDisabled]="!allowReorder || hasSearch"
+            [cdkDropListData]="filteredShownColumns"
+            (cdkDropListDropped)="onShownDropped($event)"
+          >
+            @if (filteredShownColumns.length) {
+              @for (column of filteredShownColumns; track column.key) {
+                <div
+                  class="columns-clickup-row"
+                  cdkDrag
+                  cdkDragPreviewContainer="global"
+                  [cdkDragPreviewClass]="'columns-clickup-row-preview'"
+                  [cdkDragScale]="dragScale"
+                  [cdkDragData]="column"
+                  [cdkDragDisabled]="!allowReorder || !!column.pinned || hasSearch"
+                >
+                  <button
+                    class="columns-clickup-drag"
+                    type="button"
+                    cdkDragHandle
+                    [disabled]="!allowReorder || !!column.pinned || hasSearch"
+                    aria-label="Reorder column"
+                  >
+                    <i
+                      appIcon="grip-vertical"
+                      class="columns-clickup-drag-icon"
+                      aria-hidden="true"
+                    ></i>
+                  </button>
+
+                  <div class="columns-clickup-meta">
+                    @if (column.hugeIcon) {
+                      <hugeicons-icon
+                        class="columns-huge-icon"
+                        [icon]="column.hugeIcon"
+                        [size]="column.hugeIconSize || 15"
+                        [strokeWidth]="column.hugeIconStrokeWidth || 1.9"
+                        aria-hidden="true"
+                      ></hugeicons-icon>
+                    } @else if (column.icon) {
+                      <i [appIcon]="column.icon" aria-hidden="true"></i>
+                    }
+                    <span>{{ column.label }}</span>
+                  </div>
+
+                  <label class="columns-clickup-switch is-on" [class.is-disabled]="column.pinned">
+                    <input
+                      [attr.id]="'sharedColumnsShownToggle-' + column.key"
+                      [attr.name]="'sharedColumnsShownToggle-' + column.key"
+                      type="checkbox"
+                      [checked]="true"
+                      [disabled]="column.pinned"
+                      (mousedown)="$event.stopPropagation()"
+                      (change)="toggleColumn.emit(column.key)"
+                    />
+                    <span aria-hidden="true"></span>
+                  </label>
+                </div>
+              }
+            } @else {
+              <div class="columns-drawer-empty columns-drawer-empty--clickup">
+                @if (hasSearch) {
+                  No shown columns match your search.
+                } @else {
+                  No visible columns.
+                }
+              </div>
+            }
+          </div>
+        }
+      </section>
+
+      <section class="columns-clickup-section columns-clickup-section--hidden">
+        <div class="columns-clickup-section-head">
+          <button
+            class="columns-clickup-section-toggle"
+            type="button"
+            [attr.aria-expanded]="hiddenExpanded"
+            (click)="toggleSection('hidden')"
+          >
+            <span>Hidden</span>
+            <hugeicons-icon
+              class="columns-huge-icon"
+              [icon]="hiddenExpanded ? expandIcon : collapseIcon"
+              [size]="14"
+              [strokeWidth]="1.9"
+              aria-hidden="true"
+            ></hugeicons-icon>
+          </button>
+          <button class="columns-clickup-text-action" type="button" (click)="showAll.emit()">
+            Show all
+          </button>
+        </div>
+
+        @if (hiddenExpanded) {
+          <div
+            class="columns-clickup-list columns-clickup-list--hidden"
+            cdkDropList
+            [class.is-empty]="!filteredHiddenColumns.length"
+            [class.is-receiving]="hiddenReceivingDrag"
+            [cdkDropListDisabled]="!allowReorder || hasSearch"
+            [cdkDropListData]="filteredHiddenColumns"
+            (cdkDropListEntered)="onHiddenListEntered($event)"
+            (cdkDropListExited)="onHiddenListExited($event)"
+            (cdkDropListDropped)="onHiddenDropped($event)"
+          >
+            @if (filteredHiddenColumns.length) {
+              @for (column of filteredHiddenColumns; track column.key) {
+                <div
+                  class="columns-clickup-row"
+                  cdkDrag
+                  cdkDragPreviewContainer="global"
+                  [cdkDragPreviewClass]="'columns-clickup-row-preview'"
+                  [cdkDragScale]="dragScale"
+                  [cdkDragData]="column"
+                  [cdkDragDisabled]="!allowReorder || hasSearch"
+                >
+                  <button
+                    class="columns-clickup-drag"
+                    type="button"
+                    cdkDragHandle
+                    [disabled]="!allowReorder || hasSearch"
+                    aria-label="Reorder column"
+                  >
+                    <i
+                      appIcon="grip-vertical"
+                      class="columns-clickup-drag-icon"
+                      aria-hidden="true"
+                    ></i>
+                  </button>
+
+                  <div class="columns-clickup-meta">
+                    @if (column.hugeIcon) {
+                      <hugeicons-icon
+                        class="columns-huge-icon"
+                        [icon]="column.hugeIcon"
+                        [size]="column.hugeIconSize || 15"
+                        [strokeWidth]="column.hugeIconStrokeWidth || 1.9"
+                        aria-hidden="true"
+                      ></hugeicons-icon>
+                    } @else if (column.icon) {
+                      <i [appIcon]="column.icon" aria-hidden="true"></i>
+                    }
+                    <span>{{ column.label }}</span>
+                  </div>
+
+                  <label class="columns-clickup-switch">
+                    <input
+                      [attr.id]="'sharedColumnsHiddenToggle-' + column.key"
+                      [attr.name]="'sharedColumnsHiddenToggle-' + column.key"
+                      type="checkbox"
+                      [checked]="false"
+                      (mousedown)="$event.stopPropagation()"
+                      (change)="toggleColumn.emit(column.key)"
+                    />
+                    <span aria-hidden="true"></span>
+                  </label>
+                </div>
+              }
+            } @else {
+              @if (!hiddenReceivingDrag) {
+                <div class="columns-drawer-empty columns-drawer-empty--clickup">
+                  @if (hasSearch) {
+                    No hidden columns match your search.
+                  } @else {
+                    No hidden columns.
+                  }
+                </div>
+              } @else {
+                <div
+                  class="columns-drawer-empty columns-drawer-empty--clickup columns-drawer-empty--drop-slot"
+                  aria-hidden="true"
+                ></div>
+              }
+            }
+          </div>
+        }
+      </section>
+    </div>
+  </section>
+</app-side-drawer>

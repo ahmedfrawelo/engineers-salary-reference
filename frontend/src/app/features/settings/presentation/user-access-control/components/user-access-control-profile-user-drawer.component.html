@@ -1,0 +1,358 @@
+﻿@if (userDrawerOpen()) {
+  <app-side-drawer
+    [open]="true"
+    [width]="376"
+    [backdropTint]="0"
+    [backdropBlur]="0"
+    [panelClass]="'columns-drawer columns-drawer--clickup columns-drawer--sidebar page-design-columns-drawer access-user-drawer'"
+    (closed)="closeUserDrawer()"
+  >
+    @if (activeDrawerUser(); as activeUser) {
+      <section
+        class="columns-drawer-surface access-user-drawer-surface"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="accessUserDrawerTitle"
+      >
+        <div class="columns-drawer-head columns-drawer-head--clickup access-user-drawer__head">
+          <div class="columns-drawer-head-main">
+            <div class="columns-drawer-title-wrap">
+              <div class="columns-drawer-title" id="accessUserDrawerTitle">User details</div>
+            </div>
+            <div class="access-user-drawer__head-actions">
+              @if (canDeleteAccessControlUser()) {
+                <button
+                  type="button"
+                  class="btn-sm btn-danger"
+                  (click)="deleteUser(activeUser)"
+                  [disabled]="saving()"
+                >
+                  Delete user
+                </button>
+              }
+              <button
+                class="columns-drawer-close"
+                type="button"
+                aria-label="Close user drawer"
+                (click)="closeUserDrawer()"
+              >
+                <hugeicons-icon
+                  class="access-huge-icon"
+                  [icon]="hugeIcons.close"
+                  [size]="18"
+                  [strokeWidth]="2"
+                  aria-hidden="true"
+                ></hugeicons-icon>
+              </button>
+            </div>
+          </div>
+
+          <div class="access-user-drawer__identity">
+            <div class="access-user-drawer__avatar" aria-hidden="true">
+              {{
+                getInitials(
+                  activeUser.edit?.name ||
+                    activeUser.name ||
+                    activeUser.edit?.email ||
+                    activeUser.email ||
+                    'U'
+                )
+              }}
+            </div>
+            <div class="access-user-drawer__identity-main">
+              <div class="access-user-drawer__identity-copy">
+                <strong>{{ drawerDisplayName(activeUser) }}</strong>
+                <div class="access-user-drawer__email-row">
+                  <span class="access-user-drawer__email-text">
+                    {{ drawerDisplayEmail(activeUser) }}
+                  </span>
+                  <button
+                    type="button"
+                    class="btn-icon access-user-drawer__email-copy"
+                    (click)="copyDrawerEmail(activeUser)"
+                    title="Copy email"
+                    aria-label="Copy email"
+                  >
+                    <hugeicons-icon
+                      class="access-huge-icon"
+                      [icon]="hugeIcons.copy"
+                      [size]="15"
+                      [strokeWidth]="1.9"
+                      aria-hidden="true"
+                    ></hugeicons-icon>
+                  </button>
+                  @if (copiedEmail() === drawerCopyEmailValue(activeUser)) {
+                    <span class="access-toolbar-note">Copied</span>
+                  }
+                </div>
+              </div>
+              <div class="access-user-drawer__meta-strip">
+                <div class="access-user-drawer__chips">
+                  <span class="tool-chip">
+                    <hugeicons-icon
+                      class="access-huge-icon"
+                      [icon]="hugeIcons.status"
+                      [size]="14"
+                      [strokeWidth]="1.9"
+                      aria-hidden="true"
+                    ></hugeicons-icon>
+                    <span>{{ drawerDisplayStatus(activeUser) }}</span>
+                  </span>
+                  <span class="tool-chip">
+                    <hugeicons-icon
+                      class="access-huge-icon"
+                      [icon]="hugeIcons.role"
+                      [size]="14"
+                      [strokeWidth]="1.9"
+                      aria-hidden="true"
+                    ></hugeicons-icon>
+                    <span>{{ drawerDisplayRole(activeUser) }}</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="columns-drawer-body columns-drawer-body--clickup access-user-drawer__body">
+          @if (error()) {
+            <div class="access-inline-message access-inline-message--error">
+              <div class="access-inline-message__copy">
+                <hugeicons-icon
+                  class="access-huge-icon"
+                  [icon]="hugeIcons.alert"
+                  [size]="16"
+                  [strokeWidth]="1.9"
+                  aria-hidden="true"
+                ></hugeicons-icon>
+                <span>{{ error() }}</span>
+              </div>
+            </div>
+          }
+
+          <section class="access-user-drawer__section">
+            @if (activeUser.edit; as draft) {
+              <div class="access-user-drawer__form">
+                <label class="edit-field">
+                  <span>Name</span>
+                  <input
+                    type="text"
+                    [(ngModel)]="draft.name"
+                    (ngModelChange)="onDrawerDraftChange()"
+                    [disabled]="saving() || !canEditAccessControlUser()"
+                  />
+                </label>
+                <label class="edit-field">
+                  <span>Email</span>
+                  <input
+                    type="email"
+                    [(ngModel)]="draft.email"
+                    (ngModelChange)="onDrawerDraftChange()"
+                    [disabled]="saving() || !canEditAccessControlUser()"
+                  />
+                </label>
+                <div class="edit-field edit-field--status-switch">
+                  <span>Status</span>
+                  <button
+                    type="button"
+                    class="access-status-switch"
+                    [class.is-active]="drawerStatusSwitchChecked(activeUser)"
+                    [class.is-invited]="drawerStatusSwitchState(activeUser) === 'Invited'"
+                    [disabled]="saving() || !canEditAccessControlUser()"
+                    (click)="toggleDrawerStatus(activeUser)"
+                    role="switch"
+                    [attr.aria-checked]="drawerStatusSwitchChecked(activeUser)"
+                    aria-label="Toggle user status"
+                  >
+                    <span class="access-status-switch__copy">
+                      <strong>{{ drawerStatusSwitchLabel(activeUser) }}</strong>
+                      <small>{{ drawerStatusSwitchHint(activeUser) }}</small>
+                    </span>
+                    <span class="access-status-switch__track" aria-hidden="true">
+                      <span class="access-status-switch__thumb"></span>
+                    </span>
+                  </button>
+                </div>
+                <label class="edit-field">
+                  <span>Role</span>
+                  <app-custom-dropdown
+                    class="edit-dropdown"
+                    [options]="roleDropdownOptions()"
+                    [value]="draft.role"
+                    [disabled]="
+                      saving() || !canEditAccessControlUser() || isDrawerRoleSelectionLocked(activeUser)
+                    "
+                    (valueChange)="draft.role = $event; onDrawerDraftChange()"
+                    placeholder="Select role"
+                  >
+                  </app-custom-dropdown>
+                  @if (isDrawerRoleSelectionLocked(activeUser)) {
+                    <p class="muted">
+                      This user has multiple roles. Manage role membership from the Roles panel to
+                      preserve existing access.
+                    </p>
+                  }
+                </label>
+                <label class="edit-field">
+                  <span>Department</span>
+                  <input
+                    type="text"
+                    [(ngModel)]="draft.department"
+                    (ngModelChange)="onDrawerDraftChange()"
+                    [disabled]="saving() || !canEditAccessControlUser()"
+                  />
+                </label>
+                <label class="edit-field">
+                  <span>Position</span>
+                  <input
+                    type="text"
+                    [(ngModel)]="draft.position"
+                    (ngModelChange)="onDrawerDraftChange()"
+                    [disabled]="saving() || !canEditAccessControlUser()"
+                  />
+                </label>
+                <label class="edit-field">
+                  <span>Phone</span>
+                  <input
+                    type="tel"
+                    [(ngModel)]="draft.phoneNumber"
+                    (ngModelChange)="onDrawerDraftChange()"
+                    [disabled]="saving() || !canEditAccessControlUser()"
+                    placeholder="e.g. +966 5x xxx xxxx"
+                  />
+                </label>
+                @if (canResetAccessControlPasswords()) {
+                  <label class="edit-field access-user-drawer__password">
+                    <span>New password</span>
+                    <input
+                      type="password"
+                      [(ngModel)]="draft.password"
+                      (ngModelChange)="onDrawerDraftChange()"
+                      [disabled]="saving()"
+                      placeholder="Leave blank to keep current"
+                    />
+                  </label>
+                }
+              </div>
+
+              <!-- Activity -->
+              <div class="access-user-drawer__detail-group">
+                <div class="access-user-drawer__detail-group-title">Activity</div>
+                <div class="access-user-drawer__detail-list">
+                  <div class="access-user-drawer__detail-row">
+                    <span>Joined</span>
+                    <strong>{{
+                      activeUser.createdAt ? formatDateTime(activeUser.createdAt) : '--'
+                    }}</strong>
+                  </div>
+                  <div class="access-user-drawer__detail-row">
+                    <span>Last active</span>
+                    <strong>{{
+                      activeUser.lastActive ? formatDateTime(activeUser.lastActive) : '--'
+                    }}</strong>
+                  </div>
+                  <div class="access-user-drawer__detail-row">
+                    <span>Total logins</span>
+                    <strong>{{ activeUser.loginCount ?? '--' }}</strong>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Security -->
+              <div class="access-user-drawer__detail-group">
+                <div class="access-user-drawer__detail-group-title">Security</div>
+                <div
+                  class="access-user-drawer__detail-list access-user-drawer__detail-list--security"
+                >
+                  <div
+                    class="access-user-drawer__detail-row access-user-drawer__detail-row--inline"
+                  >
+                    <div class="access-user-drawer__security-item">
+                      <span class="access-user-drawer__security-label">Email</span>
+                      <span
+                        class="access-user-drawer__badge"
+                        [class.access-user-drawer__badge--ok]="activeUser.emailConfirmed"
+                        [class.access-user-drawer__badge--warn]="!activeUser.emailConfirmed"
+                        >{{ activeUser.emailConfirmed ? 'Verified' : 'Not verified' }}</span
+                      >
+                    </div>
+                    <div class="access-user-drawer__security-item">
+                      <span class="access-user-drawer__security-label">2FA</span>
+                      <span
+                        class="access-user-drawer__badge"
+                        [class.access-user-drawer__badge--ok]="activeUser.twoFactorEnabled"
+                        [class.access-user-drawer__badge--off]="!activeUser.twoFactorEnabled"
+                        >{{ activeUser.twoFactorEnabled ? 'Enabled' : 'Disabled' }}</span
+                      >
+                    </div>
+                  </div>
+                  <div class="access-user-drawer__detail-row">
+                    <span>Failed login attempts</span>
+                    <strong
+                      [class.access-user-drawer__detail-warn]="(activeUser.failedAttempts ?? 0) > 0"
+                    >
+                      {{ activeUser.failedAttempts ?? 0 }}
+                    </strong>
+                  </div>
+                  @if (activeUser.lockedUntil) {
+                    <div class="access-user-drawer__detail-row">
+                      <span>Account locked until</span>
+                      <strong class="access-user-drawer__detail-warn">{{
+                        formatDateTime(activeUser.lockedUntil)
+                      }}</strong>
+                    </div>
+                  }
+                  @if (canEditAccessControlUser()) {
+                    <div class="access-user-drawer__security-actions">
+                      @if ((activeUser.failedAttempts ?? 0) > 0 || activeUser.lockedUntil) {
+                        <button
+                          type="button"
+                          class="btn-sm btn-ghost access-user-drawer__security-btn"
+                          [disabled]="saving()"
+                          (click)="unlockUserAccount(activeUser)"
+                        >
+                          <i appIcon="unlock" aria-hidden="true"></i>
+                          Unlock account
+                        </button>
+                      }
+                      <button
+                        type="button"
+                        class="btn-sm btn-ghost access-user-drawer__security-btn access-user-drawer__security-btn--danger"
+                        [disabled]="saving()"
+                        (click)="forceLogoutUser(activeUser)"
+                      >
+                        <i appIcon="box-arrow-right" aria-hidden="true"></i>
+                        Force logout
+                      </button>
+                    </div>
+                  }
+                </div>
+              </div>
+
+              <!-- Audit -->
+              <div class="access-user-drawer__detail-group">
+                <div class="access-user-drawer__detail-group-title">Audit</div>
+                <div class="access-user-drawer__detail-list">
+                  <div class="access-user-drawer__detail-row">
+                    <span>Created by</span>
+                    <strong>{{ activeUser.createdBy || '--' }}</strong>
+                  </div>
+                  <div class="access-user-drawer__detail-row">
+                    <span>Last updated</span>
+                    <strong>{{
+                      activeUser.updatedAt ? formatDateTime(activeUser.updatedAt) : '--'
+                    }}</strong>
+                  </div>
+                  <div class="access-user-drawer__detail-row">
+                    <span>Updated by</span>
+                    <strong>{{ activeUser.updatedBy || '--' }}</strong>
+                  </div>
+                </div>
+              </div>
+            }
+          </section>
+        </div>
+      </section>
+    }
+  </app-side-drawer>
+}

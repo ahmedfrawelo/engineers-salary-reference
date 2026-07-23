@@ -1,0 +1,206 @@
+:host {
+  display: block;
+  min-width: 0;
+}
+
+.tab-grid--insights {
+  gap: 12px;
+  align-items: start;
+}
+
+.tab-grid--insights .panel {
+  border: 1px solid color-mix(in oklab, var(--tab-accent) 20%, rgb(var(--border)) 80%);
+  background: rgb(var(--surface));
+  border-radius: 12px;
+  padding: 14px;
+}
+
+.tab-grid--insights .section-head {
+  margin: -14px -14px 12px;
+  padding: 11px 14px 10px;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  border-bottom: 1px solid color-mix(in oklab, var(--tab-accent) 26%, rgb(var(--border)) 74%);
+  background: linear-gradient(
+    90deg,
+    color-mix(in oklab, var(--tab-accent) 20%, rgb(var(--surface)) 80%),
+    color-mix(in oklab, var(--tab-accent) 7%, rgb(var(--surface)) 93%)
+  ) !important;
+}
+
+.tab-grid--insights .section-head h2 {
+  font-size: 1rem;
+  letter-spacing: 0.01em;
+}
+
+.tab-grid--insights .section-head p {
+  color: color-mix(in oklab, var(--tab-text) 72%, var(--tab-muted) 28%);
+}
+
+.tab-grid--insights .chart-embed {
+  background: rgb(var(--bg1));
+  border-color: var(--tab-border-soft);
+}
+
+.panel-insights-summary,
+.panel-insights-signals,
+.panel-insights-actions {
+  grid-column: 1 / -1;
+}
+
+.panel-insights-competency,
+.panel-insights-goals {
+  grid-column: span 7;
+}
+
+.panel-insights-essentials,
+.panel-insights-focus {
+  grid-column: span 5;
+}
+
+.insights-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.insights-summary-grid .quick-card {
+  min-height: 94px;
+  padding: 12px;
+  border-color: var(--tab-border-soft);
+  border-inline-start: 3px solid color-mix(in oklab, var(--tab-accent) 54%, transparent);
+  border-top: 0;
+  background: rgb(var(--bg1));
+}
+
+.insights-summary-grid .quick-card p {
+  margin: 0;
+  font-size: 0.75rem;
+}
+
+.insights-summary-grid .quick-card strong {
+  font-size: 1.15rem;
+}
+
+.insights-summary-charts {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 320px);
+  gap: 10px;
+  align-items: start;
+}
+
+.insights-side-stack {
+  display: grid;
+  gap: 10px;
+  align-items: start;
+}
+
+.insights-competency-charts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.insights-competency-charts > :nth-child(3) {
+  grid-column: 1 / -1;
+}
+
+.insights-goals-charts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.insights-signals-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.competency-list {
+  margin-top: 2px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.goal-list,
+.essential-list,
+.focus-list,
+.feedback-list,
+.action-list {
+  gap: 10px;
+}
+
+.goal-list li,
+.essential-list li,
+.focus-list li,
+.feedback-list li,
+.action-list li,
+.competency-list li {
+  border-color: var(--tab-border-soft);
+  background: rgb(var(--bg1));
+}
+
+.goal-list li {
+  padding: 12px;
+}
+
+.goal-meta span {
+  font-size: 0.67rem;
+}
+
+.panel-insights-focus .focus-list {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.panel-insights-focus .focus-list li {
+  min-height: 114px;
+  padding: 12px;
+}
+
+.actions-grid {
+  gap: 12px;
+  align-items: start;
+}
+
+.subpanel {
+  background: rgb(var(--bg1));
+  border-color: var(--tab-border-soft);
+}
+
+@media (max-width: 1500px) {
+  .panel-insights-competency,
+  .panel-insights-goals,
+  .panel-insights-essentials,
+  .panel-insights-focus {
+    grid-column: span 6;
+  }
+
+  .insights-summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1120px) {
+  .panel-insights-competency,
+  .panel-insights-goals,
+  .panel-insights-essentials,
+  .panel-insights-focus {
+    grid-column: 1 / -1;
+  }
+
+  .insights-summary-charts,
+  .insights-competency-charts,
+  .insights-goals-charts,
+  .insights-signals-grid,
+  .panel-insights-focus .focus-list,
+  .competency-list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 760px) {
+  .insights-summary-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

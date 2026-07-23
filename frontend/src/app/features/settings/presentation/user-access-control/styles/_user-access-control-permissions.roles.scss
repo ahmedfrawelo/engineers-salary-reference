@@ -1,0 +1,357 @@
+.permissions-layout {
+  display: grid;
+  grid-template-columns: minmax(216px, 252px) minmax(0, 1fr);
+  flex: 1 1 auto;
+  height: 100%;
+  min-height: 0;
+  gap: 12px;
+  align-items: stretch;
+  overflow: hidden;
+}
+
+.access-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-height: 0;
+  padding: 0;
+  border-radius: 16px;
+  border: 1px solid rgb(var(--border) / 0.18);
+  background: color-mix(in oklab, rgb(var(--bg0)) 92%, rgb(var(--surface)) 8%);
+  box-shadow: none;
+  overflow: hidden;
+}
+
+.role-column,
+.permission-column {
+  min-width: 0;
+  height: 100%;
+  min-height: 0;
+}
+
+.role-column {
+  overflow: hidden;
+}
+
+.permission-column {
+  display: flex;
+  flex: 1 1 auto;
+  position: relative;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  overflow: hidden;
+}
+
+.permission-list-shell,
+.permission-list-view {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.role-form,
+.perm-head,
+.access-audit-state {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px 16px;
+}
+
+.role-form,
+.perm-head {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: color-mix(in oklab, rgb(var(--bg0)) 94%, rgb(var(--surface)) 6%);
+  border-bottom: 1px solid rgb(var(--border) / 0.18);
+  backdrop-filter: blur(14px);
+}
+
+.perm-head {
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding-inline: 0;
+  background: transparent;
+  backdrop-filter: none;
+}
+
+.perm-head__copy {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.perm-head__hint {
+  margin: 0;
+  color: rgb(var(--primary));
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.perm-head__actions,
+.perm-head__compact-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.perm-head__actions {
+  justify-content: flex-start;
+  margin-inline-start: 0;
+}
+
+.perm-head__action-btn {
+  min-height: 30px;
+  padding-inline: 10px;
+}
+
+.perm-select-all {
+  min-height: 30px;
+  padding: 0 10px;
+  border-radius: 999px;
+  border: 1px solid rgb(var(--border) / 0.28);
+  background: rgb(var(--fg) / 0.04);
+  color: rgb(var(--fg));
+  font-weight: 600;
+  font-size: 0.78rem;
+}
+
+.perm-select-all--soft {
+  background: rgb(var(--primary) / 0.08);
+  border-color: rgb(var(--primary) / 0.18);
+}
+
+.perm-select-all--group {
+  margin-inline-start: auto;
+}
+
+.access-permission-target {
+  font-weight: 700;
+}
+
+.perm-head__actions .role-row-count {
+  margin-inline-start: 2px;
+}
+
+.access-permission-status-chip {
+  font-weight: 700;
+}
+
+.role-create,
+.role-edit,
+.role-row,
+.perm-group-head,
+.perm-item,
+.perm-action,
+.error-actions,
+.modal-actions,
+.modal-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.role-form__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.role-form__copy {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.role-form__count {
+  flex: 0 0 auto;
+}
+
+.role-form__error {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  color: rgb(255 120 120);
+  border: 1px solid rgb(196 52 52 / 0.24);
+  background: rgb(196 52 52 / 0.08);
+  font-size: 0.84rem;
+}
+
+.role-create input,
+.user-search input,
+.role-edit input {
+  width: 100%;
+  min-height: 38px;
+  border-radius: 12px;
+  border: 1px solid rgb(var(--border) / 0.45);
+  background: color-mix(in oklab, rgb(var(--bg1)) 90%, rgb(var(--surface)) 10%);
+  color: rgb(var(--fg));
+  padding: 0 12px;
+}
+
+.role-list,
+.perm-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 0;
+}
+
+.role-list {
+  flex: 1 1 auto;
+  max-height: none;
+  min-height: 0;
+  overflow: auto;
+  gap: 0;
+  padding: 0;
+}
+
+.role-item,
+.perm-section,
+.perm-page,
+.perm-group,
+.access-audit-card {
+  background: transparent;
+}
+
+.role-item {
+  padding: 0;
+  border: 0;
+  border-top: 1px solid rgb(var(--border) / 0.14);
+  border-radius: 0;
+  background: transparent;
+  transition:
+    background 120ms ease,
+    border-color 120ms ease,
+    transform 120ms ease;
+}
+
+.role-item:first-child {
+  border-top: 0;
+}
+
+.role-item:hover {
+  background: rgb(var(--fg) / 0.025);
+}
+
+.role-item.active {
+  background: rgb(var(--primary) / 0.08);
+}
+
+.role-row {
+  min-width: 0;
+  justify-content: space-between;
+  padding: 12px 14px;
+}
+
+.role-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 120ms ease;
+}
+
+.role-item:hover .role-actions,
+.role-item.active .role-actions {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.role-select {
+  flex: 1 1 auto;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.role-item .btn-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+}
+
+.user-select {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.user-name,
+.perm-section-title,
+.perm-page-title,
+.perm-group-title {
+  font-weight: 700;
+}
+
+.user-role {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: rgb(var(--fg) / 0.06);
+}
+
+.user-email,
+.user-role,
+.perm-empty,
+.perm-na {
+  color: rgb(var(--muted));
+  font-size: 0.84rem;
+}
+
+.btn-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  border: 1px solid rgb(var(--border) / 0.42);
+  background: color-mix(in oklab, rgb(var(--surface)) 88%, rgb(var(--bg1)) 12%);
+  color: rgb(var(--fg));
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.btn-icon.danger {
+  color: rgb(255 120 120);
+}
+
+.btn-icon.access-user-drawer__email-copy {
+  width: auto;
+  height: auto;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: rgb(var(--muted));
+  box-shadow: none;
+}
+
+.btn-icon.access-user-drawer__email-copy:hover,
+.btn-icon.access-user-drawer__email-copy:focus-visible {
+  border-color: transparent;
+  background: transparent;
+  color: rgb(var(--fg));
+  box-shadow: none;
+  outline: none;
+}

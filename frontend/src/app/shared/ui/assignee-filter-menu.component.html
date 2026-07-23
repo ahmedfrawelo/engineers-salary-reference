@@ -1,0 +1,179 @@
+<span
+  class="assignee-trigger-shell"
+  [class.is-active]="chipActive() || drawerOpen()"
+  [class.has-clear]="selectionActive()"
+>
+  <button
+    class="assignee-trigger pd-toolbar-control pd-toolbar-pill pd-motion pd-motion--chrome"
+    type="button"
+    data-assignee-panel-toggle
+    [attr.title]="effectiveTriggerLabel()"
+    [class.active]="chipActive() || drawerOpen()"
+    [class.is-active]="chipActive() || drawerOpen()"
+    (pointerdown)="onTriggerPointerDown($event)"
+    (click)="onTriggerClick($event)"
+  >
+    <hugeicons-icon
+      class="assignee-trigger-icon"
+      [icon]="triggerIcon"
+      [size]="14"
+      [strokeWidth]="1.9"
+      aria-hidden="true"
+    ></hugeicons-icon>
+    <span class="assignee-trigger-label">{{ effectiveTriggerLabel() }}</span>
+  </button>
+
+  @if (selectionActive()) {
+    <button
+      class="assignee-trigger-clear pd-motion pd-motion--chrome"
+      type="button"
+      data-assignee-panel-toggle
+      [attr.aria-label]="'Clear ' + effectiveTriggerLabel() + ' assignee filter'"
+      [attr.title]="'Clear ' + effectiveTriggerLabel()"
+      (pointerdown)="onTriggerClearPointerDown($event)"
+      (click)="onTriggerClearClick($event)"
+    >
+      <i appIcon="x-lg" aria-hidden="true"></i>
+    </button>
+  }
+</span>
+
+@if (drawerOpen()) {
+  <app-side-drawer
+    [open]="true"
+    [width]="drawerWidth"
+    [zIndex]="drawerZIndex"
+    [positionMode]="'fixed'"
+    [topInset]="drawerTopInset ?? drawerTop()"
+    [backdropTint]="0"
+    [backdropBlur]="0"
+    [ignoreOutsideSelectors]="'[data-assignee-panel-toggle]'"
+    [motionPreset]="'instant'"
+    [panelClass]="drawerPanelClass"
+    (closed)="closePanel()"
+  >
+    <section class="customize-drawer-surface" aria-labelledby="assigneeDrawerTitle">
+      <div class="customize-drawer-head">
+        <div class="customize-drawer-title" id="assigneeDrawerTitle">{{ title }}</div>
+        <button
+          class="customize-drawer-close"
+          type="button"
+          aria-label="Close assignees panel"
+          (click)="closePanel()"
+        >
+          <i appIcon="x-lg" aria-hidden="true"></i>
+        </button>
+      </div>
+
+      <div class="customize-drawer-body">
+        <section class="customize-drawer-section customize-drawer-section--first">
+          <label class="customize-drawer-view-pill assignee-search">
+            <span class="customize-drawer-view-icon">
+              <i appIcon="search" aria-hidden="true"></i>
+            </span>
+            <input
+              class="assignee-search-input"
+              type="search"
+              [ngModel]="searchQuery()"
+              (ngModelChange)="searchQuery.set($event)"
+              [placeholder]="searchPlaceholder"
+            />
+          </label>
+        </section>
+
+        <section class="customize-drawer-section">
+          <div class="assignee-section-head">
+            <div class="assignee-section-label">
+              <span>People</span>
+              <span>{{ peopleCount() }}</span>
+            </div>
+          </div>
+
+          <div class="assignee-group assignee-group-people">
+            <button
+              class="customize-row assignee-option pd-motion pd-motion--list"
+              type="button"
+              [attr.aria-pressed]="isAllSelected()"
+              (click)="selectAll()"
+            >
+              <span class="customize-row-main">
+                <span class="customize-drawer-view-icon">
+                  <i appIcon="people" aria-hidden="true"></i>
+                </span>
+                <span class="assignee-option-text">{{ allLabel }}</span>
+              </span>
+              <span class="customize-row-side">
+                <span class="customize-row-value">{{ allCount }}</span>
+                <span class="assignee-option-checkbox" aria-hidden="true"></span>
+              </span>
+            </button>
+
+            @if (showUnassignedRow()) {
+              <button
+                class="customize-row assignee-option pd-motion pd-motion--list"
+                type="button"
+                [attr.aria-pressed]="isUnassignedSelected()"
+                (click)="selectUnassigned()"
+              >
+                <span class="customize-row-main">
+                  <span class="customize-drawer-view-icon">
+                    <i appIcon="people" aria-hidden="true"></i>
+                  </span>
+                  <span class="assignee-option-text">{{ unassignedLabel }}</span>
+                </span>
+                <span class="customize-row-side">
+                  <span class="customize-row-value">{{ unassignedCount }}</span>
+                  <span class="assignee-option-checkbox" aria-hidden="true"></span>
+                </span>
+              </button>
+            }
+
+            @if (showMineRow()) {
+              <button
+                class="customize-row assignee-option pd-motion pd-motion--list"
+                type="button"
+                [attr.aria-pressed]="isMineSelected()"
+                (click)="selectMine()"
+              >
+                <span class="customize-row-main">
+                  <span class="customize-drawer-view-icon">
+                    <i appIcon="person-check" aria-hidden="true"></i>
+                  </span>
+                  <span class="assignee-option-text">{{ mineLabel }}</span>
+                </span>
+                <span class="customize-row-side">
+                  <span class="customize-row-value">{{ mineCount }}</span>
+                  <span class="assignee-option-checkbox" aria-hidden="true"></span>
+                </span>
+              </button>
+            }
+
+            @for (option of peopleOptions(); track option.value) {
+              <button
+                class="customize-row assignee-option pd-motion pd-motion--list"
+                type="button"
+                [attr.aria-pressed]="isOwnerSelected(option.value)"
+                (click)="selectOwner(option.value)"
+              >
+                <span class="customize-row-main">
+                  <span class="customize-drawer-view-icon assignee-owner-avatar">
+                    {{ optionInitials(option) }}
+                  </span>
+                  <span class="assignee-option-text">{{ option.label }}</span>
+                </span>
+                <span class="customize-row-side">
+                  <span class="customize-row-value">{{ option.count }}</span>
+                  <span class="assignee-option-checkbox" aria-hidden="true"></span>
+                </span>
+              </button>
+            }
+          </div>
+        </section>
+
+        @if (!filteredOptions().length && !showMineRow() && !showUnassignedRow()) {
+          <p class="assignee-empty">{{ emptyLabel }}</p>
+        }
+      </div>
+    </section>
+  </app-side-drawer>
+}

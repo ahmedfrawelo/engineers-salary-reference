@@ -1,0 +1,388 @@
+:host ::ng-deep .access-create-overlay {
+  --supplier-dossier-bg-override: var(--app-color-panel-body);
+  --supplier-dossier-header-bg-override: var(--app-color-header);
+  --supplier-dossier-border-override: var(--app-color-outline-stroke);
+  --supplier-dossier-outline-width-override: var(--app-outline-width);
+  --supplier-dossier-outline-override: var(--app-outline-stroke);
+  --supplier-dossier-control-bg-override: var(--app-color-control-bg);
+  --supplier-dossier-text-override: var(--app-color-text-body);
+  --supplier-dossier-muted-override: var(--app-color-text-muted);
+  --supplier-dossier-heading-color-override: var(--app-color-panel-heading);
+  --supplier-dossier-meta-color-override: var(--app-color-panel-meta-text);
+  --supplier-dossier-bg: var(--supplier-dossier-bg-override);
+  --supplier-dossier-header-bg: var(--supplier-dossier-header-bg-override);
+  --supplier-dossier-border: var(--supplier-dossier-border-override);
+  --supplier-dossier-outline: var(--supplier-dossier-outline-override);
+  --supplier-dossier-control-bg: var(--supplier-dossier-control-bg-override);
+  --supplier-dossier-text: var(--supplier-dossier-text-override);
+  --supplier-dossier-muted: var(--supplier-dossier-muted-override);
+  --supplier-dossier-heading-color: var(--supplier-dossier-heading-color-override);
+  --supplier-dossier-meta-color: var(--supplier-dossier-meta-color-override);
+  --supplier-dossier-inline-padding: 24px;
+  --supplier-dossier-inline-padding-md: 18px;
+  --supplier-dossier-inline-padding-sm: 14px;
+  --supplier-dossier-shell-padding: 6px var(--supplier-dossier-inline-padding) 15px;
+  --supplier-dossier-shell-padding-md: 6px var(--supplier-dossier-inline-padding-md) 13px;
+  --supplier-dossier-shell-padding-sm: 5px var(--supplier-dossier-inline-padding-sm) 11px;
+  --supplier-dossier-shell-gap: 4px;
+  --supplier-dossier-scrollbar-width: 6px;
+  --supplier-dossier-scrollbar-thumb: var(--app-color-scroll-thumb);
+  --supplier-dossier-section-title-size: var(--app-type-section-title-size);
+  --supplier-dossier-section-title-weight: var(--app-type-section-title-weight);
+  --supplier-dossier-section-title-letter-spacing: 0.035em;
+  --supplier-dossier-section-title-color: var(--app-color-panel-heading);
+  --supplier-dossier-label-size: var(--app-type-label-size);
+  --supplier-dossier-label-weight: var(--app-type-label-weight);
+  --supplier-dossier-label-letter-spacing: 0.04em;
+  --supplier-dossier-label-color: var(--app-color-panel-label-text);
+  --supplier-dossier-control-min-height: 38px;
+  --supplier-dossier-control-padding: 0 12px;
+  --supplier-dossier-control-radius: 10px;
+  --supplier-dossier-control-border: var(--app-control-stroke);
+  --supplier-dossier-control-text: var(--app-color-text-body);
+  --supplier-dossier-control-placeholder: var(--app-color-placeholder);
+  --supplier-dossier-grid-gap: 12px;
+  --supplier-dossier-fields-gap: 10px;
+  --supplier-dossier-row-radius: 14px;
+  --supplier-dossier-row-bg: var(--app-color-panel-row-bg);
+  --supplier-dossier-row-border: var(--app-row-stroke);
+  --supplier-dossier-empty-border: var(--app-empty-stroke);
+  --supplier-dossier-data-title-color: var(--app-color-panel-data-title);
+  --op-panel-bg: var(--supplier-dossier-bg-override);
+  --op-header-bg: var(--supplier-dossier-header-bg-override);
+  --op-body-bg: var(--supplier-dossier-bg-override);
+  --op-icon-bg: transparent;
+  --op-panel-border: var(--app-outline-stroke);
+  --op-panel-radius: 14px;
+  --op-panel-radius-compact: 14px;
+  --op-panel-radius-mobile: 14px;
+  --op-panel-shadow: none;
+  --op-panel-filter: none;
+  --op-header-padding: 0 20px;
+  --op-header-min-height: 48px;
+  --op-header-border: var(--app-divider-stroke);
+  --op-header-radius: 14px 14px 0 0;
+  --op-title-size: var(--app-type-panel-title-size);
+  --op-title-size-mobile: clamp(0.98rem, 3.8vw, 1.08rem);
+  --op-title-weight: var(--app-type-panel-title-weight);
+  --op-title-letter-spacing: 0.01em;
+  --op-title-line-height: 1.08;
+  --op-title-color: var(--app-color-text-soft);
+  --op-subtitle-display: none;
+  --op-title-icon-display: none;
+  --op-actions-gap: 8px;
+  --op-actions-margin-inline-start: 16px;
+  --op-icon-size: 30px;
+  --op-icon-size-mobile: 30px;
+  --op-icon-radius: 9px;
+  --op-icon-border: var(--app-control-stroke);
+  --op-icon-color: var(--app-color-text-body);
+  --op-icon-shadow: none;
+  --op-icon-hover-filter: none;
+  --op-icon-hover-transform: none;
+  --op-icon-active-transform: none;
+  --op-icon-danger-border-color: color-mix(in oklab, var(--app-color-danger) 35%, transparent);
+  --op-icon-danger-bg: transparent;
+  --op-icon-danger-color: var(--app-color-danger-soft);
+  --op-body-display: block;
+  --op-body-overflow: auto;
+  border-radius: 14px;
+}
+
+:host-context(html[data-theme='light']) ::ng-deep .access-create-overlay {
+  --supplier-dossier-bg-override: var(--app-color-panel-body);
+  --supplier-dossier-header-bg-override: var(--app-color-header);
+  --supplier-dossier-border-override: var(--app-color-outline-stroke);
+  --supplier-dossier-muted-override: var(--app-color-text-muted);
+  --supplier-dossier-meta-color-override: var(--app-color-text-faint);
+  --supplier-dossier-control-bg-override: color-mix(
+    in oklab,
+    var(--app-color-panel-body) 92%,
+    var(--app-color-shell) 8%
+  );
+  --supplier-dossier-row-bg: color-mix(
+    in oklab,
+    var(--app-color-panel-body) 94%,
+    var(--app-color-shell) 6%
+  );
+  --supplier-dossier-empty-border: var(--app-empty-stroke);
+  --supplier-dossier-scrollbar-thumb: var(--app-color-scroll-thumb);
+}
+
+:host ::ng-deep .access-create-overlay .body {
+  display: block;
+  overflow: auto;
+  padding: 0 !important;
+  background: var(--op-body-bg);
+}
+
+:host ::ng-deep .access-create-overlay,
+:host ::ng-deep .access-create-overlay * {
+  -webkit-tap-highlight-color: transparent;
+}
+
+:host ::ng-deep .access-create-overlay .modal-hdr {
+  background: var(--op-header-bg) !important;
+  border-bottom: var(--op-header-border) !important;
+}
+
+.access-create-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--supplier-dossier-shell-gap, 10px);
+  min-width: min(720px, 100%);
+  width: 100%;
+  padding: var(--supplier-dossier-shell-padding, 6px 24px 15px);
+  box-sizing: border-box;
+}
+
+.access-create-form__section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 8px 0 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.access-create-form__section-head {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.access-create-form__section-title {
+  margin: 0;
+  display: inline-flex;
+  width: fit-content;
+  align-self: flex-start;
+  padding-bottom: 8px;
+  border-bottom: var(--supplier-dossier-outline, var(--app-divider-stroke));
+  color: var(--supplier-dossier-section-title-color, var(--app-color-panel-heading));
+  font-size: var(--supplier-dossier-section-title-size, 13px);
+  font-weight: var(--supplier-dossier-section-title-weight, 800);
+  letter-spacing: var(--supplier-dossier-section-title-letter-spacing, 0.035em);
+  text-transform: uppercase;
+}
+
+.access-create-form__section-head .muted,
+.access-create-form__note,
+:host ::ng-deep .access-create-overlay .field > span {
+  color: var(--supplier-dossier-meta-color, var(--app-color-panel-meta-text));
+}
+
+.access-create-form__grid {
+  display: grid;
+  gap: 6px;
+  align-items: start;
+}
+
+.access-create-form__grid--identity {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.access-create-form__grid--access {
+  grid-template-columns: repeat(2, minmax(220px, 1fr));
+}
+
+:host ::ng-deep .access-create-overlay .field {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  min-width: 0;
+  min-inline-size: 0;
+  min-height: 76px;
+  padding: 10px 12px;
+  border-radius: var(--supplier-dossier-row-radius, 14px);
+  border: var(--supplier-dossier-row-border, var(--app-row-stroke));
+  background: var(--supplier-dossier-row-bg, var(--app-color-row-bg));
+  transition: none;
+}
+
+:host ::ng-deep .access-create-overlay .field:hover,
+:host ::ng-deep .access-create-overlay .field:focus-within {
+  border: var(--supplier-dossier-row-border, var(--app-row-stroke));
+  background: var(--supplier-dossier-row-bg, var(--app-color-row-bg));
+}
+
+:host ::ng-deep .access-create-overlay .access-section-kicker,
+:host ::ng-deep .access-create-overlay .field > span {
+  font-size: var(--supplier-dossier-label-size, 10px);
+  font-weight: var(--supplier-dossier-label-weight, 700);
+  letter-spacing: var(--supplier-dossier-label-letter-spacing, 0.04em);
+  text-transform: uppercase;
+}
+
+:host ::ng-deep .access-create-overlay .access-section-kicker {
+  margin: 0;
+  color: var(--supplier-dossier-heading-color, var(--app-color-panel-heading));
+}
+
+:host ::ng-deep .access-create-overlay .field input {
+  width: 100%;
+  min-height: auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--supplier-dossier-data-title-color, var(--app-color-panel-data-title));
+  font-size: 14px;
+  line-height: 1.28;
+  font-weight: 650;
+  box-shadow: none;
+  transition: none;
+}
+
+:host ::ng-deep .access-create-overlay .field input::placeholder {
+  color: var(--supplier-dossier-control-placeholder, var(--app-color-placeholder));
+}
+
+:host ::ng-deep .access-create-overlay .field input:focus {
+  outline: none;
+  border: 0;
+  box-shadow: none;
+}
+
+:host ::ng-deep .access-create-overlay app-custom-dropdown .dropdown-trigger {
+  min-height: auto !important;
+  height: auto !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  transform: none !important;
+  color: var(--supplier-dossier-data-title-color, var(--app-color-panel-data-title)) !important;
+  font-size: 14px !important;
+  font-weight: 650 !important;
+  transition: none !important;
+}
+
+:host ::ng-deep .access-create-overlay app-custom-dropdown .dropdown-trigger:hover,
+:host ::ng-deep .access-create-overlay app-custom-dropdown .dropdown-trigger:focus,
+:host ::ng-deep .access-create-overlay app-custom-dropdown .custom-dropdown.open .dropdown-trigger {
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+:host ::ng-deep .access-create-overlay app-custom-dropdown .dropdown-arrow {
+  color: var(--supplier-dossier-meta-color, var(--app-color-panel-meta-text)) !important;
+  transition: none !important;
+}
+
+:host ::ng-deep .access-create-overlay app-custom-dropdown .dropdown-menu {
+  background: var(--supplier-dossier-bg, var(--app-color-panel-body)) !important;
+  border: var(--supplier-dossier-control-border, var(--app-control-stroke)) !important;
+  border-radius: 12px !important;
+  box-shadow: none !important;
+  padding: 4px !important;
+  animation: none !important;
+  transition: none !important;
+}
+
+:host ::ng-deep .access-create-overlay app-custom-dropdown .dropdown-option {
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  transition: none !important;
+  animation: none !important;
+}
+
+:host ::ng-deep .access-create-overlay app-custom-dropdown .dropdown-option:hover,
+:host ::ng-deep .access-create-overlay app-custom-dropdown .dropdown-option.selected {
+  background: transparent !important;
+  color: var(--supplier-dossier-text, var(--app-color-text-body)) !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.access-create-form__note {
+  margin: 0;
+  padding: 14px;
+  border-radius: 10px;
+  border: var(--supplier-dossier-empty-border, var(--app-empty-stroke));
+  background: color-mix(
+    in oklab,
+    var(--supplier-dossier-control-bg, var(--app-color-control-bg)) 82%,
+    transparent
+  );
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.access-create-form__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding-top: 10px;
+  border-top: var(--supplier-dossier-outline, var(--app-divider-stroke));
+}
+
+:host ::ng-deep .access-create-overlay .btn-primary {
+  border-color: var(--app-shell-accent-border);
+  background: var(--app-shell-accent-bg-strong);
+  color: var(--app-shell-accent-text);
+  transition: none;
+  transform: none;
+  box-shadow: none;
+}
+
+:host ::ng-deep .access-create-overlay .btn-primary:hover,
+:host ::ng-deep .access-create-overlay .btn-primary:focus-visible {
+  border-color: var(--app-shell-accent-border);
+  background: var(--app-shell-accent-bg-strong);
+  color: var(--app-shell-accent-text);
+  outline: none;
+  transform: none;
+  box-shadow: none;
+}
+
+:host ::ng-deep .access-create-overlay .btn-ghost {
+  border-color: var(--supplier-dossier-border, var(--app-color-outline-stroke));
+  background: transparent;
+  color: var(--supplier-dossier-muted, var(--app-color-text-muted));
+  transition: none;
+  transform: none;
+  box-shadow: none;
+}
+
+:host ::ng-deep .access-create-overlay .btn-ghost:hover,
+:host ::ng-deep .access-create-overlay .btn-ghost:focus-visible {
+  border-color: var(--supplier-dossier-border, var(--app-color-outline-stroke));
+  background: transparent;
+  color: var(--supplier-dossier-muted, var(--app-color-text-muted));
+  outline: none;
+  transform: none;
+  box-shadow: none;
+}
+
+:host ::ng-deep .access-create-overlay .btn-danger {
+  border-color: var(--app-color-danger-border);
+  background: var(--app-color-danger-bg);
+  color: var(--app-color-danger-text);
+  transition: none;
+  transform: none;
+  box-shadow: none;
+}
+
+:host ::ng-deep .access-create-overlay .access-inline-message {
+  border-color: var(--supplier-dossier-border, var(--app-color-outline-stroke));
+  background: color-mix(
+    in oklab,
+    var(--supplier-dossier-control-bg, var(--app-color-control-bg)) 82%,
+    transparent
+  );
+  color: var(--supplier-dossier-text, var(--app-color-text-body));
+}
+
+:host ::ng-deep .access-create-overlay .access-inline-message--error {
+  border-color: var(--app-color-danger-border);
+  background: var(--app-color-danger-bg);
+  color: var(--app-color-danger-text);
+}

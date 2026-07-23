@@ -1,0 +1,180 @@
+.access-filter {
+  width: 170px;
+}
+
+.access-filter--compact {
+  width: 112px;
+}
+
+.access-create-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.btn-sm {
+  min-height: 32px;
+  border-radius: 9px;
+  padding: 0 12px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.btn-primary {
+  background: rgb(var(--primary));
+  color: #fff;
+}
+
+.btn-ghost {
+  background: color-mix(in oklab, rgb(var(--surface)) 88%, rgb(var(--bg1)) 12%);
+  border-color: rgb(var(--border) / 0.42);
+  color: rgb(var(--fg));
+}
+
+.btn-danger {
+  background: rgb(196 52 52 / 0.14);
+  border-color: rgb(196 52 52 / 0.34);
+  color: rgb(255 120 120);
+}
+
+.access-inline-message {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid rgb(var(--border) / 0.42);
+  background: color-mix(in oklab, rgb(var(--surface)) 92%, rgb(var(--bg1)) 8%);
+}
+
+.access-inline-message--error {
+  border-color: rgb(196 52 52 / 0.32);
+  background: rgb(196 52 52 / 0.08);
+}
+
+.access-inline-message__copy,
+.access-inline-message__actions,
+.access-list-toolbar,
+.access-list-toolbar__meta,
+.bulk-bar,
+.bulk-actions,
+.filter-chips,
+.access-editor-summary,
+.access-editor-meta,
+.access-data-strip__actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.access-list-toolbar,
+.bulk-bar {
+  justify-content: space-between;
+}
+
+.access-list-toolbar,
+.filter-chips,
+.bulk-bar,
+.roster-footer {
+  padding-inline: 14px;
+}
+
+.access-list-toolbar {
+  min-height: 38px;
+  border-bottom: 1px solid rgb(var(--border) / 0.18);
+}
+
+.access-select-page {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: rgb(var(--fg) / 0.88);
+  font-size: 0.9rem;
+}
+
+.filter-chips {
+  gap: 8px;
+}
+
+.chip {
+  min-height: 30px;
+  padding: 0 10px;
+  border-radius: 999px;
+  border: 1px solid rgb(var(--border) / 0.44);
+  background: color-mix(in oklab, rgb(var(--surface)) 88%, rgb(var(--bg1)) 12%);
+  color: rgb(var(--fg) / 0.86);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.chip.reset {
+  color: rgb(var(--primary));
+}
+
+.bulk-bar {
+  min-height: 42px;
+  padding-block: 6px;
+  border-bottom: 1px solid rgb(var(--primary) / 0.22);
+  background: rgb(var(--primary) / 0.06);
+}
+
+.bulk-count {
+  font-weight: 700;
+  color: rgb(var(--fg));
+}
+
+.access-create-grid--sidebar,
+.access-editor-grid--sidebar {
+  grid-template-columns: 1fr;
+}
+
+.roster-footer {
+  display: flex;
+  justify-content: center;
+  padding-top: 10px;
+}
+
+.tag-pill {
+  min-height: 30px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid rgb(var(--border) / 0.45);
+  background: color-mix(in oklab, rgb(var(--surface)) 88%, rgb(var(--bg1)) 12%);
+  color: rgb(var(--fg));
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.tag-pill.status {
+  color: rgb(226 183 69);
+}
+
+.tag-pill.role {
+  color: rgb(var(--primary));
+}
+
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: currentColor;
+}
+
+.access-editor-grid__password {
+  grid-column: 1 / -1;
+}

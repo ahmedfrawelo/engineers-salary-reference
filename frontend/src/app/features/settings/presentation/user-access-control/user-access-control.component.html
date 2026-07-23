@@ -1,0 +1,80 @@
+<section class="access-control-page">
+  <engineers-salary-reference-page-design
+    class="proj-page toolbar-soft-rect-actions"
+    [hideHeader]="true"
+    toolbarAriaLabel="Access control toolbar"
+    [sharedTenderGridToolbar]="true"
+    [sharedTenderGridToolbarShowViews]="false"
+    [sharedTenderGridToolbarShowClosed]="false"
+    [sharedTenderGridToolbarShowAssignee]="false"
+    [sharedToolbarSearchOnly]="false"
+    [sharedToolbarAvatarSearch]="true"
+    [sharedToolbarSearchPlaceholder]="'Search...'"
+    [sharedToolbarSearchVariant]="'softRect'"
+    [sharedToolbarShowCustomize]="true"
+    [sharedToolbarActions]="pageToolbarActions()"
+    [sharedGridApi]="
+      tab() === 'profile'
+        ? rosterSharedGridApi
+        : tab() === 'permissions'
+          ? permissionSharedGridApi
+          : null
+    "
+    [sharedToolbarSearchValue]="
+      tab() === 'profile' ? rosterQuery : tab() === 'permissions' ? permissionQuery : ''
+    "
+    (sharedToolbarSearchChanged)="onSharedPageSearchChanged($event)"
+    (sharedToolbarActionTriggered)="onSharedPageToolbarAction($event)"
+  >
+    <user-access-control-create-panel [host]="view"></user-access-control-create-panel>
+    <div page-table class="access-control-table-shell">
+      <div class="access-view-strip">
+        <div
+          class="access-tabs"
+          role="tablist"
+          aria-label="Access views"
+          [appStretchTabsIndicator]="tab()"
+          [stretchTabsItemSelector]="'.access-tab-list .access-tab'"
+        >
+          <div class="access-tab-list">
+            <button
+              class="access-tab"
+              type="button"
+              [class.active]="tab() === 'profile'"
+              (click)="setTab('profile')"
+              role="tab"
+              [attr.aria-selected]="tab() === 'profile'"
+            >
+              <span class="tab-label">Profile status</span>
+            </button>
+            @if (canOpenAccessControlPermissionsWorkspace()) {
+              <button
+                class="access-tab"
+                type="button"
+                [class.active]="tab() === 'permissions'"
+                (click)="setTab('permissions')"
+                role="tab"
+                [attr.aria-selected]="tab() === 'permissions'"
+              >
+                <span class="tab-label">Permissions</span>
+              </button>
+            }
+          </div>
+        </div>
+      </div>
+      <div class="access-body">
+        @if (tab() === 'profile') {
+          <user-access-control-profile-pane [host]="view"></user-access-control-profile-pane>
+        }
+
+        @if (tab() === 'permissions') {
+          <user-access-control-permissions-pane
+            [host]="view"
+          ></user-access-control-permissions-pane>
+        }
+      </div>
+    </div>
+  </engineers-salary-reference-page-design>
+
+  <user-access-control-dialogs [host]="view"></user-access-control-dialogs>
+</section>

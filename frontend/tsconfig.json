@@ -1,0 +1,33 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "target": "ES2022",
+    "ignoreDeprecations": "6.0",
+    "baseUrl": ".",
+    "paths": {
+      "@features/*": ["src/app/features/*"],
+      "@shared-kernel/*": ["src/app/shared-kernel/*"],
+      "@platform/*": ["src/app/platform/*"],
+      "@infrastructure/*": ["src/app/infrastructure/*"],
+      "@shared/*": ["src/app/shared/*"],
+      "@core/*": ["src/app/core/*"],
+      "@auth/*": ["src/app/auth/*"],
+      "@env/*": ["src/environments/*"],
+      "@testing/*": ["src/testing/*"]
+    },
+    "esModuleInterop": true,
+    "useDefineForClassFields": false,
+    "module": "ES2022",
+    "moduleResolution": "bundler",
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": false,
+    "noImplicitReturns": false,
+    "noFallthroughCasesInSwitch": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "types": []
+  },
+  "angularCompilerOptions": {
+    "strictTemplates": true
+  }
+}

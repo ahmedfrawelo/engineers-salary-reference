@@ -1,0 +1,48 @@
+:host {
+  display: block;
+}
+
+.lce-comment {
+  padding: 10px;
+  display: grid;
+  gap: 10px;
+}
+
+.lce-comment-input input {
+  width: 100%;
+  min-height: 28px;
+  border-radius: 9px;
+  border: 1px solid
+    var(--tsl-panel-control-border, color-mix(in oklab, rgb(var(--border)) 54%, transparent));
+  background: var(
+    --tsl-panel-control-bg,
+    color-mix(in oklab, rgb(var(--surface)) 89%, rgb(var(--bg1)) 11%)
+  );
+  color: rgb(var(--fg) / 0.92);
+  padding: 0 6px;
+  font-size: 12px;
+  outline: 0;
+}
+
+.lce-comment-input input:focus {
+  border-color: var(--tsl-panel-focus, rgb(var(--primary) / 0.18));
+}
+
+.lce-primary {
+  min-height: 30px;
+  padding: 0 10px;
+  border-radius: 8px;
+  border: 1px solid rgb(var(--primary) / 0.32);
+  background: var(
+    --tsl-panel-control-bg,
+    color-mix(in oklab, rgb(var(--surface)) 89%, rgb(var(--bg1)) 11%)
+  );
+  color: rgb(var(--primary));
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}

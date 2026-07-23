@@ -1,0 +1,533 @@
+// ===== ACCESSIBILITY-FIRST FOCUS STYLES =====
+// Theme tokens and accessibility-oriented defaults.
+// Runtime-safe grid base: semantic alias layer only. Visual ownership stays in simple.scss.
+
+:host {
+  --dg-bg-base: var(--app-color-grid-surface);
+  --dg-bg-base-transparent: var(--app-color-grid-surface-transparent);
+  --dg-bg-header: var(--app-color-grid-header-bg);
+  --dg-bg-surface: var(--app-color-grid-surface-raised);
+  --dg-bg-muted: var(--app-color-grid-control-bg);
+  --dg-bg-strong: var(--app-color-grid-surface);
+  --dg-border: var(--app-color-grid-line-soft);
+  --dg-border-strong: var(--app-color-grid-line);
+  --dg-fg-strong: var(--app-color-grid-body-text);
+  --dg-fg-soft: var(--app-color-grid-body-text-soft);
+  --dg-fg-muted: var(--app-color-grid-muted-label);
+  --dg-primary: var(--app-color-primary);
+  --dg-info: var(--app-color-info);
+  --dg-success: var(--app-color-success);
+  --dg-warning: var(--app-color-warning);
+  --dg-danger: var(--app-color-danger);
+  --dg-hover: var(--app-color-grid-row-hover);
+  --dg-selected: var(--app-color-grid-row-selected);
+  --dg-group-header-accent: var(--app-color-primary);
+  --dg-group-footer-accent: var(--app-color-warning);
+  --dg-grand-total-accent: var(--app-color-success);
+  --dg-overlay-bg: var(--app-color-grid-overlay-bg);
+  --dg-overlay-bg-strong: var(--app-color-grid-overlay-bg-strong);
+  --dg-overlay-subtle: var(--app-color-grid-overlay-subtle);
+  --dg-overlay-border: var(--app-color-grid-overlay-border);
+  --dg-overlay-divider: var(--app-color-grid-overlay-divider);
+  --dg-overlay-shadow: var(--app-shadow-grid-overlay);
+  --dg-overlay-scrim: var(--app-color-grid-overlay-scrim);
+  --dg-primary-bg: var(--app-color-primary-bg);
+  --dg-primary-bg-strong: var(--app-color-primary-bg-strong);
+  --dg-primary-border: var(--app-color-primary-border);
+  --dg-primary-border-strong: var(--app-color-primary-border-strong);
+  --dg-primary-text: var(--app-color-primary-text);
+  --dg-primary-text-strong: var(--app-color-primary-text-strong);
+  --dg-info-bg: var(--app-color-info-bg);
+  --dg-info-bg-strong: var(--app-color-info-bg-strong);
+  --dg-info-border: var(--app-color-info-border);
+  --dg-info-text: var(--app-color-info-text);
+  --dg-success-bg: var(--app-color-success-bg);
+  --dg-success-bg-strong: var(--app-color-success-bg-strong);
+  --dg-success-border: var(--app-color-success-border);
+  --dg-success-text: var(--app-color-success-text);
+  --dg-warning-bg: var(--app-color-warning-bg);
+  --dg-warning-bg-strong: var(--app-color-warning-bg-strong);
+  --dg-warning-border: var(--app-color-warning-border);
+  --dg-warning-text: var(--app-color-warning-text);
+  --dg-danger-bg: var(--app-color-danger-bg);
+  --dg-danger-bg-strong: var(--app-color-danger-bg-strong);
+  --dg-danger-border: var(--app-color-danger-border);
+  --dg-danger-text: var(--app-color-danger-text);
+  --dg-danger-text-strong: var(--app-color-danger-soft-strong);
+  --dg-control-bg: var(--app-color-grid-control-bg);
+  --dg-control-bg-strong: var(--app-color-grid-control-bg-strong);
+  --dg-control-border: var(--app-color-grid-control-border);
+  --dg-control-border-strong: var(--app-color-grid-control-border-strong);
+  --dg-control-text: var(--app-color-grid-body-text);
+  --dg-control-placeholder: var(--app-color-grid-control-placeholder);
+  --dg-floating-toolbar-bg: var(--app-color-grid-floating-toolbar-bg);
+  --dg-floating-toolbar-border: var(--app-color-grid-floating-toolbar-border);
+  --dg-floating-toolbar-shadow: var(--app-shadow-grid-floating-toolbar);
+  --dg-floating-toolbar-text: var(--app-color-grid-floating-toolbar-text);
+  --dg-shell-accent-soft: var(--app-color-primary-bg);
+  --dg-shell-accent-strong: var(--app-color-primary-bg-strong);
+  --dg-bottom-bar-bg: var(--app-color-grid-bottom-bar-bg);
+  --dg-bottom-bar-border: var(--app-color-grid-bottom-bar-border);
+  --dg-theme-checkbox-size: var(--app-grid-checkbox-size, 14px);
+  --dg-theme-checkbox-radius: var(--app-grid-checkbox-radius, 4px);
+  --dg-theme-checkbox-bg: var(--app-color-grid-checkbox-bg);
+  --dg-theme-checkbox-bg-hover: var(--app-color-grid-checkbox-bg-hover);
+  --dg-theme-checkbox-border: var(--app-color-grid-checkbox-border);
+  --dg-theme-checkbox-border-strong: var(--app-color-grid-checkbox-border-strong);
+  --dg-theme-checkbox-check: var(--app-color-grid-checkbox-check);
+  --dg-theme-checkbox-checked-bg: var(--app-color-grid-checkbox-checked-bg);
+  --dg-selection-control-size: var(--dg-theme-checkbox-size);
+  --dg-theme-font-sans: var(
+    --app-grid-header-font-family,
+    var(--app-theme-font-sans, var(--app-font-family-sans))
+  );
+  --dg-theme-header-cell-height: var(--app-grid-header-cell-height, 32px);
+  --dg-theme-header-cell-padding-inline: var(--app-grid-header-cell-padding-inline, 8px);
+  --dg-theme-header-cell-font-size: var(--app-grid-header-cell-font-size, 13px);
+  --dg-theme-header-cell-font-weight: var(--app-grid-header-cell-font-weight, 700);
+  --dg-theme-header-bg: var(--app-color-grid-header-bg);
+  --dg-theme-header-cell-fg: var(--app-color-grid-header-cell-fg);
+  --dg-theme-header-text-height: var(--app-grid-header-text-height, 16px);
+  --dg-theme-header-text-size: var(--app-grid-header-text-size, 12px);
+  --dg-theme-header-text-font-weight: var(--app-grid-header-text-font-weight, 500);
+  --dg-theme-header-text-line-height: var(--app-grid-header-text-line-height, 1.3333333333);
+  --dg-theme-header-text-fg: var(--app-color-grid-header-text-fg);
+  --dg-theme-header-icon-gap: var(--app-grid-header-icon-gap, 4px);
+  --dg-theme-header-icon-cluster-gap: var(--app-grid-header-icon-cluster-gap, 2px);
+  --dg-theme-header-icon-button-size: var(--app-grid-header-icon-button-size, 16px);
+  --dg-theme-header-icon-size: var(--app-grid-header-icon-size, 12px);
+  --dg-shell-header-height: var(--dg-theme-header-cell-height);
+  --dg-shell-header-text-height: var(--dg-theme-header-text-height);
+  --dg-shell-header-text-size: var(--dg-theme-header-text-size);
+  --dg-shell-header-text-line-height: var(--dg-theme-header-text-line-height);
+  --dg-shell-header-cell-padding-inline: var(--dg-theme-header-cell-padding-inline);
+  --dg-shell-header-cell-font-family: var(--dg-theme-font-sans);
+  --dg-shell-header-cell-font-size: var(--dg-theme-header-cell-font-size);
+  --dg-shell-header-cell-font-weight: var(--dg-theme-header-cell-font-weight);
+  --dg-shell-header-bg: var(--dg-theme-header-bg);
+  --dg-shell-header-cell-fg: var(--dg-theme-header-cell-fg);
+  --dg-shell-header-text-font-family: var(--dg-theme-font-sans);
+  --dg-shell-header-text-font-size: var(--dg-theme-header-text-size);
+  --dg-shell-header-text-font-weight: var(--dg-theme-header-text-font-weight);
+  --dg-shell-header-text-fg: var(--dg-theme-header-text-fg);
+  --dg-shell-header-icon-gap: var(--dg-theme-header-icon-gap);
+  --dg-shell-header-icon-cluster-gap: var(--dg-theme-header-icon-cluster-gap);
+  --dg-shell-header-icon-button-size: var(--dg-theme-header-icon-button-size);
+  --dg-shell-header-icon-size: var(--dg-theme-header-icon-size);
+  --dg-shell-header-fg: var(--dg-shell-header-text-fg);
+  --dg-shell-header-hover-bg: var(--app-color-grid-header-hover-bg);
+  --dg-shell-header-state-line: var(--app-color-grid-header-state-line);
+  --dg-shell-header-state-line-muted: var(--app-color-grid-header-state-line-muted);
+  --dg-shell-header-filtered-bg: var(--app-color-grid-header-filtered-bg);
+  --dg-shell-header-sorted-bg: var(--app-color-grid-header-sorted-bg);
+  --dg-shell-header-drop-bg: var(--app-color-grid-header-drop-bg);
+  --dg-shell-drop-marker: var(--app-color-grid-header-state-line);
+  --dg-shell-body-column-accent: var(--app-color-grid-body-column-accent);
+  --dg-shell-body-column-accent-muted: var(--app-color-grid-body-column-accent-muted);
+  --dg-shell-row-hover-border: var(--app-color-grid-row-hover-border);
+  --dg-shell-sticky-divider: var(--app-color-grid-sticky-divider);
+  --dg-shell-footer-active-bg: var(
+    --app-color-grid-shell-footer-active-bg,
+    var(--app-color-grid-bottom-bar-bg)
+  );
+  --dg-shell-footer-hover-bg: var(
+    --app-color-grid-shell-footer-hover-bg,
+    var(--app-color-grid-bottom-bar-bg)
+  );
+  --dg-shell-header-scroll-shadow: var(
+    --app-color-grid-shell-header-scroll-shadow,
+    var(--app-shadow-grid-overlay)
+  );
+  --dg-shell-footer-height: 36px;
+  --dg-shell-footer-padding-inline: 8px;
+  --dg-shell-pagination-button-height: 24px;
+  --dg-shell-pagination-button-padding-inline: 8px;
+  --dg-shell-sticky-column-bg: var(--app-color-canvas, var(--app-color-surface, transparent));
+  --dg-shell-scrollbar-offset-bg: var(--dg-shell-sticky-column-bg);
+  --dg-bottom-scrollbar-track: var(--app-color-grid-bottom-scrollbar-track);
+  --dg-bottom-scrollbar-thumb: var(--app-color-grid-bottom-scrollbar-thumb);
+  --dg-bottom-scrollbar-thumb-hover: var(--app-color-grid-bottom-scrollbar-thumb-hover);
+  --dg-context-menu-item-hover-bg: var(--app-color-grid-menu-item-hover-bg);
+  --dg-context-menu-item-hover-shadow: var(--app-shadow-grid-menu-item-hover);
+  --dg-context-menu-shortcut-bg: var(--app-color-grid-menu-shortcut-bg);
+  --dg-context-menu-item-active-bg: var(--app-color-grid-menu-item-active-bg);
+  --dg-context-menu-item-on-bg: var(--app-color-grid-menu-item-on-bg);
+  --dg-context-menu-item-on-shadow: var(--app-shadow-grid-menu-item-on);
+  --dg-context-menu-divider-shadow: var(--app-shadow-grid-menu-divider);
+  --dg-context-menu-meta-bg: var(--app-color-grid-menu-meta-bg);
+  --dg-context-menu-danger-hover-bg: var(--app-color-grid-menu-danger-hover-bg);
+  --dg-menu-scrollbar-track: var(--app-color-grid-menu-scrollbar-track);
+  --dg-menu-scrollbar-thumb: var(--app-color-grid-menu-scrollbar-thumb);
+  --dg-menu-scrollbar-thumb-hover: var(--app-color-grid-menu-scrollbar-thumb-hover);
+  --dg-menu-search-focus-shadow: var(--app-shadow-grid-menu-search-focus);
+  --dg-menu-success-hover-shadow: var(--app-shadow-grid-menu-success-hover);
+  --dg-menu-success-checked-inner: var(--app-color-grid-menu-success-checked-inner);
+  --dg-menu-success-focus-shadow: var(--app-shadow-grid-menu-success-focus);
+  --dg-group-panel-icon: var(--app-color-grid-group-panel-icon);
+  --dg-group-placeholder-border: var(--app-color-grid-group-placeholder-border);
+  --dg-group-placeholder-bg: var(--app-color-grid-group-placeholder-bg);
+  --dg-group-chip-bg: var(--app-color-grid-group-chip-bg);
+  --dg-group-chip-border-hover: var(--app-color-grid-group-chip-border-hover);
+  --dg-group-chip-bg-hover: var(--app-color-grid-group-chip-bg-hover);
+  --dg-group-chip-remove-hover-bg: var(--app-color-grid-group-chip-remove-hover-bg);
+  --dg-group-actions-divider: var(--app-color-grid-group-actions-divider);
+  --dg-group-action-bg: var(--app-color-grid-group-action-bg);
+  --dg-group-action-border-hover: var(--app-color-grid-group-action-border-hover);
+  --dg-group-action-bg-hover: var(--app-color-grid-group-action-bg-hover);
+  --dg-filter-chip-bg: var(--app-color-grid-filter-chip-bg);
+  --dg-filter-chip-border: var(--app-color-grid-filter-chip-border);
+  --dg-filter-clear-all-bg: var(--app-color-grid-filter-clear-all-bg);
+  --dg-insights-panel-bg: var(--app-color-grid-insights-panel-bg);
+  --dg-insights-panel-shadow: var(--app-shadow-grid-insights-panel);
+  --dg-primary-hover-shadow: var(--app-shadow-grid-primary-hover);
+  --dg-bookmark-dot-shadow: var(--app-shadow-grid-bookmark-dot);
+  --dg-headline-card-bg: var(--app-color-grid-headline-card-bg);
+  --dg-headline-card-border: var(--app-color-grid-headline-card-border);
+  --dg-headline-label: var(--app-color-grid-headline-label);
+  --dg-headline-value: var(--app-color-grid-headline-value);
+  --dg-side-panel-shadow: var(--app-shadow-grid-side-panel);
+  --dg-value-bar-fill: var(--app-gradient-grid-value-bar-fill);
+  --dg-row-group-panel-border: var(--app-color-grid-row-group-panel-border);
+  --dg-row-group-panel-bg: var(--app-color-grid-row-group-panel-bg);
+  --dg-dialog-backdrop: var(--app-color-grid-dialog-backdrop);
+  --dg-dialog-close: var(--app-color-grid-dialog-close);
+  --dg-dialog-close-hover-bg: var(--app-color-grid-dialog-close-hover-bg);
+  --dg-dialog-close-hover-text: var(--app-color-grid-dialog-close-hover-text);
+  --dg-help-step-number-bg: var(--app-color-grid-help-step-number-bg);
+  --dg-help-step-number-border: var(--app-color-grid-help-step-number-border);
+  --dg-help-step-number-text: var(--app-color-grid-help-step-number-text);
+  --dg-help-tip-bg: var(--app-color-grid-help-tip-bg);
+  --dg-help-tip-border: var(--app-color-grid-help-tip-border);
+  --dg-help-tip-text: var(--app-color-grid-help-tip-text);
+  --dg-dialog-footer-border: var(--app-color-grid-dialog-footer-border);
+  --dg-dialog-primary-action-bg: var(--app-color-grid-dialog-primary-action-bg);
+  --dg-dialog-primary-action-text: var(--app-color-grid-dialog-primary-action-text);
+  --dg-dialog-primary-action-hover-bg: var(--app-color-grid-dialog-primary-action-hover-bg);
+  --dg-dialog-primary-action-hover-shadow: var(--app-shadow-grid-dialog-primary-action-hover);
+  --dg-search-icon-idle: var(--app-color-grid-search-icon-idle);
+  --dg-search-icon-active: var(--app-color-grid-search-icon-active);
+  --dg-freshness-bg: var(--app-color-grid-freshness-bg);
+  --dg-freshness-border: var(--app-color-grid-freshness-border);
+  --dg-freshness-inner-shadow: var(--app-shadow-grid-freshness-inner);
+  --dg-freshness-ready: var(--app-color-grid-freshness-ready);
+  --dg-freshness-ready-shadow: var(--app-shadow-grid-freshness-ready);
+  --dg-freshness-sync: var(--app-color-grid-freshness-sync);
+  --dg-freshness-label: var(--app-color-grid-freshness-label);
+  --dg-refresh-btn-bg: var(--app-color-grid-refresh-btn-bg);
+  --dg-refresh-btn-hover-bg: var(--app-color-grid-refresh-btn-hover-bg);
+  --dg-batch-toolbar-bg: var(--app-color-grid-batch-toolbar-bg);
+  --dg-batch-toolbar-border: var(--app-color-grid-batch-toolbar-border);
+  --dg-batch-btn-bg: var(--app-color-grid-batch-btn-bg);
+  --dg-batch-btn-hover-bg: var(--app-color-grid-batch-btn-hover-bg);
+  --dg-batch-delete-hover-bg: var(--app-color-grid-batch-delete-hover-bg);
+  --dg-batch-delete-hover-border: var(--app-color-grid-batch-delete-hover-border);
+  --dg-batch-delete-hover-text: var(--app-color-grid-batch-delete-hover-text);
+  --dg-batch-export-hover-bg: var(--app-color-grid-batch-export-hover-bg);
+  --dg-batch-export-hover-border: var(--app-color-grid-batch-export-hover-border);
+  --dg-batch-export-hover-text: var(--app-color-grid-batch-export-hover-text);
+  --dg-batch-clear-hover-bg: var(--app-color-grid-batch-clear-hover-bg);
+  --dg-batch-clear-hover-border: var(--app-color-grid-batch-clear-hover-border);
+  --dg-batch-clear-hover-text: var(--app-color-grid-batch-clear-hover-text);
+  --dg-header-search-input-bg: var(--app-color-grid-header-search-input-bg);
+  --dg-header-search-input-border: var(--app-color-grid-header-search-input-border);
+  --dg-header-search-input-text: var(--app-color-grid-header-search-input-text);
+  --dg-action-btn-bg: var(--app-color-grid-action-btn-bg);
+  --dg-action-btn-border: var(--app-color-grid-action-btn-border);
+  --dg-action-btn-text: var(--app-color-grid-action-btn-text);
+  --dg-action-btn-hover-bg: var(--app-color-grid-action-btn-hover-bg);
+  --dg-action-btn-hover-border: var(--app-color-grid-action-btn-hover-border);
+  --dg-action-btn-hover-text: var(--app-color-grid-action-btn-hover-text);
+  --dg-action-btn-active-bg: var(--app-color-grid-action-btn-active-bg);
+  --dg-action-btn-active-border: var(--app-color-grid-action-btn-active-border);
+  --dg-action-btn-active-text: var(--app-color-grid-action-btn-active-text);
+  --dg-action-btn-active-shadow: var(--app-shadow-grid-action-btn-active);
+  --dg-mega-menu-border: var(--app-color-grid-mega-menu-border);
+  --dg-mega-menu-bg: var(--app-gradient-grid-mega-menu-bg);
+  --dg-mega-menu-shadow: var(--app-shadow-grid-mega-menu);
+  --dg-mega-subtitle: var(--app-color-grid-mega-subtitle);
+  --dg-mega-summary-bg: var(--app-color-grid-mega-summary-bg);
+  --dg-mega-summary-border: var(--app-color-grid-mega-summary-border);
+  --dg-mega-summary-shadow: var(--app-shadow-grid-mega-summary);
+  --dg-mega-summary-label: var(--app-color-grid-mega-summary-label);
+  --dg-mega-headline-border: var(--app-color-grid-mega-headline-border);
+  --dg-mega-headline-bg: var(--app-color-grid-mega-headline-bg);
+  --dg-mega-headline-label: var(--app-color-grid-mega-headline-label);
+  --dg-mega-headline-value: var(--app-color-grid-mega-headline-value);
+  --dg-mega-section-bg: var(--app-color-grid-mega-section-bg);
+  --dg-mega-section-border: var(--app-color-grid-mega-section-border);
+  --dg-mega-section-shadow: var(--app-shadow-grid-mega-section);
+  --dg-mega-section-subtitle: var(--app-color-grid-mega-section-subtitle);
+  --dg-mega-chip-bg: var(--app-color-grid-mega-chip-bg);
+  --dg-mega-chip-border: var(--app-color-grid-mega-chip-border);
+  --dg-mega-chip-text: var(--app-color-grid-mega-chip-text);
+  --dg-mega-chip-hover-border: var(--app-color-grid-mega-chip-hover-border);
+  --dg-mega-chip-hover-text: var(--app-color-grid-mega-chip-hover-text);
+  --dg-mega-chip-active-bg: var(--app-color-grid-mega-chip-active-bg);
+  --dg-mega-chip-active-border: var(--app-color-grid-mega-chip-active-border);
+  --dg-mega-chip-active-text: var(--app-color-grid-mega-chip-active-text);
+  --dg-mega-chip-active-shadow: var(--app-shadow-grid-mega-chip-active);
+  --dg-mega-toggle-bg: var(--app-color-grid-mega-toggle-bg);
+  --dg-mega-toggle-border: var(--app-color-grid-mega-toggle-border);
+  --dg-mega-toggle-text: var(--app-color-grid-mega-toggle-text);
+  --dg-mega-toggle-hover-border: var(--app-color-grid-mega-toggle-hover-border);
+  --dg-mega-toggle-hover-text: var(--app-color-grid-mega-toggle-hover-text);
+  --dg-mega-toggle-active-bg: var(--app-color-grid-mega-toggle-active-bg);
+  --dg-mega-toggle-active-border: var(--app-color-grid-mega-toggle-active-border);
+  --dg-mega-toggle-active-text: var(--app-color-grid-mega-toggle-active-text);
+  --dg-mega-toggle-active-shadow: var(--app-shadow-grid-mega-toggle-active);
+  --dg-mega-primary-border: var(--app-color-grid-mega-primary-border);
+  --dg-mega-primary-bg: var(--app-gradient-grid-mega-primary-bg);
+  --dg-mega-primary-hover-bg: var(--app-gradient-grid-mega-primary-hover-bg);
+  --dg-mega-primary-text: var(--app-color-grid-mega-primary-text);
+  --dg-mega-primary-hover-shadow: var(--app-shadow-grid-mega-primary-hover);
+  --dg-scrollbar-thumb-glow: var(--app-color-grid-scrollbar-thumb-glow);
+  --dg-scrollbar-thumb: var(--app-color-grid-scrollbar-thumb);
+  --dg-scrollbar-thumb-hover: var(--app-color-grid-scrollbar-thumb-hover);
+  --dg-scrollbar-thumb-active: var(--app-color-grid-scrollbar-thumb-active);
+  --dg-scrollbar-thumb-shadow: var(--app-shadow-grid-scrollbar-thumb);
+  --dg-resize-guide-line: var(--app-color-grid-resize-guide-line);
+  --dg-resize-guide-line-shadow: var(--app-shadow-grid-resize-guide-line);
+  --dg-resize-guide-label-bg: var(--app-color-grid-resize-guide-label-bg);
+  --dg-resize-guide-label-border: var(--app-color-grid-resize-guide-label-border);
+  --dg-resize-guide-label-shadow: var(--app-shadow-grid-resize-guide-label);
+  --dg-resize-guide-label-title: var(--app-color-grid-resize-guide-label-title);
+  --dg-resize-guide-label-value: var(--app-color-grid-resize-guide-label-value);
+  --dg-resize-guide-label-delta: var(--app-color-grid-resize-guide-label-delta);
+  --dg-loading-overlay: var(--app-color-grid-loading-overlay);
+  --dg-loading-card-bg: var(--app-color-grid-loading-card-bg);
+  --dg-loading-card-border: var(--app-color-grid-loading-card-border);
+  --dg-loading-card-shadow: var(--app-shadow-grid-loading-card);
+  --dg-spinner-ring-primary: var(--app-color-grid-spinner-ring-primary);
+  --dg-spinner-ring-secondary: var(--app-color-grid-spinner-ring-secondary);
+  --dg-spinner-ring-tertiary: var(--app-color-grid-spinner-ring-tertiary);
+  --dg-loading-message: var(--app-color-grid-loading-message);
+  --dg-loading-bar-bg: var(--app-color-grid-loading-bar-bg);
+  --dg-loading-progress: var(--app-gradient-grid-loading-progress);
+  --dg-spinner-legacy-track: var(--app-color-grid-spinner-legacy-track);
+  --dg-skeleton-header: var(--app-gradient-grid-skeleton-header);
+  --dg-skeleton-header-accent: var(--app-gradient-grid-skeleton-header-accent);
+  --dg-skeleton-row: var(--app-gradient-grid-skeleton-row);
+  --dg-skeleton-row-accent: var(--app-gradient-grid-skeleton-row-accent);
+  --dg-footer-page-btn-bg: var(--app-color-grid-footer-page-btn-bg);
+  --dg-group-row-gradient: var(--app-gradient-grid-group-row);
+  --dg-group-footer-gradient: var(--app-gradient-grid-group-footer);
+  --dg-grand-total-gradient: var(--app-gradient-grid-grand-total);
+  --dg-grand-total-border-top: var(--app-color-grid-grand-total-border-top);
+  --dg-grand-total-border-bottom: var(--app-color-grid-grand-total-border-bottom);
+  --dg-grand-total-edge: var(--app-color-grid-grand-total-edge);
+  --dg-grand-total-value-bg: var(--app-color-grid-grand-total-value-bg);
+  --dg-grand-total-value-border: var(--app-color-grid-grand-total-value-border);
+  --dg-grand-total-overlay: var(--app-gradient-grid-grand-total-overlay);
+  --dg-group-footer-row-bg: var(--app-color-grid-group-footer-row-bg);
+  --dg-group-footer-border-top: var(--app-color-grid-group-footer-border-top);
+  --dg-group-footer-border-bottom: var(--app-color-grid-group-footer-border-bottom);
+  --dg-group-footer-edge: var(--app-color-grid-group-footer-edge);
+  --dg-group-footer-value-bg: var(--app-color-grid-group-footer-value-bg);
+  --dg-group-footer-value-border: var(--app-color-grid-group-footer-value-border);
+  --dg-group-footer-overlay: var(--app-color-grid-group-footer-overlay);
+  --dg-zebra-even-bg: var(--app-color-grid-zebra-even-bg);
+  --dg-zebra-even-hover-bg: var(--app-color-grid-zebra-even-hover-bg);
+  --dg-zebra-even-selected-bg: var(--app-color-grid-zebra-even-selected-bg);
+  --dg-zebra-even-selected-hover-bg: var(--app-color-grid-zebra-even-selected-hover-bg);
+  --dg-zebra-odd-hover-bg: var(--app-color-grid-zebra-odd-hover-bg);
+  --dg-zebra-odd-selected-bg: var(--app-color-grid-zebra-odd-selected-bg);
+  --dg-zebra-odd-selected-hover-bg: var(--app-color-grid-zebra-odd-selected-hover-bg);
+  --dg-fullscreen-bg: var(--app-color-grid-fullscreen-bg);
+  --dg-empty-title: var(--app-color-grid-empty-title);
+  --dg-empty-message: var(--app-color-grid-empty-message);
+  --dg-empty-action-border: var(--app-color-grid-empty-action-border);
+  --dg-empty-action-bg: var(--app-color-grid-empty-action-bg);
+  --dg-empty-action-text: var(--app-color-grid-empty-action-text);
+  --dg-empty-action-hover-bg: var(--app-color-grid-empty-action-hover-bg);
+  --dg-empty-action-hover-shadow: var(--app-shadow-grid-empty-action-hover);
+  --dg-header-sparkline-stroke: var(--app-color-grid-header-sparkline-stroke);
+  --dg-header-sort-indicator-bg: var(--app-color-grid-header-sort-indicator-bg);
+  --dg-header-sort-indicator-shadow: var(--app-shadow-grid-header-sort-indicator);
+  --dg-header-sort-arrow: var(--app-color-grid-header-sort-arrow);
+  --dg-group-toggle-border: var(--app-color-grid-group-toggle-border);
+  --dg-group-toggle-hover-border: var(--app-color-grid-group-toggle-hover-border);
+  --dg-group-toggle-hover-bg: var(--app-color-grid-group-toggle-hover-bg);
+  --dg-group-row-label: var(--app-color-grid-group-row-label);
+  --dg-group-row-value: var(--app-color-grid-group-row-value);
+  --dg-group-filter-shell-border: var(--app-color-grid-group-filter-shell-border);
+  --dg-group-filter-shell-bg: var(--app-color-grid-group-filter-shell-bg);
+  --dg-group-filter-clear-bg: var(--app-color-grid-group-filter-clear-bg);
+  --dg-group-row-aggregate-text: var(--app-color-grid-group-row-aggregate-text);
+  --dg-group-body-sticky-bg: var(--app-color-grid-group-body-sticky-bg);
+  --dg-group-row-cell-border: var(--app-color-grid-group-row-cell-border);
+  --dg-group-aggregate-bg: var(--app-color-grid-group-aggregate-bg);
+  --dg-group-aggregate-border: var(--app-color-grid-group-aggregate-border);
+  --dg-group-aggregate-label: var(--app-color-grid-group-aggregate-label);
+  --dg-group-aggregate-value: var(--app-color-grid-group-aggregate-value);
+  --dg-chooser-search-focus-shadow: var(--app-shadow-grid-chooser-search-focus);
+  --dg-renderer-status-active-bg: var(--app-color-grid-renderer-status-active-bg);
+  --dg-renderer-status-active-text: var(--app-color-grid-renderer-status-active-text);
+  --dg-renderer-status-active-border: var(--app-color-grid-renderer-status-active-border);
+  --dg-renderer-status-inactive-bg: var(--app-color-grid-renderer-status-inactive-bg);
+  --dg-renderer-status-inactive-text: var(--app-color-grid-renderer-status-inactive-text);
+  --dg-renderer-status-inactive-border: var(--app-color-grid-renderer-status-inactive-border);
+  --dg-renderer-status-pending-bg: var(--app-color-grid-renderer-status-pending-bg);
+  --dg-renderer-status-pending-text: var(--app-color-grid-renderer-status-pending-text);
+  --dg-renderer-status-pending-border: var(--app-color-grid-renderer-status-pending-border);
+  --dg-renderer-status-completed-bg: var(--app-color-grid-renderer-status-completed-bg);
+  --dg-renderer-status-completed-text: var(--app-color-grid-renderer-status-completed-text);
+  --dg-renderer-status-completed-border: var(--app-color-grid-renderer-status-completed-border);
+  --dg-renderer-status-cancelled-bg: var(--app-color-grid-renderer-status-cancelled-bg);
+  --dg-renderer-status-cancelled-text: var(--app-color-grid-renderer-status-cancelled-text);
+  --dg-renderer-status-cancelled-border: var(--app-color-grid-renderer-status-cancelled-border);
+  --dg-renderer-status-default-bg: var(--app-color-grid-renderer-status-default-bg);
+  --dg-renderer-status-default-text: var(--app-color-grid-renderer-status-default-text);
+  --dg-renderer-status-default-border: var(--app-color-grid-renderer-status-default-border);
+  --dg-renderer-link: var(--app-color-grid-renderer-link);
+  --dg-renderer-link-hover: var(--app-color-grid-renderer-link-hover);
+  --dg-renderer-link-visited: var(--app-color-grid-renderer-link-visited);
+  --dg-renderer-avatar-border: var(--app-color-grid-renderer-avatar-border);
+  --dg-renderer-avatar-bg: var(--app-gradient-grid-renderer-avatar);
+  --dg-renderer-avatar-text: var(--app-color-grid-renderer-avatar-text);
+  --dg-renderer-tag-bg: var(--app-color-grid-renderer-tag-bg);
+  --dg-renderer-tag-text: var(--app-color-grid-renderer-tag-text);
+  --dg-renderer-tag-border: var(--app-color-grid-renderer-tag-border);
+  --dg-renderer-tag-more-bg: var(--app-color-grid-renderer-tag-more-bg);
+  --dg-renderer-tag-more-text: var(--app-color-grid-renderer-tag-more-text);
+  --dg-renderer-tag-more-border: var(--app-color-grid-renderer-tag-more-border);
+  --dg-renderer-progress-track: var(--app-color-grid-renderer-progress-track);
+  --dg-renderer-progress-track-shadow: var(--app-shadow-grid-renderer-progress-track);
+  --dg-renderer-progress-success: var(--app-gradient-grid-renderer-progress-success);
+  --dg-renderer-progress-info: var(--app-gradient-grid-renderer-progress-info);
+  --dg-renderer-progress-warning: var(--app-gradient-grid-renderer-progress-warning);
+  --dg-renderer-progress-danger: var(--app-gradient-grid-renderer-progress-danger);
+  --dg-renderer-progress-label: var(--app-color-grid-renderer-progress-label);
+  --dg-renderer-progress-label-shadow: var(--app-shadow-grid-renderer-progress-label);
+  --dg-renderer-rating-star: var(--app-color-grid-renderer-rating-star);
+  --dg-renderer-rating-star-empty: var(--app-color-grid-renderer-rating-star-empty);
+  --dg-renderer-rating-value: var(--app-color-grid-renderer-rating-value);
+  --dg-renderer-mark-bg: var(--app-color-grid-renderer-mark-bg);
+  --dg-renderer-mark-text: var(--app-color-grid-renderer-mark-text);
+  --dg-renderer-button-hover-shadow: var(--app-shadow-grid-renderer-button-hover);
+  --dg-renderer-btn-primary-bg: var(--app-color-grid-renderer-btn-primary-bg);
+  --dg-renderer-btn-primary-border: var(--app-color-grid-renderer-btn-primary-border);
+  --dg-renderer-btn-secondary-bg: var(--app-color-grid-renderer-btn-secondary-bg);
+  --dg-renderer-btn-secondary-border: var(--app-color-grid-renderer-btn-secondary-border);
+  --dg-renderer-btn-success-bg: var(--app-color-grid-renderer-btn-success-bg);
+  --dg-renderer-btn-success-border: var(--app-color-grid-renderer-btn-success-border);
+  --dg-renderer-btn-danger-bg: var(--app-color-grid-renderer-btn-danger-bg);
+  --dg-renderer-btn-danger-border: var(--app-color-grid-renderer-btn-danger-border);
+  --dg-renderer-btn-warning-bg: var(--app-color-grid-renderer-btn-warning-bg);
+  --dg-renderer-btn-warning-text: var(--app-color-grid-renderer-btn-warning-text);
+  --dg-renderer-btn-warning-border: var(--app-color-grid-renderer-btn-warning-border);
+  --dg-renderer-btn-info-bg: var(--app-color-grid-renderer-btn-info-bg);
+  --dg-renderer-btn-info-border: var(--app-color-grid-renderer-btn-info-border);
+  --dg-renderer-btn-outline-primary-text: var(--app-color-grid-renderer-btn-outline-primary-text);
+  --dg-renderer-btn-outline-primary-border: var(
+    --app-color-grid-renderer-btn-outline-primary-border
+  );
+  --dg-renderer-print-text: var(--app-color-grid-renderer-print-text);
+  --dg-renderer-print-border: var(--app-color-grid-renderer-print-border);
+  --focus-color: var(--app-color-grid-focus);
+  --focus-color-alt: var(--app-color-grid-focus-ring);
+  --focus-outline-width: 2px;
+  --focus-outline-offset: 2px;
+  --dg-body-row-min-height: 46px;
+  --dg-body-row-height: auto;
+  --dg-body-cell-padding-block: 8px;
+  --dg-body-cell-padding-inline: 10px;
+  --dg-selection-column-width: 44px;
+}
+
+:host([data-grid-layout-preset='default']) {
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  height: 100%;
+  --dg-shell-outline-w: var(--app-outline-width, 1px);
+  --dg-shell-outline-color: var(--app-color-outline-stroke);
+  --dg-shell-grid-line: var(--dg-shell-outline-color);
+  --dg-shell-grid-line-strong: var(--dg-shell-outline-color);
+  --dg-shell-cell-grid-line: var(--dg-shell-outline-color);
+  --dg-shell-cell-grid-line-strong: var(--dg-shell-outline-color);
+  --dg-shell-header-fg: var(--dg-shell-header-text-fg);
+}
+
+:host(.dg-hover-disabled) {
+  --dg-hover: transparent;
+  --dg-shell-row-hover-fill: transparent;
+  --dg-shell-row-hover-solid: transparent;
+}
+
+:host button:focus-visible,
+:host a:focus-visible,
+:host input:focus-visible,
+:host select:focus-visible,
+:host [tabindex]:not([tabindex='-1']):focus-visible,
+:host [role='button']:focus-visible,
+:host [role='link']:focus-visible {
+  outline: var(--focus-outline-width) solid var(--focus-color);
+  outline-offset: var(--focus-outline-offset);
+  box-shadow: var(--app-shadow-grid-focus);
+  border-radius: 4px;
+  transition:
+    outline 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.grid-container,
+.grid-header-section,
+.grid-body-section,
+.empty-state,
+.loading-overlay {
+  &:focus {
+    outline: none;
+  }
+}
+
+:host *[draggable='true']:focus-visible {
+  outline: 2px dashed var(--focus-color);
+  outline-offset: 2px;
+}
+
+:host ::ng-deep img[draggable],
+:host ::ng-deep *:-webkit-drag {
+  outline: none;
+  border: none;
+}
+
+.engineers-salary-reference-data-grid {
+  position: relative;
+  direction: ltr;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 0;
+  overflow: visible !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: auto;
+  -webkit-overflow-scrolling: touch;
+
+  &.loading {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .data-grid-table th:focus-visible {
+    outline: var(--focus-outline-width) solid var(--focus-color);
+    outline-offset: -2px;
+    background: var(--app-color-grid-focus-header-bg);
+    position: relative;
+    z-index: 10;
+  }
+
+  .data-grid-table td:focus-visible {
+    outline: 2px solid var(--focus-color);
+    outline-offset: -2px;
+    background: var(--app-color-grid-focus-cell-bg);
+    position: relative;
+    z-index: 10;
+  }
+
+  .data-grid-table th[draggable='true']:focus-visible {
+    outline: 2px dashed var(--focus-color);
+    outline-offset: -2px;
+  }
+}

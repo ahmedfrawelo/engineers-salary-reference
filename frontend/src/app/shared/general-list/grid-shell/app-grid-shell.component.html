@@ -1,0 +1,12 @@
+<section class="tgs-shell">
+  <div class="tgs-header">
+    <ng-content select="[shell-header]"></ng-content>
+  </div>
+  <div class="tgs-actions">
+    <ng-content select="[shell-actions]"></ng-content>
+  </div>
+  <div class="tgs-body" [attr.aria-busy]="loading">
+    <ng-content select="[shell-body]"></ng-content>
+    <ng-content></ng-content>
+  </div>
+</section>

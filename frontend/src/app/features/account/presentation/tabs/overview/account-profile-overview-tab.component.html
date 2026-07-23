@@ -1,0 +1,93 @@
+<section class="tab-grid tab-grid--overview">
+  <article class="panel panel-overview-identity">
+    <header class="section-head">
+      <h2>Identity and access</h2>
+      <p>Workspace credentials, employment context, and operating footprint.</p>
+    </header>
+    <div class="overview-facts" aria-label="Primary profile facts">
+      <article class="overview-fact">
+        <span>Email</span>
+        <strong>{{ model.email }}</strong>
+      </article>
+      <article class="overview-fact">
+        <span>Mobile</span>
+        <strong>{{ model.phone }}</strong>
+      </article>
+      <article class="overview-fact">
+        <span>Location</span>
+        <strong>{{ model.location }}</strong>
+      </article>
+      <article class="overview-fact">
+        <span>Time zone</span>
+        <strong>{{ model.timezone }}</strong>
+      </article>
+      <article class="overview-fact">
+        <span>Readiness</span>
+        <strong>{{ readiness.score }}% - {{ readiness.status }}</strong>
+      </article>
+    </div>
+    <dl class="detail-grid">
+      @for (stat of headlineStats; track stat.label) {
+        <div>
+          <dt>{{ stat.label }}</dt>
+          <dd>{{ stat.value }}</dd>
+        </div>
+      }
+      <div>
+        <dt>Employment type</dt>
+        <dd>{{ model.employmentType }}</dd>
+      </div>
+      <div>
+        <dt>Joined ENGINEERS_SALARY_REFERENCE</dt>
+        <dd>{{ model.joinDate }}</dd>
+      </div>
+      <div>
+        <dt>Strategic focus</dt>
+        <dd>{{ model.focusAreas }}</dd>
+      </div>
+    </dl>
+  </article>
+
+  <article class="panel panel-overview-highlights">
+    <header class="section-head">
+      <h2>Quarter highlights</h2>
+      <p>Recent outcomes and impact moments.</p>
+    </header>
+    <ul class="timeline">
+      @for (event of highlights; track event.title) {
+        <li>
+          <span class="timeline-dot" aria-hidden="true"></span>
+          <div class="timeline-item">
+            <span class="overline">{{ event.date }}</span>
+            <h3>{{ event.title }}</h3>
+            <p>{{ event.description }}</p>
+            <div class="chip-row">
+              @for (tag of event.tags; track tag) {
+                <span class="chip">{{ tag }}</span>
+              }
+            </div>
+          </div>
+        </li>
+      }
+    </ul>
+  </article>
+
+  <article class="panel panel-full panel-overview-recognition">
+    <header class="section-head">
+      <h2>Recognition</h2>
+      <p>Acknowledgements from leadership and guild teams.</p>
+    </header>
+    <ul class="stack-list">
+      @for (item of recognitions; track item.title) {
+        <li>
+          <div class="stack-head">
+            <strong>{{ item.title }}</strong>
+            <span>{{ item.date }}</span>
+          </div>
+          <p>{{ item.summary }}</p>
+          <small>Issued by {{ item.issuer }}</small>
+        </li>
+      }
+    </ul>
+  </article>
+</section>

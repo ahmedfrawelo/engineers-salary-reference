@@ -1,0 +1,1358 @@
+.proj-filter-menu-list {
+  inset-inline-start: auto;
+  inset-inline-end: 0;
+  width: min(640px, calc(100vw - 24px));
+  min-width: min(460px, calc(100vw - 24px));
+  max-width: calc(100vw - 24px);
+  max-height: min(82vh, calc(100vh - 56px));
+  overflow: visible;
+  padding: 12px;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 10px;
+  background: var(--proj-filter-panel-bg);
+  transform: translateX(var(--proj-filter-offset-x, 0));
+}
+
+.proj-filter-menu-list:not(.has-detailed-filters) {
+  width: min(640px, calc(100vw - 24px));
+  min-width: min(640px, calc(100vw - 24px));
+  max-width: calc(100vw - 24px);
+  height: 100px;
+  min-height: 100px;
+  max-height: 100px;
+  box-sizing: border-box;
+  overflow: hidden;
+  align-content: start;
+  gap: 8px;
+  border: 0 !important;
+  border-width: 0 !important;
+  border-color: transparent !important;
+  outline: none !important;
+}
+
+.proj-filter-menu-list:not(.has-detailed-filters) .proj-filter-body {
+  display: none;
+}
+
+.proj-filter-menu-list:not(.has-detailed-filters) .proj-filter-footer {
+  justify-content: flex-start;
+  padding-top: 0;
+}
+
+.proj-filter-menu-list.has-detailed-filters {
+  width: min(760px, calc(100vw - 24px));
+  min-width: min(640px, calc(100vw - 24px));
+  max-width: calc(100vw - 24px);
+  height: auto;
+  min-height: 0;
+}
+
+.proj-filter-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.proj-filter-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--proj-filter-panel-title-fg);
+}
+
+.proj-filter-title > i {
+  font-size: 12px;
+  color: var(--proj-filter-panel-title-icon);
+}
+
+.proj-filter-clear-link {
+  min-height: 30px;
+  border-radius: 8px;
+  border-style: none !important;
+  background: transparent;
+  color: color-mix(in oklab, var(--proj-danger-fg) 74%, transparent);
+  padding: 0 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color 0.1s ease-out,
+    color 0.1s ease-out;
+}
+
+.proj-filter-clear-link:hover,
+.proj-filter-clear-link:focus-visible {
+  color: color-mix(in oklab, var(--proj-danger-fg) 94%, transparent);
+  background: color-mix(in oklab, var(--proj-danger-fg) 7%, transparent);
+  outline: none;
+}
+
+.proj-filter-head-actions {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  position: relative;
+}
+
+.proj-filter-saved {
+  min-height: 32px;
+  border-radius: 8px;
+  border: var(--proj-outline-w) solid var(--proj-outline-color);
+  background: var(--proj-filter-panel-control-bg);
+  color: var(--proj-filter-panel-control-fg);
+  padding: 0 10px;
+  font-size: 13px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  margin: 0;
+  line-height: 1;
+  position: static;
+  transform: none;
+  flex-shrink: 0;
+  align-self: flex-start;
+  transition:
+    background-color 0.1s ease-out,
+    border-color 0.1s ease-out,
+    color 0.1s ease-out,
+    box-shadow 0.1s ease-out;
+}
+
+.proj-filter-saved:hover,
+.proj-filter-saved:focus-visible {
+  border-color: var(--proj-toolbar-hover-border, var(--proj-outline-color));
+  background: var(--proj-toolbar-hover-bg, var(--proj-filter-panel-control-bg));
+  color: var(--proj-toolbar-hover-fg, var(--proj-filter-panel-control-fg));
+  outline: none;
+}
+
+.proj-filter-saved[aria-expanded='true'] {
+  border-color: var(--proj-toolbar-active-border, var(--proj-outline-color));
+  background: var(--proj-toolbar-active-bg, var(--proj-filter-panel-control-bg));
+  color: var(--proj-toolbar-active-fg, var(--proj-filter-panel-control-fg));
+}
+
+.proj-filter-saved:focus-visible {
+  box-shadow: 0 0 0 2px
+    color-mix(
+      in oklab,
+      var(--app-color-primary-focus-ring, var(--proj-outline-color)) 68%,
+      transparent
+    );
+}
+
+.proj-saved-filters-panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 12;
+  width: min(340px, calc(100vw - 40px));
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 12px;
+  border: var(--proj-outline-w) solid var(--proj-outline-color);
+  background: var(--proj-filter-panel-bg);
+  box-shadow:
+    0 22px 48px rgba(0, 0, 0, 0.28),
+    0 0 0 1px rgba(255, 255, 255, 0.03);
+}
+
+.proj-saved-filters-panel-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+}
+
+.proj-saved-filters-name {
+  width: 100%;
+  min-width: 0;
+  height: 36px;
+  padding: 0 12px;
+  border-radius: 8px;
+  border: var(--proj-outline-w) solid var(--proj-outline-color);
+  background: var(--proj-filter-panel-control-bg);
+  color: var(--proj-filter-panel-control-fg);
+  font-size: 13px;
+  outline: none;
+}
+
+.proj-saved-filters-name::placeholder {
+  color: color-mix(in oklab, var(--proj-filter-panel-control-fg) 52%, transparent);
+}
+
+.proj-saved-filters-name:focus {
+  border-color: var(--proj-toolbar-active-border, var(--proj-outline-color));
+  box-shadow: 0 0 0 2px
+    color-mix(
+      in oklab,
+      var(--app-color-primary-focus-ring, var(--proj-outline-color)) 52%,
+      transparent
+    );
+}
+
+.proj-saved-filters-save,
+.proj-saved-filter-item-delete {
+  border: var(--proj-outline-w) solid var(--proj-outline-color);
+  background: var(--proj-filter-panel-control-bg);
+  color: var(--proj-filter-panel-control-fg);
+  cursor: pointer;
+  transition:
+    background-color 0.1s ease-out,
+    border-color 0.1s ease-out,
+    color 0.1s ease-out,
+    opacity 0.1s ease-out;
+}
+
+.proj-saved-filters-save {
+  min-width: 104px;
+  height: 36px;
+  padding: 0 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.proj-saved-filters-save:hover:not(:disabled),
+.proj-saved-filters-save:focus-visible:not(:disabled),
+.proj-saved-filter-item-delete:hover:not(:disabled),
+.proj-saved-filter-item-delete:focus-visible:not(:disabled) {
+  border-color: var(--proj-toolbar-hover-border, var(--proj-outline-color));
+  background: var(--proj-toolbar-hover-bg, var(--proj-filter-panel-control-bg));
+  color: var(--proj-toolbar-hover-fg, var(--proj-filter-panel-control-fg));
+  outline: none;
+}
+
+.proj-saved-filters-save:active:not(:disabled),
+.proj-saved-filter-item-delete:active:not(:disabled) {
+  border-color: var(--proj-toolbar-active-border, var(--proj-outline-color));
+  background: var(--proj-toolbar-active-bg, var(--proj-filter-panel-control-bg));
+}
+
+.proj-saved-filters-save:disabled,
+.proj-saved-filter-item-delete:disabled {
+  cursor: default;
+  opacity: 0.52;
+}
+
+.proj-saved-filters-feedback,
+.proj-saved-filters-empty {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.proj-saved-filters-feedback {
+  color: color-mix(in oklab, var(--proj-filter-panel-control-fg) 72%, transparent);
+}
+
+.proj-saved-filters-feedback--error {
+  color: color-mix(in oklab, var(--proj-danger-fg) 88%, transparent);
+}
+
+.proj-saved-filters-empty {
+  color: color-mix(in oklab, var(--proj-filter-panel-control-fg) 62%, transparent);
+}
+
+.proj-saved-filters-list {
+  display: grid;
+  gap: 8px;
+  max-height: 260px;
+  overflow: auto;
+}
+
+.proj-saved-filter-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: stretch;
+  padding: 6px;
+  border-radius: 10px;
+  border: var(--proj-outline-w) solid
+    color-mix(in oklab, var(--proj-outline-color) 60%, transparent);
+  background: color-mix(in oklab, var(--proj-filter-panel-control-bg) 92%, transparent);
+  transition:
+    background-color 0.1s ease-out,
+    border-color 0.1s ease-out;
+}
+
+.proj-saved-filter-item:hover {
+  border-color: var(--proj-toolbar-hover-border, var(--proj-outline-color));
+  background: color-mix(
+    in oklab,
+    var(--proj-filter-panel-control-bg) 84%,
+    var(--app-color-text-high, white) 4%
+  );
+}
+
+.proj-saved-filter-item.is-active {
+  border-color: var(--proj-toolbar-active-border, var(--proj-outline-color));
+  background: var(--proj-toolbar-active-bg, var(--proj-filter-panel-control-bg));
+}
+
+.proj-saved-filter-item-main {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+  justify-items: start;
+  padding: 4px 6px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 8px;
+  outline: none;
+  transition:
+    background-color 0.1s ease-out,
+    color 0.1s ease-out;
+}
+
+.proj-saved-filter-item-main:hover,
+.proj-saved-filter-item-main:focus-visible {
+  background: var(
+    --proj-toolbar-hover-bg,
+    color-mix(in oklab, var(--proj-filter-panel-control-bg) 90%, transparent)
+  );
+}
+
+.proj-saved-filter-item-main[aria-pressed='true'] .proj-saved-filter-item-name {
+  color: var(--proj-toolbar-active-fg, var(--proj-filter-panel-control-fg));
+}
+
+.proj-saved-filter-item-name {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--proj-filter-panel-control-fg);
+}
+
+.proj-saved-filter-item-meta {
+  font-size: 11px;
+  color: color-mix(in oklab, var(--proj-filter-panel-control-fg) 58%, transparent);
+}
+
+.proj-saved-filter-item-delete {
+  width: 34px;
+  min-width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+}
+
+.proj-filter-body {
+  min-height: 0;
+  max-height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  display: grid;
+  gap: 10px;
+  padding-inline-end: 6px;
+}
+
+.proj-filter-groups-shell {
+  display: grid;
+  gap: 10px;
+  border-radius: 18px;
+  padding: 4px 0 2px;
+}
+
+.proj-filter-group {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+  align-items: center;
+  gap: 14px;
+}
+
+.proj-filter-group-bridge {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  align-self: stretch;
+  width: 72px;
+  min-width: 72px;
+  padding-inline-end: 2px;
+}
+
+.proj-filter-group-shell-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+  min-height: 100%;
+  text-align: right;
+  color: var(--proj-filter-panel-muted-fg);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.proj-filter-group-shell-label--muted {
+  color: var(--proj-filter-panel-muted-fg-weak);
+  font-weight: 600;
+}
+
+.proj-filter-group-label {
+  color: var(--proj-filter-panel-label-fg);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.proj-filter-group-box {
+  display: grid;
+  gap: 8px;
+  border-radius: 16px;
+  width: 100%;
+  min-height: 0;
+  position: relative;
+  padding: 12px 14px 12px;
+  border: 1px solid var(--proj-filter-group-border);
+  background: linear-gradient(
+    180deg,
+    var(--proj-filter-group-bg-start) 0%,
+    var(--proj-filter-group-bg-end) 100%
+  );
+  box-shadow: var(--proj-filter-group-shadow);
+}
+
+.proj-filter-group-content {
+  min-height: 0;
+  max-height: min(34vh, 320px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  display: grid;
+  gap: 8px;
+  padding-inline-end: 6px;
+}
+
+.proj-filter-menu-list:has(.proj-inline-select[open]) .proj-filter-body {
+  overflow: visible;
+}
+
+.proj-filter-group-box:has(.proj-inline-select[open]) {
+  z-index: 6;
+}
+
+.proj-filter-group-box:has(.proj-inline-select[open]) .proj-filter-group-content {
+  max-height: none;
+  overflow: visible;
+  padding-inline-end: 0;
+}
+
+.proj-filter-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 20px;
+  align-items: center;
+  gap: 8px;
+  min-height: 36px;
+  border-radius: 10px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.proj-filter-row-prefix {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.proj-filter-row:not(.has-field) .proj-filter-field-select {
+  width: min(188px, 100%);
+  max-width: 188px;
+}
+
+.proj-filter-row.has-prefix:not(.has-field) {
+  grid-template-columns: 72px minmax(0, 1fr) 20px;
+}
+
+.proj-filter-row > * {
+  min-width: 0;
+}
+
+.proj-filter-row .proj-filter-remove {
+  grid-column: -1;
+  align-self: center;
+  margin-top: 0;
+}
+
+.proj-filter-row.has-field {
+  grid-template-columns: minmax(160px, 188px) minmax(88px, 96px) minmax(0, 1fr) 20px;
+  align-items: center;
+}
+
+.proj-filter-row.has-field.has-prefix {
+  grid-template-columns: 72px minmax(160px, 188px) minmax(88px, 96px) minmax(0, 1fr) 20px;
+}
+
+.proj-filter-row.has-field .proj-filter-remove {
+  grid-column: -1;
+  align-self: center;
+  margin-top: 0;
+}
+
+.proj-filter-where {
+  color: rgb(var(--fg) / 0.62);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.proj-filter-join-display,
+.proj-filter-operator,
+.proj-filter-value {
+  width: 100%;
+  height: 36px;
+  min-height: 36px;
+  border-radius: 11px;
+  border: 1px solid rgb(var(--fg) / 0.09);
+  background: color-mix(in oklab, rgb(var(--bg1)) 92%, rgb(var(--surface)) 8%);
+  color: rgb(var(--fg) / 0.88);
+  padding: 0 11px;
+  font-size: 13px;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.proj-filter-join-display,
+.proj-filter-operator {
+  font-weight: 600;
+}
+
+.proj-filter-join-select {
+  position: relative;
+  width: auto;
+  min-width: 0;
+  justify-self: start;
+}
+
+.proj-filter-join-select--bridge {
+  width: auto;
+  min-width: 0;
+}
+
+.proj-filter-join-select--bridge .proj-filter-join-trigger {
+  min-width: 66px;
+  width: 66px;
+  justify-content: space-between;
+  padding-inline: 10px;
+}
+
+.proj-filter-join-trigger {
+  min-width: 78px;
+  min-height: 36px;
+  height: 36px;
+  padding-inline: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.proj-filter-join-trigger > span {
+  min-width: 0;
+  white-space: nowrap;
+}
+
+.proj-filter-join-menu {
+  min-width: 100%;
+  width: max-content;
+  max-width: min(160px, calc(100vw - 36px));
+}
+
+.proj-filter-join-item {
+  min-width: 0;
+}
+
+.proj-filter-join-display {
+  min-width: 68px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-inline: 11px;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  color: rgb(var(--fg) / 0.28);
+  cursor: default;
+  user-select: none;
+}
+
+.proj-filter-value::placeholder {
+  color: rgb(var(--fg) / 0.52);
+}
+
+.proj-filter-operator-select,
+.proj-filter-value-select {
+  position: relative;
+  min-width: 0;
+  width: 100%;
+}
+
+.proj-filter-field-select,
+.proj-filter-operator-select,
+.proj-filter-value-select,
+.proj-filter-value,
+.proj-filter-join-select {
+  min-width: 0;
+}
+
+.proj-filter-operator-select .proj-filter-operator,
+.proj-filter-value-select .proj-filter-value-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.proj-filter-operator-select .proj-filter-operator > span,
+.proj-filter-value-trigger .proj-inline-select-value,
+.proj-filter-value-trigger-text {
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.proj-filter-value-trigger-text.is-placeholder {
+  color: rgb(var(--fg) / 0.52);
+}
+
+.proj-filter-value-trigger .proj-inline-select-value {
+  flex: 1 1 auto;
+}
+
+.proj-filter-operator-menu,
+.proj-filter-value-menu {
+  position: absolute;
+  inset-inline-start: 0;
+  inset-inline-end: auto;
+  top: calc(100% + 8px);
+  z-index: 5600;
+  min-width: max(100%, 220px);
+  max-width: min(320px, calc(100vw - 36px));
+  border-radius: 10px;
+  border: 1px solid var(--proj-outline-color);
+  background: var(--proj-popover-bg);
+  box-shadow: var(--proj-popover-shadow);
+  display: none;
+  padding: 6px;
+  max-height: min(40vh, 260px);
+  overflow: auto;
+}
+
+.proj-filter-operator-select[open] .proj-filter-operator-menu,
+.proj-filter-value-select[open] .proj-filter-value-menu {
+  display: grid;
+  gap: 2px;
+}
+
+.proj-filter-value-menu {
+  max-width: min(360px, calc(100vw - 36px));
+}
+
+.proj-filter-operator-item,
+.proj-filter-value-item {
+  min-height: 30px;
+  border-radius: 7px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: rgb(var(--fg) / 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 0 8px;
+  font-size: 12px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.proj-filter-operator-item:hover,
+.proj-filter-operator-item:focus-visible,
+.proj-filter-value-item:hover,
+.proj-filter-value-item:focus-visible {
+  border-color: var(--proj-outline-color);
+  background: color-mix(in oklab, rgb(var(--surface)) 84%, rgb(var(--bg1)) 16%);
+  outline: none;
+}
+
+.proj-filter-value-empty {
+  min-height: 30px;
+  border-radius: 7px;
+  border: var(--proj-outline-w) dashed var(--proj-outline-color);
+  color: rgb(var(--fg) / 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}
+
+.proj-filter-value--muted {
+  display: inline-flex;
+  align-items: center;
+  color: rgb(var(--fg) / 0.56);
+  font-style: italic;
+}
+
+.proj-filter-remove {
+  width: 18px;
+  height: 18px;
+  border-radius: 6px;
+  border-style: none !important;
+  background: transparent;
+  color: rgb(var(--fg) / 0.38);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.proj-filter-remove:hover,
+.proj-filter-remove:focus-visible {
+  color: var(--proj-danger-fg);
+  background: color-mix(in oklab, var(--proj-danger-fg) 8%, transparent);
+  outline: none;
+}
+
+.proj-filter-nested {
+  justify-self: start;
+  min-height: 24px;
+  border-style: none !important;
+  border: 0 !important;
+  background: transparent;
+  color: rgb(var(--fg) / 0.62);
+  padding: 0;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none !important;
+  box-shadow: none !important;
+  flex: 0 0 auto;
+  width: max-content;
+  white-space: nowrap;
+}
+
+.proj-filter-nested:hover,
+.proj-filter-nested:focus-visible {
+  color: rgb(var(--fg) / 0.82);
+  background: color-mix(in oklab, rgb(var(--fg)) 6%, transparent);
+}
+
+.proj-filter-nested:focus,
+.proj-filter-nested:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.proj-filter-group-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding-top: 2px;
+  border-top: 0;
+}
+
+.proj-filter-body,
+.proj-filter-group-content {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(var(--fg) / 0.18) transparent;
+}
+
+.proj-filter-body::-webkit-scrollbar,
+.proj-filter-group-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.proj-filter-body::-webkit-scrollbar-track,
+.proj-filter-group-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.proj-filter-body::-webkit-scrollbar-thumb,
+.proj-filter-group-content::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgb(var(--fg) / 0.18);
+}
+
+.proj-filter-body::-webkit-scrollbar-thumb:hover,
+.proj-filter-group-content::-webkit-scrollbar-thumb:hover {
+  background: rgb(var(--fg) / 0.28);
+}
+
+.proj-filter-clear-group {
+  min-height: 24px;
+  border: 0 !important;
+  border-style: none !important;
+  background: transparent;
+  color: rgb(var(--fg) / 0.62);
+  padding: 0;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none !important;
+  box-shadow: none !important;
+  flex: 0 0 auto;
+  width: max-content;
+  white-space: nowrap;
+  margin-inline-start: auto;
+}
+
+.proj-filter-clear-group:hover,
+.proj-filter-clear-group:focus-visible {
+  color: rgb(var(--fg) / 0.82);
+  background: color-mix(in oklab, rgb(var(--fg)) 6%, transparent);
+}
+
+.proj-filter-clear-group:focus,
+.proj-filter-clear-group:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.proj-filter-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 0;
+}
+
+.proj-filter-add {
+  min-height: 34px;
+  border-radius: 9px;
+  border: 1px solid var(--proj-filter-add-border);
+  background: var(--proj-filter-add-bg);
+  color: var(--proj-filter-add-fg);
+  padding: 0 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color 0.1s ease-out,
+    border-color 0.1s ease-out,
+    color 0.1s ease-out;
+}
+
+.proj-filter-add:hover,
+.proj-filter-add:focus-visible {
+  border-color: var(--proj-filter-add-border);
+  color: var(--proj-filter-add-fg);
+  background: var(--proj-filter-add-bg-hover);
+  outline: none;
+}
+
+.proj-filter-footer .proj-filter-clear-link {
+  min-height: 34px;
+  border-radius: 9px;
+  border: var(--proj-outline-w) solid var(--proj-outline-color) !important;
+  background: transparent;
+  color: color-mix(in oklab, var(--proj-danger-fg) 90%, transparent);
+  padding: 0 12px;
+  font-size: 13px;
+}
+
+.proj-filter-footer .proj-filter-clear-link:hover,
+.proj-filter-footer .proj-filter-clear-link:focus-visible {
+  color: var(--proj-danger-fg);
+  background: color-mix(in oklab, var(--proj-danger-fg) 8%, transparent);
+}
+
+.proj-filter-field-select {
+  position: relative;
+  min-width: 0;
+  width: 100%;
+}
+
+.proj-filter-field-select .proj-inline-select-trigger {
+  width: 100%;
+  min-width: 0;
+  min-height: 36px;
+  height: 36px;
+}
+
+.proj-filter-field-menu {
+  position: absolute;
+  inset-inline-start: 0;
+  inset-inline-end: auto;
+  top: calc(100% + 8px);
+  z-index: 5600;
+  width: 280px;
+  min-width: 280px;
+  max-width: min(360px, calc(100vw - 36px));
+  border-radius: 12px;
+  border: 1px solid var(--proj-outline-color);
+  background: var(--proj-popover-bg);
+  box-shadow: var(--proj-popover-shadow);
+  display: none;
+  padding: 8px;
+  gap: 8px;
+}
+
+.proj-filter-field-select[open] .proj-filter-field-menu {
+  display: grid;
+}
+
+.proj-filter-field-search {
+  min-height: 34px;
+  border-radius: 8px;
+  border: var(--proj-outline-w) solid var(--proj-outline-color);
+  background: color-mix(in oklab, rgb(var(--surface)) 92%, rgb(var(--bg1)) 8%);
+  display: grid;
+  grid-template-columns: 14px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  padding: 0 9px;
+}
+
+.proj-filter-field-search > i {
+  color: rgb(var(--fg) / 0.56);
+  font-size: 11px;
+}
+
+.proj-filter-field-search-input {
+  height: 30px;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: rgb(var(--fg));
+  font-size: 12px;
+}
+
+.proj-filter-field-search-input::placeholder {
+  color: rgb(var(--fg) / 0.44);
+}
+
+.proj-filter-field-search-clear {
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  border: 0;
+  background: transparent;
+  color: rgb(var(--fg) / 0.64);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.proj-filter-field-search-clear:hover {
+  background: color-mix(in oklab, rgb(var(--fg)) 8%, transparent);
+  color: rgb(var(--fg));
+}
+
+.proj-filter-field-list {
+  max-height: min(40vh, 300px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: grid;
+  gap: 2px;
+  padding-inline-end: 2px;
+}
+
+.proj-filter-field-item {
+  min-height: 32px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: rgb(var(--fg) / 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 0 8px;
+  font-size: 12px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.proj-filter-field-item .item-main {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.proj-filter-field-item .item-main > i {
+  width: 14px;
+  flex: 0 0 14px;
+  text-align: center;
+}
+
+.proj-filter-field-item .item-main > span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.proj-filter-field-item:hover {
+  border-color: var(--proj-outline-color);
+  background: color-mix(in oklab, rgb(var(--surface)) 82%, rgb(var(--bg1)) 18%);
+}
+
+.proj-filter-field-empty {
+  min-height: 30px;
+  border-radius: 8px;
+  border: var(--proj-outline-w) dashed var(--proj-outline-color);
+  color: rgb(var(--fg) / 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}
+
+.proj-filter-select-control {
+  min-width: 0;
+  width: 100%;
+}
+
+.proj-filter-select-control > search-select {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+engineers-salary-reference-shared-filter-menu .proj-filter-select-control .ss,
+engineers-salary-reference-shared-filter-menu .proj-filter-select-control .ss-origin {
+  width: 100%;
+  min-width: 0;
+}
+
+engineers-salary-reference-shared-filter-menu .proj-filter-select-control .ss-trigger,
+engineers-salary-reference-shared-filter-menu .proj-filter-select-control .ss-inline-trigger {
+  width: 100%;
+  height: 36px;
+  min-height: 36px;
+  border-radius: 11px;
+  border: 1px solid rgb(var(--fg) / 0.09);
+  background: color-mix(in oklab, rgb(var(--bg1)) 92%, rgb(var(--surface)) 8%);
+  color: rgb(var(--fg) / 0.88);
+  box-shadow: none;
+}
+
+engineers-salary-reference-shared-filter-menu .proj-filter-select-control .ss-trigger {
+  padding-inline-start: 11px;
+}
+
+engineers-salary-reference-shared-filter-menu .proj-filter-select-control .ss-trigger:hover,
+engineers-salary-reference-shared-filter-menu .proj-filter-select-control .ss-trigger:focus-visible,
+engineers-salary-reference-shared-filter-menu .proj-filter-select-control .ss-inline-trigger:hover,
+engineers-salary-reference-shared-filter-menu .proj-filter-select-control .ss-inline-trigger:focus-within,
+engineers-salary-reference-shared-filter-menu .proj-filter-select-control .ss-inline-trigger.focused {
+  border-color: color-mix(in oklab, rgb(var(--fg)) 16%, transparent);
+  box-shadow: none;
+}
+
+engineers-salary-reference-shared-filter-menu .proj-filter-select-control .ss-label,
+engineers-salary-reference-shared-filter-menu .proj-filter-select-control .ss-inline-input {
+  min-width: 0;
+  color: rgb(var(--fg) / 0.88);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+engineers-salary-reference-shared-filter-menu .proj-filter-select-control .ss-label {
+  text-overflow: ellipsis;
+}
+
+engineers-salary-reference-shared-filter-menu .proj-filter-select-control .ss-label.placeholder,
+engineers-salary-reference-shared-filter-menu .proj-filter-select-control .ss-inline-input::placeholder {
+  color: rgb(var(--fg) / 0.52);
+}
+
+engineers-salary-reference-shared-filter-menu .proj-filter-select-control .ss-inline-input {
+  padding-inline: 11px 6px;
+}
+
+engineers-salary-reference-shared-filter-menu .proj-filter-select-control .ss-caret-trigger {
+  position: relative;
+  width: 30px;
+  min-width: 30px;
+}
+
+engineers-salary-reference-shared-filter-menu .proj-filter-select-control .ss-caret-trigger::before {
+  content: '';
+  position: absolute;
+  inset: -1px auto -1px 0;
+  width: 1px;
+  background: rgb(var(--fg) / 0.09);
+}
+
+engineers-salary-reference-shared-filter-menu .proj-filter-select-control .ss-caret-box {
+  width: 30px;
+  min-width: 30px;
+  height: 100%;
+  border-left: 0;
+  background: transparent;
+  border-radius: 0 11px 11px 0;
+}
+
+engineers-salary-reference-shared-filter-menu .proj-filter-select-control .ss-caret {
+  width: 8px;
+  height: 8px;
+  border-width: 1.5px;
+  border-color: rgb(var(--fg) / 0.5);
+}
+
+engineers-salary-reference-shared-filter-menu .proj-filter-join-select .ss-trigger,
+engineers-salary-reference-shared-filter-menu .proj-filter-join-select .ss-inline-trigger {
+  min-width: 70px;
+  width: 70px;
+}
+
+engineers-salary-reference-shared-filter-menu .proj-filter-join-select--bridge .ss-trigger,
+engineers-salary-reference-shared-filter-menu .proj-filter-join-select--bridge .ss-inline-trigger {
+  min-width: 66px;
+  width: 66px;
+}
+
+engineers-salary-reference-shared-filter-menu .proj-filter-join-select .ss-label,
+engineers-salary-reference-shared-filter-menu .proj-filter-join-select .ss-inline-input {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.proj-filter-select-overlay {
+  z-index: 200010 !important;
+}
+
+.proj-filter-select-overlay .ss-panel {
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: 0 14px 34px rgb(0 0 0 / 0.22) !important;
+  border-radius: 10px !important;
+  background: color-mix(in oklab, rgb(var(--bg1)) 94%, rgb(var(--surface)) 6%) !important;
+  color: rgb(var(--fg));
+  padding: 6px !important;
+}
+
+.proj-filter-select-overlay .ss-panel.hybrid-panel.button-panel {
+  padding: 0 !important;
+  overflow: hidden;
+}
+
+.proj-filter-select-overlay .ss-search {
+  height: 34px;
+  border: 0 !important;
+  border-radius: 8px !important;
+  background: color-mix(in oklab, rgb(var(--surface)) 90%, rgb(var(--bg1)) 10%) !important;
+  color: rgb(var(--fg));
+  box-shadow: none !important;
+  font-size: 12px;
+}
+
+.proj-filter-select-overlay .ss-panel.hybrid-panel.button-panel .ss-search {
+  width: 100%;
+  height: 42px;
+  border-radius: 0 !important;
+  border-bottom: 1px solid rgb(var(--fg) / 0.08) !important;
+  background: color-mix(in oklab, rgb(var(--bg1)) 96%, rgb(var(--surface)) 4%) !important;
+  padding: 0 14px;
+}
+
+.proj-filter-select-overlay .ss-search::placeholder {
+  color: rgb(var(--fg) / 0.45);
+}
+
+.proj-filter-select-overlay .ss-list {
+  max-height: min(42vh, 300px);
+  padding: 2px 0 0;
+  gap: 2px;
+}
+
+.proj-filter-select-overlay .ss-panel.hybrid-panel.button-panel .ss-list {
+  padding: 6px !important;
+}
+
+.proj-filter-select-overlay .ss-item {
+  min-height: 32px;
+  border-radius: 8px;
+  padding: 8px 9px;
+  font-size: 12px;
+  line-height: 1.35;
+  box-shadow: none !important;
+}
+
+.proj-filter-select-overlay .ss-item:hover,
+.proj-filter-select-overlay .ss-item.active,
+.proj-filter-select-overlay .ss-item.selected {
+  background: color-mix(in oklab, rgb(var(--surface)) 82%, rgb(var(--bg1)) 18%) !important;
+  color: rgb(var(--fg));
+}
+
+.proj-filter-select-overlay .ss-item.selected {
+  color: var(--app-color-primary-text, rgb(var(--primary))) !important;
+  box-shadow: inset 2px 0 0 var(--app-color-primary, rgb(var(--primary))) !important;
+}
+
+.proj-filter-select-overlay .ss-empty {
+  min-height: 30px;
+  border-radius: 8px;
+  color: rgb(var(--fg) / 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}
+
+.proj-filter-select-overlay--compact .ss-panel {
+  min-width: 92px;
+}
+
+.proj-filter-select-overlay--compact .ss-search {
+  display: none;
+}
+
+/* Filter dropdown popovers: flat (no outline) with soft click feedback */
+engineers-salary-reference-shared-filter-menu .proj-filter-field-menu,
+engineers-salary-reference-shared-filter-menu .proj-filter-operator-menu,
+engineers-salary-reference-shared-filter-menu .proj-filter-value-menu,
+engineers-salary-reference-shared-filter-menu .proj-inline-select-list {
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  border-radius: 10px !important;
+  background: color-mix(in oklab, rgb(var(--bg1)) 94%, rgb(var(--surface)) 6%) !important;
+}
+
+engineers-salary-reference-shared-filter-menu .proj-filter-field-search,
+engineers-salary-reference-shared-filter-menu .proj-filter-field-empty,
+engineers-salary-reference-shared-filter-menu .proj-filter-value-empty {
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  background: color-mix(in oklab, rgb(var(--surface)) 90%, rgb(var(--bg1)) 10%) !important;
+}
+
+engineers-salary-reference-shared-filter-menu .proj-filter-field-item,
+engineers-salary-reference-shared-filter-menu .proj-filter-operator-item,
+engineers-salary-reference-shared-filter-menu .proj-filter-value-item,
+engineers-salary-reference-shared-filter-menu .proj-inline-select-item {
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  transition:
+    background-color 0.1s ease-out,
+    color 0.1s ease-out;
+}
+
+.proj-filter-menu-list button:active:not(:disabled),
+.proj-filter-saved:active:not(:disabled) {
+  transition-duration: 0s !important;
+}
+
+engineers-salary-reference-shared-filter-menu .proj-filter-field-item:hover,
+engineers-salary-reference-shared-filter-menu .proj-filter-operator-item:hover,
+engineers-salary-reference-shared-filter-menu .proj-filter-value-item:hover,
+engineers-salary-reference-shared-filter-menu .proj-inline-select-item:hover,
+engineers-salary-reference-shared-filter-menu .proj-inline-select-item.active {
+  border: 0 !important;
+  background: color-mix(in oklab, rgb(var(--surface)) 82%, rgb(var(--bg1)) 18%) !important;
+}
+
+engineers-salary-reference-shared-filter-menu .proj-filter-field-item:active,
+engineers-salary-reference-shared-filter-menu .proj-filter-operator-item:active,
+engineers-salary-reference-shared-filter-menu .proj-filter-value-item:active,
+engineers-salary-reference-shared-filter-menu .proj-inline-select-item:active {
+  background: color-mix(in oklab, rgb(var(--surface)) 74%, rgb(var(--bg1)) 26%) !important;
+}
+
+@media (max-width: 900px) {
+  .proj-filter-menu-list {
+    min-width: min(320px, calc(100vw - 20px));
+    width: min(760px, calc(100vw - 20px));
+    max-width: calc(100vw - 20px);
+    max-height: min(84vh, calc(100vh - 28px));
+  }
+
+  .proj-filter-menu-list:not(.has-detailed-filters) {
+    width: min(640px, calc(100vw - 20px));
+    min-width: min(320px, calc(100vw - 20px));
+    max-width: calc(100vw - 20px);
+  }
+
+  .proj-filter-menu-list.has-detailed-filters {
+    width: min(760px, calc(100vw - 20px));
+    min-width: min(320px, calc(100vw - 20px));
+    max-width: calc(100vw - 20px);
+  }
+
+  .proj-filter-join-trigger {
+    min-width: 84px;
+  }
+
+  .proj-filter-groups-shell {
+    padding: 10px;
+    gap: 10px;
+  }
+
+  .proj-filter-group-content {
+    max-height: min(32vh, 280px);
+  }
+
+  .proj-filter-group {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .proj-filter-group-bridge {
+    justify-content: flex-start;
+    width: auto;
+    min-width: 0;
+    padding-inline-end: 0;
+  }
+
+  .proj-filter-group-shell-label {
+    justify-content: flex-start;
+    min-height: auto;
+    text-align: left;
+  }
+
+  .proj-filter-row {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: stretch;
+  }
+
+  .proj-filter-row .proj-filter-remove,
+  .proj-filter-row.has-field .proj-filter-remove,
+  .proj-filter-row.has-join .proj-filter-remove,
+  .proj-filter-row.has-join.has-field .proj-filter-remove {
+    grid-column: auto;
+    justify-self: end;
+  }
+
+  engineers-salary-reference-shared-filter-menu .proj-filter-field-menu,
+  engineers-salary-reference-shared-filter-menu .proj-filter-operator-menu,
+  engineers-salary-reference-shared-filter-menu .proj-filter-value-menu,
+  engineers-salary-reference-shared-filter-menu .proj-inline-select-list {
+    max-width: min(100vw - 24px, 360px) !important;
+  }
+}

@@ -1,0 +1,75 @@
+@mixin button-motion(
+  $selector,
+  $hover-transform: translateY(-1px),
+  $active-transform: translateY(0) scale(0.985),
+  $hover-shadow: none,
+  $focus-shadow: none,
+  $transition-duration: 180ms,
+  $timing-function: cubic-bezier(0.22, 1, 0.36, 1),
+  $important: false
+) {
+  $bang: '';
+
+  @if $important {
+    $bang: ' !important';
+  }
+
+  #{$selector} {
+    transition:
+      background-color 0.16s ease,
+      border-color 0.16s ease,
+      color 0.16s ease,
+      opacity 0.16s ease#{$bang};
+    transform: none#{$bang};
+    box-shadow: none#{$bang};
+  }
+
+  #{$selector}:disabled,
+  #{$selector}[aria-disabled='true'] {
+    transform: none#{$bang};
+    box-shadow: none#{$bang};
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #{$selector} {
+      transition:
+        background-color 0.16s ease,
+        border-color 0.16s ease,
+        color 0.16s ease,
+        opacity 0.16s ease#{$bang};
+      transform: none#{$bang};
+    }
+  }
+}
+
+@mixin chrome-motion(
+  $selector,
+  $hover-transform: translateY(-1px),
+  $active-transform: translateY(0) scale(0.985),
+  $hover-shadow: (0 1px 2px rgb(15 23 42 / 0.05), 0 8px 14px rgb(15 23 42 / 0.08)),
+  $focus-shadow: 0 0 0 1px rgb(var(--primary, 0 196 167) / 0.12),
+  $important: false
+) {
+  @include button-motion(
+    $selector: $selector,
+    $hover-transform: $hover-transform,
+    $active-transform: $active-transform,
+    $hover-shadow: $hover-shadow,
+    $focus-shadow: $focus-shadow,
+    $important: $important
+  );
+}
+
+@mixin list-motion(
+  $selector,
+  $hover-shadow: (0 0 0 1px rgb(var(--primary, 0 196 167) / 0.08), 0 8px 16px rgb(15 23 42 / 0.06)),
+  $focus-shadow: 0 0 0 1px rgb(var(--primary, 0 196 167) / 0.1),
+  $important: false
+) {
+  @include button-motion(
+    $selector: $selector,
+    $hover-shadow: $hover-shadow,
+    $focus-shadow: $focus-shadow,
+    $important: $important
+  );
+}

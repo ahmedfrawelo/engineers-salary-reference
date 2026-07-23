@@ -1,0 +1,9 @@
+<div class="lce-inline-edit">
+  <label class="lce-date-input">
+    <input type="date" [(ngModel)]="draftValue" />
+  </label>
+  <div class="lce-actions">
+    <button class="lce-ghost" type="button" (click)="clearDraft()">Clear</button>
+    <button class="lce-primary" type="button" (click)="applyDraft()">Apply</button>
+  </div>
+</div>

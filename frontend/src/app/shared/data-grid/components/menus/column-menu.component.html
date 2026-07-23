@@ -1,0 +1,414 @@
+<div
+  class="column-menu"
+  [style.left.px]="position.x"
+  [style.top.px]="position.y"
+  (click)="$event.stopPropagation()"
+  (pointerdown)="$event.stopPropagation()"
+>
+  <button
+    #pinBtn
+    class="menu-item"
+    type="button"
+    (mouseenter)="showSubmenu('pin', $event)"
+    (mouseleave)="hideSubmenu()"
+  >
+    <hugeicons-icon class="menu-icon" [icon]="menuIcons.pin" [size]="14"></hugeicons-icon>
+    <span>Pin Column</span>
+    <span class="submenu-arrow">&#9656;</span>
+  </button>
+
+  <button
+    class="menu-item"
+    type="button"
+    (mouseenter)="showSubmenu('align', $event)"
+    (mouseleave)="hideSubmenu()"
+  >
+    <hugeicons-icon class="menu-icon" [icon]="menuIcons.align" [size]="14"></hugeicons-icon>
+    <span>Align</span>
+    <span class="submenu-arrow">&#9656;</span>
+  </button>
+
+  <button
+    class="menu-item"
+    type="button"
+    (mouseenter)="showSubmenu('autosize', $event)"
+    (mouseleave)="hideSubmenu()"
+  >
+    <hugeicons-icon class="menu-icon" [icon]="menuIcons.autosize" [size]="14"></hugeicons-icon>
+    <span>Autosize</span>
+    <span class="submenu-arrow">&#9656;</span>
+  </button>
+
+  <div class="menu-divider"></div>
+
+  <button
+    class="menu-item"
+    type="button"
+    (mouseenter)="showSubmenu('sort', $event)"
+    (mouseleave)="hideSubmenu()"
+  >
+    <hugeicons-icon class="menu-icon" [icon]="menuIcons.sort" [size]="14"></hugeicons-icon>
+    <span>Sort</span>
+    <span class="submenu-arrow">&#9656;</span>
+  </button>
+
+  <button
+    class="menu-item"
+    type="button"
+    (mouseenter)="showSubmenu('filter', $event)"
+    (mouseleave)="hideSubmenu()"
+  >
+    <hugeicons-icon class="menu-icon" [icon]="menuIcons.filter" [size]="14"></hugeicons-icon>
+    <span>Filter</span>
+    <span class="submenu-arrow">&#9656;</span>
+  </button>
+
+  <div class="menu-divider"></div>
+
+  <button
+    class="menu-item"
+    type="button"
+    (mouseenter)="showSubmenu('group', $event)"
+    (mouseleave)="hideSubmenu()"
+  >
+    <hugeicons-icon class="menu-icon" [icon]="menuIcons.group" [size]="14"></hugeicons-icon>
+    <span>Group</span>
+    <span class="submenu-arrow">&#9656;</span>
+  </button>
+
+  <div class="menu-divider"></div>
+
+  <button
+    class="menu-item"
+    type="button"
+    (mouseenter)="showSubmenu('columns', $event)"
+    (mouseleave)="hideSubmenu()"
+  >
+    <hugeicons-icon class="menu-icon" [icon]="menuIcons.columns" [size]="14"></hugeicons-icon>
+    <span>Columns</span>
+    <span class="submenu-arrow">&#9656;</span>
+  </button>
+
+  <button
+    class="menu-item"
+    type="button"
+    (click)="onAction('copy-column'); $event.stopPropagation()"
+  >
+    <hugeicons-icon class="menu-icon" [icon]="menuIcons.copy" [size]="14"></hugeicons-icon>
+    <span>Copy Column Data</span>
+    <span class="shortcut">Ctrl+C</span>
+  </button>
+
+  <div class="menu-divider"></div>
+
+  <button class="menu-item" type="button" (click)="onAction('reset'); $event.stopPropagation()">
+    <hugeicons-icon class="menu-icon" [icon]="menuIcons.reset" [size]="14"></hugeicons-icon>
+    <span>Reset Columns</span>
+  </button>
+</div>
+
+@if (activeSubmenu === 'pin') {
+  <div
+    class="submenu"
+    [style.left.px]="submenuPosition.x"
+    [style.top.px]="submenuPosition.y"
+    (mouseenter)="keepSubmenuOpen()"
+    (mouseleave)="hideSubmenu()"
+  >
+    <button
+      class="menu-item"
+      type="button"
+      (click)="onAction('pin-left'); $event.stopPropagation()"
+    >
+      <hugeicons-icon class="menu-icon" [icon]="menuIcons.pinLeft" [size]="14"></hugeicons-icon>
+      <span>Pin Left</span>
+    </button>
+    <button
+      class="menu-item"
+      type="button"
+      (click)="onAction('pin-right'); $event.stopPropagation()"
+    >
+      <hugeicons-icon class="menu-icon" [icon]="menuIcons.pinRight" [size]="14"></hugeicons-icon>
+      <span>Pin Right</span>
+    </button>
+    <button class="menu-item" type="button" (click)="onAction('unpin'); $event.stopPropagation()">
+      <hugeicons-icon class="menu-icon" [icon]="menuIcons.noPin" [size]="14"></hugeicons-icon>
+      <span>No Pin</span>
+    </button>
+  </div>
+}
+
+@if (activeSubmenu === 'align') {
+  <div
+    class="submenu"
+    [style.left.px]="submenuPosition.x"
+    [style.top.px]="submenuPosition.y"
+    (mouseenter)="keepSubmenuOpen()"
+    (mouseleave)="hideSubmenu()"
+  >
+    <button
+      class="menu-item"
+      type="button"
+      (click)="onAction('align-left'); $event.stopPropagation()"
+    >
+      <hugeicons-icon class="menu-icon" [icon]="menuIcons.alignLeft" [size]="14"></hugeicons-icon>
+      <span>Align Left</span>
+    </button>
+    <button
+      class="menu-item"
+      type="button"
+      (click)="onAction('align-center'); $event.stopPropagation()"
+    >
+      <hugeicons-icon class="menu-icon" [icon]="menuIcons.alignCenter" [size]="14"></hugeicons-icon>
+      <span>Align Center</span>
+    </button>
+    <button
+      class="menu-item"
+      type="button"
+      (click)="onAction('align-right'); $event.stopPropagation()"
+    >
+      <hugeicons-icon class="menu-icon" [icon]="menuIcons.alignRight" [size]="14"></hugeicons-icon>
+      <span>Align Right</span>
+    </button>
+  </div>
+}
+
+@if (activeSubmenu === 'autosize') {
+  <div
+    class="submenu"
+    [style.left.px]="submenuPosition.x"
+    [style.top.px]="submenuPosition.y"
+    (mouseenter)="keepSubmenuOpen()"
+    (mouseleave)="hideSubmenu()"
+  >
+    <button
+      class="menu-item"
+      type="button"
+      (click)="onAction('autosize'); $event.stopPropagation()"
+    >
+      <hugeicons-icon class="menu-icon" [icon]="menuIcons.autosize" [size]="14"></hugeicons-icon>
+      <span>Autosize This Column</span>
+    </button>
+    <button
+      class="menu-item"
+      type="button"
+      (click)="onAction('autosize-all'); $event.stopPropagation()"
+    >
+      <hugeicons-icon class="menu-icon" [icon]="menuIcons.autosizeAll" [size]="14"></hugeicons-icon>
+      <span>Autosize All Columns</span>
+    </button>
+  </div>
+}
+
+@if (activeSubmenu === 'sort') {
+  <div
+    class="submenu"
+    [style.left.px]="submenuPosition.x"
+    [style.top.px]="submenuPosition.y"
+    (mouseenter)="keepSubmenuOpen()"
+    (mouseleave)="hideSubmenu()"
+  >
+    <button
+      class="menu-item"
+      type="button"
+      (click)="onAction('sort-asc'); $event.stopPropagation()"
+    >
+      <hugeicons-icon class="menu-icon" [icon]="menuIcons.sortAsc" [size]="14"></hugeicons-icon>
+      <span>Sort Ascending</span>
+    </button>
+    <button
+      class="menu-item"
+      type="button"
+      (click)="onAction('sort-desc'); $event.stopPropagation()"
+    >
+      <hugeicons-icon class="menu-icon" [icon]="menuIcons.sortDesc" [size]="14"></hugeicons-icon>
+      <span>Sort Descending</span>
+    </button>
+    <button
+      class="menu-item"
+      type="button"
+      (click)="onAction('clear-sort'); $event.stopPropagation()"
+    >
+      <hugeicons-icon class="menu-icon" [icon]="menuIcons.clear" [size]="14"></hugeicons-icon>
+      <span>Clear Sort</span>
+    </button>
+  </div>
+}
+
+@if (activeSubmenu === 'filter') {
+  <div
+    class="submenu"
+    [style.left.px]="submenuPosition.x"
+    [style.top.px]="submenuPosition.y"
+    (mouseenter)="keepSubmenuOpen()"
+    (mouseleave)="hideSubmenu()"
+  >
+    <button class="menu-item" type="button" (click)="onAction('filter'); $event.stopPropagation()">
+      <hugeicons-icon class="menu-icon" [icon]="menuIcons.filter" [size]="14"></hugeicons-icon>
+      <span>Open Filter</span>
+    </button>
+    <button
+      class="menu-item"
+      type="button"
+      (click)="onAction('clear-filter'); $event.stopPropagation()"
+    >
+      <hugeicons-icon class="menu-icon" [icon]="menuIcons.clear" [size]="14"></hugeicons-icon>
+      <span>Clear Filter</span>
+    </button>
+  </div>
+}
+
+@if (activeSubmenu === 'group') {
+  <div
+    class="submenu"
+    [style.left.px]="submenuPosition.x"
+    [style.top.px]="submenuPosition.y"
+    (mouseenter)="keepSubmenuOpen()"
+    (mouseleave)="hideSubmenu()"
+  >
+    <button class="menu-item" type="button" (click)="onAction('group'); $event.stopPropagation()">
+      <hugeicons-icon class="menu-icon" [icon]="menuIcons.group" [size]="14"></hugeicons-icon>
+      <span>Group by {{ column?.header }}</span>
+    </button>
+    <button class="menu-item" type="button" (click)="onAction('ungroup'); $event.stopPropagation()">
+      <hugeicons-icon class="menu-icon" [icon]="menuIcons.clear" [size]="14"></hugeicons-icon>
+      <span>Ungroup</span>
+    </button>
+  </div>
+}
+
+@if (activeSubmenu === 'columns' || activeSubmenu === 'choose-columns') {
+  <div
+    class="submenu"
+    [style.left.px]="submenuPosition.x"
+    [style.top.px]="submenuPosition.y"
+    (mouseenter)="keepSubmenuOpen()"
+    (mouseleave)="hideSubmenu()"
+  >
+    <button
+      class="menu-item"
+      type="button"
+      (click)="onAction('rename-column'); $event.stopPropagation()"
+    >
+      <hugeicons-icon
+        class="menu-icon"
+        [icon]="menuIcons.edit"
+        [size]="14"
+      ></hugeicons-icon>
+      <span>Rename Column</span>
+    </button>
+    <button
+      class="menu-item"
+      type="button"
+      (click)="onAction('add-column-left'); $event.stopPropagation()"
+    >
+      <hugeicons-icon
+        class="menu-icon"
+        [icon]="menuIcons.addColumnLeft"
+        [size]="14"
+      ></hugeicons-icon>
+      <span>Insert Column Left</span>
+    </button>
+    <button
+      class="menu-item"
+      type="button"
+      (click)="onAction('add-column-right'); $event.stopPropagation()"
+    >
+      <hugeicons-icon
+        class="menu-icon"
+        [icon]="menuIcons.addColumnRight"
+        [size]="14"
+      ></hugeicons-icon>
+      <span>Insert Column Right</span>
+    </button>
+    <button
+      class="menu-item danger"
+      type="button"
+      (click)="onAction('delete-column'); $event.stopPropagation()"
+    >
+      <hugeicons-icon
+        class="menu-icon"
+        [icon]="menuIcons.deleteColumn"
+        [size]="14"
+      ></hugeicons-icon>
+      <span>Delete Column</span>
+    </button>
+    <div class="menu-divider"></div>
+    <button class="menu-item" type="button" (click)="onAction('hide'); $event.stopPropagation()">
+      <hugeicons-icon class="menu-icon" [icon]="menuIcons.viewOff" [size]="14"></hugeicons-icon>
+      <span>Hide Column</span>
+    </button>
+    <button
+      class="menu-item"
+      type="button"
+      (mouseenter)="showSubmenu('choose-columns', $event)"
+      (mouseleave)="preventHide()"
+    >
+      <hugeicons-icon class="menu-icon" [icon]="menuIcons.columns" [size]="14"></hugeicons-icon>
+      <span>Choose Columns</span>
+      <span class="submenu-arrow">&#9656;</span>
+    </button>
+    <button
+      class="menu-item"
+      type="button"
+      (click)="onAction('show-all'); $event.stopPropagation()"
+    >
+      <hugeicons-icon class="menu-icon" [icon]="menuIcons.view" [size]="14"></hugeicons-icon>
+      <span>Show All Columns</span>
+    </button>
+  </div>
+}
+
+@if (activeSubmenu === 'choose-columns') {
+  <div
+    class="submenu columns-submenu"
+    [style.left.px]="nestedSubmenuPosition.x"
+    [style.top.px]="nestedSubmenuPosition.y"
+    (mouseenter)="keepSubmenuOpen()"
+    (mouseleave)="hideSubmenu()"
+  >
+    <div class="submenu-title">Toggle Columns</div>
+    <div class="columns-search">
+      <input
+        type="text"
+        class="search-input"
+        placeholder="Search columns..."
+        [(ngModel)]="columnSearchTerm"
+        (click)="$event.stopPropagation()"
+        autocomplete="off"
+      />
+    </div>
+    <button
+      class="menu-item column-toggle-item select-all-item"
+      type="button"
+      (click)="toggleAllColumns(); $event.stopPropagation()"
+    >
+      <input
+        #selectAllCheckbox
+        type="checkbox"
+        [checked]="areAllColumnsVisible()"
+        (click)="$event.preventDefault()"
+        tabindex="-1"
+      />
+      <span>Select All</span>
+    </button>
+    <div class="menu-divider"></div>
+    <div class="columns-list">
+      @for (col of filteredColumns(); track col) {
+        <button
+          class="menu-item column-toggle-item"
+          type="button"
+          (click)="toggleColumnVisibility(col); $event.stopPropagation()"
+        >
+          <input
+            type="checkbox"
+            [checked]="!col.hidden"
+            (click)="$event.preventDefault()"
+            tabindex="-1"
+          />
+          <span>{{ col.header }}</span>
+        </button>
+      }
+    </div>
+  </div>
+}

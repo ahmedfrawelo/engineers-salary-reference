@@ -1,0 +1,323 @@
+<engineers-salary-reference-page-design
+  class="proj-page tender-projects-page-design toolbar-soft-rect-actions"
+  title="Tender Projects"
+  sub="Tender projects incoming for pricing"
+  icon="folder2-open"
+  toolbarAriaLabel="Tender Projects toolbar"
+  [sharedTenderGridToolbar]="true"
+  [sharedTenderGridToolbarShowClosed]="false"
+  [sharedToolbarAvatarText]="'A'"
+  [sharedToolbarShowCustomize]="true"
+  [sharedToolbarSearchPlaceholder]="'Search projects...'"
+  [sharedToolbarSearchVariant]="'softRect'"
+  [sharedToolbarAssigneeFilter]="sharedToolbarAssigneeFilterConfig()"
+  [sharedToolbarMineQuickFilter]="sharedToolbarMineQuickFilterConfig()"
+  [sharedToolbarActions]="sharedToolbarActions"
+  (sharedViewsRequested)="openSavedViews($event)"
+  (sharedToolbarAssigneeSelectionChanged)="onSharedToolbarAssigneeSelectionChange($event)"
+  (sharedToolbarMineQuickToggleRequested)="toggleProjectMineQuickPanel()"
+  (sharedToolbarMineQuickClearRequested)="clearProjectMineQuickFilter($event)"
+  (sharedToolbarMineQuickOptionToggled)="toggleProjectMineQuickOption($event)"
+  (sharedToolbarActionTriggered)="onSharedToolbarAction($event)"
+>
+  <div header-actions class="tender-projects-view-actions">
+    <div
+      class="tender-projects-view-tabs"
+      role="tablist"
+      aria-label="Tender project views"
+      [appStretchTabsIndicator]="projectViewMode"
+      [stretchTabsItemSelector]="'.tender-projects-view-list .tender-projects-view-tab'"
+    >
+      <div class="tender-projects-view-list">
+        <button
+          class="tender-projects-view-tab"
+          type="button"
+          role="tab"
+          [class.active]="projectViewMode === 'table'"
+          [attr.aria-selected]="projectViewMode === 'table'"
+          (click)="setProjectViewMode('table')"
+        >
+          <i class="tender-projects-view-icon" appIcon="table" aria-hidden="true"></i>
+          <span class="tender-projects-view-label">Table View</span>
+        </button>
+        <button
+          class="tender-projects-view-tab"
+          type="button"
+          role="tab"
+          [class.active]="projectViewMode === 'calendar'"
+          [attr.aria-selected]="projectViewMode === 'calendar'"
+          (click)="setProjectViewMode('calendar')"
+        >
+          <i class="tender-projects-view-icon" appIcon="calendar3" aria-hidden="true"></i>
+          <span class="tender-projects-view-label">Calendar</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div
+    page-table
+    class="tender-projects-view-host"
+    [class.tender-projects-view-host--calendar]="projectViewMode === 'calendar'"
+  >
+    <app-grid-shell
+      class="table-area-shell tender-projects-table-view"
+      [class.tender-projects-table-view--hidden]="projectViewMode !== 'table'"
+      [loading]="loading && !pageSkeletonLoading && rows.length === 0"
+      [skeletonVariant]="'table'"
+      [skeletonRows]="12"
+      [skeletonColumns]="10"
+      [skeletonHeader]="true"
+    >
+      <div shell-body>
+        <engineers-salary-reference-data-grid
+          [stateKey]="projectGridStateKey"
+          [data]="projectRowsForGrid()"
+          [columns]="gridColumns"
+          [config]="projectGridConfig"
+          [remoteGroups]="projectRemoteGroups"
+          [aggregateFooter]="projectAggregateFooterConfig()"
+          [loading]="loading && rows.length === 0"
+          [selectionBarShowEditAction]="permission.canEditPage('tender.projects')"
+          [selectionBarShowDeleteAction]="permission.canDeletePage('tender.projects')"
+          (onCellAction)="onCellAction($event)"
+          (onChange)="handleGridChange($event)"
+          (onSelectionChange)="handleSelectionChange($event)"
+          (selectionBarEditRequested)="onEditSelected()"
+          (selectionBarDeleteRequested)="onDeleteSelected()"
+          (aggregateFooterChange)="handleProjectAggregateFooterChange($event)"
+        >
+        </engineers-salary-reference-data-grid>
+      </div>
+    </app-grid-shell>
+
+    @if (projectViewMode === 'calendar') {
+      <section class="tender-projects-calendar-view" aria-label="Tender projects calendar">
+        <engineers-salary-reference-calendar
+          [events]="projectCalendarEvents()"
+          [legend]="projectCalendarLegend()"
+          [resources]="projectCalendarResources()"
+          [title]="''"
+          [view]="'month'"
+          [viewOptions]="projectCalendarViewOptions"
+          [initialDate]="projectCalendarInitialDate()"
+          [storageKey]="projectCalendarStorageKey"
+          [persistState]="true"
+          [showToolbar]="true"
+          [showToday]="true"
+          [showNav]="true"
+          [showJump]="false"
+          [sidePanelDefaultWidth]="296"
+          [sidePanelMinWidth]="280"
+          [sidePanelMaxWidth]="384"
+          [enableEditor]="false"
+          [enableDragDrop]="false"
+          [enableResize]="false"
+          [enableQuickAdd]="false"
+          [enableFilters]="false"
+          [enableImport]="false"
+          [enableExport]="false"
+          [enablePresets]="false"
+          [showSidePanel]="true"
+          [maxVisiblePerDay]="3"
+          [showLegend]="false"
+          [showTimeZone]="false"
+          [groupByResource]="true"
+          [resourceLabel]="projectCalendarResourceLabel()"
+          layerLabel="Stages"
+          emptyMessage="No dated tender projects."
+          (eventClick)="onProjectCalendarEventClick($event)"
+        ></engineers-salary-reference-calendar>
+      </section>
+    }
+  </div>
+</engineers-salary-reference-page-design>
+
+<!-- Project details overlay -->
+@if (selectedRow) {
+  <tender-project-details
+    [open]="showDetails"
+    [row]="selectedRow!"
+    [projectList]="rows"
+    [activities]="activities"
+    [activityLoading]="activityLoading"
+    [detailsLoading]="projectDetailsLoading"
+    [notificationFocus]="projectNotificationFocus"
+    [saveBusy]="detailsAutoSaveBusy"
+    [saveErrorMessage]="projectDetailsSaveErrorMessage"
+    [saveFieldIssues]="projectDetailsSaveFieldIssues"
+    [ownersList]="owners"
+    [ownerTypesList]="ownerTypes"
+    [countriesList]="countries"
+    [stagesList]="stages"
+    [typesList]="top"
+    [statusesList]="statuses"
+    [importanceList]="doi"
+    [assignToSettingsList]="assignToSettings"
+    [inChargeSettingsList]="inChargeSettings"
+    [canEdit]="permission.canEditPage('tender.projects')"
+    (save)="applySave($event)"
+    (switchProject)="onSwitchProject($event)"
+    (lookupCreated)="onLookupCreated($event)"
+    (lookupCreateFailed)="onLookupCreateFailed($event)"
+    (lookupUpdated)="onLookupUpdated($event)"
+    (lookupUpdateFailed)="onLookupUpdateFailed($event)"
+    (checklistActionFailed)="onChecklistActionFailed($event)"
+    (saveDeferred)="onSaveDeferred()"
+    [canDelete]="permission.canDeletePage('tender.projects')"
+    (delete)="onDelete()"
+    (addNote)="onAddNote($event)"
+    (auditRecorded)="onAuditRecorded($event)"
+    (close)="closeOverlay()"
+  >
+  </tender-project-details>
+}
+
+<overlay-panel
+  [open]="deleteDialogOpen"
+  (closed)="cancelDeleteDialog()"
+  [title]="deleteDialogTitle"
+  [variant]="'dialog'"
+  [showSave]="false"
+  [showDelete]="false"
+  [showHeader]="false"
+  [closeDanger]="false"
+  [draggable]="false"
+  [dense]="false"
+  [autoFitContent]="false"
+  [panelClass]="'confirm-delete-overlay'"
+  [minWidth]="0"
+  [minHeight]="0"
+  [maxWidth]="440"
+  [maxHeight]="deleteProtectionEnabled ? 320 : 220"
+  [fitRatioWDesktop]="0.28"
+  [fitRatioHDesktop]="deleteProtectionEnabled ? 0.36 : 0.27"
+  [bodyPadding]="0"
+  [bodyPaddingDense]="0"
+  [bubbleTooltips]="true"
+>
+  <div class="confirm-delete">
+    <button
+      type="button"
+      class="confirm-delete__close"
+      aria-label="Close delete dialog"
+      (click)="cancelDeleteDialog()"
+      [disabled]="deleteInProgress"
+    >
+      <i appIcon="x-lg"></i>
+    </button>
+    <div class="confirm-delete__summary">
+      <div class="confirm-delete__icon">
+        <i appIcon="exclamation-triangle"></i>
+      </div>
+      <div class="confirm-delete__copy">
+        <p class="confirm-delete__eyebrow">Delete permanently</p>
+        <p class="confirm-delete__text">
+          @if (deleteDialogCount === 1) {
+            <span class="primary-line">
+              You are deleting <strong>{{ deleteDialogName }}</strong
+              >.
+            </span>
+          }
+          @if (deleteDialogCount > 1) {
+            <span class="primary-line">
+              You are deleting <strong>{{ deleteDialogCount }}</strong> selected projects.
+            </span>
+          }
+          <span class="secondary-line">This cannot be undone.</span>
+        </p>
+      </div>
+    </div>
+    @if (deleteProtectionEnabled) {
+      <label class="confirm-delete__field">
+        <span class="confirm-delete__label">Delete authorization code</span>
+        <input
+          class="confirm-delete__code"
+          type="text"
+          inputmode="text"
+          autocomplete="one-time-code"
+          autocapitalize="off"
+          spellcheck="false"
+          maxlength="64"
+          placeholder="Enter the delete code"
+          [value]="deleteAuthorizationCode"
+          [disabled]="deleteInProgress"
+          (input)="onDeleteAuthorizationCodeInput($any($event.target).value)"
+        />
+      </label>
+      @if (deleteAuthorizationError) {
+        <p class="confirm-delete__error">{{ deleteAuthorizationError }}</p>
+      }
+    }
+    <div class="confirm-delete__actions">
+      <button
+        type="button"
+        class="btn ghost sm"
+        (click)="cancelDeleteDialog()"
+        [disabled]="deleteInProgress"
+      >
+        Cancel
+      </button>
+      <button
+        type="button"
+        class="btn sm warning"
+        (click)="confirmDeleteDialog()"
+        [disabled]="
+          deleteInProgress || (deleteProtectionEnabled && !deleteAuthorizationCode.trim())
+        "
+      >
+        @if (!deleteInProgress) {
+          Delete
+        } @else {
+          Deleting...
+        }
+      </button>
+    </div>
+  </div>
+</overlay-panel>
+
+<!-- Add New Tender overlay -->
+@if (showAdd) {
+  <add-tender-panel
+    [open]="showAdd"
+    [panelTitle]="addPanelTitle"
+    [editMode]="addPanelEditMode"
+    [bulkEdit]="bulkEditMode"
+    [bulkEditCount]="bulkEditCount"
+    [initialValue]="addPanelSeedRow"
+    [ownersList]="owners"
+    [ownerTypesList]="ownerTypes"
+    [countriesList]="countries"
+    [stagesList]="stages"
+    [typesList]="top"
+    [statusesList]="statuses"
+    [importanceList]="doi"
+    [assignToSettingsList]="assignToSettings"
+    [inChargeSettingsList]="inChargeSettings"
+    [projectList]="rows"
+    (lookupUpdated)="onLookupUpdated($event)"
+    (lookupUpdateFailed)="onLookupUpdateFailed($event)"
+    (save)="onSaveTenderFromPanel($event)"
+    (close)="onAddPanelClose()"
+  >
+  </add-tender-panel>
+}
+
+<!-- Tender Settings overlay -->
+@if (showSettings) {
+  <tender-project-settings
+    [open]="showSettings"
+    [lookupsReady]="lookupsLoaded"
+    [ownersList]="owners"
+    [ownerTypesList]="ownerTypes"
+    [countriesList]="countries"
+    [stagesList]="stages"
+    [typesList]="top"
+    [statusesList]="statuses"
+    [importanceList]="doi"
+    [assignToSettingsList]="assignToSettings"
+    [inChargeSettingsList]="inChargeSettings"
+    (close)="onSettingsClosed()"
+  >
+  </tender-project-settings>
+}

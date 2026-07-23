@@ -1,0 +1,10 @@
+// Unified DataGrid style entry:
+// - base owns the visual theme
+// - shell owns layout plumbing
+// - structure/content add feature-specific, non-theme styles
+// Selection/radius-reset are intentionally excluded to avoid visual double-ownership.
+@use './base';
+@use './structure';
+@use './shell';
+@use './content';
+@use './structure/group-rows';

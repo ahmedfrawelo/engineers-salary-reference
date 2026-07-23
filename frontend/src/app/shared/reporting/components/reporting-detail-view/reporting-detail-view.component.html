@@ -1,0 +1,653 @@
+<div class="report-detail">
+  <section class="page-header">
+    <div class="page-header__copy">
+      <span class="eyebrow">{{ page.kicker }}</span>
+      <div class="title-row">
+        <h1>{{ page.report.title }}</h1>
+        <span class="status-pill" [class]="'status-pill ' + statusClass(page.report.status)">
+          {{ page.report.status }}
+        </span>
+      </div>
+      <p>{{ page.description }}</p>
+      <div class="spotlight-note">
+        <strong>Management note</strong>
+        <span>{{ page.spotlight }}</span>
+      </div>
+    </div>
+
+    <div class="page-header__meta">
+      <div class="detail-actions" aria-label="Report actions">
+        <button class="detail-action" type="button" (click)="exportPageJson()">
+          <i appIcon="download" aria-hidden="true"></i>
+          <span>Export JSON</span>
+        </button>
+        <button class="detail-action detail-action--primary" type="button" (click)="printPage()">
+          <i appIcon="file-earmark-text" aria-hidden="true"></i>
+          <span>Print</span>
+        </button>
+      </div>
+      <div class="meta-cell">
+        <span>Owner</span>
+        <strong>{{ page.report.owner }}</strong>
+      </div>
+      <div class="meta-cell">
+        <span>Department</span>
+        <strong>{{ page.report.department }}</strong>
+      </div>
+      <div class="meta-cell">
+        <span>Last run</span>
+        <strong>{{ page.report.lastRun }}</strong>
+      </div>
+      <div class="meta-cell">
+        <span>Next run</span>
+        <strong>{{ page.report.nextRun || 'Not scheduled' }}</strong>
+      </div>
+      <div class="meta-cell">
+        <span>Health</span>
+        <strong>{{ page.report.health }}%</strong>
+      </div>
+      <div class="meta-cell">
+        <span>Value</span>
+        <strong>{{ page.report.value | currency: 'USD' : 'symbol' : '1.0-0' }}</strong>
+      </div>
+    </div>
+  </section>
+
+  @if (page.filterGroups.length) {
+    <section class="panel">
+      <div class="panel-head">
+        <div>
+          <span class="eyebrow eyebrow--muted">Local filters</span>
+          <h2>This page has its own filter lens</h2>
+          <p>
+            Changing these values affects only this page and does not change the rest of reports.
+          </p>
+        </div>
+      </div>
+
+      <div class="filter-grid">
+        @for (group of page.filterGroups; track group.key) {
+          <label class="filter-field">
+            <span>{{ group.label }}</span>
+            <select
+              [ngModel]="selectedFilters[group.key]"
+              (ngModelChange)="selectFilter(group.key, $event)"
+            >
+              @for (option of group.options; track option.value) {
+                <option [value]="option.value">{{ option.label }}</option>
+              }
+            </select>
+            <small>{{ group.description }}</small>
+          </label>
+        }
+      </div>
+
+      <div class="active-lens">
+        <span>Current lens</span>
+        <strong>{{ activeLensSummary() }}</strong>
+      </div>
+    </section>
+  }
+
+  <section class="metric-strip">
+    @for (metric of page.metrics; track metric.label) {
+      <article class="metric-card" [class]="'metric-card tone-' + toneClass(metric.tone)">
+        <span>{{ metric.label }}</span>
+        <strong>{{ metric.value }}</strong>
+        <small>{{ metric.note }}</small>
+      </article>
+    }
+  </section>
+
+  <section class="decision-strip">
+    <article class="focus-card">
+      <span>Main risk</span>
+      <strong>{{ primaryRisk().label }}</strong>
+      <small>{{ primaryRisk().note }}</small>
+    </article>
+    <article class="focus-card">
+      <span>Best recovery lane</span>
+      <strong>{{ primaryOpportunity().label }}</strong>
+      <small>{{ primaryOpportunity().note }}</small>
+    </article>
+    <article class="focus-card">
+      <span>Immediate action</span>
+      <strong>{{ nextActionItem().title }}</strong>
+      <small>{{ nextActionItem().owner }} / {{ nextActionItem().due }}</small>
+    </article>
+    <article class="focus-card">
+      <span>Current lens</span>
+      <strong>{{ activeLensSummary() }}</strong>
+      <small>Local to this page only</small>
+    </article>
+  </section>
+
+  <section class="summary-strip">
+    <article class="summary-card">
+      <span>Open actions</span>
+      <strong>{{ page.actionItems.length }}</strong>
+      <small>{{ criticalActionCount() }} critical / warning items</small>
+    </article>
+    <article class="summary-card">
+      <span>Warning signals</span>
+      <strong>{{ warningSignalCount() }}</strong>
+      <small>Signals currently pointing to risk or attention</small>
+    </article>
+    <article class="summary-card">
+      <span>Positive signals</span>
+      <strong>{{ positiveSignalCount() }}</strong>
+      <small>Signals showing momentum or recovery potential</small>
+    </article>
+    <article class="summary-card">
+      <span>Next gate</span>
+      <strong>{{ nextDecisionDue() }}</strong>
+      <small>Nearest dated action on this page</small>
+    </article>
+  </section>
+
+  <section class="data-strip">
+    <article class="data-chip">
+      <span>Report ID</span>
+      <strong>{{ page.report.id }}</strong>
+      <small>Primary register identifier for this page.</small>
+    </article>
+    <article class="data-chip">
+      <span>Type</span>
+      <strong>{{ page.report.type }}</strong>
+      <small>Business reporting lane tied to this report.</small>
+    </article>
+    <article class="data-chip">
+      <span>Priority / format</span>
+      <strong>{{ formatLabel() }}</strong>
+      <small>Delivery urgency and export format currently assigned.</small>
+    </article>
+    <article class="data-chip">
+      <span>Reporting period</span>
+      <strong>{{ periodLabel() }}</strong>
+      <small>Time window covered by the underlying source record.</small>
+    </article>
+    <article class="data-chip">
+      <span>Tracking mode</span>
+      <strong>{{ starredLabel() }}</strong>
+      <small>Whether this report is part of the starred management focus.</small>
+    </article>
+    <article class="data-chip">
+      <span>Updated</span>
+      <strong>{{ page.report.updatedAt }}</strong>
+      <small>Latest register update stamped on the report record.</small>
+    </article>
+  </section>
+
+  <section class="executive-dossier">
+    @for (item of executiveDossierItems(); track item.label) {
+      <article class="dossier-card" [class]="'dossier-card tone-' + item.tone">
+        <span>{{ item.label }}</span>
+        <strong>{{ item.value }}</strong>
+        <small>{{ item.note }}</small>
+      </article>
+    }
+  </section>
+
+  <nav class="section-map" aria-label="Page sections">
+    @for (link of sectionLinks; track link.id) {
+      <a class="section-map__link" [href]="'#' + link.id">{{ link.label }}</a>
+    }
+  </nav>
+
+  <section class="record-overview-grid">
+    <article class="panel" id="detail-record">
+      <div class="panel-head">
+        <div>
+          <span class="eyebrow eyebrow--muted">Report profile</span>
+          <h2>Core record context at a glance</h2>
+          <p>Quick profile of this report before drilling into metrics, actions, or charts.</p>
+        </div>
+      </div>
+
+      <div class="profile-facts">
+        <div class="profile-fact">
+          <span>Type</span>
+          <strong>{{ page.report.type }}</strong>
+          <small>Business lane this page belongs to.</small>
+        </div>
+        <div class="profile-fact">
+          <span>Status</span>
+          <strong>{{ page.report.status }}</strong>
+          <small>Current execution state in the reporting register.</small>
+        </div>
+        <div class="profile-fact">
+          <span>Rows</span>
+          <strong>{{ page.report.rows | number }}</strong>
+          <small>Underlying data volume currently in scope.</small>
+        </div>
+        <div class="profile-fact">
+          <span>Value</span>
+          <strong>{{ page.report.value | currency: 'USD' : 'symbol' : '1.0-0' }}</strong>
+          <small>Commercial value monitored by this page.</small>
+        </div>
+        <div class="profile-fact">
+          <span>Confidence</span>
+          <strong>{{ confidenceLabel() }}</strong>
+          <small>Reliability level of the current readout.</small>
+        </div>
+        <div class="profile-fact">
+          <span>Variance</span>
+          <strong [class.negative]="page.report.variance < 0">{{ varianceLabel() }}</strong>
+          <small>Current movement versus baseline or target.</small>
+        </div>
+      </div>
+
+      <div class="tag-board">
+        @for (tag of reportTags(); track tag) {
+          <span class="tag-chip">{{ tag }}</span>
+        }
+      </div>
+    </article>
+
+    <article class="panel">
+      <div class="panel-head">
+        <div>
+          <span class="eyebrow eyebrow--muted">Lifecycle</span>
+          <h2>How the report is moving through time</h2>
+          <p>Creation, coverage window, latest run, and the next dated checkpoint.</p>
+        </div>
+      </div>
+
+      <div class="lifecycle-list">
+        @for (item of lifecycleItems(); track item.label) {
+          <div class="lifecycle-item">
+            <div>
+              <span>{{ item.label }}</span>
+              <strong>{{ item.value }}</strong>
+            </div>
+            <small>{{ item.note }}</small>
+          </div>
+        }
+      </div>
+    </article>
+  </section>
+
+  <section class="detail-layout">
+    <div class="detail-main">
+      <article class="panel" id="detail-summary">
+        <div class="panel-head">
+          <div>
+            <span class="eyebrow eyebrow--muted">Decision summary</span>
+            <h2>What the page is saying now</h2>
+            <p>Use this before looking at charts or assigning additional actions.</p>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table class="data-table">
+            <tbody>
+              <tr>
+                <th>Main risk</th>
+                <td>{{ primaryRisk().label }}</td>
+                <td>{{ primaryRisk().note }}</td>
+              </tr>
+              <tr>
+                <th>Best recovery lane</th>
+                <td>{{ primaryOpportunity().label }}</td>
+                <td>{{ primaryOpportunity().note }}</td>
+              </tr>
+              <tr>
+                <th>Immediate action</th>
+                <td>{{ nextActionItem().title }}</td>
+                <td>{{ nextActionItem().owner }} / {{ nextActionItem().due }}</td>
+              </tr>
+              <tr>
+                <th>Commercial variance</th>
+                <td [class.negative]="page.report.variance < 0">{{ varianceLabel() }}</td>
+                <td>Confidence {{ confidenceLabel() }} / {{ page.report.rows | number }} rows</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </article>
+
+      <article class="panel">
+        <div class="panel-head">
+          <div>
+            <span class="eyebrow eyebrow--muted">Full data record</span>
+            <h2>Everything stored for this report</h2>
+            <p>Full record-level data before filtering down to decisions or charts.</p>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table class="data-table">
+            <tbody>
+              <tr>
+                <th>Register ID</th>
+                <td>{{ page.report.id }}</td>
+                <td>{{ page.report.summary }}</td>
+              </tr>
+              <tr>
+                <th>Classification</th>
+                <td>{{ page.report.type }} / {{ page.report.department }}</td>
+                <td>Status {{ page.report.status }} / Priority {{ page.report.priority }}</td>
+              </tr>
+              <tr>
+                <th>Ownership</th>
+                <td>{{ page.report.owner }}</td>
+                <td>Created {{ page.report.createdAt }} / Updated {{ page.report.updatedAt }}</td>
+              </tr>
+              <tr>
+                <th>Period</th>
+                <td>{{ periodLabel() }}</td>
+                <td>Next run {{ page.report.nextRun || 'Not scheduled' }}</td>
+              </tr>
+              <tr>
+                <th>Volume</th>
+                <td>{{ page.report.rows | number }} rows</td>
+                <td>{{ page.report.value | currency: 'USD' : 'symbol' : '1.0-0' }}</td>
+              </tr>
+              <tr>
+                <th>Quality</th>
+                <td>Health {{ page.report.health }}% / Confidence {{ confidenceLabel() }}</td>
+                <td [class.negative]="page.report.variance < 0">Variance {{ varianceLabel() }}</td>
+              </tr>
+              <tr>
+                <th>Register flags</th>
+                <td>{{ page.report.format }} / {{ starredLabel() }}</td>
+                <td>{{ page.report.tags.join(', ') || 'No tags' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </article>
+
+      <article class="panel" id="detail-metrics">
+        <div class="panel-head">
+          <div>
+            <span class="eyebrow eyebrow--muted">Metric ledger</span>
+            <h2>All KPI readings in one table</h2>
+            <p>Full metric list so management can scan the page without reading every card.</p>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Metric</th>
+                <th>Value</th>
+                <th>Tone</th>
+                <th>Why it matters</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (metric of page.metrics; track metric.label) {
+                <tr>
+                  <td>{{ metric.label }}</td>
+                  <td>{{ metric.value }}</td>
+                  <td>
+                    <span class="status-pill" [class]="'status-pill ' + toneClass(metric.tone)">
+                      {{ metric.tone }}
+                    </span>
+                  </td>
+                  <td>{{ metric.note }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </article>
+
+      <article class="panel" id="detail-actions">
+        <div class="panel-head">
+          <div>
+            <span class="eyebrow eyebrow--muted">Action register</span>
+            <h2>Who does what next</h2>
+            <p>Compact log of open actions for the current page.</p>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Action</th>
+                <th>Owner</th>
+                <th>Due</th>
+                <th>Status</th>
+                <th>Why it matters</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (item of sortedActionItems(); track item.title) {
+                <tr>
+                  <td>{{ item.title }}</td>
+                  <td>{{ item.owner }}</td>
+                  <td>{{ item.due }}</td>
+                  <td>
+                    <span class="status-pill" [class]="'status-pill ' + toneClass(item.tone)">
+                      {{ item.status }}
+                    </span>
+                  </td>
+                  <td>{{ item.note }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </article>
+
+      <article class="panel">
+        <div class="panel-head">
+          <div>
+            <span class="eyebrow eyebrow--muted">Chart inventory</span>
+            <h2>What visual evidence exists on this page</h2>
+            <p>Inventory of all chart views before you scroll through the full visual section.</p>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Chart</th>
+                <th>Type</th>
+                <th>Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (chart of chartInventory(); track chart.title + chart.kind) {
+                <tr>
+                  <td>{{ chart.title }}</td>
+                  <td>{{ chart.kind }}</td>
+                  <td>{{ chart.caption }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </article>
+
+      <article class="panel" id="detail-charts">
+        <div class="panel-head">
+          <div>
+            <span class="eyebrow eyebrow--muted">Charts</span>
+            <h2>Evidence behind the decision</h2>
+            <p>Charts stay lower in the page and support the action summary above.</p>
+          </div>
+        </div>
+        <engineers-salary-reference-reporting-chart-deck [charts]="page.charts"></engineers-salary-reference-reporting-chart-deck>
+      </article>
+    </div>
+
+    <aside class="detail-side">
+      <article class="panel">
+        <div class="panel-head">
+          <div>
+            <span class="eyebrow eyebrow--muted">Command board</span>
+            <h2>Who owns the next move</h2>
+          </div>
+        </div>
+
+        <div class="command-board">
+          @for (item of commandBoardItems(); track item.label) {
+            <div class="command-board__item">
+              <span>{{ item.label }}</span>
+              <strong>{{ item.value }}</strong>
+              <small>{{ item.note }}</small>
+            </div>
+          }
+        </div>
+      </article>
+
+      <article class="panel">
+        <div class="panel-head">
+          <div>
+            <span class="eyebrow eyebrow--muted">Signal board</span>
+            <h2>Fast operational read</h2>
+          </div>
+        </div>
+
+        <div class="signal-board">
+          @for (item of signalCards(); track item.label) {
+            <div class="signal-board__item" [class]="'signal-board__item tone-' + item.tone">
+              <span>{{ item.label }}</span>
+              <strong>{{ item.value }}</strong>
+              <small>{{ item.note }}</small>
+            </div>
+          }
+        </div>
+      </article>
+
+      <article class="panel">
+        <div class="panel-head">
+          <div>
+            <span class="eyebrow eyebrow--muted">Operational reading</span>
+            <h2>Signals to read before acting</h2>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table class="data-table data-table--compact">
+            <thead>
+              <tr>
+                <th>Signal</th>
+                <th>Current reading</th>
+                <th>Why it matters</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (item of page.insights; track item.label) {
+                <tr>
+                  <td>{{ item.label }}</td>
+                  <td>
+                    <span class="status-pill" [class]="'status-pill ' + toneClass(item.tone)">
+                      {{ item.value }}
+                    </span>
+                  </td>
+                  <td>{{ item.note }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </article>
+
+      <article class="panel">
+        <div class="panel-head">
+          <div>
+            <span class="eyebrow eyebrow--muted">Management snapshot</span>
+            <h2>Page control points</h2>
+          </div>
+        </div>
+
+        <div class="snapshot-list">
+          <div class="snapshot-item">
+            <span>Action load</span>
+            <strong>{{ page.actionItems.length }}</strong>
+            <small>{{ criticalActionCount() }} critical actions</small>
+          </div>
+          <div class="snapshot-item">
+            <span>Decision gate</span>
+            <strong>{{ nextDecisionDue() }}</strong>
+            <small>Nearest due action on this page</small>
+          </div>
+          <div class="snapshot-item">
+            <span>Confidence</span>
+            <strong>{{ confidenceLabel() }}</strong>
+            <small>Current reliability of the reporting readout</small>
+          </div>
+          <div class="snapshot-item">
+            <span>Signals mix</span>
+            <strong
+              >{{ warningSignalCount() }} warning / {{ positiveSignalCount() }} positive</strong
+            >
+            <small>{{ page.report.rows | number }} rows in scope</small>
+          </div>
+        </div>
+      </article>
+
+      @if (page.filterGroups.length) {
+        <article class="panel">
+          <div class="panel-head">
+            <div>
+              <span class="eyebrow eyebrow--muted">Applied lens</span>
+              <h2>Exact filter context on this page</h2>
+            </div>
+          </div>
+
+          <div class="lens-list">
+            @for (item of appliedLensItems(); track item.label) {
+              <div class="lens-item">
+                <div>
+                  <span>{{ item.label }}</span>
+                  <strong>{{ item.value }}</strong>
+                </div>
+                <small>{{ item.note }}</small>
+              </div>
+            }
+          </div>
+        </article>
+      }
+
+      <article class="panel">
+        <div class="panel-head">
+          <div>
+            <span class="eyebrow eyebrow--muted">Data coverage</span>
+            <h2>How much information this page carries</h2>
+          </div>
+        </div>
+
+        <div class="coverage-list">
+          @for (item of dataCoverageItems(); track item.label) {
+            <div class="coverage-item">
+              <span>{{ item.label }}</span>
+              <strong>{{ item.value }}</strong>
+              <small>{{ item.note }}</small>
+            </div>
+          }
+        </div>
+      </article>
+
+      <article class="panel">
+        <div class="panel-head">
+          <div>
+            <span class="eyebrow eyebrow--muted">Immediate actions</span>
+            <h2>Next actions to track</h2>
+          </div>
+        </div>
+
+        <div class="action-preview-list">
+          @for (item of actionPreviewItems(); track item.title) {
+            <div class="action-preview-item">
+              <div>
+                <strong>{{ item.title }}</strong>
+                <small>{{ item.owner }} / {{ item.due }}</small>
+              </div>
+              <span class="status-pill" [class]="'status-pill ' + toneClass(item.tone)">
+                {{ item.status }}
+              </span>
+            </div>
+          }
+        </div>
+      </article>
+    </aside>
+  </section>
+</div>

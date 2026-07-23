@@ -1,0 +1,87 @@
+name: Deploy Cloudflare production
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "worker/**"
+      - "frontend/**"
+      - ".github/workflows/deploy-cloudflare.yml"
+
+concurrency:
+  group: cloudflare-production
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  validate-worker:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: worker
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: worker/package-lock.json
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+
+  deploy-worker:
+    if: github.event_name == 'workflow_dispatch'
+    needs: validate-worker
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: worker
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: worker/package-lock.json
+      - run: npm ci
+      - run: npx wrangler deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+
+  deploy-frontend:
+    needs: deploy-worker
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+      - run: npm test -- --watch=false
+      - run: npm run build:cloudflare
+        env:
+          API_BASE_URL: ${{ vars.PRODUCTION_API_BASE_URL }}
+      - run: npx wrangler pages deploy dist/engineers-salary-reference --project-name engineers-salary-reference --branch main --commit-dirty=true
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+
+  verify:
+    needs: deploy-frontend
+    runs-on: ubuntu-latest
+    steps:
+      - run: curl --fail --retry 5 --retry-delay 5 "${API_BASE_URL%/api}/health/live"
+        env:
+          API_BASE_URL: ${{ vars.PRODUCTION_API_BASE_URL }}
+      - run: curl --fail --retry 5 --retry-delay 5 https://engineers-salary-reference.pages.dev/assets/runtime-config.json

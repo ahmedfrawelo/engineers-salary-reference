@@ -1,0 +1,327 @@
+@if (!charts.length) {
+  <div class="chart-empty">
+    <i appIcon="bar-chart" aria-hidden="true"></i>
+    <h3>No charts configured</h3>
+    <p>Add chart cards to render this reporting deck.</p>
+  </div>
+} @else {
+<div class="chart-grid">
+  @for (chart of charts; track chart.exportName) {
+    <article class="chart-card" [class.chart-card--wide]="chart.layout === 'wide'">
+      <header class="chart-card__head">
+        <div>
+          <h3>{{ chart.title }}</h3>
+          <p>{{ chart.caption }}</p>
+        </div>
+        <span class="chart-kind">{{ chart.kind }}</span>
+      </header>
+
+      <div class="chart-card__body">
+        @switch (chart.kind) {
+          @case ('areaRange') {
+            <engineers-salary-reference-area-range-chart
+              [height]="chart.height || 240"
+              [data]="chart.areaRangeData || []"
+            ></engineers-salary-reference-area-range-chart>
+          }
+          @case ('bar') {
+            <engineers-salary-reference-bar-chart
+              [height]="chart.height || 240"
+              [data]="chart.barData || []"
+            ></engineers-salary-reference-bar-chart>
+          }
+          @case ('boxplot') {
+            <engineers-salary-reference-boxplot-chart
+              [height]="chart.height || 240"
+              [data]="chart.boxplotData || []"
+            ></engineers-salary-reference-boxplot-chart>
+          }
+          @case ('bump') {
+            <engineers-salary-reference-bump-chart
+              [height]="chart.height || 240"
+              [labels]="chart.labels || []"
+              [series]="chart.lineSeries || []"
+            ></engineers-salary-reference-bump-chart>
+          }
+          @case ('calendarHeatmap') {
+            <engineers-salary-reference-calendar-heatmap
+              [height]="chart.height || 240"
+              [data]="chart.calendarHeatmapData || []"
+            ></engineers-salary-reference-calendar-heatmap>
+          }
+          @case ('candlestick') {
+            <engineers-salary-reference-candlestick-chart
+              [height]="chart.height || 240"
+              [data]="chart.candlestickData || []"
+            ></engineers-salary-reference-candlestick-chart>
+          }
+          @case ('chord') {
+            <engineers-salary-reference-chord-chart
+              [height]="chart.height || 260"
+              [nodes]="chart.chordNodes || []"
+              [links]="chart.chordLinks || []"
+            ></engineers-salary-reference-chord-chart>
+          }
+          @case ('dumbbell') {
+            <engineers-salary-reference-dumbbell-chart
+              [height]="chart.height || 240"
+              [data]="chart.dumbbellData || []"
+            ></engineers-salary-reference-dumbbell-chart>
+          }
+          @case ('line') {
+            <engineers-salary-reference-line-chart
+              [height]="chart.height || 240"
+              [labels]="chart.labels || []"
+              [series]="chart.lineSeries || []"
+              [showLegend]="true"
+            ></engineers-salary-reference-line-chart>
+          }
+          @case ('gauge') {
+            <engineers-salary-reference-gauge-chart
+              [height]="chart.height || 220"
+              [data]="chart.gaugeData || { value: 0 }"
+            ></engineers-salary-reference-gauge-chart>
+          }
+          @case ('gantt') {
+            <engineers-salary-reference-gantt-chart
+              [height]="chart.height || 260"
+              [data]="chart.ganttData || []"
+            ></engineers-salary-reference-gantt-chart>
+          }
+          @case ('histogram') {
+            <engineers-salary-reference-histogram-chart
+              [height]="chart.height || 220"
+              [values]="chart.histogramValues || []"
+            ></engineers-salary-reference-histogram-chart>
+          }
+          @case ('lollipop') {
+            <engineers-salary-reference-lollipop-chart
+              [height]="chart.height || 240"
+              [data]="chart.lollipopData || []"
+            ></engineers-salary-reference-lollipop-chart>
+          }
+          @case ('mekko') {
+            <engineers-salary-reference-mekko-chart
+              [height]="chart.height || 260"
+              [data]="chart.mekkoData || []"
+            ></engineers-salary-reference-mekko-chart>
+          }
+          @case ('network') {
+            <engineers-salary-reference-network-chart
+              [height]="chart.height || 260"
+              [nodes]="chart.networkNodes || []"
+              [links]="chart.networkLinks || []"
+            ></engineers-salary-reference-network-chart>
+          }
+          @case ('ohlc') {
+            <engineers-salary-reference-ohlc-chart
+              [height]="chart.height || 240"
+              [data]="chart.ohlcData || []"
+            ></engineers-salary-reference-ohlc-chart>
+          }
+          @case ('parallelCoordinates') {
+            <engineers-salary-reference-parallel-coordinates
+              [height]="chart.height || 260"
+              [axes]="chart.parallelAxes || []"
+              [series]="chart.parallelSeries || []"
+            ></engineers-salary-reference-parallel-coordinates>
+          }
+          @case ('pareto') {
+            <engineers-salary-reference-pareto-chart
+              [height]="chart.height || 240"
+              [data]="chart.paretoData || []"
+            ></engineers-salary-reference-pareto-chart>
+          }
+          @case ('stackedBar') {
+            <engineers-salary-reference-stacked-bar-chart
+              [height]="chart.height || 240"
+              [labels]="chart.labels || []"
+              [series]="chart.stackedSeries || []"
+            ></engineers-salary-reference-stacked-bar-chart>
+          }
+          @case ('stepLine') {
+            <engineers-salary-reference-step-line-chart
+              [height]="chart.height || 240"
+              [labels]="chart.labels || []"
+              [series]="chart.lineSeries || []"
+            ></engineers-salary-reference-step-line-chart>
+          }
+          @case ('stream') {
+            <engineers-salary-reference-stream-chart
+              [height]="chart.height || 260"
+              [labels]="chart.labels || []"
+              [series]="chart.stackedSeries || []"
+            ></engineers-salary-reference-stream-chart>
+          }
+          @case ('radar') {
+            <engineers-salary-reference-radar-chart
+              [height]="chart.height || 260"
+              [axes]="chart.radarAxes || []"
+              [series]="chart.radarSeries || []"
+              [max]="chart.radarMax || 0"
+              [showLegend]="true"
+            ></engineers-salary-reference-radar-chart>
+          }
+          @case ('radialBar') {
+            <engineers-salary-reference-radial-bar-chart
+              [height]="chart.height || 240"
+              [data]="chart.radialBarData || []"
+            ></engineers-salary-reference-radial-bar-chart>
+          }
+          @case ('rangeBar') {
+            <engineers-salary-reference-range-bar-chart
+              [height]="chart.height || 240"
+              [data]="chart.rangeBarData || []"
+            ></engineers-salary-reference-range-bar-chart>
+          }
+          @case ('ridgeline') {
+            <engineers-salary-reference-ridgeline-chart
+              [height]="chart.height || 260"
+              [data]="chart.ridgelineData || []"
+            ></engineers-salary-reference-ridgeline-chart>
+          }
+          @case ('sankey') {
+            <engineers-salary-reference-sankey-chart
+              [height]="chart.height || 260"
+              [nodes]="chart.sankeyNodes || []"
+              [links]="chart.sankeyLinks || []"
+            ></engineers-salary-reference-sankey-chart>
+          }
+          @case ('scatter') {
+            <engineers-salary-reference-scatter-chart
+              [height]="chart.height || 250"
+              [data]="chart.scatterData || []"
+            ></engineers-salary-reference-scatter-chart>
+          }
+          @case ('slope') {
+            <engineers-salary-reference-slope-chart
+              [height]="chart.height || 240"
+              [data]="chart.slopeData || []"
+            ></engineers-salary-reference-slope-chart>
+          }
+          @case ('sparkline') {
+            <engineers-salary-reference-sparkline-chart
+              [height]="chart.height || 160"
+              [values]="chart.sparklineValues || []"
+            ></engineers-salary-reference-sparkline-chart>
+          }
+          @case ('sunburst') {
+            <engineers-salary-reference-sunburst-chart
+              [height]="chart.height || 240"
+              [data]="chart.sunburstData || []"
+            ></engineers-salary-reference-sunburst-chart>
+          }
+          @case ('ternary') {
+            <engineers-salary-reference-ternary-chart
+              [height]="chart.height || 240"
+              [data]="chart.ternaryData || []"
+              [labels]="chart.ternaryLabels || ['A', 'B', 'C']"
+            ></engineers-salary-reference-ternary-chart>
+          }
+          @case ('tilemap') {
+            <engineers-salary-reference-tilemap-chart
+              [height]="chart.height || 240"
+              [data]="chart.tilemapData || []"
+            ></engineers-salary-reference-tilemap-chart>
+          }
+          @case ('timeline') {
+            <engineers-salary-reference-timeline-chart
+              [height]="chart.height || 260"
+              [lanes]="chart.timelineLanes || []"
+            ></engineers-salary-reference-timeline-chart>
+          }
+          @case ('tree') {
+            <engineers-salary-reference-tree-chart
+              [height]="chart.height || 260"
+              [root]="chart.treeRoot || null"
+            ></engineers-salary-reference-tree-chart>
+          }
+          @case ('heatmap') {
+            <engineers-salary-reference-heatmap-chart
+              [height]="chart.height || 250"
+              [data]="chart.heatmapData || []"
+            ></engineers-salary-reference-heatmap-chart>
+          }
+          @case ('bullet') {
+            <engineers-salary-reference-bullet-chart
+              [height]="chart.height || 240"
+              [data]="chart.bulletData || []"
+            ></engineers-salary-reference-bullet-chart>
+          }
+          @case ('pie') {
+            <engineers-salary-reference-pie-chart
+              [height]="chart.height || 260"
+              [data]="chart.pieData || []"
+              [innerRadius]="0.56"
+              [showLegend]="true"
+              [showLabels]="false"
+            ></engineers-salary-reference-pie-chart>
+          }
+          @case ('polarArea') {
+            <engineers-salary-reference-polar-area-chart
+              [height]="chart.height || 250"
+              [data]="chart.polarAreaData || []"
+            ></engineers-salary-reference-polar-area-chart>
+          }
+          @case ('pyramid') {
+            <engineers-salary-reference-pyramid-chart
+              [height]="chart.height || 250"
+              [data]="chart.pyramidData || []"
+            ></engineers-salary-reference-pyramid-chart>
+          }
+          @case ('treemap') {
+            <engineers-salary-reference-treemap-chart
+              [height]="chart.height || 260"
+              [data]="chart.treemapData || []"
+            ></engineers-salary-reference-treemap-chart>
+          }
+          @case ('upset') {
+            <engineers-salary-reference-upset-chart
+              [height]="chart.height || 250"
+              [sets]="chart.upsetSets || []"
+              [data]="chart.upsetData || []"
+            ></engineers-salary-reference-upset-chart>
+          }
+          @case ('venn') {
+            <engineers-salary-reference-venn-chart
+              [height]="chart.height || 250"
+              [sets]="chart.vennSets || []"
+              [intersections]="chart.vennIntersections || []"
+            ></engineers-salary-reference-venn-chart>
+          }
+          @case ('violin') {
+            <engineers-salary-reference-violin-chart
+              [height]="chart.height || 250"
+              [data]="chart.violinData || []"
+            ></engineers-salary-reference-violin-chart>
+          }
+          @case ('waffle') {
+            <engineers-salary-reference-waffle-chart
+              [height]="chart.height || 250"
+              [data]="chart.waffleData || []"
+            ></engineers-salary-reference-waffle-chart>
+          }
+          @case ('funnel') {
+            <engineers-salary-reference-funnel-chart
+              [height]="chart.height || 260"
+              [data]="chart.funnelData || []"
+            ></engineers-salary-reference-funnel-chart>
+          }
+          @case ('waterfall') {
+            <engineers-salary-reference-waterfall-chart
+              [height]="chart.height || 260"
+              [data]="chart.waterfallData || []"
+            ></engineers-salary-reference-waterfall-chart>
+          }
+          @case ('wordCloud') {
+            <engineers-salary-reference-word-cloud
+              [height]="chart.height || 250"
+              [data]="chart.wordCloudData || []"
+            ></engineers-salary-reference-word-cloud>
+          }
+        }
+      </div>
+    </article>
+  }
+</div>
+}

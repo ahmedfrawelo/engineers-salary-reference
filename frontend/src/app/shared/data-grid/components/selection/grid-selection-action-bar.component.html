@@ -1,0 +1,588 @@
+@if (selectedCount > 0 || undoAvailable) {
+  <div class="grid-selection-action-bar" role="toolbar" aria-label="Selected rows actions">
+    <div class="grid-selection-action-bar__summary" role="group" aria-label="Selection summary">
+      @if (hasSelection) {
+        <span class="grid-selection-action-bar__chip">
+          <span class="grid-selection-action-bar__chip-count">{{ selectedCount }}</span>
+          <span class="grid-selection-action-bar__chip-label">
+            {{ selectedCount === 1 ? 'row selected' : 'rows selected' }}
+          </span>
+        </span>
+        <button
+          type="button"
+          class="grid-selection-action-bar__dismiss"
+          aria-label="Clear selection"
+          title="Clear selection"
+          (click)="triggerAction(clearRequested, 'Selection cleared')"
+        >
+          <i appIcon="x-lg" aria-hidden="true"></i>
+        </button>
+      } @else {
+        <span class="grid-selection-action-bar__chip grid-selection-action-bar__chip--history">
+          <span class="grid-selection-action-bar__chip-count">
+            <i appIcon="arrow-repeat" aria-hidden="true"></i>
+          </span>
+          <span class="grid-selection-action-bar__chip-label">Last selection action</span>
+        </span>
+        <button
+          type="button"
+          class="grid-selection-action-bar__dismiss"
+          aria-label="Dismiss undo"
+          title="Dismiss undo"
+          (click)="triggerAction(clearUndoRequested)"
+        >
+          <i appIcon="x-lg" aria-hidden="true"></i>
+        </button>
+        <span class="grid-selection-action-bar__summary-stat">
+          <i appIcon="arrow-repeat" aria-hidden="true"></i>
+          <span>{{ undoSummaryLabel }}</span>
+        </span>
+      }
+
+      @if (statusMessage) {
+        <span class="grid-selection-action-bar__status" aria-live="polite">
+          <i appIcon="check2" aria-hidden="true"></i>
+          <span>{{ statusMessage }}</span>
+        </span>
+      }
+
+      @if (undoAvailable) {
+        <button
+          type="button"
+          class="grid-selection-action-bar__action grid-selection-action-bar__action--soft"
+          (click)="triggerAction(undoRequested, 'Selection restored')"
+        >
+          <i appIcon="arrow-repeat" aria-hidden="true"></i>
+          <span>Undo</span>
+        </button>
+      }
+    </div>
+
+    <div class="grid-selection-action-bar__actions" role="group" aria-label="Bulk actions">
+      @if (hasSelection) {
+        <div
+          class="grid-selection-action-bar__action-group grid-selection-action-bar__action-group--utility"
+          role="group"
+          aria-label="Selection tools"
+        >
+          @if (showSelectVisibleAction) {
+            <button
+              type="button"
+              class="grid-selection-action-bar__action grid-selection-action-bar__action--soft"
+              (click)="triggerAction(selectVisibleRequested, 'Selection updated')"
+            >
+              <i appIcon="eye" aria-hidden="true"></i>
+              <span>Select Visible</span>
+            </button>
+          }
+          <div class="grid-selection-action-bar__menu">
+            <button
+              type="button"
+              class="grid-selection-action-bar__action grid-selection-action-bar__action--soft"
+              [class.grid-selection-action-bar__action--active]="copyMenuOpen"
+              aria-haspopup="menu"
+              [attr.aria-expanded]="copyMenuOpen"
+              (click)="toggleCopyMenu($event)"
+            >
+              <i appIcon="files" aria-hidden="true"></i>
+              <span>Copy</span>
+              <i appIcon="chevron-up" aria-hidden="true"></i>
+            </button>
+
+            @if (copyMenuOpen) {
+              <div
+                class="grid-selection-action-bar__menu-panel grid-selection-action-bar__menu-panel--compact"
+                role="menu"
+                aria-label="Copy selected rows"
+                (click)="$event.stopPropagation()"
+              >
+                <div class="grid-selection-action-bar__menu-header">
+                  <span class="grid-selection-action-bar__menu-section-title">Copy</span>
+                  <span class="grid-selection-action-bar__menu-context">
+                    {{ selectedCount }} selected
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  class="grid-selection-action-bar__menu-item"
+                  role="menuitem"
+                  (click)="triggerMenuAction(copyRequested, $event, 'Copied')"
+                >
+                  <i appIcon="files" aria-hidden="true"></i>
+                  <span class="grid-selection-action-bar__menu-item-copy">
+                    <span class="grid-selection-action-bar__menu-item-label">Copy rows</span>
+                    <span class="grid-selection-action-bar__menu-item-detail">
+                      Clipboard-friendly table text
+                    </span>
+                  </span>
+                  <span class="grid-selection-action-bar__menu-item-badge">TXT</span>
+                </button>
+                <button
+                  type="button"
+                  class="grid-selection-action-bar__menu-item"
+                  role="menuitem"
+                  (click)="triggerMenuAction(copyJsonRequested, $event, 'JSON copied')"
+                >
+                  <span class="grid-selection-action-bar__menu-item-icon">&#123;&#125;</span>
+                  <span class="grid-selection-action-bar__menu-item-copy">
+                    <span class="grid-selection-action-bar__menu-item-label">Copy as JSON</span>
+                    <span class="grid-selection-action-bar__menu-item-detail">
+                      Structured data for tools
+                    </span>
+                  </span>
+                  <span class="grid-selection-action-bar__menu-item-badge">JSON</span>
+                </button>
+                <button
+                  type="button"
+                  class="grid-selection-action-bar__menu-item"
+                  role="menuitem"
+                  (click)="triggerMenuAction(copyInsightsRequested, $event, 'Insights copied')"
+                >
+                  <i appIcon="stars" aria-hidden="true"></i>
+                  <span class="grid-selection-action-bar__menu-item-copy">
+                    <span class="grid-selection-action-bar__menu-item-label">Copy insights</span>
+                    <span class="grid-selection-action-bar__menu-item-detail">
+                      Summary of selected rows
+                    </span>
+                  </span>
+                  <span class="grid-selection-action-bar__menu-item-badge">AI</span>
+                </button>
+              </div>
+            }
+          </div>
+        </div>
+
+        @if (hasExportPanelActions) {
+          <div class="grid-selection-action-bar__menu">
+            <button
+              type="button"
+              class="grid-selection-action-bar__action grid-selection-action-bar__action--soft"
+              [class.grid-selection-action-bar__action--active]="exportMenuOpen"
+              aria-haspopup="menu"
+              [attr.aria-expanded]="exportMenuOpen"
+              (click)="toggleExportMenu($event)"
+            >
+              <i appIcon="file-earmark-text" aria-hidden="true"></i>
+              <span>Export</span>
+              <i appIcon="chevron-up" aria-hidden="true"></i>
+            </button>
+
+            @if (exportMenuOpen) {
+              <div
+                class="grid-selection-action-bar__menu-panel grid-selection-action-bar__menu-panel--compact"
+                role="menu"
+                aria-label="Export selected rows"
+                (click)="$event.stopPropagation()"
+              >
+                <div class="grid-selection-action-bar__menu-header">
+                  <span class="grid-selection-action-bar__menu-section-title">Export</span>
+                  <span class="grid-selection-action-bar__menu-context">
+                    {{ selectedCount }} selected
+                  </span>
+                </div>
+                @if (showExportActions) {
+                  <button
+                    type="button"
+                    class="grid-selection-action-bar__menu-item"
+                    role="menuitem"
+                    (click)="
+                      triggerMenuAction(exportExcelRequested, $event, 'Excel export started')
+                    "
+                  >
+                    <i appIcon="file-earmark-spreadsheet" aria-hidden="true"></i>
+                    <span class="grid-selection-action-bar__menu-item-copy">
+                      <span class="grid-selection-action-bar__menu-item-label">Excel workbook</span>
+                      <span class="grid-selection-action-bar__menu-item-detail">
+                        Best for handoff and review
+                      </span>
+                    </span>
+                    <span class="grid-selection-action-bar__menu-item-badge">XLSX</span>
+                  </button>
+                  <button
+                    type="button"
+                    class="grid-selection-action-bar__menu-item"
+                    role="menuitem"
+                    (click)="triggerMenuAction(exportCsvRequested, $event, 'CSV export started')"
+                  >
+                    <i appIcon="filetype-csv" aria-hidden="true"></i>
+                    <span class="grid-selection-action-bar__menu-item-copy">
+                      <span class="grid-selection-action-bar__menu-item-label">CSV file</span>
+                      <span class="grid-selection-action-bar__menu-item-detail">
+                        Lightweight raw data
+                      </span>
+                    </span>
+                    <span class="grid-selection-action-bar__menu-item-badge">CSV</span>
+                  </button>
+                  <button
+                    type="button"
+                    class="grid-selection-action-bar__menu-item"
+                    role="menuitem"
+                    (click)="triggerMenuAction(exportPdfRequested, $event, 'PDF export started')"
+                  >
+                    <i appIcon="file-earmark-pdf" aria-hidden="true"></i>
+                    <span class="grid-selection-action-bar__menu-item-copy">
+                      <span class="grid-selection-action-bar__menu-item-label">PDF document</span>
+                      <span class="grid-selection-action-bar__menu-item-detail">
+                        Fixed document snapshot
+                      </span>
+                    </span>
+                    <span class="grid-selection-action-bar__menu-item-badge">PDF</span>
+                  </button>
+                }
+                @if (showExportVisibleAction) {
+                  <div class="grid-selection-action-bar__menu-divider" aria-hidden="true"></div>
+                  <button
+                    type="button"
+                    class="grid-selection-action-bar__menu-item"
+                    role="menuitem"
+                    (click)="
+                      triggerMenuAction(exportVisibleRequested, $event, 'Visible export started')
+                    "
+                  >
+                    <i appIcon="file-earmark-text" aria-hidden="true"></i>
+                    <span class="grid-selection-action-bar__menu-item-copy">
+                      <span class="grid-selection-action-bar__menu-item-label"
+                        >Export visible rows</span
+                      >
+                      <span class="grid-selection-action-bar__menu-item-detail">
+                        Current filtered table view
+                      </span>
+                    </span>
+                    <span class="grid-selection-action-bar__menu-item-badge">VIEW</span>
+                  </button>
+                }
+              </div>
+            }
+          </div>
+        }
+
+        @if (showEditAction || showDeleteAction || showMoreAction) {
+          <div
+            class="grid-selection-action-bar__action-group grid-selection-action-bar__action-group--emphasis"
+            role="group"
+            aria-label="Selected rows management"
+          >
+            @if (showEditAction) {
+              <button
+                type="button"
+                class="grid-selection-action-bar__action grid-selection-action-bar__action--prominent"
+                (click)="triggerAction(editRequested)"
+              >
+                <i appIcon="pencil" aria-hidden="true"></i>
+                <span>{{ editActionLabel }}</span>
+              </button>
+            }
+
+            @if (showDeleteAction) {
+              <button
+                type="button"
+                class="grid-selection-action-bar__action grid-selection-action-bar__action--danger"
+                (click)="triggerAction(deleteRequested)"
+              >
+                <i appIcon="trash" aria-hidden="true"></i>
+                <span>{{ deleteActionLabel }}</span>
+              </button>
+            }
+
+            @if (showMoreAction) {
+              <div class="grid-selection-action-bar__menu">
+                <button
+                  type="button"
+                  class="grid-selection-action-bar__action grid-selection-action-bar__action--prominent"
+                  [class.grid-selection-action-bar__action--active]="moreMenuOpen"
+                  aria-haspopup="menu"
+                  [attr.aria-expanded]="moreMenuOpen"
+                  (click)="toggleMoreMenu($event)"
+                >
+                  <i appIcon="three-dots" aria-hidden="true"></i>
+                  <span>More</span>
+                </button>
+
+                @if (moreMenuOpen) {
+                  <div
+                    class="grid-selection-action-bar__menu-panel"
+                    role="menu"
+                    aria-label="More selected rows actions"
+                    (click)="$event.stopPropagation()"
+                  >
+                    <div class="grid-selection-action-bar__menu-section-title">Actions</div>
+
+                    @if (hasBulkEditFields) {
+                      <button
+                        type="button"
+                        class="grid-selection-action-bar__menu-item"
+                        [class.grid-selection-action-bar__menu-item--active]="bulkEditExpanded"
+                        role="menuitem"
+                        (click)="toggleBulkEdit($event)"
+                      >
+                        <i appIcon="magic" aria-hidden="true"></i>
+                        <span>{{ bulkEditActionLabel }}</span>
+                      </button>
+
+                      @if (bulkEditExpanded) {
+                        <div
+                          class="grid-selection-action-bar__menu-form"
+                          (click)="$event.stopPropagation()"
+                        >
+                          <label
+                            class="grid-selection-action-bar__menu-form-label"
+                            for="bulk-edit-field"
+                          >
+                            Column
+                          </label>
+                          <select
+                            id="bulk-edit-field"
+                            class="grid-selection-action-bar__menu-form-control"
+                            [value]="bulkEditField"
+                            (change)="onBulkEditFieldChange($any($event.target).value)"
+                          >
+                            @for (field of bulkEditFields; track field.field) {
+                              <option [value]="field.field">{{ field.label }}</option>
+                            }
+                          </select>
+
+                          <label
+                            class="grid-selection-action-bar__menu-form-label"
+                            for="bulk-edit-value"
+                          >
+                            Value
+                          </label>
+
+                          @if (selectedBulkEditField?.kind === 'select') {
+                            <select
+                              id="bulk-edit-value"
+                              class="grid-selection-action-bar__menu-form-control"
+                              [value]="bulkEditSelectKey"
+                              (change)="onBulkEditSelectChange($any($event.target).value)"
+                            >
+                              @for (
+                                option of selectedBulkEditField?.options ?? [];
+                                track option.key
+                              ) {
+                                <option [value]="option.key">{{ option.label }}</option>
+                              }
+                            </select>
+                          } @else {
+                            <input
+                              id="bulk-edit-value"
+                              class="grid-selection-action-bar__menu-form-control"
+                              [type]="bulkEditInputType"
+                              [value]="bulkEditDraft"
+                              placeholder="Leave empty to clear"
+                              (input)="onBulkEditDraftChange($any($event.target).value)"
+                              (keydown.enter)="submitBulkEdit($event)"
+                            />
+                          }
+
+                          <div class="grid-selection-action-bar__menu-form-hint">
+                            Leave the value empty to clear it for all selected rows.
+                          </div>
+
+                          @if (bulkEditError) {
+                            <div class="grid-selection-action-bar__menu-form-error">
+                              {{ bulkEditError }}
+                            </div>
+                          }
+
+                          <div class="grid-selection-action-bar__menu-form-actions">
+                            <button
+                              type="button"
+                              class="grid-selection-action-bar__menu-form-button grid-selection-action-bar__menu-form-button--primary"
+                              (click)="submitBulkEdit($event)"
+                            >
+                              Apply
+                            </button>
+                            <button
+                              type="button"
+                              class="grid-selection-action-bar__menu-form-button"
+                              (click)="closeBulkEdit($event)"
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        </div>
+                      }
+
+                      <div class="grid-selection-action-bar__menu-divider" aria-hidden="true"></div>
+                    }
+
+                    <button
+                      type="button"
+                      class="grid-selection-action-bar__menu-item"
+                      role="menuitem"
+                      (click)="
+                        triggerMenuAction(selectAllRequested, $event, 'All loaded rows selected')
+                      "
+                    >
+                      <i appIcon="check2-square" aria-hidden="true"></i>
+                      <span>Select All Loaded</span>
+                    </button>
+                    <button
+                      type="button"
+                      class="grid-selection-action-bar__menu-item"
+                      role="menuitem"
+                      (click)="
+                        triggerMenuAction(invertSelectionRequested, $event, 'Selection inverted')
+                      "
+                    >
+                      <span class="grid-selection-action-bar__menu-item-icon">+/-</span>
+                      <span>Invert Selection</span>
+                    </button>
+
+                    <div class="grid-selection-action-bar__menu-divider" aria-hidden="true"></div>
+                    <div class="grid-selection-action-bar__menu-section-title">Intelligence</div>
+
+                    @if (showHeadlineAction) {
+                      <button
+                        type="button"
+                        class="grid-selection-action-bar__menu-item"
+                        [class.grid-selection-action-bar__menu-item--active]="headlinePanelOpen"
+                        role="menuitem"
+                        (click)="
+                          triggerMenuAction(headlineRequested, $event, 'Headline metrics toggled')
+                        "
+                      >
+                        <i appIcon="layout-text-window-reverse" aria-hidden="true"></i>
+                        <span>Headline Metrics</span>
+                      </button>
+                    }
+                    @if (showQualityAction) {
+                      <button
+                        type="button"
+                        class="grid-selection-action-bar__menu-item"
+                        [class.grid-selection-action-bar__menu-item--active]="qualityPanelOpen"
+                        role="menuitem"
+                        (click)="
+                          triggerMenuAction(qualityRequested, $event, 'Quality panel toggled')
+                        "
+                      >
+                        <i appIcon="bar-chart" aria-hidden="true"></i>
+                        <span>Quality Panel</span>
+                      </button>
+                    }
+                    @if (showAuditAction) {
+                      <button
+                        type="button"
+                        class="grid-selection-action-bar__menu-item"
+                        [class.grid-selection-action-bar__menu-item--active]="auditTrailOpen"
+                        role="menuitem"
+                        (click)="triggerMenuAction(auditRequested, $event, 'Audit trail toggled')"
+                      >
+                        <i appIcon="clipboard-data" aria-hidden="true"></i>
+                        <span>Audit Trail</span>
+                      </button>
+                    }
+
+                    <div class="grid-selection-action-bar__menu-divider" aria-hidden="true"></div>
+                    <div class="grid-selection-action-bar__menu-section-title">View</div>
+
+                    <button
+                      type="button"
+                      class="grid-selection-action-bar__menu-item"
+                      [class.grid-selection-action-bar__menu-item--active]="colorScaleEnabled"
+                      role="menuitem"
+                      (click)="
+                        triggerMenuAction(colorScaleRequested, $event, 'Color scale toggled')
+                      "
+                    >
+                      <span class="grid-selection-action-bar__menu-item-icon">CS</span>
+                      <span>Color Scale</span>
+                    </button>
+                    <button
+                      type="button"
+                      class="grid-selection-action-bar__menu-item"
+                      [class.grid-selection-action-bar__menu-item--active]="anomalyAlertsEnabled"
+                      role="menuitem"
+                      (click)="
+                        triggerMenuAction(anomalyAlertsRequested, $event, 'Anomaly alerts toggled')
+                      "
+                    >
+                      <i appIcon="activity" aria-hidden="true"></i>
+                      <span>Anomaly Alerts</span>
+                    </button>
+                    <button
+                      type="button"
+                      class="grid-selection-action-bar__menu-item"
+                      [class.grid-selection-action-bar__menu-item--active]="forecastEnabled"
+                      role="menuitem"
+                      (click)="
+                        triggerMenuAction(forecastRequested, $event, 'Forecast view toggled')
+                      "
+                    >
+                      <span class="grid-selection-action-bar__menu-item-icon">FX</span>
+                      <span>Forecast View</span>
+                    </button>
+                    <button
+                      type="button"
+                      class="grid-selection-action-bar__menu-item"
+                      [class.grid-selection-action-bar__menu-item--active]="highContrastEnabled"
+                      role="menuitem"
+                      (click)="
+                        triggerMenuAction(highContrastRequested, $event, 'High contrast toggled')
+                      "
+                    >
+                      <span class="grid-selection-action-bar__menu-item-icon">Aa</span>
+                      <span>High Contrast</span>
+                    </button>
+
+                    <div class="grid-selection-action-bar__menu-divider" aria-hidden="true"></div>
+                    <div class="grid-selection-action-bar__menu-section-title">Workspace</div>
+
+                    @if (showShareAction) {
+                      <button
+                        type="button"
+                        class="grid-selection-action-bar__menu-item"
+                        role="menuitem"
+                        (click)="triggerMenuAction(shareViewRequested, $event, 'Share view copied')"
+                      >
+                        <i appIcon="link-45deg" aria-hidden="true"></i>
+                        <span>Share View</span>
+                      </button>
+                    }
+                    @if (showSnapshotAction) {
+                      <button
+                        type="button"
+                        class="grid-selection-action-bar__menu-item"
+                        [class.grid-selection-action-bar__menu-item--active]="snapshotManagerOpen"
+                        role="menuitem"
+                        (click)="triggerMenuAction(snapshotRequested, $event, 'Snapshots toggled')"
+                      >
+                        <span class="grid-selection-action-bar__menu-item-icon">SN</span>
+                        <span>Snapshots</span>
+                      </button>
+                    }
+                    @if (showBookmarkAction) {
+                      <button
+                        type="button"
+                        class="grid-selection-action-bar__menu-item"
+                        role="menuitem"
+                        (click)="
+                          triggerMenuAction(bookmarkRequested, $event, 'Selection bookmarked')
+                        "
+                      >
+                        <i appIcon="bookmark-star" aria-hidden="true"></i>
+                        <span>Bookmark Selected</span>
+                      </button>
+                    }
+
+                    <div class="grid-selection-action-bar__menu-divider" aria-hidden="true"></div>
+
+                    <button
+                      type="button"
+                      class="grid-selection-action-bar__menu-item"
+                      role="menuitem"
+                      (click)="triggerMenuAction(clearRequested, $event, 'Selection cleared')"
+                    >
+                      <i appIcon="x-lg" aria-hidden="true"></i>
+                      <span>Clear Selection</span>
+                    </button>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        }
+      }
+    </div>
+  </div>
+}

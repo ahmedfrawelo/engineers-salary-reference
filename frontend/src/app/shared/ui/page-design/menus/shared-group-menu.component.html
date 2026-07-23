@@ -1,0 +1,257 @@
+<details class="proj-menu proj-group-menu" #groupMenu (toggle)="onGroupMenuToggle()">
+  <summary
+    class="proj-cu-chip proj-menu-summary"
+    (pointerdown)="onSummaryPointerDown($event)"
+    (click)="onSummaryClick($event)"
+    (keydown.enter)="onSummaryKeydown($event)"
+    (keydown.space)="onSummaryKeydown($event)"
+  >
+    <i class="proj-group-summary-icon" [appIcon]="icon" aria-hidden="true"></i>
+    <span>Group: {{ label }}</span>
+  </summary>
+
+  <div
+    class="proj-menu-list proj-group-menu-list"
+    [class.is-simple-mode]="isSimpleMode()"
+    (click)="$event.stopPropagation()"
+  >
+    @if (isSimpleMode()) {
+      <div class="proj-group-simple-options">
+        @for (option of groupOptionsWithoutNone(); track option.value ?? option.label) {
+          <button
+            class="proj-inline-select-item proj-group-simple-option"
+            type="button"
+            [class.active]="selectedValue === option.value"
+            [attr.aria-pressed]="selectedValue === option.value"
+            (click)="onGroupSelect(option.value)"
+          >
+            <span class="item-main">
+              <i [appIcon]="option.icon" aria-hidden="true"></i>
+              <span>{{ option.label }}</span>
+            </span>
+            @if (selectedValue === option.value) {
+              <i appIcon="check2" aria-hidden="true"></i>
+            }
+          </button>
+        }
+      </div>
+    } @else {
+      @if (isMultiModeEnabled()) {
+        <div class="proj-group-menu-label">Group by</div>
+        <div class="proj-group-multi-rows">
+          @for (row of groupRows(); track $index; let i = $index) {
+            <div class="proj-group-controls">
+              <details
+                class="proj-inline-select"
+                #multiGroupFieldMenu
+                (toggle)="onMultiGroupFieldToggle(i)"
+              >
+                <summary class="proj-inline-select-trigger">
+                  <span class="proj-inline-select-value">
+                    <i [appIcon]="groupRowIcon(row)" aria-hidden="true"></i>
+                    <span>{{ groupRowLabel(row) }}</span>
+                  </span>
+                  <i appIcon="chevron-down" aria-hidden="true"></i>
+                </summary>
+
+                <div class="proj-inline-select-list">
+                  @let rowOptions = availableOptionsForRow(i);
+                  @for (option of rowOptions; track option.value ?? option.label) {
+                    <button
+                      class="proj-inline-select-item"
+                      type="button"
+                      [class.active]="row.value === option.value"
+                      [attr.aria-pressed]="row.value === option.value"
+                      (click)="onMultiGroupFieldSelect(i, option.value)"
+                    >
+                      <span class="item-main">
+                        <i [appIcon]="option.icon" aria-hidden="true"></i>
+                        <span>{{ option.label }}</span>
+                      </span>
+                    </button>
+                  }
+                  @if (!rowOptions.length) {
+                    <div class="proj-inline-select-empty">No available groups</div>
+                  }
+                </div>
+              </details>
+
+              @let dateIntervalOptions = groupRowDateIntervalOptions(row);
+              @if (dateIntervalOptions.length) {
+                <details
+                  class="proj-inline-select proj-inline-select-date-interval"
+                  #multiGroupDateIntervalMenu
+                  (toggle)="onMultiGroupDateIntervalToggle(i)"
+                >
+                  <summary class="proj-inline-select-trigger">
+                    <span class="proj-inline-select-value">
+                      <span>{{ groupRowDateIntervalLabel(row) }}</span>
+                    </span>
+                    <i appIcon="chevron-down" aria-hidden="true"></i>
+                  </summary>
+
+                  <div class="proj-inline-select-list">
+                    @for (option of dateIntervalOptions; track option.value) {
+                      <button
+                        class="proj-inline-select-item"
+                        type="button"
+                        [class.active]="groupRowDateIntervalLabel(row) === option.label"
+                        [attr.aria-pressed]="groupRowDateIntervalLabel(row) === option.label"
+                        (click)="onMultiGroupDateIntervalSelect(i, option.value)"
+                      >
+                        <span>{{ option.label }}</span>
+                      </button>
+                    }
+                  </div>
+                </details>
+              }
+
+              <details
+                class="proj-inline-select proj-inline-select-order"
+                [class.is-disabled]="isGroupRowEmpty(row)"
+                #multiGroupOrderMenu
+                (toggle)="onMultiGroupOrderToggle(i)"
+              >
+                <summary class="proj-inline-select-trigger">
+                  <span class="proj-inline-select-value">
+                    <span>{{ groupRowOrderLabel(row) }}</span>
+                  </span>
+                  <i appIcon="chevron-down" aria-hidden="true"></i>
+                </summary>
+
+                <div class="proj-inline-select-list">
+                  @for (option of orderOptions; track option.value) {
+                    <button
+                      class="proj-inline-select-item"
+                      type="button"
+                      [class.active]="row.order === option.value"
+                      [attr.aria-pressed]="row.order === option.value"
+                      (click)="onMultiGroupOrderSelect(i, option.value)"
+                    >
+                      <span>{{ option.label }}</span>
+                    </button>
+                  }
+                </div>
+              </details>
+
+              <div class="proj-group-row-actions">
+                @if (showMoveControls(i)) {
+                  <button
+                    class="proj-group-action"
+                    type="button"
+                    title="Move up"
+                    [disabled]="!canMoveGroupUp(i)"
+                    (click)="moveGroupRow(i, 'up')"
+                  >
+                    <i appIcon="chevron-up" aria-hidden="true"></i>
+                  </button>
+
+                  <button
+                    class="proj-group-action"
+                    type="button"
+                    title="Move down"
+                    [disabled]="!canMoveGroupDown(i)"
+                    (click)="moveGroupRow(i, 'down')"
+                  >
+                    <i appIcon="chevron-down" aria-hidden="true"></i>
+                  </button>
+                }
+
+                @if (i === 0) {
+                  <button
+                    class="proj-group-reset"
+                    type="button"
+                    title="Remove first group level"
+                    (click)="onReset()"
+                  >
+                    <i appIcon="trash" aria-hidden="true"></i>
+                  </button>
+                } @else {
+                  <button
+                    class="proj-group-reset"
+                    type="button"
+                    title="Remove group level"
+                    (click)="removeGroupRow(i)"
+                  >
+                    <i appIcon="dash-lg" aria-hidden="true"></i>
+                  </button>
+                }
+              </div>
+            </div>
+          }
+        </div>
+
+        @if (canShowAddGroupButton()) {
+          <button class="proj-group-add-subgroup" type="button" (click)="addGroupRow()">
+            <i appIcon="plus-lg" aria-hidden="true"></i>
+            <span>Add group</span>
+          </button>
+        }
+      } @else {
+        <div class="proj-group-menu-label">Group by</div>
+        <div class="proj-group-controls">
+          <details class="proj-inline-select" #groupByMenu (toggle)="onGroupByToggle()">
+            <summary class="proj-inline-select-trigger">
+              <span class="proj-inline-select-value">
+                <i [appIcon]="icon" aria-hidden="true"></i>
+                <span>{{ label }}</span>
+              </span>
+              <i appIcon="chevron-down" aria-hidden="true"></i>
+            </summary>
+
+            <div class="proj-inline-select-list">
+              @for (option of groupOptionsWithoutNone(); track option.label) {
+                <button
+                  class="proj-inline-select-item"
+                  type="button"
+                  [class.active]="selectedValue === option.value"
+                  [attr.aria-pressed]="selectedValue === option.value"
+                  (click)="onGroupSelect(option.value)"
+                >
+                  <span class="item-main">
+                    <i [appIcon]="option.icon" aria-hidden="true"></i>
+                    <span>{{ option.label }}</span>
+                  </span>
+                  @if (selectedValue === option.value) {
+                    <i appIcon="check2" aria-hidden="true"></i>
+                  }
+                </button>
+              }
+            </div>
+          </details>
+
+          <details
+            class="proj-inline-select proj-inline-select-order"
+            #groupOrderMenu
+            (toggle)="onGroupOrderToggle()"
+          >
+            <summary class="proj-inline-select-trigger">
+              <span class="proj-inline-select-value">
+                <span>{{ orderLabel }}</span>
+              </span>
+              <i appIcon="chevron-down" aria-hidden="true"></i>
+            </summary>
+
+            <div class="proj-inline-select-list">
+              @for (option of orderOptions; track option.value) {
+                <button
+                  class="proj-inline-select-item"
+                  type="button"
+                  [class.active]="selectedOrder === option.value"
+                  [attr.aria-pressed]="selectedOrder === option.value"
+                  (click)="onOrderSelect(option.value)"
+                >
+                  <span>{{ option.label }}</span>
+                </button>
+              }
+            </div>
+          </details>
+
+          <button class="proj-group-reset" type="button" title="Reset grouping" (click)="onReset()">
+            <i appIcon="trash" aria-hidden="true"></i>
+          </button>
+        </div>
+      }
+    }
+  </div>
+</details>

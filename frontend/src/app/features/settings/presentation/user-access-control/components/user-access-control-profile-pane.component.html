@@ -1,0 +1,143 @@
+﻿<div class="access-pane access-pane--profile">
+  <div class="tasks-body-scroll list-mode">
+    <section class="workspace-shell cu-workspace workspace-shell-flat">
+      <div class="workspace-main">
+        @if (error() && roster().length) {
+          <div class="access-inline-message access-inline-message--error">
+            <div class="access-inline-message__copy">
+              <hugeicons-icon
+                class="access-huge-icon"
+                [icon]="hugeIcons.alert"
+                [size]="16"
+                [strokeWidth]="1.9"
+                aria-hidden="true"
+              ></hugeicons-icon>
+              <span>{{ error() }}</span>
+            </div>
+            <div class="access-inline-message__actions">
+              @if (restoreCandidate() && canEditAccessControlUser()) {
+                <button
+                  type="button"
+                  class="btn-sm btn-ghost"
+                  (click)="restoreDeletedUser()"
+                  [disabled]="saving() || restoring()"
+                >
+                  {{ restoring() ? 'Restoring...' : 'Restore user' }}
+                </button>
+              }
+              <button
+                type="button"
+                class="btn-sm btn-ghost"
+                (click)="loadRoster()"
+                [disabled]="loading()"
+              >
+                Retry
+              </button>
+            </div>
+          </div>
+        }
+
+        @if (resolvedRosterForView(); as visibleUsers) {
+          @if (visibleUsers.length) {
+            <section class="register-shell cu-list-shell" #rosterListShell>
+              <app-status-list
+                [groups]="rosterListGroups()"
+                [collapsedGroupIds]="collapsedRosterGroupIds()"
+                [visibleColumns]="rosterListColumns()"
+                [columnWidths]="rosterListColumnWidths()"
+                [columnLabels]="rosterListColumnLabels"
+                [stickyHorizontalRail]="false"
+                [selectionEnabled]="true"
+                [rowMenuEnabled]="false"
+                [rowDragEnabled]="true"
+                [groupActionsEnabled]="false"
+                [addRowEnabled]="false"
+                [columnManagementEnabled]="false"
+                itemLabel="user"
+                (columnWidthsChange)="onRosterColumnWidthsChange($event)"
+                (groupToggle)="onRosterGroupToggle($event)"
+                (rowClick)="onRosterRowClick($event)"
+              ></app-status-list>
+            </section>
+          } @else {
+            @if (!error() && roster().length) {
+              <div class="access-roster-empty">
+                <div class="empty-title">No users match the current view</div>
+                <p class="empty-sub">
+                  Adjust the filters or clear the search query to bring users back.
+                </p>
+                <button type="button" class="btn-sm btn-ghost" (click)="resetRosterView()">
+                  Reset view
+                </button>
+              </div>
+            }
+
+            @if (!error() && !roster().length) {
+              <div class="access-roster-empty access-roster-empty--first-load">
+                <div class="empty-title">No users yet</div>
+                <p class="empty-sub">
+                  Once the workspace directory is connected, seats and user records will show up
+                  here.
+                </p>
+              </div>
+            }
+
+            @if (error()) {
+              <div class="error-state access-error-state">
+                <div class="error-icon">
+                  <hugeicons-icon
+                    class="access-huge-icon"
+                    [icon]="hugeIcons.alert"
+                    [size]="20"
+                    [strokeWidth]="1.9"
+                    aria-hidden="true"
+                  ></hugeicons-icon>
+                </div>
+                <p class="error-message">{{ error() }}</p>
+                <div class="error-actions">
+                  @if (needsAuth()) {
+                    <button type="button" class="btn-sm btn-primary" (click)="goToLogin()">
+                      <hugeicons-icon
+                        class="access-huge-icon"
+                        [icon]="hugeIcons.login"
+                        [size]="16"
+                        [strokeWidth]="1.9"
+                        aria-hidden="true"
+                      ></hugeicons-icon>
+                      <span>Sign In</span>
+                    </button>
+                  }
+                  @if (restoreCandidate() && canEditAccessControlUser()) {
+                    <button
+                      type="button"
+                      class="btn-sm btn-ghost"
+                      (click)="restoreDeletedUser()"
+                      [disabled]="saving() || restoring()"
+                    >
+                      {{ restoring() ? 'Restoring...' : 'Restore user' }}
+                    </button>
+                  }
+                  <button type="button" class="btn-sm btn-ghost" (click)="loadRoster()">
+                    <hugeicons-icon
+                      class="access-huge-icon"
+                      [icon]="hugeIcons.refresh"
+                      [size]="16"
+                      [strokeWidth]="1.9"
+                      aria-hidden="true"
+                    ></hugeicons-icon>
+                    <span>Retry</span>
+                  </button>
+                </div>
+              </div>
+            }
+          }
+        }
+      </div>
+    </section>
+  </div>
+
+  <user-access-control-profile-deleted-drawer
+    [host]="host"
+  ></user-access-control-profile-deleted-drawer>
+  <user-access-control-profile-user-drawer [host]="host"></user-access-control-profile-user-drawer>
+</div>

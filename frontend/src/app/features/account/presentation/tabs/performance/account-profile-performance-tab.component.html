@@ -1,0 +1,94 @@
+<section class="tab-grid tab-grid--performance">
+  <article class="panel panel-full panel-performance-signals">
+    <header class="section-head">
+      <h2>Operational signals</h2>
+      <p>Current execution view at a glance.</p>
+    </header>
+    <div class="quick-grid">
+      @for (signal of quickSignals; track signal.label) {
+        <article class="quick-card">
+          <span class="overline">{{ signal.label }}</span>
+          <strong>{{ signal.value }}</strong>
+          <p>{{ signal.caption }}</p>
+        </article>
+      }
+    </div>
+  </article>
+
+  <article class="panel panel-performance-initiatives">
+    <header class="section-head">
+      <h2>Strategic initiatives</h2>
+      <p>Mission-critical programmes and delivery trajectory.</p>
+    </header>
+    <ul class="initiative-list">
+      @for (item of initiatives; track item.name) {
+        <li>
+          <div class="initiative-head">
+            <strong>{{ item.name }}</strong>
+            <span
+              class="status"
+              [class.positive]="item.health === 'positive'"
+              [class.neutral]="item.health === 'neutral'"
+              [class.risk]="item.health === 'risk'"
+            >
+              {{
+                item.health === 'positive' ? 'Healthy' : item.health === 'risk' ? 'Risk' : 'Watch'
+              }}
+            </span>
+          </div>
+          <p>{{ item.summary }}</p>
+          <div class="progress-track">
+            <span
+              class="progress-fill"
+              [style.width.%]="item.progress"
+              [class.positive]="item.health === 'positive'"
+              [class.neutral]="item.health === 'neutral'"
+              [class.risk]="item.health === 'risk'"
+            ></span>
+          </div>
+          <div class="initiative-meta">
+            <span>{{ item.progress }}% complete</span>
+            <span>Owner: {{ item.owner }}</span>
+            <span>Target: {{ item.due }}</span>
+          </div>
+        </li>
+      }
+    </ul>
+  </article>
+
+  <article class="panel panel-performance-board">
+    <header class="section-head">
+      <h2>Performance board</h2>
+      <p>Current scorecard and trend direction.</p>
+    </header>
+    <ul class="metric-list">
+      @for (metric of keyMetrics; track metric.label) {
+        <li>
+          <div class="metric-copy">
+            <strong>{{ metric.label }}</strong>
+            <p>{{ metric.caption }}</p>
+          </div>
+          <div class="metric-main">
+            <span
+              class="metric-value"
+              [class.positive]="metric.trend === 'positive'"
+              [class.neutral]="metric.trend === 'neutral'"
+              [class.risk]="metric.trend === 'risk'"
+            >
+              {{ metric.value }}
+            </span>
+            <div class="meter-track">
+              <span
+                class="meter-fill"
+                [style.width.%]="metric.score"
+                [class.positive]="metric.trend === 'positive'"
+                [class.neutral]="metric.trend === 'neutral'"
+                [class.risk]="metric.trend === 'risk'"
+              ></span>
+            </div>
+          </div>
+        </li>
+      }
+    </ul>
+  </article>
+</section>

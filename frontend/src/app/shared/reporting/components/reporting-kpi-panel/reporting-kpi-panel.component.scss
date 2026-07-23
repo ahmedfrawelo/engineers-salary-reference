@@ -1,0 +1,126 @@
+@use '../../styles/reporting-design' as reporting;
+
+:host {
+  display: block;
+}
+
+.kpi-panel {
+  @include reporting.surface(10px);
+}
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.kpi-card {
+  @include reporting.inset-surface(12px);
+  min-height: 118px;
+  min-width: 0;
+  transition:
+    border-color 160ms ease,
+    background 160ms ease;
+}
+
+.kpi-card:hover {
+  border-color: rgb(var(--primary) / 0.34);
+  background:
+    linear-gradient(180deg, rgb(var(--primary) / 0.08), transparent 70%),
+    color-mix(in srgb, rgb(var(--bg1)) 88%, rgb(var(--surface)) 12%);
+}
+
+.kpi-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.kpi-label {
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgb(var(--fg) / 0.6);
+}
+
+.kpi-delta {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  color: rgb(var(--fg) / 0.66);
+}
+
+.kpi-delta.up {
+  color: rgb(34 197 94);
+}
+
+.kpi-delta.down {
+  color: rgb(239 68 68);
+}
+
+.kpi-delta.flat {
+  color: rgb(148 163 184);
+}
+
+.kpi-value {
+  display: block;
+  margin-top: 14px;
+  font-size: 22px;
+  line-height: 1.05;
+}
+
+.kpi-note {
+  display: block;
+  margin-top: 8px;
+  color: rgb(var(--fg) / 0.68);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.tone-primary {
+  border-color: rgb(var(--primary) / 0.34);
+  background:
+    linear-gradient(180deg, rgb(var(--primary) / 0.1), transparent 68%),
+    color-mix(in srgb, rgb(var(--bg1)) 88%, rgb(var(--surface)) 12%);
+}
+
+.tone-success {
+  border-color: rgb(34 197 94 / 0.24);
+  background:
+    linear-gradient(180deg, rgb(34 197 94 / 0.08), transparent 68%),
+    color-mix(in srgb, rgb(var(--bg1)) 88%, rgb(var(--surface)) 12%);
+}
+
+.tone-warning {
+  border-color: rgb(245 158 11 / 0.24);
+  background:
+    linear-gradient(180deg, rgb(245 158 11 / 0.08), transparent 68%),
+    color-mix(in srgb, rgb(var(--bg1)) 88%, rgb(var(--surface)) 12%);
+}
+
+.tone-neutral {
+  border-color: rgb(148 163 184 / 0.22);
+}
+
+@media (max-width: 980px) {
+  .kpi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .kpi-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media print {
+  .kpi-panel,
+  .kpi-card {
+    @include reporting.print-surface;
+  }
+}
