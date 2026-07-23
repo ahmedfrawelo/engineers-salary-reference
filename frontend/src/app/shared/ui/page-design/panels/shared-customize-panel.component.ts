@@ -29,8 +29,7 @@ export type SharedCustomizePanelActionMenuItem = {
 })
 export class SharedCustomizePanelComponent {
   @Input() open = false;
-  /** Matches the compact reference drawer while keeping the shared shell responsive. */
-  @Input() width = 300;
+  @Input() width = 304;
   @Input() zIndex: number | null = null;
   @Input() topInset: number | null = null;
   @Input() ignoreOutsideSelectors = '';
