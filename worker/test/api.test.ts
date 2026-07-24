@@ -15,7 +15,7 @@ describe('salary worker contract', () => {
   });
 
   it('maps aggregate resultKey into response field', async () => {
-    const worker=app(text=>text.includes('count(*)')?[{total:4}]:[{value:1250}]);
+    const worker=app(text=>text.includes('__totalRows')?[{__totalRows:4,a0:1250}]:[]);
     const response=await worker.fetch(request('/api/salary-reports/read-rows/aggregates',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({filters:{currency:'EGP'},scope:'filtered',aggregates:[{field:'monthlyNetSalary',operation:'median',resultKey:'medianSalary'}]})}),env);
     expect(await response.json()).toEqual({scope:'filtered',totalRows:4,aggregates:[{field:'medianSalary',operation:'median',value:1250}]});
   });

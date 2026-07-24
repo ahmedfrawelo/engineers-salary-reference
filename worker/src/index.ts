@@ -8,9 +8,58 @@ const sortFields = new Set(['id','discipline','country','city','companytype','wo
 const aggregateOps = new Set(['sum','avg','average','count','min','max','distinct','distinctcount','countdistinct','median','percent']);
 class ValidationError extends Error {}
 
+type CachePolicy = { maxAge: number; staleWhileRevalidate: number };
+const edgeCache = (globalThis as typeof globalThis & { caches?: { default?: Cache } }).caches?.default;
+const requestWindows = new Map<string, { startedAt: number; count: number }>();
+const rateWindows = { read: { limit: 120, windowMs: 60_000 }, write: { limit: 12, windowMs: 60_000 } };
+
 const json = (body: unknown, status = 200, headers: HeadersInit = {}) =>
   new Response(JSON.stringify(body), { status, headers: { ...jsonHeaders, ...headers } });
 const problem = (status: number, title: string, detail: string) => json({ type: 'about:blank', title, status, detail }, status);
+
+function cachePolicy(path: string): CachePolicy | null {
+  if (path === '/options' || path === '/read-rows/filter-options') return { maxAge: 300, staleWhileRevalidate: 60 };
+  if (path === '/read-rows' || path === '/read-rows/summary') return { maxAge: 20, staleWhileRevalidate: 60 };
+  if (/^\/[0-9a-f-]{36}$/i.test(path)) return { maxAge: 30, staleWhileRevalidate: 60 };
+  return null;
+}
+
+function clientKey(request: Request): string {
+  return request.headers.get('CF-Connecting-IP') || request.headers.get('X-Forwarded-For')?.split(',')[0]?.trim() || 'unknown';
+}
+
+function allowRequest(request: Request): boolean {
+  const policy = request.method === 'POST' ? rateWindows.write : rateWindows.read;
+  const key = `${policy === rateWindows.write ? 'write' : 'read'}:${clientKey(request)}`;
+  const now = Date.now();
+  const current = requestWindows.get(key);
+  if (!current || now - current.startedAt >= policy.windowMs) {
+    requestWindows.set(key, { startedAt: now, count: 1 });
+    if (requestWindows.size > 5000) requestWindows.delete(requestWindows.keys().next().value as string);
+    return true;
+  }
+  current.count += 1;
+  return current.count <= policy.limit;
+}
+
+function applySecurityHeaders(response: Response): Response {
+  const secured = new Response(response.body, response);
+  secured.headers.set('X-Content-Type-Options', 'nosniff');
+  secured.headers.set('X-Frame-Options', 'DENY');
+  secured.headers.set('Referrer-Policy', 'no-referrer');
+  return secured;
+}
+
+async function readCached(request: Request, policy: CachePolicy | null): Promise<Response | null> {
+  if (!edgeCache || !policy || request.method !== 'GET') return null;
+  const cached = await edgeCache.match(request);
+  return cached ? new Response(cached.body, cached) : null;
+}
+
+async function writeCached(request: Request, response: Response, policy: CachePolicy | null): Promise<void> {
+  if (!edgeCache || !policy || request.method !== 'GET' || !response.ok) return;
+  await edgeCache.put(request, response.clone());
+}
 
 function corsOrigin(request: Request, env: Env): string | null {
   const origin = request.headers.get('Origin');
@@ -136,20 +185,29 @@ async function aggregates(request: Request, db: Db): Promise<Response> {
   if (!['page','filtered','all'].includes(body.scope || '') || !body.aggregates?.length || body.aggregates.length > 32) throw new ValidationError('Invalid aggregate request');
   const resultKeys = body.aggregates.map(item => item.resultKey?.trim().toLowerCase());
   if (resultKeys.some(key => !key || key.length > 80) || new Set(resultKeys).size !== resultKeys.length) throw new ValidationError('Aggregate result keys must be unique and at most 80 characters');
-  const query = new URLSearchParams(); for (const [key,item] of Object.entries(body.filters ?? {})) if (item !== undefined && item !== null) query.set(key, String(item));
-  const filtered = body.scope === 'all' ? { where:'', params:[] } : filters(query);
-  const total = await db.query<{total:number}>(`SELECT count(*)::int AS total FROM ${view}${filtered.where}`, filtered.params);
-  const results = [];
-  for (const aggregate of body.aggregates) {
+  const filterQuery = new URLSearchParams(); for (const [key,item] of Object.entries(body.filters ?? {})) if (item !== undefined && item !== null) filterQuery.set(key, String(item));
+  const filtered = body.scope === 'all' ? { where:'', params:[] } : filters(filterQuery);
+  const definitions = body.aggregates.map((aggregate, index) => {
     const field = aggregate.field.toLowerCase(); let op = aggregate.operation.toLowerCase(); if (op === 'average') op='avg'; if (['distinctcount','countdistinct'].includes(op)) op='distinct';
     const column = columnByField[field]; if (!column || !aggregateOps.has(op) || !aggregate.resultKey) throw new ValidationError('Invalid aggregate definition');
     const numeric = ['monthlynetsalary','yearsofexperience','dailyworkhours'].includes(field);
     if (!numeric && !['count','min','max','distinct','percent'].includes(op)) throw new ValidationError('Invalid aggregate operation for text field');
     const expression = op === 'distinct' ? `count(DISTINCT ${column})` : op === 'median' ? `percentile_cont(0.5) WITHIN GROUP (ORDER BY ${column})` : op === 'percent' ? `CASE WHEN count(*)=0 THEN 0 ELSE count(${column})*100.0/count(*) END` : `${op}(${op === 'count' ? '*' : column})`;
-    const rows = await db.query<{value:unknown}>(`SELECT ${expression} AS value FROM ${view}${filtered.where}`, filtered.params);
-    results.push({ field: aggregate.resultKey, operation: op, value: rows[0]?.value ?? null });
-  }
-  return json({ scope: body.scope, totalRows: Number(total[0]?.total ?? 0), aggregates: results });
+    return { expression, field: aggregate.resultKey, operation: op, alias: `a${index}` };
+  });
+  const scoped = `SELECT * FROM ${view}${filtered.where}`;
+  const aggregateQuery = `WITH scoped AS (${scoped}) SELECT count(*)::int AS "__totalRows", ${definitions.map(item => `${item.expression} AS "${item.alias}"`).join(', ')} FROM scoped`;
+  const rows = await db.query<Row>(aggregateQuery, filtered.params);
+  const row = rows[0] ?? {};
+  return json({
+    scope: body.scope,
+    totalRows: Number(row.__totalRows ?? row.total ?? 0),
+    aggregates: definitions.map(item => ({
+      field: item.field,
+      operation: item.operation,
+      value: row[item.alias] ?? (definitions.length === 1 ? row.value : null) ?? null
+    }))
+  });
 }
 
 const createFields = ['country','city','discipline','yearsOfExperience','companyType','workMode','currency','monthlyNetSalary','housingProvided','transportationProvided','annualBonus','salaryFairness','recommendField','negotiationAdvice','professionalCertificate','benefits','highestEducation','dailyWorkHours','extraDayOff'];
@@ -215,7 +273,12 @@ export function createApp(dbFactory: (env: Env) => Db = createDb) {
       const url = new URL(request.url);
       if (request.method==='GET' && (url.pathname==='/health/live' || url.pathname==='/health/ready')) return withCors(json({status:'Healthy'}),origin);
       const prefix='/api/salary-reports'; if (!url.pathname.startsWith(prefix)) return new Response(null,{status:404});
-      const path=url.pathname.slice(prefix.length)||'/'; const db=dbFactory(env); let response: Response;
+      if (!allowRequest(request)) return withCors(problem(429, 'Too Many Requests', 'Request rate limit exceeded. Please retry shortly.'), origin);
+      const path=url.pathname.slice(prefix.length)||'/';
+      const policy = cachePolicy(path);
+      const cached = await readCached(request, policy);
+      if (cached) return withCors(applySecurityHeaders(cached), origin);
+      const db=dbFactory(env); let response: Response;
       if (request.method==='GET' && path==='/read-rows') response=await readRows(request,db);
       else if (request.method==='GET' && path==='/read-rows/summary') response=await summary(request,db);
       else if (request.method==='POST' && path==='/read-rows/aggregates') response=await aggregates(request,db);
@@ -224,10 +287,12 @@ export function createApp(dbFactory: (env: Env) => Db = createDb) {
       else if (request.method==='POST' && path==='/') response=await create(request,db);
       else if (request.method==='GET' && /^\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(path)) response=await detail(path.slice(1),db);
       else response=new Response(null,{status:404});
-      const secured = new Response(response.body, response);
-      secured.headers.set('X-Content-Type-Options','nosniff');
-      secured.headers.set('X-Frame-Options','DENY');
-      secured.headers.set('Referrer-Policy','no-referrer');
+      const secured = applySecurityHeaders(response);
+      if (policy && response.ok) {
+        secured.headers.set('Cache-Control', `public, max-age=0, s-maxage=${policy.maxAge}, stale-while-revalidate=${policy.staleWhileRevalidate}`);
+        secured.headers.set('Vary', 'Origin');
+        await writeCached(request, secured, policy);
+      }
       return withCors(secured, origin);
     } catch (error) {
       console.error('Request failed', error);
