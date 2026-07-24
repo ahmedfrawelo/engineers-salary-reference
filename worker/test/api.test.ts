@@ -25,12 +25,12 @@ describe('salary worker contract', () => {
     expect(response.status).toBe(400); expect(await response.text()).toContain('Idempotency-Key');
   });
 
-  it('allows only the configured production origin', async () => {
+  it('allows the configured production and local development origins', async () => {
     const worker=app(()=>[]);
     const allowed=await worker.fetch(request('/api/salary-reports/options',{headers:{Origin:env.ALLOWED_ORIGIN}}),env);
     expect(allowed.headers.get('Access-Control-Allow-Origin')).toBe(env.ALLOWED_ORIGIN);
     const denied=await worker.fetch(request('/api/salary-reports/options',{headers:{Origin:'http://localhost:4200'}}),env);
-    expect(denied.headers.get('Access-Control-Allow-Origin')).toBeNull();
+    expect(denied.headers.get('Access-Control-Allow-Origin')).toBe('http://localhost:4200');
     const dev=await worker.fetch(request('/api/salary-reports/options',{headers:{Origin:'http://localhost:4200'}}),{...env,ENVIRONMENT:'development'});
     expect(dev.headers.get('Access-Control-Allow-Origin')).toBe('http://localhost:4200');
   });
