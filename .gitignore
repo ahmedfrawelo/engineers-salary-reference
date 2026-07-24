@@ -24,3 +24,4 @@ coverage/
 data/imports/
 tools/__pycache__/
 backend/artifacts/
+worker/.wrangler/
