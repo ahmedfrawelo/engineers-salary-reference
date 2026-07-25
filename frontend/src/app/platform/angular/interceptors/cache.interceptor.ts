@@ -39,6 +39,7 @@ const invalidateRelatedCacheEntries = (url: string): void => {
 };
 
 const shouldBypassCache = (url: string): boolean =>
+  url.includes('/salary-reports') ||
   url.includes('/suppliers') ||
   url.includes('/suppliermaterialcategoryconnections') ||
   url.includes('/suppliermaterialconnections') ||

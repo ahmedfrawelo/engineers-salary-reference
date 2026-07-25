@@ -71,13 +71,15 @@ export class SharedColumnsPanelComponent implements OnChanges {
   @Input() shownColumns: SharedColumnsPanelItem[] = [];
   @Input() hiddenColumns: SharedColumnsPanelItem[] = [];
   @Input() allowReorder = true;
-  @Input() width = 304;
+  @Input() width = 352;
   @Input() showBack = false;
   @Input() zIndex: number | null = null;
   @Input() topInset: number | null = null;
   @Input() ignoreOutsideSelectors = '';
   @Input() panelClass =
-    'columns-drawer columns-drawer--clickup columns-drawer--sidebar page-design-columns-drawer';
+    'customize-drawer customize-drawer--tasks page-design-customize-drawer boq-version-drawer columns-drawer columns-drawer--clickup columns-drawer--sidebar page-design-columns-drawer';
+  @Input() overlayPanelClass =
+    'task-panel task-panel-clickup task-panel-ref-size boq-project-breakdown-overlay-panel boq-version-overlay-panel';
   drawerMode: SideDrawerMode = 'sidebar';
 
   @Output() closed = new EventEmitter<void>();

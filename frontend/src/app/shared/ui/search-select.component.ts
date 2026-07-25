@@ -28,6 +28,10 @@ import {
   type ExplorerTreeNode,
   type ExplorerTreeSelectEvent
 } from './explorer-tree.component';
+import {
+  SharedContextMenuComponent,
+  type SharedContextMenuItem
+} from './context-menu';
 
 type LooseValue = ReturnType<typeof JSON.parse>;
 export type SearchSelectOptionAction = {
@@ -39,6 +43,9 @@ export type SearchSelectOptionAction = {
 };
 export type SearchSelectOptionPresentation = {
   pill?: boolean;
+  link?: boolean;
+  icon?: string | null;
+  iconColor?: string | null;
   color?: string | null;
   backgroundColor?: string | null;
   borderColor?: string | null;
@@ -62,7 +69,7 @@ type SearchSelectTagFilterOption = {
 @Component({
   selector: 'search-select',
   standalone: true,
-  imports: [FormsModule, OverlayModule, AppIconDirective, ExplorerTreeComponent],
+  imports: [FormsModule, OverlayModule, AppIconDirective, ExplorerTreeComponent, SharedContextMenuComponent],
   template: `
     <div
       class="ss"
@@ -76,6 +83,7 @@ type SearchSelectTagFilterOption = {
             class="ss-inline-trigger"
             [class.focused]="open"
             [class.has-selected-pill]="showSelectedInlinePill"
+            [class.has-leading-icon]="!!optionPresentation(value)?.icon"
           >
             @if (showSelectedInlinePill) {
               <span
@@ -88,22 +96,58 @@ type SearchSelectTagFilterOption = {
                 <span class="ss-pill-text">{{ valueText() }}</span>
               </span>
             }
-            <input
-              #inlineInput
-              class="ss-inline-input"
-              type="text"
-              autocomplete="off"
-              spellcheck="false"
-              [disabled]="disabled"
-              [placeholder]="placeholder || 'Select...'"
-              [value]="inlineInputText"
-              [attr.inputmode]="inlineInputMode"
-              (focus)="onInlineFocus()"
-              (input)="onInlineInput($event)"
-              (keydown)="onInlineKey($event)"
-              (blur)="onInlineBlur($event)"
-            />
-            @if (inlineSuffixText) {
+            @if (inlineTextReadonly) {
+              <button
+                type="button"
+                class="ss-inline-readonly"
+                [class.is-link]="showOptionPresentation && !!optionPresentation(value)?.link"
+                [style.color]="
+                  showOptionPresentation ? optionPresentation(value)?.color || null : null
+                "
+                [disabled]="disabled"
+                [attr.title]="inlineInputText"
+                (click)="onInlineReadonlyClick($event)"
+              >
+                @if (showOptionPresentation && optionPresentation(value)?.icon; as selectedIcon) {
+                  <i
+                    class="ss-inline-icon"
+                    [appIcon]="selectedIcon"
+                    [style.color]="optionPresentation(value)?.iconColor || null"
+                    aria-hidden="true"
+                  ></i>
+                }
+                <span>{{ inlineInputText }}</span>
+              </button>
+            } @else {
+              @if (showOptionPresentation && optionPresentation(value)?.icon; as selectedIcon) {
+                <i
+                  class="ss-inline-icon"
+                  [appIcon]="selectedIcon"
+                  [style.color]="optionPresentation(value)?.iconColor || null"
+                  aria-hidden="true"
+                ></i>
+              }
+              <input
+                #inlineInput
+                class="ss-inline-input"
+                type="text"
+                autocomplete="off"
+                spellcheck="false"
+                [disabled]="disabled"
+                [placeholder]="placeholder || 'Select...'"
+                [value]="inlineInputText"
+                [attr.inputmode]="inlineInputMode"
+                (focus)="onInlineFocus()"
+                (input)="onInlineInput($event)"
+                (keydown)="onInlineKey($event)"
+                (blur)="onInlineBlur($event)"
+              />
+            }
+            @if (inlineSuffixLoading) {
+              <span class="ss-inline-suffix is-loading" role="status" aria-label="Loading file">
+                <span class="ss-inline-spinner" aria-hidden="true"></span>
+              </span>
+            } @else if (inlineSuffixText) {
               <span class="ss-inline-suffix">{{ inlineSuffixText }}</span>
             }
             <button
@@ -111,7 +155,7 @@ type SearchSelectTagFilterOption = {
               type="button"
               class="ss-caret-trigger"
               (click)="onDropdownTriggerClick($event)"
-              [disabled]="disabled"
+              [disabled]="disabled || dropdownDisabled"
               aria-label="Open options"
               aria-haspopup="listbox"
               [attr.aria-expanded]="open"
@@ -131,6 +175,14 @@ type SearchSelectTagFilterOption = {
             aria-haspopup="listbox"
             [attr.aria-expanded]="open"
           >
+            @if (showOptionPresentation && optionPresentation(value)?.icon; as selectedIcon) {
+              <i
+                class="ss-trigger-icon"
+                [appIcon]="selectedIcon"
+                [style.color]="optionPresentation(value)?.iconColor || null"
+                aria-hidden="true"
+              ></i>
+            }
             <span class="ss-label" [class.placeholder]="!valueText()">{{
               valueText() || placeholder || 'Select...'
             }}</span>
@@ -140,6 +192,26 @@ type SearchSelectTagFilterOption = {
           </button>
         }
       </div>
+
+      @if (useContextMenuPanel) {
+        <app-shared-context-menu
+          [open]="open"
+          placement="anchor"
+          [origin]="origin"
+          [items]="contextMenuItems"
+          [footerItems]="contextMenuFooterItems"
+          [selectedItemId]="contextMenuSelectedId"
+          [searchable]="showPanelSearch"
+          [searchPlaceholder]="searchPlaceholder"
+          [hasBackdrop]="false"
+          [preferStart]="true"
+          [panelWidth]="overlayWidth"
+          [panelClass]="contextMenuPanelClass"
+          [showSelectedCheck]="false"
+          (openChange)="onContextMenuOpenChange($event)"
+          (itemSelect)="onContextMenuItemSelect($event)"
+        ></app-shared-context-menu>
+      } @else {
       <ng-template
         cdkConnectedOverlay
         [cdkConnectedOverlayOrigin]="origin"
@@ -183,22 +255,49 @@ type SearchSelectTagFilterOption = {
                   (pointerdown)="onOptionFilterTriggerPointerDown($event)"
                   (click)="toggleOptionFilterMenu($event)"
                 >
-                  <i appIcon="sliders" class="ss-filter-trigger-icon" aria-hidden="true"></i>
+                  <svg
+                    class="ss-filter-trigger-icon"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    aria-hidden="true"
+                    focusable="false"
+                  >
+                    <path
+                      d="M3 5h10M5 8h6M7 11h2"
+                      stroke="currentColor"
+                      stroke-width="1.6"
+                      stroke-linecap="round"
+                    />
+                  </svg>
                 </button>
                 <button
                   type="button"
                   class="ss-tree-toggle-trigger"
                   [class.active]="hierarchyCollapsed"
-                  [attr.aria-label]="hierarchyCollapsed ? 'Expand service items' : 'Collapse service items'"
-                  [attr.title]="hierarchyCollapsed ? 'Expand service items' : 'Collapse service items'"
+                  [attr.aria-label]="
+                    hierarchyCollapsed ? 'Expand service items' : 'Collapse service items'
+                  "
+                  [attr.title]="
+                    hierarchyCollapsed ? 'Expand service items' : 'Collapse service items'
+                  "
                   (pointerdown)="onHierarchyToggleTriggerPointerDown($event)"
                   (click)="toggleHierarchyCollapsed($event)"
                 >
-                  <i
-                    [appIcon]="hierarchyCollapsed ? 'chevron-down' : 'chevron-up'"
+                  <svg
                     class="ss-tree-toggle-trigger-icon"
+                    viewBox="0 0 16 16"
+                    fill="none"
                     aria-hidden="true"
-                  ></i>
+                    focusable="false"
+                  >
+                    <path
+                      [attr.d]="hierarchyCollapsed ? 'M4 6.5 8 10.5l4-4' : 'M4 9.5 8 5.5l4 4'"
+                      stroke="currentColor"
+                      stroke-width="1.6"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
                 </button>
               }
             </div>
@@ -277,10 +376,20 @@ type SearchSelectTagFilterOption = {
                   (dblclick)="onOptionDoubleClick($event, o)"
                   role="option"
                 >
+                  @if (showOptionPresentation && optionPresentation(o)?.icon; as optionIcon) {
+                    <i
+                      class="ss-item-icon"
+                      [appIcon]="optionIcon"
+                      [style.color]="optionPresentation(o)?.iconColor || null"
+                      aria-hidden="true"
+                    ></i>
+                  }
                   <span
                     class="ss-item-label"
                     [class.ss-option-pill]="showOptionPresentation && optionPresentation(o)?.pill"
-                    [style.color]="showOptionPresentation ? optionPresentation(o)?.color || null : null"
+                    [style.color]="
+                      showOptionPresentation ? optionPresentation(o)?.color || null : null
+                    "
                     [style.background-color]="
                       showOptionPresentation ? optionPresentation(o)?.backgroundColor || null : null
                     "
@@ -357,6 +466,7 @@ type SearchSelectTagFilterOption = {
           </div>
         </div>
       </ng-template>
+      }
     </div>
   `,
   styles: [
@@ -364,17 +474,22 @@ type SearchSelectTagFilterOption = {
       .ss {
         position: relative;
         width: 100%;
+        --ss-trigger-outline: rgb(var(--border) / 0.42);
+        --ss-trigger-hover-bg: color-mix(in oklab, rgb(var(--fg)) 10%, transparent);
+        --ss-trigger-focus-bg: color-mix(in oklab, rgb(var(--fg)) 6%, transparent);
+        --ss-trigger-text: rgb(var(--fg) / 0.92);
+        --ss-trigger-muted: rgb(var(--muted) / 0.86);
       }
       .ss.inline-enabled,
       .ss-panel.hybrid-panel {
-        --ss-hybrid-bg: var(--app-color-control-bg, rgb(var(--bg1)));
-        --ss-hybrid-panel-bg: var(--app-color-panel-body, rgb(var(--surface)));
-        --ss-hybrid-border: var(--app-color-outline-stroke, rgb(var(--border-strong)));
+        --ss-hybrid-bg: var(--app-color-control-bg, rgb(var(--bg0)));
+        --ss-hybrid-panel-bg: var(--app-color-panel-body, rgb(var(--bg0)));
+        --ss-hybrid-border: var(--app-color-outline-stroke, var(--ss-trigger-outline));
         --ss-hybrid-border-strong: var(--app-color-outline-stroke-strong, var(--ss-hybrid-border));
         --ss-hybrid-divider: var(--app-color-divider, var(--ss-hybrid-border));
-        --ss-hybrid-text: var(--app-color-text-body, rgb(var(--fg)));
-        --ss-hybrid-muted: var(--app-color-placeholder, rgb(var(--muted)));
-        --ss-hybrid-active-bg: var(--app-color-toolbar-active-bg, var(--ss-hybrid-bg));
+        --ss-hybrid-text: var(--app-color-text-body, var(--ss-trigger-text));
+        --ss-hybrid-muted: var(--app-color-placeholder, var(--ss-trigger-muted));
+        --ss-hybrid-active-bg: var(--app-color-toolbar-active-bg, var(--ss-trigger-hover-bg));
         --ss-hybrid-active-text: var(--app-color-toolbar-active-fg, var(--ss-hybrid-text));
       }
       .ss-origin {
@@ -389,9 +504,9 @@ type SearchSelectTagFilterOption = {
         width: 100%;
         height: 32px;
         border-radius: 8px;
-        border: 1px solid color-mix(in oklab, rgb(var(--border-strong)) 65%, transparent);
-        background: rgb(var(--bg1));
-        color: rgb(var(--fg));
+        border: 1px solid var(--ss-trigger-outline);
+        background: rgb(var(--bg0));
+        color: var(--ss-trigger-text);
         padding: 0 0 0 12px;
         text-align: left;
         display: flex;
@@ -406,11 +521,11 @@ type SearchSelectTagFilterOption = {
         width: 100%;
         height: 32px;
         border-radius: 8px;
-        border: 1px solid var(--ss-hybrid-border, rgb(var(--border-strong)));
+        border: 1px solid var(--ss-trigger-outline);
         background: var(--ss-hybrid-bg, rgb(var(--bg1)));
         color: var(--ss-hybrid-text, rgb(var(--fg)));
         display: flex;
-        align-items: stretch;
+        align-items: center;
         overflow: hidden;
         transition:
           border-color 0.15s,
@@ -453,25 +568,24 @@ type SearchSelectTagFilterOption = {
         white-space: nowrap;
       }
       .ss-trigger:hover {
-        border-color: color-mix(in oklab, rgb(var(--border-strong)) 80%, transparent);
+        border-color: color-mix(in oklab, rgb(var(--fg)) 24%, transparent);
+        background: rgb(var(--bg0));
       }
       .ss-inline-trigger:hover {
-        border-color: var(
-          --ss-hybrid-border-strong,
-          var(--ss-hybrid-border, rgb(var(--border-strong)))
-        );
+        border-color: color-mix(in oklab, rgb(var(--fg)) 24%, transparent);
+        background: var(--ss-hybrid-bg, rgb(var(--bg0)));
       }
       .ss-trigger:focus-visible {
         outline: none;
-        border-color: color-mix(in oklab, rgb(var(--primary)) 65%, transparent);
-        box-shadow: 0 0 0 2px color-mix(in oklab, rgb(var(--primary)) 22%, transparent);
+        border-color: color-mix(in oklab, rgb(var(--fg)) 28%, transparent);
+        background: rgb(var(--bg0));
+        box-shadow: none;
       }
+      .ss.open .ss-trigger,
       .ss-inline-trigger:focus-within,
       .ss-inline-trigger.focused {
-        border-color: var(
-          --ss-hybrid-border-strong,
-          var(--ss-hybrid-border, rgb(var(--border-strong)))
-        );
+        border-color: color-mix(in oklab, rgb(var(--fg)) 28%, transparent);
+        background: var(--ss-hybrid-bg, rgb(var(--bg0)));
         box-shadow: none;
       }
       .ss-label {
@@ -513,50 +627,84 @@ type SearchSelectTagFilterOption = {
         white-space: nowrap;
         pointer-events: none;
       }
+      .ss-inline-suffix.is-loading {
+        width: 28px;
+        min-width: 28px;
+        padding: 0 8px 0 4px;
+        justify-content: center;
+        overflow: visible;
+      }
+      .ss-inline-spinner {
+        width: 13px;
+        height: 13px;
+        border: 2px solid color-mix(in oklab, currentColor 28%, transparent);
+        border-top-color: currentColor;
+        border-radius: 50%;
+        animation: ss-inline-spin 0.7s linear infinite;
+      }
+      @keyframes ss-inline-spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .ss-inline-spinner {
+          animation-duration: 1.4s;
+        }
+      }
       .ss-label.placeholder {
-        color: color-mix(in oklab, rgb(var(--fg)) 45%, transparent);
+        color: var(--ss-trigger-muted);
       }
       .ss-caret-trigger {
         margin-left: auto;
-        width: 32px;
-        min-width: 32px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        min-width: 28px;
         height: 100%;
         border: none;
         padding: 0;
         background: transparent;
         color: inherit;
         cursor: pointer;
+        flex: 0 0 28px;
       }
       .ss-caret-trigger:focus-visible {
         outline: none;
       }
+      .ss-caret-trigger:disabled {
+        cursor: default;
+        opacity: 0.32;
+      }
       .ss-caret-box {
-        width: 32px;
+        width: 100%;
         height: 100%;
-        border-left: 1px solid
-          var(--ss-hybrid-border, color-mix(in oklab, rgb(var(--border-strong)) 40%, transparent));
+        border-left: 1px solid var(--ss-trigger-outline);
         display: flex;
         align-items: center;
         justify-content: center;
-        background: var(--ss-hybrid-bg, color-mix(in oklab, rgb(var(--surface)) 6%, transparent));
-        border-top-right-radius: 10px;
-        border-bottom-right-radius: 10px;
+        background: transparent;
+        border-radius: 0;
       }
       .ss-caret {
-        width: 12px;
-        height: 12px;
-        border-right: 2px solid
-          var(--ss-hybrid-muted, color-mix(in oklab, rgb(var(--fg)) 45%, transparent));
-        border-bottom: 2px solid
-          var(--ss-hybrid-muted, color-mix(in oklab, rgb(var(--fg)) 45%, transparent));
+        width: 7px;
+        height: 7px;
+        margin-top: -2px;
+        border-right: 1.5px solid
+          var(--ss-hybrid-muted, var(--ss-trigger-muted));
+        border-bottom: 1.5px solid
+          var(--ss-hybrid-muted, var(--ss-trigger-muted));
         transform: rotate(45deg);
         transition:
-          transform 0.2s,
-          border-color 0.15s;
+          transform 0.18s ease,
+          border-color 0.15s ease;
         display: inline-block;
       }
       .ss-caret.open {
+        margin-top: 2px;
         transform: rotate(-135deg);
+        border-color: var(--ss-trigger-text);
       }
       .ss-clear {
         position: absolute;
@@ -672,6 +820,56 @@ type SearchSelectTagFilterOption = {
         cursor: pointer;
         outline: none;
       }
+      .ss-inline-icon,
+      .ss-trigger-icon,
+      .ss-item-icon {
+        display: inline-flex;
+        flex: 0 0 auto;
+        width: 14px;
+        height: 14px;
+      }
+      .ss-inline-icon {
+        align-self: center;
+        color: var(--ss-hybrid-muted, color-mix(in oklab, rgb(var(--fg)) 58%, transparent));
+        pointer-events: none;
+      }
+      .ss-inline-trigger:not(:has(.ss-inline-readonly)) > .ss-inline-icon {
+        margin-left: 10px;
+      }
+      .ss-inline-readonly {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        flex: 1 1 auto;
+        min-width: 0;
+        height: 100%;
+        padding: 0 10px;
+        border: 0;
+        background: transparent;
+        color: var(--ss-hybrid-text, rgb(var(--fg)));
+        font: inherit;
+        text-align: left;
+        cursor: default;
+      }
+      .ss-inline-readonly > span {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .ss-inline-readonly.is-link {
+        cursor: pointer;
+      }
+      .ss-inline-readonly.is-link > span {
+        text-decoration: underline;
+        text-underline-offset: 2px;
+      }
+      .ss-inline-trigger.has-leading-icon .ss-inline-input {
+        padding-left: 7px;
+      }
+      .ss-trigger-icon {
+        color: color-mix(in oklab, rgb(var(--fg)) 58%, transparent);
+      }
       .ss-filter-trigger {
         right: 38px;
       }
@@ -684,8 +882,8 @@ type SearchSelectTagFilterOption = {
       .ss-filter-trigger:hover,
       .ss-filter-trigger:focus-visible,
       .ss-filter-trigger.active {
-        color: var(--ss-hybrid-active-text, rgb(var(--primary)));
-        background: color-mix(in oklab, rgb(var(--primary)) 8%, transparent);
+        color: var(--ss-hybrid-active-text, var(--ss-trigger-text));
+        background: var(--ss-trigger-hover-bg);
       }
       .ss-tree-toggle-trigger-icon,
       .ss-filter-trigger span,
@@ -714,7 +912,8 @@ type SearchSelectTagFilterOption = {
         max-height: min(340px, calc(100vh - 180px));
         overflow-y: auto;
         padding: 10px 8px;
-        border: 1px solid var(--ss-hybrid-border, color-mix(in oklab, rgb(var(--border)) 65%, transparent));
+        border: 1px solid
+          var(--ss-hybrid-border, color-mix(in oklab, rgb(var(--border)) 65%, transparent));
         border-radius: 8px;
         background: var(--ss-hybrid-panel-bg, rgb(var(--surface)));
         color: var(--ss-hybrid-text, rgb(var(--fg)));
@@ -772,9 +971,15 @@ type SearchSelectTagFilterOption = {
       .ss-filter-menu__tag:focus-visible,
       .ss-filter-menu > button.is-active,
       .ss-filter-menu__tag.is-active {
-        border-color: var(--ss-hybrid-divider, color-mix(in oklab, rgb(var(--border)) 55%, transparent));
-        background: var(--ss-hybrid-active-bg, color-mix(in oklab, rgb(var(--primary)) 9%, transparent));
-        color: var(--ss-hybrid-active-text, rgb(var(--primary)));
+        border-color: var(
+          --ss-hybrid-divider,
+          color-mix(in oklab, rgb(var(--border)) 55%, transparent)
+        );
+        background: var(
+          --ss-hybrid-active-bg,
+          var(--ss-trigger-hover-bg)
+        );
+        color: var(--ss-hybrid-active-text, var(--ss-trigger-text));
       }
       .ss-filter-menu > button.is-active::after,
       .ss-filter-menu__tag.is-active::after {
@@ -888,7 +1093,7 @@ type SearchSelectTagFilterOption = {
         display: flex;
         align-items: flex-start;
         justify-content: flex-start;
-        gap: 0;
+        gap: 8px;
         line-height: 1.4;
         white-space: normal;
         overflow-wrap: break-word;
@@ -945,6 +1150,10 @@ type SearchSelectTagFilterOption = {
         line-height: 1;
         cursor: pointer;
       }
+      .ss-item-icon {
+        margin-top: 2px;
+        color: color-mix(in oklab, rgb(var(--fg)) 58%, transparent);
+      }
       .ss-option-action i {
         display: inline-flex;
         width: 13px;
@@ -955,8 +1164,8 @@ type SearchSelectTagFilterOption = {
       .ss-option-action:hover,
       .ss-option-action:focus-visible {
         outline: none;
-        border-color: color-mix(in oklab, rgb(var(--primary)) 55%, transparent);
-        background: color-mix(in oklab, rgb(var(--primary)) 16%, transparent);
+        border-color: color-mix(in oklab, rgb(var(--fg)) 24%, transparent);
+        background: var(--ss-trigger-hover-bg);
       }
       .ss-option-action.danger:hover,
       .ss-option-action.danger:focus-visible {
@@ -966,47 +1175,31 @@ type SearchSelectTagFilterOption = {
       }
       .ss-item:hover,
       .ss-item.active {
-        background: linear-gradient(
-          90deg,
-          rgba(var(--primary), 0.14) 0%,
-          rgba(var(--primary), 0.08) 100%
-        );
-        color: rgb(var(--primary));
+        background: var(--ss-trigger-hover-bg);
+        color: var(--ss-trigger-text);
         box-shadow: none;
       }
       .ss-item.selected {
-        background: color-mix(
-          in oklab,
-          var(--app-color-primary, rgb(var(--primary))) 12%,
-          transparent
-        );
-        color: var(--app-color-primary-text, rgb(var(--primary)));
-        box-shadow: inset 2px 0 0 var(--app-color-primary, rgb(var(--primary)));
+        background: transparent;
+        color: var(--ss-trigger-text);
+        box-shadow: inset 0 0 0 1px color-mix(in oklab, rgb(var(--fg)) 22%, transparent);
         font-weight: 700;
       }
       .ss.inline-enabled .ss-item:hover,
       .ss.inline-enabled .ss-item.active {
         background: var(
           --ss-hybrid-active-bg,
-          color-mix(
-            in oklab,
-            var(--app-color-primary, rgb(var(--primary))) 10%,
-            rgb(var(--bg1)) 90%
-          )
+          var(--ss-trigger-hover-bg)
         );
         color: var(--ss-hybrid-active-text, rgb(var(--fg)));
       }
       .ss.inline-enabled .ss-item.selected {
         background: var(
           --ss-hybrid-active-bg,
-          color-mix(
-            in oklab,
-            var(--app-color-primary, rgb(var(--primary))) 12%,
-            rgb(var(--bg1)) 88%
-          )
+          transparent
         );
         color: var(--ss-hybrid-active-text, rgb(var(--fg)));
-        box-shadow: inset 2px 0 0 var(--app-color-primary, rgb(var(--primary)));
+        box-shadow: inset 0 0 0 1px color-mix(in oklab, rgb(var(--fg)) 22%, transparent);
       }
       .ss-item:active {
         transition-duration: 0s;
@@ -1101,21 +1294,24 @@ export class SearchSelectComponent<T = string> implements OnInit, OnChanges, OnD
   @Output() valueChange = new EventEmitter<T | null>();
   @Output() search = new EventEmitter<string>();
   @Input() displayFn?: (v: T) => string;
-  @Input() optionPresentationFn?: (
-    value: T
-  ) => SearchSelectOptionPresentation | null | undefined;
+  @Input() optionKeyFn?: (value: T) => string | number | null | undefined;
+  @Input() optionPresentationFn?: (value: T) => SearchSelectOptionPresentation | null | undefined;
   @Input() optionHierarchyFn?: (value: T) => SearchSelectOptionHierarchy | null | undefined;
   @Input() showOptionPresentation = true;
   @Input() placeholder = 'Select...';
   @Input() noResultsText = 'No results';
   @Input() disabled = false;
+  @Input() dropdownDisabled = false;
   @Input() allowClear = false;
   @Input() allowEdit = false;
   @Input() allowCreate = false;
   @Input() allowInlineSearch = false;
+  @Input() inlineTextReadonly = false;
+  @Input() panelSearchEnabled = true;
   @Input() inlineTextValue: string | null | undefined;
   @Input() inlineInputMode = 'text';
   @Input() inlineSuffix: string | null | undefined;
+  @Input() inlineSuffixLoading = false;
   @Input() createLabel = 'Create';
   @Input() renameLabel = 'Edit';
   @Input() editSelectedLabel = 'Edit selected';
@@ -1131,6 +1327,7 @@ export class SearchSelectComponent<T = string> implements OnInit, OnChanges, OnD
   @Output() rename = new EventEmitter<{ from: T | null; to: string }>();
   @Output() optionAction = new EventEmitter<{ option: T; actionId: string }>();
   @Output() inlineTextCommit = new EventEmitter<string>();
+  @Output() inlineTextActivate = new EventEmitter<void>();
 
   open = false;
   inlineFocused = false;
@@ -1186,7 +1383,8 @@ export class SearchSelectComponent<T = string> implements OnInit, OnChanges, OnD
     }
     if (
       changes['inlineTextValue'] &&
-      (typeof document === 'undefined' || document.activeElement !== this.inlineInput?.nativeElement)
+      (typeof document === 'undefined' ||
+        document.activeElement !== this.inlineInput?.nativeElement)
     ) {
       this.lastCommittedInlineText = String(changes['inlineTextValue'].currentValue ?? '');
     }
@@ -1220,7 +1418,9 @@ export class SearchSelectComponent<T = string> implements OnInit, OnChanges, OnD
     return this.inlineTextValue !== undefined;
   }
   get inlineInputText(): string {
-    return this.usesExternalInlineText ? String(this.inlineTextValue ?? '') : this.inlineDisplayText;
+    return this.usesExternalInlineText
+      ? String(this.inlineTextValue ?? '')
+      : this.inlineDisplayText;
   }
   get inlineSuffixText(): string {
     return String(this.inlineSuffix ?? '').trim();
@@ -1228,14 +1428,77 @@ export class SearchSelectComponent<T = string> implements OnInit, OnChanges, OnD
   get showSelectedInlinePill(): boolean {
     return Boolean(
       this.allowInlineSearch &&
-        !this.inlineFocused &&
-        !this.usesExternalInlineText &&
-        this.valueText().trim() &&
-        this.optionPresentation(this.value)?.pill
+      !this.inlineFocused &&
+      !this.usesExternalInlineText &&
+      this.valueText().trim() &&
+      this.optionPresentation(this.value)?.pill
     );
   }
   get showPanelSearch(): boolean {
-    return !this.allowInlineSearch || this.openSource === 'button';
+    return this.panelSearchEnabled && (!this.allowInlineSearch || this.openSource === 'button');
+  }
+  /**
+   * Flat selects use the shared context menu panel (same chrome as Copy source).
+   * Hierarchy / filters / row actions / create-edit keep the legacy panel.
+   */
+  get useContextMenuPanel(): boolean {
+    return (
+      !this.hasHierarchyOptions &&
+      !this.optionFiltersEnabled &&
+      !(this.optionActions?.length)
+    );
+  }
+  get contextMenuItemSource(): T[] {
+    return this.showPanelSearch ? [...(this.options || [])] : [...this.filtered];
+  }
+  get contextMenuItems(): SharedContextMenuItem[] {
+    return this.contextMenuItemSource.map((option, index) => {
+      const presentation = this.showOptionPresentation ? this.optionPresentation(option) : null;
+      return {
+        id: this.optionMenuId(option, index),
+        label: this.optionText(option),
+        icon: presentation?.icon || undefined
+      };
+    });
+  }
+  get contextMenuFooterItems(): SharedContextMenuItem[] {
+    const items: SharedContextMenuItem[] = [];
+    if (this.canEditSelected && !this.createText && this.showPanelSearch) {
+      items.push({ id: '__ss_edit_selected__', label: `${this.editSelectedLabel} "${this.valueText()}"` });
+    }
+    if (this.canRename) {
+      items.push({ id: '__ss_rename__', label: `${this.renameLabel} "${this.renameText}"` });
+    }
+    if (this.canCreate) {
+      items.push({ id: '__ss_create__', label: `${this.createLabel} ${this.createText}` });
+    }
+    if (this.allowClear && this.value != null) {
+      items.push({ id: '__ss_clear__', label: 'Clear', icon: 'x-lg' });
+    }
+    return items;
+  }
+  get contextMenuSelectedId(): string | null {
+    if (this.value == null) {
+      return null;
+    }
+    const source = this.contextMenuItemSource;
+    const index = source.findIndex(option => this.isOptionSelected(option));
+    if (index < 0) {
+      return null;
+    }
+    return this.optionMenuId(source[index] as T, index);
+  }
+  get contextMenuPanelClass(): string[] {
+    const classes = ['ss-context-menu-panel'];
+    const extra = this.overlayPanelClass;
+    if (Array.isArray(extra)) {
+      classes.push(...extra.filter(Boolean));
+      return classes;
+    }
+    if (extra) {
+      classes.push(...extra.split(/\s+/).filter(Boolean));
+    }
+    return classes;
   }
   get showOptionFilters(): boolean {
     return this.optionFiltersEnabled && this.hasHierarchyOptions;
@@ -1297,7 +1560,11 @@ export class SearchSelectComponent<T = string> implements OnInit, OnChanges, OnD
     }
     this.filter();
     this.attachOpenDomListeners();
-    if ((options?.focusPanelSearch ?? source === 'button') && this.showPanelSearch) {
+    if (
+      (options?.focusPanelSearch ?? source === 'button') &&
+      this.showPanelSearch &&
+      !this.useContextMenuPanel
+    ) {
       setTimeout(() => this.searchInput?.nativeElement?.focus(), 0);
     }
     this.cdr.markForCheck();
@@ -1363,9 +1630,49 @@ export class SearchSelectComponent<T = string> implements OnInit, OnChanges, OnD
     this.closePanel(this.shouldRestoreTriggerFocus());
   }
 
+  onContextMenuOpenChange(next: boolean): void {
+    if (!next && this.open) {
+      this.closePanel(this.shouldRestoreTriggerFocus());
+    }
+  }
+
+  onContextMenuItemSelect(id: string): void {
+    if (id === '__ss_clear__') {
+      this.clear();
+      return;
+    }
+    if (id === '__ss_edit_selected__') {
+      this.editSelected();
+      return;
+    }
+    if (id === '__ss_rename__') {
+      this.emitRename();
+      return;
+    }
+    if (id === '__ss_create__') {
+      this.emitCreate();
+      return;
+    }
+    const source = this.contextMenuItemSource;
+    const option = source.find((entry, index) => this.optionMenuId(entry, index) === id);
+    if (option != null) {
+      this.choose(option);
+    }
+  }
+
+  private optionMenuId(option: T, index: number): string {
+    if (this.optionKeyFn) {
+      return `k:${String(this.optionKeyFn(option) ?? '')}`;
+    }
+    return `i:${index}:${this.optionText(option)}`;
+  }
+
   onDropdownTriggerClick(event: MouseEvent): void {
     event.preventDefault();
     event.stopPropagation();
+    if (this.disabled || this.dropdownDisabled) {
+      return;
+    }
     if (this.open && this.openSource === 'button') {
       this.closePanel(true);
       return;
@@ -1374,11 +1681,19 @@ export class SearchSelectComponent<T = string> implements OnInit, OnChanges, OnD
   }
 
   onInlineFocus(): void {
-    if (!this.allowInlineSearch || this.disabled) {
+    if (!this.allowInlineSearch || this.inlineTextReadonly || this.disabled) {
       return;
     }
     this.inlineFocused = true;
     this.cdr.markForCheck();
+  }
+
+  onInlineReadonlyClick(event: MouseEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+    if (!this.disabled) {
+      this.inlineTextActivate.emit();
+    }
   }
 
   onInlineInput(event: Event): void {
@@ -1532,7 +1847,12 @@ export class SearchSelectComponent<T = string> implements OnInit, OnChanges, OnD
           ? rawTarget.parentNode
           : null;
     if (!target) return;
-    if (!target.closest('search-select') && !target.closest('.search-select-overlay')) {
+    if (
+      !target.closest('search-select') &&
+      !target.closest('.search-select-overlay') &&
+      !target.closest('.scm-panel') &&
+      !target.closest('.scm-overlay-pane')
+    ) {
       this.closePanel();
     }
   }
@@ -1599,13 +1919,14 @@ export class SearchSelectComponent<T = string> implements OnInit, OnChanges, OnD
   }
 
   private normalizeOptionFilterTags(tags: readonly string[]): string[] {
-    return Array.from(
-      new Set(tags.map(tag => this.normalizeOptionFilterTag(tag)).filter(Boolean))
-    );
+    return Array.from(new Set(tags.map(tag => this.normalizeOptionFilterTag(tag)).filter(Boolean)));
   }
 
   private normalizeOptionFilterTag(tag: unknown): string {
-    return String(tag ?? '').trim().replace(/^#+/, '').toLowerCase();
+    return String(tag ?? '')
+      .trim()
+      .replace(/^#+/, '')
+      .toLowerCase();
   }
 
   private rebuildOptionFilterTagOptions(): void {
@@ -1746,6 +2067,9 @@ export class SearchSelectComponent<T = string> implements OnInit, OnChanges, OnD
   }
 
   private sameOptionText(a: T | null, b: T | null): boolean {
+    if (a != null && b != null && this.optionKeyFn) {
+      return String(this.optionKeyFn(a) ?? '') === String(this.optionKeyFn(b) ?? '');
+    }
     return this.normalizeOptionText(a) === this.normalizeOptionText(b);
   }
 
@@ -1947,7 +2271,11 @@ export class SearchSelectComponent<T = string> implements OnInit, OnChanges, OnD
     const anchorWidth = this.measureWidth(this.resolveOverlayWidthAnchor());
     const originWidth = this.measureWidth(this.triggerOrigin?.elementRef.nativeElement ?? null);
     const hostWidth = this.measureWidth(this.hostElement.nativeElement);
-    return Math.max(1, this.overlayMinWidth, Math.round(anchorWidth || originWidth || hostWidth || 200));
+    return Math.max(
+      1,
+      this.overlayMinWidth,
+      Math.round(anchorWidth || originWidth || hostWidth || 200)
+    );
   }
 
   private resolveOverlayOffsetX(): number {

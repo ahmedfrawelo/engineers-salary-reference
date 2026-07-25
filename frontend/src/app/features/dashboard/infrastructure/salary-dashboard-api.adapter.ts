@@ -19,6 +19,7 @@ type ReadSummaryDto = {
 };
 type ReadRowDto = {
   id: string;
+  submittedAt: string;
   discipline: string;
   city: string;
   monthlyNetSalary: number;
@@ -45,8 +46,8 @@ export class SalaryDashboardApiAdapter extends SalaryDashboardPort {
       reports: this.api.get<ReadPageDto>('salary-reports/read-rows', {
         ...query,
         pageNumber: 1,
-        pageSize: 100,
-        sortBy: 'id',
+        pageSize: 10,
+        sortBy: 'submittedAt',
         sortDirection: 'desc'
       }),
       options: this.api.get<SalaryOptionsDto>('salary-reports/options')

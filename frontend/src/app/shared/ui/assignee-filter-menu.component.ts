@@ -57,11 +57,12 @@ export class AssigneeFilterMenuComponent implements OnDestroy {
   @Input() allCount = 0;
   @Input() mineCount = 0;
   @Input() unassignedCount = 0;
-  @Input() drawerWidth = 304;
+  @Input() drawerWidth = 352;
   @Input() drawerZIndex: number | null = 140;
   @Input() drawerTopInset: number | null = null;
-  @Input() drawerPanelClass = 'customize-drawer customize-drawer--tasks page-design-customize-drawer';
-  drawerMode: SideDrawerMode = 'sidebar';
+  @Input() drawerPanelClass = 'customize-drawer customize-drawer--tasks page-design-customize-drawer boq-version-drawer';
+  @Input() drawerOverlayPanelClass =
+    'task-panel task-panel-clickup task-panel-ref-size boq-project-breakdown-overlay-panel boq-version-overlay-panel';
 
   @Input() set options(value: AssigneeFilterOption[] | null | undefined) {
     this.optionsState.set(value ?? []);
@@ -85,6 +86,7 @@ export class AssigneeFilterMenuComponent implements OnDestroy {
   readonly searchQuery = signal('');
   readonly drawerOpen = signal(false);
   readonly drawerTop = signal(0);
+  drawerMode: SideDrawerMode = 'sidebar';
   private readonly optionsState = signal<AssigneeFilterOption[]>([]);
   private readonly selectionState = signal<AssigneeFilterSelection>({ kind: 'all' });
   private triggerPointerHandled = false;

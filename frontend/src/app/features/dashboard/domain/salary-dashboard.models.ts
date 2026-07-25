@@ -30,6 +30,7 @@ export type SalaryDashboardOptions = {
 
 export type SalaryDashboardReportPreview = {
   id: string;
+  submittedAt: string;
   discipline: string;
   roleTitle: string;
   seniority: string;

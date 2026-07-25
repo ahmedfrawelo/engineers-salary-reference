@@ -1,39 +1,40 @@
-<ng-template #columnsDrawerActions>
-  @if (showBack) {
-    <button
-      class="columns-drawer-back"
-      type="button"
-      aria-label="Back to customize"
-      (click)="back.emit()"
-    >
-      <hugeicons-icon
-        class="columns-huge-icon"
-        [icon]="backIcon"
-        [size]="16"
-        [strokeWidth]="1.9"
-        aria-hidden="true"
-      ></hugeicons-icon>
-    </button>
-  }
-  <button
-    class="columns-drawer-close"
-    type="button"
-    aria-label="Close columns panel"
-    (click)="closePanel()"
-  >
-    <hugeicons-icon
-      class="columns-huge-icon"
-      [icon]="closeIcon"
-      [size]="16"
-      [strokeWidth]="1.9"
-      aria-hidden="true"
-    ></hugeicons-icon>
-  </button>
-</ng-template>
+<app-side-drawer
+  [open]="open"
+  [mode]="drawerMode"
+  [width]="width"
+  [zIndex]="zIndex"
+  [topInset]="topInset"
+  [backdropTint]="0"
+  [backdropBlur]="0"
+  [ignoreOutsideSelectors]="ignoreOutsideSelectors"
+  [motionPreset]="'instant'"
+  [panelClass]="panelClass"
+  [overlayPanelClass]="overlayPanelClass"
+  [title]="'Fields'"
+  [showHeader]="true"
+  [showModeToggle]="true"
+  [actionsTemplate]="columnsDrawerActions"
+  [contentTemplate]="columnsDrawerContent"
+  (modeChange)="onDrawerModeChange($event)"
+  (closed)="closePanel()"
+>
+  <ng-template #columnsDrawerActions>
+    @if (showBack) {
+      <button class="app-icon-action" type="button" aria-label="Back to customize" (click)="back.emit()">
+        <hugeicons-icon class="columns-huge-icon" [icon]="backIcon" [size]="16" [strokeWidth]="1.9" aria-hidden="true"></hugeicons-icon>
+      </button>
+    }
+  </ng-template>
 
-<ng-template #columnsDrawerToolbar>
-  <div class="columns-drawer-head columns-drawer-head--clickup">
-    <label class="columns-drawer-search columns-drawer-search--clickup">
+  <ng-template #columnsDrawerContent>
+  <section
+    class="columns-drawer-surface"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="sharedColumnsDrawerTitle"
+  >
+    <div class="columns-drawer-head columns-drawer-head--clickup">
+      <label class="columns-drawer-search columns-drawer-search--clickup">
         <hugeicons-icon
           class="columns-huge-icon"
           [icon]="searchIcon"
@@ -71,12 +72,10 @@
             Reset
           </button>
         </span>
-    </label>
-  </div>
-</ng-template>
+      </label>
+    </div>
 
-<ng-template #columnsDrawerContent>
-  <div class="columns-drawer-body columns-drawer-body--clickup" cdkDropListGroup>
+    <div class="columns-drawer-body columns-drawer-body--clickup" cdkDropListGroup>
       <section class="columns-clickup-section">
         <div class="columns-clickup-section-head">
           <button
@@ -280,27 +279,7 @@
           </div>
         }
       </section>
-  </div>
-</ng-template>
-
-<app-side-drawer
-  [open]="open"
-  [mode]="drawerMode"
-  [width]="width"
-  [zIndex]="zIndex"
-  [topInset]="topInset"
-  [backdropTint]="0"
-  [backdropBlur]="0"
-  [ignoreOutsideSelectors]="ignoreOutsideSelectors"
-  [motionPreset]="'instant'"
-  [panelClass]="panelClass"
-  [showHeader]="true"
-  [showModeToggle]="true"
-  [title]="'Fields'"
-  [actionsTemplate]="columnsDrawerActions"
-  [toolbarTemplate]="columnsDrawerToolbar"
-  [contentTemplate]="columnsDrawerContent"
-  [overlayPanelClass]="'task-panel task-panel-clickup task-panel-ref-size'"
-  (modeChange)="onDrawerModeChange($event)"
-  (closed)="closePanel()"
-/>
+    </div>
+  </section>
+  </ng-template>
+</app-side-drawer>

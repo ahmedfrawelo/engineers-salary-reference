@@ -45,6 +45,16 @@
   max-width: none;
 }
 
+.scm-panel.ss-context-menu-panel {
+  max-height: min(320px, calc(100dvh - 96px));
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+.scm-panel.ss-context-menu-panel .scm-panel__list {
+  overflow: visible;
+}
+
 .scm-panel__head {
   display: grid;
   gap: 2px;

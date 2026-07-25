@@ -261,33 +261,6 @@ export abstract class TenderProjectsComponentState {
     return this.getCachedElement(cacheField, row, factory);
   }
 
-  private renderTitleLink = (value: unknown, row: TenderRow) => {
-    if (!row || typeof row !== 'object') {
-      const span = document.createElement('span');
-      span.textContent = '-';
-      return span;
-    }
-
-    const safeLabel = this.normalizeLabel(value) ?? '-';
-    const dataKey =
-      this.getRowKeyValue(row, safeLabel) ?? `name:${encodeURIComponent(safeLabel.toLowerCase())}`;
-    return this.getCachedCellRendererElement('proj-link-v1:title', row, () => {
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'link data-grid-link data-grid-link--project';
-      btn.textContent = safeLabel;
-      btn.setAttribute('data-link', 'project');
-      btn.setAttribute('data-field', 'title');
-      btn.setAttribute('data-kind', 'project');
-      btn.setAttribute('data-key', dataKey);
-      if (row.id != null) btn.setAttribute('data-row-id', String(row.id));
-      btn.setAttribute('aria-label', `Project: ${safeLabel}`);
-      btn.setAttribute('role', 'button');
-      btn.setAttribute('tabindex', '0');
-      return btn;
-    });
-  };
-
   private renderMutedPill = (value: unknown) => {
     const span = document.createElement('span');
     span.className = 'pill pill-muted';
@@ -692,8 +665,6 @@ export abstract class TenderProjectsComponentState {
       sortable: true,
       filterable: true,
       filterOptionsLoader: this.buildProjectFilterOptionsLoader('title'),
-      cellClass: 'proj-link-cell',
-      cellRenderer: this.renderTitleLink,
       showTooltip: true
     },
     {

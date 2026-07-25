@@ -1459,11 +1459,6 @@ export class TenderProjectsComponentPresenter
       this.openProjectDetails(row);
       return;
     }
-    if (event.column?.field === 'title' && event.row) {
-      mouseEvent.preventDefault();
-      mouseEvent.stopPropagation();
-      this.openProjectDetails(event.row);
-    }
   }
 
   private openProjectDetails(row: TenderRow): void {

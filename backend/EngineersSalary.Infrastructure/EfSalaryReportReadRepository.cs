@@ -7,8 +7,8 @@ namespace EngineersSalary.Infrastructure;
 
 internal sealed class EfSalaryReportReadRepository(EngineersSalaryDbContext dbContext) : ISalaryReportReadRepository
 {
-    private const string SqlServerReadViewSql = "SELECT Id, Discipline, Country, City, YearsOfExperience, CompanyType, WorkMode, Currency, MonthlyNetSalary, HousingProvided, TransportationProvided, AnnualBonus, SalaryFairness, RecommendField, NegotiationAdvice, ProfessionalCertificate, Benefits, HighestEducation, DailyWorkHours, ExtraDayOff FROM dbo.vwSalaryReportReadRows";
-    private const string PostgreSqlReadViewSql = "SELECT \"Id\", \"Discipline\", \"Country\", \"City\", \"YearsOfExperience\", \"CompanyType\", \"WorkMode\", \"Currency\", \"MonthlyNetSalary\", \"HousingProvided\", \"TransportationProvided\", \"AnnualBonus\", \"SalaryFairness\", \"RecommendField\", \"NegotiationAdvice\", \"ProfessionalCertificate\", \"Benefits\", \"HighestEducation\", \"DailyWorkHours\", \"ExtraDayOff\" FROM \"vwSalaryReportReadRows\"";
+    private const string SqlServerReadViewSql = "SELECT Id, SubmittedAt, Discipline, Country, City, YearsOfExperience, CompanyType, WorkMode, Currency, MonthlyNetSalary, HousingProvided, TransportationProvided, AnnualBonus, SalaryFairness, RecommendField, NegotiationAdvice, ProfessionalCertificate, Benefits, HighestEducation, DailyWorkHours, ExtraDayOff FROM dbo.vwSalaryReportReadRows";
+    private const string PostgreSqlReadViewSql = "SELECT \"Id\", \"SubmittedAt\", \"Discipline\", \"Country\", \"City\", \"YearsOfExperience\", \"CompanyType\", \"WorkMode\", \"Currency\", \"MonthlyNetSalary\", \"HousingProvided\", \"TransportationProvided\", \"AnnualBonus\", \"SalaryFairness\", \"RecommendField\", \"NegotiationAdvice\", \"ProfessionalCertificate\", \"Benefits\", \"HighestEducation\", \"DailyWorkHours\", \"ExtraDayOff\" FROM \"vwSalaryReportReadRows\"";
     public async Task<SalaryReportReadPageResult> ListPageAsync(
         SalaryReportReadFilters filters,
         int pageNumber,
@@ -261,6 +261,7 @@ internal sealed class EfSalaryReportReadRepository(EngineersSalaryDbContext dbCo
 
         var ordered = normalizedSort switch
         {
+            "submittedat" => descending ? query.OrderByDescending(row => row.SubmittedAt) : query.OrderBy(row => row.SubmittedAt),
             "discipline" => descending ? query.OrderByDescending(row => row.Discipline) : query.OrderBy(row => row.Discipline),
             "country" => descending ? query.OrderByDescending(row => row.Country) : query.OrderBy(row => row.Country),
             "city" => descending ? query.OrderByDescending(row => row.City) : query.OrderBy(row => row.City),

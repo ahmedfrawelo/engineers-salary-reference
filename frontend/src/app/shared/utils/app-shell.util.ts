@@ -100,6 +100,7 @@ export function applyAppRouteClasses(
   const clean = stripUrlDecorations(url);
   const authRoute = isAuthRoute(clean);
   doc.body.classList.toggle('auth-route', authRoute);
+  doc.body.classList.toggle('dashboard-page', clean === '/dashboard' || clean === '/');
   doc.body.classList.toggle('tender-projects-page', clean.startsWith('/tender/projects'));
   doc.body.classList.toggle('salary-reports-page', clean.startsWith('/salary-reports'));
   doc.body.classList.toggle('submit-report-page', clean.startsWith('/submit-report'));

@@ -168,7 +168,10 @@
                         @for (result of section.items; track result.item.path) {
                           <a
                             class="global-search-option"
-                            [routerLink]="result.item.disabled ? null : '/' + result.item.path"
+                            [routerLink]="result.item.disabled || result.item.externalUrl ? null : '/' + result.item.path"
+                            [attr.href]="result.item.disabled ? null : result.item.externalUrl"
+                            [attr.target]="result.item.externalUrl ? '_blank' : null"
+                            [attr.rel]="result.item.externalUrl ? 'noopener noreferrer' : null"
                             [id]="'global-search-option-' + result.index"
                             [attr.data-search-index]="result.index"
                             role="option"
@@ -583,7 +586,10 @@
             @for (item of shellMenuItems; track item.key) {
               <a
                 class="area-trigger shell-primary-item"
-                [routerLink]="item.disabled ? null : '/' + item.path"
+                [routerLink]="item.disabled || item.externalUrl ? null : '/' + item.path"
+                [attr.href]="item.disabled ? null : item.externalUrl"
+                [attr.target]="item.externalUrl ? '_blank' : null"
+                [attr.rel]="item.externalUrl ? 'noopener noreferrer' : null"
                 [class.is-current]="isShellItemActive(item)"
                 [attr.aria-current]="isShellItemActive(item) ? 'page' : null"
                 [attr.data-tooltip]="menuItemTooltip(item)"
@@ -669,7 +675,10 @@
                     @for (item of menus()[area]; track item.key) {
                       <a
                         class="area-page-item"
-                        [routerLink]="item.disabled ? null : '/' + item.path"
+                        [routerLink]="item.disabled || item.externalUrl ? null : '/' + item.path"
+                        [attr.href]="item.disabled ? null : item.externalUrl"
+                        [attr.target]="item.externalUrl ? '_blank' : null"
+                        [attr.rel]="item.externalUrl ? 'noopener noreferrer' : null"
                         [attr.tabindex]="
                           sidebarGroupsVisible && (sideCollapsed || !isAreaExpanded(area))
                             ? -1
@@ -708,6 +717,77 @@
               </section>
             }
           </nav>
+          <div class="sidebar-developer-footer" aria-label="Developer information">
+            <a
+              class="sidebar-developer-footer__link"
+              [href]="aboutDeveloperItem.externalUrl"
+              target="_blank"
+              rel="noopener noreferrer"
+              [attr.data-tooltip]="menuItemTooltip(aboutDeveloperItem)"
+              (mouseenter)="showSidebarTooltip($event, menuItemTooltip(aboutDeveloperItem))"
+              (mouseleave)="hideSidebarTooltip()"
+              (focus)="showSidebarTooltip($event, menuItemTooltip(aboutDeveloperItem))"
+              (blur)="hideSidebarTooltip()"
+              (click)="onAreaItemLinkClick('Tender', aboutDeveloperItem, $event)"
+            >
+              <span class="sidebar-developer-footer__icon-shell" aria-hidden="true">
+                <img
+                  class="sidebar-developer-footer__logo sidebar-developer-footer__logo--base"
+                  src="assets/brand/developer/ahmed-frawelo-logo-01.png"
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                />
+                <img
+                  class="sidebar-developer-footer__logo sidebar-developer-footer__logo--mid"
+                  src="assets/brand/developer/ahmed-frawelo-logo-02.png"
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                />
+                <img
+                  class="sidebar-developer-footer__logo sidebar-developer-footer__logo--top"
+                  src="assets/brand/developer/ahmed-frawelo-logo-03.png"
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                />
+              </span>
+              <span class="sidebar-developer-footer__copy">
+                <span class="sidebar-developer-footer__label">{{ aboutDeveloperItem.label }}</span>
+                <span class="sidebar-developer-footer__rights">&copy; All rights reserved</span>
+              </span>
+            </a>
+            <a
+              class="sidebar-developer-footer__link"
+              [href]="informationSourceItem.externalUrl"
+              target="_blank"
+              rel="noopener noreferrer"
+              [attr.data-tooltip]="menuItemTooltip(informationSourceItem)"
+              (mouseenter)="showSidebarTooltip($event, menuItemTooltip(informationSourceItem))"
+              (mouseleave)="hideSidebarTooltip()"
+              (focus)="showSidebarTooltip($event, menuItemTooltip(informationSourceItem))"
+              (blur)="hideSidebarTooltip()"
+              (click)="onAreaItemLinkClick('Tender', informationSourceItem, $event)"
+            >
+              <span
+                class="sidebar-developer-footer__icon-shell sidebar-developer-footer__icon-shell--source"
+                aria-hidden="true"
+              >
+                <img
+                  class="sidebar-developer-footer__logo sidebar-developer-footer__logo--source"
+                  src="assets/brand/engref-favicon-v6.svg"
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                />
+              </span>
+              <span class="sidebar-developer-footer__copy">
+                <span class="sidebar-developer-footer__label">{{ informationSourceItem.label }}</span>
+                <span class="sidebar-developer-footer__rights">LinkedIn profile</span>
+              </span>
+            </a>
+          </div>
         </div>
       </aside>
       @if (collapsedAreaFlyout; as flyout) {
@@ -738,7 +818,10 @@
             @for (item of menus()[flyout.area]; track item.key) {
               <a
                 class="collapsed-area-flyout__item"
-                [routerLink]="item.disabled ? null : '/' + item.path"
+                [routerLink]="item.disabled || item.externalUrl ? null : '/' + item.path"
+                [attr.href]="item.disabled ? null : item.externalUrl"
+                [attr.target]="item.externalUrl ? '_blank' : null"
+                [attr.rel]="item.externalUrl ? 'noopener noreferrer' : null"
                 [class.active]="activeKey === item.key"
                 [class.is-disabled]="item.disabled"
                 [attr.aria-current]="activeKey === item.key ? 'page' : null"

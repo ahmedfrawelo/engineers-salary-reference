@@ -140,7 +140,7 @@ namespace EngineersSalary.Infrastructure.Persistence.Migrations
 
             return $"""
                 CREATE VIEW dbo.vwSalaryReportReadRows AS
-                SELECT r.Id, d.Value AS Discipline, co.Value AS Country, ci.Value AS City,
+                SELECT r.Id, r.SubmittedAt, d.Value AS Discipline, co.Value AS Country, ci.Value AS City,
                        y.Value AS YearsOfExperience, ct.Value AS CompanyType, wm.Value AS WorkMode,
                        {currencyProjection} AS Currency, {salaryProjection} AS MonthlyNetSalary,
                        h.Value AS HousingProvided, t.Value AS TransportationProvided,

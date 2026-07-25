@@ -2,6 +2,9 @@ using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
 using EngineersSalary.Contracts;
+using EngineersSalary.Infrastructure;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace EngineersSalary.Tests;
 
@@ -325,6 +328,45 @@ public sealed class SalaryReportsApiIntegrationTests : IAsyncLifetime
         Assert.Equal(firstPass, secondPass);
     }
 
+    [Fact]
+    public async Task ReadRows_returns_the_most_recent_submission_first_when_sorted_by_submitted_at()
+    {
+        using var client = factory.CreateClient();
+
+        var older = await CreateReportAndReadAsync(client, CreateRequest("Recent Ordering", "EGP", null), "recent-ordering-record-0001");
+        var newer = await CreateReportAndReadAsync(client, CreateRequest("Recent Ordering", "EGP", null), "recent-ordering-record-0002");
+
+        await using (var scope = factory.Services.CreateAsyncScope())
+        {
+            var dbContext = scope.ServiceProvider.GetRequiredService<EngineersSalaryDbContext>();
+            await dbContext.Database.ExecuteSqlInterpolatedAsync(
+                $"""
+                 UPDATE SalaryReports
+                 SET SubmittedAt = {new DateOnly(2026, 1, 1)}
+                 WHERE Id = {older.Id}
+                 """);
+            await dbContext.Database.ExecuteSqlInterpolatedAsync(
+                $"""
+                 UPDATE SalaryReports
+                 SET SubmittedAt = {new DateOnly(2026, 1, 2)}
+                 WHERE Id = {newer.Id}
+                 """);
+        }
+
+        using var response = await client.GetAsync(
+            "/api/salary-reports/read-rows?discipline=Recent%20Ordering&currency=EGP&pageNumber=1&pageSize=10&sortBy=submittedAt&sortDirection=desc");
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+        var page = await response.Content.ReadFromJsonAsync<SalaryReportReadRowPageDto>();
+        Assert.NotNull(page);
+        Assert.Equal(2, page.TotalCount);
+        Assert.Equal(2, page.Items.Count);
+        Assert.Equal(newer.Id, page.Items[0].Id);
+        Assert.Equal(new DateOnly(2026, 1, 2), page.Items[0].SubmittedAt);
+        Assert.Equal(older.Id, page.Items[1].Id);
+        Assert.Equal(new DateOnly(2026, 1, 1), page.Items[1].SubmittedAt);
+    }
+
     private static async Task CreateReportAsync(
         HttpClient client,
         CreateSalaryReportRequest request,
@@ -337,6 +379,23 @@ public sealed class SalaryReportsApiIntegrationTests : IAsyncLifetime
         message.Headers.Add("Idempotency-Key", idempotencyKey);
         using var response = await client.SendAsync(message);
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+    }
+
+    private static async Task<SalaryReportDto> CreateReportAndReadAsync(
+        HttpClient client,
+        CreateSalaryReportRequest request,
+        string idempotencyKey)
+    {
+        using var message = new HttpRequestMessage(HttpMethod.Post, "/api/salary-reports")
+        {
+            Content = JsonContent.Create(request),
+        };
+        message.Headers.Add("Idempotency-Key", idempotencyKey);
+        using var response = await client.SendAsync(message);
+        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+        var report = await response.Content.ReadFromJsonAsync<SalaryReportDto>();
+        Assert.NotNull(report);
+        return report;
     }
 
     private static void AssertSecurityHeaders(HttpResponseMessage response)

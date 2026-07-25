@@ -22,7 +22,8 @@ public sealed class SalaryReportReadService(ISalaryReportReadRepository reposito
     private static readonly HashSet<string> SupportedSortFields =
     [
         "id", "discipline", "country", "city", "companytype", "workmode", "currency",
-        "yearsofexperience", "monthlynetsalary", "dailyworkhours", "annualbonus"
+        "yearsofexperience", "monthlynetsalary", "dailyworkhours", "annualbonus",
+        "submittedat"
     ];
     private static readonly HashSet<string> NumericAggregateFields =
         ["monthlynetsalary", "yearsofexperience", "dailyworkhours"];

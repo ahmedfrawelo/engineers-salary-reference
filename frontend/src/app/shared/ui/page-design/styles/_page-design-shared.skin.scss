@@ -2155,6 +2155,17 @@ app-side-drawer .side-drawer-panel.page-design-customize-drawer.customize-drawer
   box-shadow: none !important;
 }
 
+/* Shared shell copied from Project Breakdown > Versions. */
+.customize-drawer.side-drawer-panel.has-shell-header .side-drawer-header {
+  border-bottom: 1px solid var(--customize-drawer-border, rgb(var(--border) / 0.28));
+}
+
+.customize-drawer.side-drawer-panel.has-shell-header .side-drawer-body,
+.customize-drawer.side-drawer-panel.has-shell-header .customize-drawer-surface {
+  min-height: 0;
+  height: 100%;
+}
+
 .page-design-customize-drawer .customize-drawer-surface {
   position: relative;
   display: flex;

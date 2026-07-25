@@ -82,10 +82,12 @@ import { MessagesStoreService } from './features/messages/infrastructure/message
 import { LoadingService } from './core/loading/loading.service';
 import {
   AREA_ICONS,
+  ABOUT_DEVELOPER_ITEM,
   APP_SHELL_ITEMS,
   AREA_LABELS,
   AREA_MENUS,
   AREA_ORDER,
+  INFORMATION_SOURCE_ITEM,
   Area,
   MenuItem
 } from './shared/data/app-navigation.data';
@@ -381,6 +383,8 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
 
   readonly areaIcons: Record<Area, string> = AREA_ICONS;
   readonly shellMenuItems: MenuItem[] = APP_SHELL_ITEMS;
+  readonly aboutDeveloperItem: MenuItem = ABOUT_DEVELOPER_ITEM;
+  readonly informationSourceItem: MenuItem = INFORMATION_SOURCE_ITEM;
   readonly areaLabels: Record<Area, string> = AREA_LABELS;
   readonly areaOrder: Area[] = AREA_ORDER;
   readonly sidebarOpenIcon = ViewSidebarRightIcon;
@@ -401,8 +405,11 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   readonly sidebarMenuIconSpecs: Record<string, AppIconSpec> = {
     'app-dashboard': resolveAppIconSpec('nav-dashboard'),
     'salary-reports': resolveAppIconSpec('nav-salary-reports'),
-    'submit-salary-report': resolveAppIconSpec('nav-submit-report')
+    'submit-salary-report': resolveAppIconSpec('nav-submit-report'),
+    'about-developer': resolveAppIconSpec('user'),
+    'information-source': resolveAppIconSpec('link-dots')
   };
+
   activeKey = '';
 
   private readonly permissionService = inject(PermissionService);
@@ -473,6 +480,16 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
       ...this.buildShellSearchDestinations(),
       ...this.quickAccessItems(),
       ...this.buildAreaSearchDestinations(),
+      this.createGlobalSearchDestination(this.aboutDeveloperItem, 'About', [
+        'About Ahmed Frawelo',
+        'Developer portfolio',
+        'All rights reserved'
+      ]),
+      this.createGlobalSearchDestination(this.informationSourceItem, 'About', [
+        'Information Source',
+        'LinkedIn',
+        'Ahmed Radwan'
+      ]),
       ...this.buildStaticSearchDestinations()
     ].filter(item => {
       const dedupeKey = item.path;
@@ -868,6 +885,13 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
       return;
     }
 
+    if (item.externalUrl) {
+      this.setCurrentArea(area);
+      this.closeCollapsedAreaFlyout(true);
+      this.closeGlobalSearch();
+      return;
+    }
+
     if (this.isNewTabNavigation(event)) {
       return;
     }
@@ -884,6 +908,13 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
       return;
     }
 
+    if (item.externalUrl) {
+      this.closeCollapsedAreaFlyout(true);
+      this.hideSidebarTooltip();
+      this.closeGlobalSearch();
+      return;
+    }
+
     if (this.isNewTabNavigation(event)) {
       return;
     }
@@ -897,6 +928,13 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
       event.preventDefault();
       event.stopPropagation();
       this.selectGlobalSearchResult(item, event);
+      return;
+    }
+
+    if (item.externalUrl) {
+      this.rememberRecentSearchPath(item.path);
+      this.globalSearchTerm.set(item.label);
+      this.closeGlobalSearch();
       return;
     }
 
@@ -1500,6 +1538,12 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     this.rememberRecentSearchPath(item.path);
     this.globalSearchTerm.set(item.label);
     this.closeGlobalSearch();
+    if (item.externalUrl) {
+      if (this.isBrowser) {
+        window.open(item.externalUrl, '_blank', 'noopener,noreferrer');
+      }
+      return;
+    }
     this.activate(item);
   }
 

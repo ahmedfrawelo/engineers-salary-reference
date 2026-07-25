@@ -2,6 +2,7 @@ namespace EngineersSalary.Contracts;
 
 public sealed record SalaryReportReadRowDto(
     Guid Id,
+    DateOnly SubmittedAt,
     string Discipline,
     string Country,
     string City,

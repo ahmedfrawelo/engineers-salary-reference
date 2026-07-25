@@ -29,11 +29,14 @@ export type SharedCustomizePanelActionMenuItem = {
 })
 export class SharedCustomizePanelComponent {
   @Input() open = false;
-  @Input() width = 304;
+  @Input() width = 352;
   @Input() zIndex: number | null = null;
   @Input() topInset: number | null = null;
   @Input() ignoreOutsideSelectors = '';
-  @Input() panelClass = 'customize-drawer customize-drawer--tasks page-design-customize-drawer';
+  /** Same SideDrawer shell and panel skin used by Project Breakdown > Versions in ABRD. */
+  @Input() panelClass = 'customize-drawer customize-drawer--tasks page-design-customize-drawer boq-version-drawer';
+  @Input() overlayPanelClass =
+    'task-panel task-panel-clickup task-panel-ref-size boq-project-breakdown-overlay-panel boq-version-overlay-panel';
   @Input() title = 'Customize view';
   @Input() showDefaultContent = true;
   @Input() actionIcon = '';
