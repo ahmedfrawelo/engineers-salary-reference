@@ -1,0 +1,371 @@
+﻿{
+    "mode":  "dryRun",
+    "affectedRows":  81,
+    "mappings":  [
+                     {
+                         "original":  "مساح",
+                         "canonical":  "Surveying",
+                         "count":  5
+                     },
+                     {
+                         "original":  "Agriculture",
+                         "canonical":  "Agricultural Engineering",
+                         "count":  3
+                     },
+                     {
+                         "original":  "Chemical engineer",
+                         "canonical":  "Chemical",
+                         "count":  2
+                     },
+                     {
+                         "original":  "Communication",
+                         "canonical":  "Electrical",
+                         "count":  2
+                     },
+                     {
+                         "original":  "Agriculture Engineer",
+                         "canonical":  "Agricultural Engineering",
+                         "count":  1
+                     },
+                     {
+                         "original":  "Autocad Drawer",
+                         "canonical":  "Drafting / CAD",
+                         "count":  1
+                     },
+                     {
+                         "original":  "Biomedical",
+                         "canonical":  "Biomedical Engineering",
+                         "count":  1
+                     },
+                     {
+                         "original":  "Business Development",
+                         "canonical":  "Information Technology",
+                         "count":  1
+                     },
+                     {
+                         "original":  "Chemical engineer (Operation)",
+                         "canonical":  "Chemical",
+                         "count":  1
+                     },
+                     {
+                         "original":  "Chemist",
+                         "canonical":  "Chemical",
+                         "count":  1
+                     },
+                     {
+                         "original":  "Chemistry",
+                         "canonical":  "Chemical",
+                         "count":  1
+                     },
+                     {
+                         "original":  "Civil Defense Consultant",
+                         "canonical":  "Civil",
+                         "count":  1
+                     },
+                     {
+                         "original":  "Civil Execution Engineer",
+                         "canonical":  "Civil",
+                         "count":  1
+                     },
+                     {
+                         "original":  "Computer science",
+                         "canonical":  "Information Technology",
+                         "count":  1
+                     },
+                     {
+                         "original":  "Dev",
+                         "canonical":  "Information Technology",
+                         "count":  1
+                     },
+                     {
+                         "original":  "Draftsman mep \u0026 arch",
+                         "canonical":  "Mechanical",
+                         "count":  1
+                     },
+                     {
+                         "original":  "FLS",
+                         "canonical":  "Electrical",
+                         "count":  1
+                     },
+                     {
+                         "original":  "FLS Engineer",
+                         "canonical":  "Electrical",
+                         "count":  1
+                     },
+                     {
+                         "original":  "Frontend web development",
+                         "canonical":  "Information Technology",
+                         "count":  1
+                     },
+                     {
+                         "original":  "Furniture production",
+                         "canonical":  "Architecture",
+                         "count":  1
+                     },
+                     {
+                         "original":  "HVAC ENGINEER",
+                         "canonical":  "Mechanical",
+                         "count":  1
+                     },
+                     {
+                         "original":  "Health and safety",
+                         "canonical":  "HSE",
+                         "count":  1
+                     },
+                     {
+                         "original":  "Highway technical office engineer",
+                         "canonical":  "Civil",
+                         "count":  1
+                     },
+                     {
+                         "original":  "Hvac bim",
+                         "canonical":  "Mechanical",
+                         "count":  1
+                     },
+                     {
+                         "original":  "Infra structure",
+                         "canonical":  "Civil",
+                         "count":  1
+                     },
+                     {
+                         "original":  "Infrastructural engineering",
+                         "canonical":  "Structural",
+                         "count":  1
+                     },
+                     {
+                         "original":  "Infrastructure",
+                         "canonical":  "Civil",
+                         "count":  1
+                     },
+                     {
+                         "original":  "Infrastructure BIM",
+                         "canonical":  "Civil",
+                         "count":  1
+                     },
+                     {
+                         "original":  "Infrastructure and roads",
+                         "canonical":  "Civil",
+                         "count":  1
+                     },
+                     {
+                         "original":  "Infrastructure civil engineer",
+                         "canonical":  "Civil",
+                         "count":  1
+                     },
+                     {
+                         "original":  "Interior and furniture design",
+                         "canonical":  "Architecture",
+                         "count":  1
+                     },
+                     {
+                         "original":  "Irrigation",
+                         "canonical":  "Agricultural Engineering",
+                         "count":  1
+                     },
+                     {
+                         "original":  "It",
+                         "canonical":  "Information Technology",
+                         "count":  1
+                     },
+                     {
+                         "original":  "Land Scap",
+                         "canonical":  "Agricultural Engineering",
+                         "count":  1
+                     },
+                     {
+                         "original":  "Light current",
+                         "canonical":  "Electrical",
+                         "count":  1
+                     },
+                     {
+                         "original":  "Mechanical Infrastructure",
+                         "canonical":  "Mechanical",
+                         "count":  1
+                     },
+                     {
+                         "original":  "Mechanical and electrical",
+                         "canonical":  "Mechanical",
+                         "count":  1
+                     },
+                     {
+                         "original":  "Mechanical, BIM",
+                         "canonical":  "Mechanical",
+                         "count":  1
+                     },
+                     {
+                         "original":  "Metallurgical (quality)",
+                         "canonical":  "Metallurgy",
+                         "count":  1
+                     },
+                     {
+                         "original":  "Petrochemical",
+                         "canonical":  "Chemical",
+                         "count":  1
+                     },
+                     {
+                         "original":  "Plumbing and fire protection",
+                         "canonical":  "Mechanical",
+                         "count":  1
+                     },
+                     {
+                         "original":  "Pluming",
+                         "canonical":  "Mechanical",
+                         "count":  1
+                     },
+                     {
+                         "original":  "Process engineer",
+                         "canonical":  "Chemical",
+                         "count":  1
+                     },
+                     {
+                         "original":  "Production chemist",
+                         "canonical":  "Chemical",
+                         "count":  1
+                     },
+                     {
+                         "original":  "Smart home",
+                         "canonical":  "Electrical",
+                         "count":  1
+                     },
+                     {
+                         "original":  "Survey",
+                         "canonical":  "Surveying",
+                         "count":  1
+                     },
+                     {
+                         "original":  "Traffic engineer",
+                         "canonical":  "Civil",
+                         "count":  1
+                     },
+                     {
+                         "original":  "Water treatment",
+                         "canonical":  "Mechanical",
+                         "count":  1
+                     },
+                     {
+                         "original":  "Wet Utilities Engineer",
+                         "canonical":  "Mechanical",
+                         "count":  1
+                     },
+                     {
+                         "original":  "agricultural",
+                         "canonical":  "Agricultural Engineering",
+                         "count":  1
+                     },
+                     {
+                         "original":  "bms",
+                         "canonical":  "Electrical",
+                         "count":  1
+                     },
+                     {
+                         "original":  "marine construction works",
+                         "canonical":  "Mechanical",
+                         "count":  1
+                     },
+                     {
+                         "original":  "safety",
+                         "canonical":  "HSE",
+                         "count":  1
+                     },
+                     {
+                         "original":  "utilities",
+                         "canonical":  "Mechanical",
+                         "count":  1
+                     },
+                     {
+                         "original":  "اعمال السلامة الانذار والاطفاء",
+                         "canonical":  "Electrical",
+                         "count":  1
+                     },
+                     {
+                         "original":  "الزراعة",
+                         "canonical":  "Agricultural Engineering",
+                         "count":  1
+                     },
+                     {
+                         "original":  "الصيانة الميكانيكية",
+                         "canonical":  "Mechanical",
+                         "count":  1
+                     },
+                     {
+                         "original":  "بترول",
+                         "canonical":  "Petroleum",
+                         "count":  1
+                     },
+                     {
+                         "original":  "بنية تحتية",
+                         "canonical":  "Civil",
+                         "count":  1
+                     },
+                     {
+                         "original":  "بنيه تحتيه",
+                         "canonical":  "Civil",
+                         "count":  1
+                     },
+                     {
+                         "original":  "تعدين وفلزات",
+                         "canonical":  "Metallurgy",
+                         "count":  1
+                     },
+                     {
+                         "original":  "زراعة",
+                         "canonical":  "Agricultural Engineering",
+                         "count":  1
+                     },
+                     {
+                         "original":  "شبكات",
+                         "canonical":  "Electrical",
+                         "count":  1
+                     },
+                     {
+                         "original":  "عماره داخليه وتصميم داخلي واثاث",
+                         "canonical":  "Architecture",
+                         "count":  1
+                     },
+                     {
+                         "original":  "كيمياء",
+                         "canonical":  "Chemical",
+                         "count":  1
+                     },
+                     {
+                         "original":  "لاندسكيب",
+                         "canonical":  "Agricultural Engineering",
+                         "count":  1
+                     },
+                     {
+                         "original":  "لاندسكيب شبكات ري",
+                         "canonical":  "Electrical",
+                         "count":  1
+                     },
+                     {
+                         "original":  "مدنى / سيفتى",
+                         "canonical":  "Civil",
+                         "count":  1
+                     },
+                     {
+                         "original":  "مدني تنفيذي",
+                         "canonical":  "Civil",
+                         "count":  1
+                     },
+                     {
+                         "original":  "مدير مكتب فنى - مهندس مدنى",
+                         "canonical":  "Civil",
+                         "count":  1
+                     },
+                     {
+                         "original":  "مساحة",
+                         "canonical":  "Surveying",
+                         "count":  1
+                     },
+                     {
+                         "original":  "مساحه",
+                         "canonical":  "Surveying",
+                         "count":  1
+                     },
+                     {
+                         "original":  "هندسة زراعية",
+                         "canonical":  "Agricultural Engineering",
+                         "count":  1
+                     }
+                 ]
+}

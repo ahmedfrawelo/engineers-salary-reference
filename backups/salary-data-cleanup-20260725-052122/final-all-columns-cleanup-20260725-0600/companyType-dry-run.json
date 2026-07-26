@@ -1,0 +1,48 @@
+﻿{
+    "mode":  "dryRun",
+    "field":  "companyTypes",
+    "table":  "SalaryReportCompanyTypes",
+    "affectedRows":  3,
+    "mappings":  [
+                     {
+                         "original":  "David",
+                         "canonical":  "Other / Needs Review",
+                         "count":  1
+                     },
+                     {
+                         "original":  "Maitenance",
+                         "canonical":  "Maintenance",
+                         "count":  1
+                     },
+                     {
+                         "original":  "enegy and oil and gas",
+                         "canonical":  "Oil \u0026 Gas",
+                         "count":  1
+                     },
+                     {
+                         "original":  "??",
+                         "canonical":  "Other / Needs Review",
+                         "count":  0
+                     },
+                     {
+                         "original":  "?? ???? ?????",
+                         "canonical":  "Other / Needs Review",
+                         "count":  0
+                     },
+                     {
+                         "original":  "???",
+                         "canonical":  "Other / Needs Review",
+                         "count":  0
+                     },
+                     {
+                         "original":  "????",
+                         "canonical":  "Other / Needs Review",
+                         "count":  0
+                     },
+                     {
+                         "original":  "??????????",
+                         "canonical":  "Petrochemical",
+                         "count":  0
+                     }
+                 ]
+}

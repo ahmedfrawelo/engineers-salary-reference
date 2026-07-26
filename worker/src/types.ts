@@ -2,6 +2,7 @@ export interface Env {
   DATABASE_URL: string;
   ALLOWED_ORIGIN: string;
   ENVIRONMENT: 'production' | 'development';
+  DATA_CLEANUP_TOKEN?: string;
 }
 
 export type Row = Record<string, unknown>;
@@ -17,3 +18,5 @@ export const readFields = [
 export const columnByField: Record<string, string> = Object.fromEntries(
   ['Id', ...readFields.map(value => value[0].toUpperCase() + value.slice(1))].map(value => [value.toLowerCase(), `"${value}"`])
 );
+
+columnByField.submittedat = '"SubmittedAt"';

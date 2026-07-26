@@ -1,0 +1,18 @@
+﻿{
+    "mode":  "apply",
+    "field":  "country",
+    "mappings":  [
+                     {
+                         "original":  "مصر",
+                         "canonical":  "Egypt"
+                     },
+                     {
+                         "original":  "OMAN",
+                         "canonical":  "Oman"
+                     },
+                     {
+                         "original":  "السعودية",
+                         "canonical":  "Saudi Arabia"
+                     }
+                 ]
+}

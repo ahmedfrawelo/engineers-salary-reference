@@ -1,0 +1,5 @@
+﻿"Field","BackupTable","AffectedRows","UpdatedRows","ResponseFile"
+"city","SalaryReportCities_Backup_20260725024232","1184","1184","E:\MY DATA\div\ENGINEERING\engineers-salary-reference\backups\salary-data-cleanup-20260725-052122\cleanup-city-apply-response.json"
+"companyType","SalaryReportCompanyTypes_Backup_20260725024233","630","630","E:\MY DATA\div\ENGINEERING\engineers-salary-reference\backups\salary-data-cleanup-20260725-052122\cleanup-companyType-apply-response.json"
+"country","SalaryReportCountries_Backup_20260725024233","1822","1822","E:\MY DATA\div\ENGINEERING\engineers-salary-reference\backups\salary-data-cleanup-20260725-052122\cleanup-country-apply-response.json"
+"currency","SalaryReportCurrencies_Backup_20260725024234","4","4","E:\MY DATA\div\ENGINEERING\engineers-salary-reference\backups\salary-data-cleanup-20260725-052122\cleanup-currency-apply-response.json"

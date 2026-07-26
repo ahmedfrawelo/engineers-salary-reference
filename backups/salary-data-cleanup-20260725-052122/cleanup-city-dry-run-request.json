@@ -1,0 +1,42 @@
+﻿{
+    "mode":  "dryRun",
+    "field":  "city",
+    "mappings":  [
+                     {
+                         "original":  "10th of ramadan",
+                         "canonical":  "10th of Ramadan"
+                     },
+                     {
+                         "original":  "العاشر من رمضان",
+                         "canonical":  "10th of Ramadan"
+                     },
+                     {
+                         "original":  "٦ اكتوبر",
+                         "canonical":  "6th of October"
+                     },
+                     {
+                         "original":  "6th october",
+                         "canonical":  "6th of October"
+                     },
+                     {
+                         "original":  "Alexanderia",
+                         "canonical":  "Alexandria"
+                     },
+                     {
+                         "original":  "الاسكندرية",
+                         "canonical":  "Alexandria"
+                     },
+                     {
+                         "original":  "الإسكندرية",
+                         "canonical":  "Alexandria"
+                     },
+                     {
+                         "original":  "القاهرة",
+                         "canonical":  "Cairo"
+                     },
+                     {
+                         "original":  "الجيزة",
+                         "canonical":  "Giza"
+                     }
+                 ]
+}

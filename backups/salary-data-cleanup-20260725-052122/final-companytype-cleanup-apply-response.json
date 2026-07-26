@@ -1,0 +1,45 @@
+﻿{
+    "mode":  "apply",
+    "field":  "companyTypes",
+    "table":  "SalaryReportCompanyTypes",
+    "backupTable":  "SalaryReportCompanyTypes_Backup_20260725025011",
+    "affectedRows":  502,
+    "updatedRows":  502,
+    "mappings":  [
+                     {
+                         "original":  "Sub-Contractor",
+                         "canonical":  "Contractor",
+                         "count":  351
+                     },
+                     {
+                         "original":  "Manufacturer",
+                         "canonical":  "Manufacturing",
+                         "count":  78
+                     },
+                     {
+                         "original":  "Supervision Consultant",
+                         "canonical":  "Consultant",
+                         "count":  66
+                     },
+                     {
+                         "original":  "مقاولات",
+                         "canonical":  "Contractor",
+                         "count":  3
+                     },
+                     {
+                         "original":  "Contracting",
+                         "canonical":  "Contractor",
+                         "count":  2
+                     },
+                     {
+                         "original":  "supplier",
+                         "canonical":  "Supplier",
+                         "count":  1
+                     },
+                     {
+                         "original":  "خدمات هندسية",
+                         "canonical":  "Consultant",
+                         "count":  1
+                     }
+                 ]
+}

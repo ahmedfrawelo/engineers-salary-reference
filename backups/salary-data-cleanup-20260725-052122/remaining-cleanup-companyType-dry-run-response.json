@@ -1,0 +1,128 @@
+﻿{
+    "mode":  "dryRun",
+    "field":  "companyTypes",
+    "table":  "SalaryReportCompanyTypes",
+    "affectedRows":  24,
+    "mappings":  [
+                     {
+                         "original":  "BIM Consultant",
+                         "canonical":  "Consultant",
+                         "count":  1
+                     },
+                     {
+                         "original":  "Cement industry",
+                         "canonical":  "Manufacturing",
+                         "count":  1
+                     },
+                     {
+                         "original":  "Client rep.",
+                         "canonical":  "Owner",
+                         "count":  1
+                     },
+                     {
+                         "original":  "MEP Engineering Services",
+                         "canonical":  "Consultant",
+                         "count":  1
+                     },
+                     {
+                         "original":  "Medium voltage distributer",
+                         "canonical":  "Supplier",
+                         "count":  1
+                     },
+                     {
+                         "original":  "Pumps Supplier",
+                         "canonical":  "Supplier",
+                         "count":  1
+                     },
+                     {
+                         "original":  "Sheet metal",
+                         "canonical":  "Manufacturing",
+                         "count":  1
+                     },
+                     {
+                         "original":  "Supplies, Agencies \u0026 Contracting",
+                         "canonical":  "Supplier",
+                         "count":  1
+                     },
+                     {
+                         "original":  "constructure and design",
+                         "canonical":  "Contractor",
+                         "count":  1
+                     },
+                     {
+                         "original":  "food industry",
+                         "canonical":  "Manufacturing",
+                         "count":  1
+                     },
+                     {
+                         "original":  "owner’s engineer",
+                         "canonical":  "Owner",
+                         "count":  1
+                     },
+                     {
+                         "original":  "اتشاءات",
+                         "canonical":  "Contractor",
+                         "count":  1
+                     },
+                     {
+                         "original":  "انشاءات",
+                         "canonical":  "Contractor",
+                         "count":  1
+                     },
+                     {
+                         "original":  "توريدات عامه",
+                         "canonical":  "Supplier",
+                         "count":  1
+                     },
+                     {
+                         "original":  "خدمات هندسيه",
+                         "canonical":  "Consultant",
+                         "count":  1
+                     },
+                     {
+                         "original":  "شركه طباعة",
+                         "canonical":  "Manufacturing",
+                         "count":  1
+                     },
+                     {
+                         "original":  "مالك لمجموعة فنادق",
+                         "canonical":  "Owner",
+                         "count":  1
+                     },
+                     {
+                         "original":  "محطة خرسانه جاهزه",
+                         "canonical":  "Contractor",
+                         "count":  1
+                     },
+                     {
+                         "original":  "مصنع",
+                         "canonical":  "Manufacturing",
+                         "count":  1
+                     },
+                     {
+                         "original":  "مقاول",
+                         "canonical":  "Contractor",
+                         "count":  1
+                     },
+                     {
+                         "original":  "مقاولات عامه",
+                         "canonical":  "Contractor",
+                         "count":  1
+                     },
+                     {
+                         "original":  "مكتب مقاولات بسوهاج",
+                         "canonical":  "Contractor",
+                         "count":  1
+                     },
+                     {
+                         "original":  "مكتب هندسي",
+                         "canonical":  "Consultant",
+                         "count":  1
+                     },
+                     {
+                         "original":  "وكيل براند تكييف",
+                         "canonical":  "Supplier",
+                         "count":  1
+                     }
+                 ]
+}

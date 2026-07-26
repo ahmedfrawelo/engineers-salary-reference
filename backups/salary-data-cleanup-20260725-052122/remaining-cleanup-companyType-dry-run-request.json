@@ -1,0 +1,102 @@
+﻿{
+    "mode":  "dryRun",
+    "field":  "companyType",
+    "mappings":  [
+                     {
+                         "original":  "مقاول",
+                         "canonical":  "Contractor"
+                     },
+                     {
+                         "original":  "مقاولات عامه",
+                         "canonical":  "Contractor"
+                     },
+                     {
+                         "original":  "انشاءات",
+                         "canonical":  "Contractor"
+                     },
+                     {
+                         "original":  "اتشاءات",
+                         "canonical":  "Contractor"
+                     },
+                     {
+                         "original":  "constructure and design",
+                         "canonical":  "Contractor"
+                     },
+                     {
+                         "original":  "مكتب مقاولات بسوهاج",
+                         "canonical":  "Contractor"
+                     },
+                     {
+                         "original":  "محطة خرسانه جاهزه",
+                         "canonical":  "Contractor"
+                     },
+                     {
+                         "original":  "BIM Consultant",
+                         "canonical":  "Consultant"
+                     },
+                     {
+                         "original":  "مكتب هندسي",
+                         "canonical":  "Consultant"
+                     },
+                     {
+                         "original":  "خدمات هندسيه",
+                         "canonical":  "Consultant"
+                     },
+                     {
+                         "original":  "MEP Engineering Services",
+                         "canonical":  "Consultant"
+                     },
+                     {
+                         "original":  "owner’s engineer",
+                         "canonical":  "Owner"
+                     },
+                     {
+                         "original":  "Client rep.",
+                         "canonical":  "Owner"
+                     },
+                     {
+                         "original":  "مالك لمجموعة فنادق",
+                         "canonical":  "Owner"
+                     },
+                     {
+                         "original":  "Pumps Supplier",
+                         "canonical":  "Supplier"
+                     },
+                     {
+                         "original":  "توريدات عامه",
+                         "canonical":  "Supplier"
+                     },
+                     {
+                         "original":  "Supplies, Agencies \u0026 Contracting",
+                         "canonical":  "Supplier"
+                     },
+                     {
+                         "original":  "Medium voltage distributer",
+                         "canonical":  "Supplier"
+                     },
+                     {
+                         "original":  "وكيل براند تكييف",
+                         "canonical":  "Supplier"
+                     },
+                     {
+                         "original":  "مصنع",
+                         "canonical":  "Manufacturing"
+                     },
+                     {
+                         "original":  "food industry",
+                         "canonical":  "Manufacturing"
+                     },
+                     {
+                         "original":  "Cement industry",
+                         "canonical":  "Manufacturing"
+                     },
+                     {
+                         "original":  "Sheet metal",
+                         "canonical":  "Manufacturing"
+                     },
+                     {
+                         "original":  "شركه طباعة",
+                         "canonical":  "Manufacturing"
+                     }
+                 ]
+}

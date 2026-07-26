@@ -1,0 +1,62 @@
+﻿{
+    "mode":  "dryRun",
+    "field":  "currency",
+    "mappings":  [
+                     {
+                         "original":  "70% EGP",
+                         "canonical":  "EGP"
+                     },
+                     {
+                         "original":  "ARD",
+                         "canonical":  "AED"
+                     },
+                     {
+                         "original":  "JD",
+                         "canonical":  "JOD"
+                     },
+                     {
+                         "original":  "JOR",
+                         "canonical":  "JOD"
+                     },
+                     {
+                         "original":  "QR",
+                         "canonical":  "QAR"
+                     },
+                     {
+                         "original":  "UAD",
+                         "canonical":  "AED"
+                     },
+                     {
+                         "original":  "UAE",
+                         "canonical":  "AED"
+                     },
+                     {
+                         "original":  "UAE DIRH",
+                         "canonical":  "AED"
+                     },
+                     {
+                         "original":  "NAIRA",
+                         "canonical":  "NGN"
+                     },
+                     {
+                         "original":  "NIS / SH",
+                         "canonical":  "ILS"
+                     },
+                     {
+                         "original":  "SYR",
+                         "canonical":  "SYP"
+                     },
+                     {
+                         "original":  "جنية سود",
+                         "canonical":  "SDG"
+                     },
+                     {
+                         "original":  "دينار",
+                         "canonical":  "KWD"
+                     },
+                     {
+                         "original":  "دينار لي",
+                         "canonical":  "LYD"
+                     }
+                 ]
+}

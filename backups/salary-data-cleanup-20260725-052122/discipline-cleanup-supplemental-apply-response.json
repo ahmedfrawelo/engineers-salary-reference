@@ -1,0 +1,53 @@
+﻿{
+    "mode":  "apply",
+    "backupTable":  "SalaryReportDisciplines_Backup_20260725023319",
+    "affectedRows":  9,
+    "updatedRows":  9,
+    "mappings":  [
+                     {
+                         "original":  "Agricultural engineering",
+                         "canonical":  "Agricultural Engineering",
+                         "count":  2
+                     },
+                     {
+                         "original":  "AGRICULTURE",
+                         "canonical":  "Agricultural Engineering",
+                         "count":  1
+                     },
+                     {
+                         "original":  "Alexandria",
+                         "canonical":  "Other / Needs Review",
+                         "count":  1
+                     },
+                     {
+                         "original":  "BMS",
+                         "canonical":  "Electrical",
+                         "count":  1
+                     },
+                     {
+                         "original":  "IT",
+                         "canonical":  "Information Technology",
+                         "count":  1
+                     },
+                     {
+                         "original":  "civil",
+                         "canonical":  "Civil",
+                         "count":  1
+                     },
+                     {
+                         "original":  "information technology",
+                         "canonical":  "Information Technology",
+                         "count":  1
+                     },
+                     {
+                         "original":  "surveying",
+                         "canonical":  "Surveying",
+                         "count":  1
+                     },
+                     {
+                         "original":  "Agriculture",
+                         "canonical":  "Agricultural Engineering",
+                         "count":  0
+                     }
+                 ]
+}

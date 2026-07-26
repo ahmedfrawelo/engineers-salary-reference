@@ -1,0 +1,22 @@
+﻿{
+    "mode":  "apply",
+    "field":  "currency",
+    "mappings":  [
+                     {
+                         "original":  "DRHM",
+                         "canonical":  "AED"
+                     },
+                     {
+                         "original":  "DURHAM",
+                         "canonical":  "AED"
+                     },
+                     {
+                         "original":  "EURO",
+                         "canonical":  "EUR"
+                     },
+                     {
+                         "original":  "DINAR",
+                         "canonical":  "KWD"
+                     }
+                 ]
+}

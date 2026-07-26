@@ -1,0 +1,18 @@
+﻿{
+    "mode":  "dryRun",
+    "field":  "companyTypes",
+    "table":  "SalaryReportCompanyTypes",
+    "affectedRows":  630,
+    "mappings":  [
+                     {
+                         "original":  "Main Contractor",
+                         "canonical":  "Contractor",
+                         "count":  629
+                     },
+                     {
+                         "original":  "Construction",
+                         "canonical":  "Contractor",
+                         "count":  1
+                     }
+                 ]
+}

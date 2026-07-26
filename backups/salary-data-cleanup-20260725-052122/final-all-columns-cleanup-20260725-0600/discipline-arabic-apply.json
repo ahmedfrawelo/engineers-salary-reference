@@ -1,0 +1,30 @@
+﻿{
+    "mode":  "apply",
+    "field":  "disciplines",
+    "table":  "SalaryReportDisciplines",
+    "backupTable":  "SalaryReportDisciplines_Backup_20260725030133",
+    "affectedRows":  4,
+    "updatedRows":  4,
+    "mappings":  [
+                     {
+                         "original":  "اخصائي شؤون الموظفين",
+                         "canonical":  "Other / Needs Review",
+                         "count":  1
+                     },
+                     {
+                         "original":  "المحاسبه",
+                         "canonical":  "Other / Needs Review",
+                         "count":  1
+                     },
+                     {
+                         "original":  "محاسب",
+                         "canonical":  "Other / Needs Review",
+                         "count":  1
+                     },
+                     {
+                         "original":  "مهندس جوده طباعه",
+                         "canonical":  "Quality",
+                         "count":  1
+                     }
+                 ]
+}

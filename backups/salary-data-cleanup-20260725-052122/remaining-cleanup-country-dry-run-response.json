@@ -1,0 +1,98 @@
+﻿{
+    "mode":  "dryRun",
+    "field":  "countries",
+    "table":  "SalaryReportCountries",
+    "affectedRows":  87,
+    "mappings":  [
+                     {
+                         "original":  "الامارات",
+                         "canonical":  "United Arab Emirates",
+                         "count":  40
+                     },
+                     {
+                         "original":  "سوريا",
+                         "canonical":  "Syria",
+                         "count":  11
+                     },
+                     {
+                         "original":  "ليبيا",
+                         "canonical":  "Libya",
+                         "count":  5
+                     },
+                     {
+                         "original":  "الاردن",
+                         "canonical":  "Jordan",
+                         "count":  4
+                     },
+                     {
+                         "original":  "العراق",
+                         "canonical":  "Iraq",
+                         "count":  4
+                     },
+                     {
+                         "original":  "الكويت",
+                         "canonical":  "Kuwait",
+                         "count":  4
+                     },
+                     {
+                         "original":  "اليمن",
+                         "canonical":  "Yemen",
+                         "count":  3
+                     },
+                     {
+                         "original":  "Back Office Saudi",
+                         "canonical":  "Saudi Arabia",
+                         "count":  2
+                     },
+                     {
+                         "original":  "سورية",
+                         "canonical":  "Syria",
+                         "count":  2
+                     },
+                     {
+                         "original":  "فلسطين",
+                         "canonical":  "Palestine",
+                         "count":  2
+                     },
+                     {
+                         "original":  "قطر",
+                         "canonical":  "Qatar",
+                         "count":  2
+                     },
+                     {
+                         "original":  "لبنان",
+                         "canonical":  "Lebanon",
+                         "count":  2
+                     },
+                     {
+                         "original":  "Syraia",
+                         "canonical":  "Syria",
+                         "count":  1
+                     },
+                     {
+                         "original":  "الأردن",
+                         "canonical":  "Jordan",
+                         "count":  1
+                     },
+                     {
+                         "original":  "السودان",
+                         "canonical":  "Sudan",
+                         "count":  1
+                     },
+                     {
+                         "original":  "ف مصر. باك اوفيس ل قطر",
+                         "canonical":  "Egypt",
+                         "count":  1
+                     },
+                     {
+                         "original":  "فرنسا",
+                         "canonical":  "France",
+                         "count":  1
+                     },
+                     {
+                         "original":  "موريتانيا",
+                         "canonical":  "Mauritania",
+                         "count":  1
+                     }
+                 ]
+}

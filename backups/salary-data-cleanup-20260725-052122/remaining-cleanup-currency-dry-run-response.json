@@ -1,0 +1,78 @@
+﻿{
+    "mode":  "dryRun",
+    "field":  "currencies",
+    "table":  "SalaryReportCurrencies",
+    "affectedRows":  15,
+    "mappings":  [
+                     {
+                         "original":  "دينار لي",
+                         "canonical":  "LYD",
+                         "count":  2
+                     },
+                     {
+                         "original":  "70% EGP",
+                         "canonical":  "EGP",
+                         "count":  1
+                     },
+                     {
+                         "original":  "ARD",
+                         "canonical":  "AED",
+                         "count":  1
+                     },
+                     {
+                         "original":  "JD",
+                         "canonical":  "JOD",
+                         "count":  1
+                     },
+                     {
+                         "original":  "JOR",
+                         "canonical":  "JOD",
+                         "count":  1
+                     },
+                     {
+                         "original":  "NAIRA",
+                         "canonical":  "NGN",
+                         "count":  1
+                     },
+                     {
+                         "original":  "NIS / SH",
+                         "canonical":  "ILS",
+                         "count":  1
+                     },
+                     {
+                         "original":  "QR",
+                         "canonical":  "QAR",
+                         "count":  1
+                     },
+                     {
+                         "original":  "SYR",
+                         "canonical":  "SYP",
+                         "count":  1
+                     },
+                     {
+                         "original":  "UAD",
+                         "canonical":  "AED",
+                         "count":  1
+                     },
+                     {
+                         "original":  "UAE",
+                         "canonical":  "AED",
+                         "count":  1
+                     },
+                     {
+                         "original":  "UAE DIRH",
+                         "canonical":  "AED",
+                         "count":  1
+                     },
+                     {
+                         "original":  "جنية سود",
+                         "canonical":  "SDG",
+                         "count":  1
+                     },
+                     {
+                         "original":  "دينار",
+                         "canonical":  "KWD",
+                         "count":  1
+                     }
+                 ]
+}

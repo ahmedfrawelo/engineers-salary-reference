@@ -1,0 +1,14 @@
+﻿{
+    "mode":  "apply",
+    "field":  "companyType",
+    "mappings":  [
+                     {
+                         "original":  "Construction",
+                         "canonical":  "Contractor"
+                     },
+                     {
+                         "original":  "Main Contractor",
+                         "canonical":  "Contractor"
+                     }
+                 ]
+}

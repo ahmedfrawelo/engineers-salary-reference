@@ -1,0 +1,20 @@
+﻿{
+    "mode":  "apply",
+    "field":  "companyTypes",
+    "table":  "SalaryReportCompanyTypes",
+    "backupTable":  "SalaryReportCompanyTypes_Backup_20260725024233",
+    "affectedRows":  630,
+    "updatedRows":  630,
+    "mappings":  [
+                     {
+                         "original":  "Main Contractor",
+                         "canonical":  "Contractor",
+                         "count":  629
+                     },
+                     {
+                         "original":  "Construction",
+                         "canonical":  "Contractor",
+                         "count":  1
+                     }
+                 ]
+}

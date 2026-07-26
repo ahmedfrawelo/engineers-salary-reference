@@ -1,0 +1,26 @@
+﻿{
+    "mode":  "dryRun",
+    "affectedRows":  0,
+    "mappings":  [
+                     {
+                         "original":  "Agricultural engineering",
+                         "canonical":  "Agricultural Engineering",
+                         "count":  0
+                     },
+                     {
+                         "original":  "civil",
+                         "canonical":  "Civil",
+                         "count":  0
+                     },
+                     {
+                         "original":  "information technology",
+                         "canonical":  "Information Technology",
+                         "count":  0
+                     },
+                     {
+                         "original":  "surveying",
+                         "canonical":  "Surveying",
+                         "count":  0
+                     }
+                 ]
+}

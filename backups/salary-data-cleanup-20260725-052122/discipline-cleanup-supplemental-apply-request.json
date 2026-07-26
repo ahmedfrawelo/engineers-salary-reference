@@ -1,0 +1,41 @@
+﻿{
+    "mode":  "apply",
+    "mappings":  [
+                     {
+                         "original":  "AGRICULTURE",
+                         "canonical":  "Agricultural Engineering"
+                     },
+                     {
+                         "original":  "Agricultural engineering",
+                         "canonical":  "Agricultural Engineering"
+                     },
+                     {
+                         "original":  "Agriculture",
+                         "canonical":  "Agricultural Engineering"
+                     },
+                     {
+                         "original":  "civil",
+                         "canonical":  "Civil"
+                     },
+                     {
+                         "original":  "information technology",
+                         "canonical":  "Information Technology"
+                     },
+                     {
+                         "original":  "surveying",
+                         "canonical":  "Surveying"
+                     },
+                     {
+                         "original":  "BMS",
+                         "canonical":  "Electrical"
+                     },
+                     {
+                         "original":  "IT",
+                         "canonical":  "Information Technology"
+                     },
+                     {
+                         "original":  "Alexandria",
+                         "canonical":  "Other / Needs Review"
+                     }
+                 ]
+}

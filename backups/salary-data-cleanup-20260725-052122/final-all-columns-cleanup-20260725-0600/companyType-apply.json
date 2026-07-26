@@ -1,0 +1,50 @@
+﻿{
+    "mode":  "apply",
+    "field":  "companyTypes",
+    "table":  "SalaryReportCompanyTypes",
+    "backupTable":  "SalaryReportCompanyTypes_Backup_20260725025841",
+    "affectedRows":  3,
+    "updatedRows":  3,
+    "mappings":  [
+                     {
+                         "original":  "David",
+                         "canonical":  "Other / Needs Review",
+                         "count":  1
+                     },
+                     {
+                         "original":  "Maitenance",
+                         "canonical":  "Maintenance",
+                         "count":  1
+                     },
+                     {
+                         "original":  "enegy and oil and gas",
+                         "canonical":  "Oil \u0026 Gas",
+                         "count":  1
+                     },
+                     {
+                         "original":  "??",
+                         "canonical":  "Other / Needs Review",
+                         "count":  0
+                     },
+                     {
+                         "original":  "?? ???? ?????",
+                         "canonical":  "Other / Needs Review",
+                         "count":  0
+                     },
+                     {
+                         "original":  "???",
+                         "canonical":  "Other / Needs Review",
+                         "count":  0
+                     },
+                     {
+                         "original":  "????",
+                         "canonical":  "Other / Needs Review",
+                         "count":  0
+                     },
+                     {
+                         "original":  "??????????",
+                         "canonical":  "Petrochemical",
+                         "count":  0
+                     }
+                 ]
+}

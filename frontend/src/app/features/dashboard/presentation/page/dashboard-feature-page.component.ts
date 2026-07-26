@@ -204,7 +204,7 @@ import { OverlayPanelComponent } from '../../../../shared/ui/overlay-panel.compo
                     <span class="recent-item__main">
                       <strong>{{ report.discipline || 'Engineering role' }}</strong>
                       <small>{{ report.city || 'Egypt' }} / {{ report.workMode || 'Work mode not specified' }} / {{ report.seniority }}</small>
-                      <small>Submitted {{ value(report.submittedAt) }}</small>
+                      <small>Submitted {{ dateValue(report.submittedAt) }}</small>
                     </span>
                     <span class="recent-item__salary">
                       <b>{{ money(report.monthlyNetSalary) }}</b>
@@ -277,7 +277,7 @@ import { OverlayPanelComponent } from '../../../../shared/ui/overlay-panel.compo
                   <div class="report-card__title"><i appIcon="calendar3" aria-hidden="true"></i><span>Location</span></div>
                   <div class="report-field"><dt>Country</dt><dd>{{ value($any(item).country) }}</dd></div>
                   <div class="report-field"><dt>City</dt><dd>{{ item.city || 'Not specified' }}</dd></div>
-                  <div class="report-field report-field--wide"><dt>Submitted</dt><dd>{{ value($any(item).submittedAt) }}</dd></div>
+                  <div class="report-field report-field--wide"><dt>Submitted</dt><dd>{{ dateValue($any(item).submittedAt) }}</dd></div>
                 </dl>
 
                 <dl class="report-card report-card--package">
@@ -1345,6 +1345,23 @@ export class DashboardFeaturePageComponent {
 
   value(value: string | number | null | undefined): string {
     return value === null || value === undefined || value === '' ? 'Not specified' : String(value);
+  }
+
+  dateValue(value: string | number | null | undefined): string {
+    if (value === null || value === undefined || value === '') {
+      return 'Not specified';
+    }
+
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) {
+      return String(value);
+    }
+
+    return new Intl.DateTimeFormat('en-GB', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric'
+    }).format(date);
   }
 
   barWidth(value: number, max: number): number {

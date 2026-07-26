@@ -4,11 +4,14 @@ import { columnByField, readFields, type Db, type Env, type Row } from './types'
 const view = '"vwSalaryReportReadRows"';
 const jsonHeaders = { 'content-type': 'application/json; charset=utf-8' };
 const textFilters = readFields.filter(field => !['yearsOfExperience','monthlyNetSalary','dailyWorkHours'].includes(field));
-const sortFields = new Set(['id','discipline','country','city','companytype','workmode','currency','yearsofexperience','monthlynetsalary','dailyworkhours','annualbonus']);
+const sortFields = new Set(['id','submittedat','discipline','country','city','companytype','workmode','currency','yearsofexperience','monthlynetsalary','dailyworkhours','annualbonus']);
 const aggregateOps = new Set(['sum','avg','average','count','min','max','distinct','distinctcount','countdistinct','median','percent']);
 class ValidationError extends Error {}
 
 type CachePolicy = { maxAge: number; staleWhileRevalidate: number };
+type CleanupMode = 'dryRun' | 'apply';
+type CleanupMapping = { original: string; canonical: string };
+type CleanupField = { key: string; table: string; maxLength: number };
 const edgeCache = (globalThis as typeof globalThis & { caches?: { default?: Cache } }).caches?.default;
 const requestWindows = new Map<string, { startedAt: number; count: number }>();
 const rateWindows = { read: { limit: 120, windowMs: 60_000 }, write: { limit: 12, windowMs: 60_000 } };
@@ -16,9 +19,9 @@ const rateWindows = { read: { limit: 120, windowMs: 60_000 }, write: { limit: 12
 const json = (body: unknown, status = 200, headers: HeadersInit = {}) =>
   new Response(JSON.stringify(body), { status, headers: { ...jsonHeaders, ...headers } });
 const problem = (status: number, title: string, detail: string) => json({ type: 'about:blank', title, status, detail }, status);
+const sqlIdentifier = (value: string) => `"${value.replace(/"/g, '""')}"`;
 
 function cachePolicy(path: string): CachePolicy | null {
-  if (path === '/options' || path === '/read-rows/filter-options') return { maxAge: 300, staleWhileRevalidate: 60 };
   if (path === '/read-rows' || path === '/read-rows/summary') return { maxAge: 20, staleWhileRevalidate: 60 };
   if (/^\/[0-9a-f-]{36}$/i.test(path)) return { maxAge: 30, staleWhileRevalidate: 60 };
   return null;
@@ -130,6 +133,89 @@ function publicDetail(row: Row): Row {
   return mapped;
 }
 
+function normalizeTextOption(key: string, value: unknown): string | null {
+  const text = String(value ?? '').normalize('NFKC').replace(/\s+/g, ' ').trim();
+  if (!text) return null;
+  const compactGeneral = text.toLocaleLowerCase('en-US').replace(/[._/-]+/g, ' ').replace(/\s+/g, ' ').trim();
+  if (['housingProvided','transportationProvided','annualBonuses','salaryFairnessOptions','recommendFieldOptions','professionalCertificates'].includes(key)) {
+    if (['yes', 'y', 'true', '1', 'نعم'].includes(compactGeneral)) return 'نعم';
+    if (['no', 'n', 'false', '0', 'لا'].includes(compactGeneral)) return 'لا';
+    if (['maybe', 'possibly', 'ربما'].includes(compactGeneral)) return 'ربما';
+  }
+  if (key === 'currencies') {
+    if (['egp', 'egyptian pound', 'جنيه', 'جنيه مصري'].includes(compactGeneral)) return 'EGP';
+    if (['aed', 'dirham', 'drhm', 'durham'].includes(compactGeneral)) return 'AED';
+    if (['sar', 'sr', 'riyal', 'saudi riyal'].includes(compactGeneral)) return 'SAR';
+    if (['usd', 'dollar', 'us dollar'].includes(compactGeneral)) return 'USD';
+    if (['eur', 'euro'].includes(compactGeneral)) return 'EUR';
+    if (['kwd', 'dinar'].includes(compactGeneral)) return 'KWD';
+    return text.toUpperCase();
+  }
+  if (key === 'countries') {
+    if (['egypt', 'eg', 'مصر'].includes(compactGeneral)) return 'Egypt';
+    if (['saudi arabia', 'ksa', 'saudia', 'السعودية'].includes(compactGeneral)) return 'Saudi Arabia';
+    if (['uae', 'united arab emirates', 'emirates'].includes(compactGeneral)) return 'United Arab Emirates';
+    if (['oman'].includes(compactGeneral)) return 'Oman';
+    return text;
+  }
+  if (key === 'cities') {
+    if (['alexandria', 'alexanderia', 'alex', 'الاسكندرية', 'الإسكندرية'].includes(compactGeneral)) return 'Alexandria';
+    if (['cairo', 'القاهرة'].includes(compactGeneral)) return 'Cairo';
+    if (['giza', 'الجيزة'].includes(compactGeneral)) return 'Giza';
+    if (['6 october', '6th october', '٦ اكتوبر', '6 اكتوبر', 'october'].includes(compactGeneral)) return '6th of October';
+    if (['10 ramadan', '10th of ramadan', 'العاشر من رمضان'].includes(compactGeneral)) return '10th of Ramadan';
+    if (['new cairo', 'التجمع', 'التجمع الخامس'].includes(compactGeneral)) return 'New Cairo';
+    return text;
+  }
+  if (key === 'workModes') {
+    if (['office', 'on site office'].includes(compactGeneral)) return 'Office';
+    if (['site', 'on site'].includes(compactGeneral)) return 'Site';
+    if (['hybrid'].includes(compactGeneral)) return 'Hybrid';
+    if (['from home', 'remote', 'work from home'].includes(compactGeneral)) return 'From Home';
+  }
+  if (key === 'companyTypes') {
+    if (['consultant', 'consulting', 'consultancy', 'engineering consultant'].includes(compactGeneral)) return 'Consultant';
+    if (['contractor', 'construction', 'main contractor', 'contracting', 'sub contractor', 'مقاولات'].includes(compactGeneral)) return 'Contractor';
+    if (['developer', 'real estate developer'].includes(compactGeneral)) return 'Developer';
+    if (['owner', 'client'].includes(compactGeneral)) return 'Owner';
+    if (['supplier'].includes(compactGeneral)) return 'Supplier';
+    if (['manufacturer'].includes(compactGeneral)) return 'Manufacturing';
+    if (['maintenance', 'maitenance'].includes(compactGeneral)) return 'Maintenance';
+    if (['oil gas', 'oil and gas', 'energy and oil and gas', 'enegy and oil and gas'].includes(compactGeneral)) return 'Oil & Gas';
+    if (['petrochemical', 'petrochemicals'].includes(compactGeneral)) return 'Petrochemical';
+    if (['david', 'all', 'none currently', 'not working currently'].includes(compactGeneral)) return 'Other / Needs Review';
+    if (['supervision consultant', 'خدمات هندسية'].includes(compactGeneral)) return 'Consultant';
+    if (['back office', 'backoffice'].includes(compactGeneral)) return 'Back Office';
+    return text;
+  }
+  if (key !== 'disciplines') return text;
+  const compact = text.toLocaleLowerCase('en-US').replace(/[._/-]+/g, ' ').replace(/\s+/g, ' ').trim();
+  if (['agriculture', 'agricultural', 'agriculture engineer', 'agricultural engineering', 'هندسة زراعية', 'زراعة', 'الزراعة'].includes(compact)) return 'Agricultural Engineering';
+  if (['civil', 'مدني تنفيذي'].includes(compact)) return 'Civil';
+  if (['structural'].includes(compact)) return 'Structural';
+  if (['mechanical', 'الصيانة الميكانيكية'].includes(compact)) return 'Mechanical';
+  if (['electrical', 'bms', 'fls', 'fls engineer', 'light current', 'اعمال السلامة الانذار والاطفاء'].includes(compact)) return 'Electrical';
+  if (['it', 'information technology', 'computer science', 'frontend web development', 'dev'].includes(compact)) return 'Information Technology';
+  if (['management', 'project management'].includes(compact)) return 'Project Management';
+  if (['technical', 'thecnical', 'technical office'].includes(compact)) return 'Technical Office';
+  if (['quality', 'quality engineer', 'printing quality engineer'].includes(compact)) return 'Quality';
+  if (['accounting', 'accountant', 'hr specialist'].includes(compact)) return 'Other / Needs Review';
+  if (['surveying', 'survey', 'مساح', 'مساحة', 'مساحه'].includes(compact)) return 'Surveying';
+  if (['alexandria', 'cairo'].includes(compact)) return 'Other / Needs Review';
+  return text;
+}
+
+function optionList(key: string, column: string, rows: Array<{ value: unknown }>, numericColumns: Set<string>): unknown[] {
+  if (numericColumns.has(column)) return rows.map(row => Number(row.value)).filter(Number.isFinite).sort((a, b) => a - b);
+  const values = new Map<string, string>();
+  for (const row of rows) {
+    const normalized = normalizeTextOption(key, row.value);
+    if (!normalized) continue;
+    values.set(normalized.toLocaleLowerCase('en-US'), normalized);
+  }
+  return [...values.values()].sort((left, right) => left.localeCompare(right, 'en', { sensitivity: 'base' }));
+}
+
 async function readRows(request: Request, db: Db): Promise<Response> {
   const url = new URL(request.url); const filtered = filters(url.searchParams);
   const pageSize = Math.min(200, Math.max(1, Number(url.searchParams.get('pageSize')) || 100));
@@ -140,7 +226,8 @@ async function readRows(request: Request, db: Db): Promise<Response> {
   if (!['asc','desc'].includes(direction)) throw new ValidationError("Sort direction must be 'asc' or 'desc'");
   const count = await db.query<{ total: number }>(`SELECT count(*)::int AS total FROM ${view}${filtered.where}`, filtered.params);
   const params = [...filtered.params, pageSize, (pageNumber - 1) * pageSize];
-  const items = await db.query(`SELECT * FROM ${view}${filtered.where} ORDER BY ${columnByField[sort]} ${direction.toUpperCase()}, "Id" ${direction.toUpperCase()} LIMIT $${params.length - 1} OFFSET $${params.length}`, params);
+  const sortColumn = sort === 'submittedat' ? 's."SubmittedAt"' : `v.${columnByField[sort]}`;
+  const items = await db.query(`SELECT v.*, s."SubmittedAt" FROM ${view} v JOIN "SalaryReports" s ON s."Id"=v."Id"${filtered.where} ORDER BY ${sortColumn} ${direction.toUpperCase()}, v."Id" ${direction.toUpperCase()} LIMIT $${params.length - 1} OFFSET $${params.length}`, params);
   const totalCount = Number(count[0]?.total ?? 0);
   return json({ items: items.map(dbRow), totalCount, pageNumber, pageSize, totalPages: Math.max(1, Math.ceil(totalCount / pageSize)) });
 }
@@ -163,10 +250,81 @@ async function options(db: Db): Promise<Response> {
   const result: Row = {};
   const numericOptionColumns = new Set(['MonthlyNetSalary', 'YearsOfExperience', 'DailyWorkHours']);
   await Promise.all(specs.map(async ([key,column]) => {
-    result[key] = (await db.query<{ value: unknown }>(`SELECT DISTINCT "${column}" AS value FROM ${view} WHERE "${column}" IS NOT NULL ORDER BY value`))
-      .map(x => numericOptionColumns.has(column) ? Number(x.value) : x.value);
+    const rows = await db.query<{ value: unknown }>(`SELECT DISTINCT "${column}" AS value FROM ${view} WHERE "${column}" IS NOT NULL ORDER BY value`);
+    result[key] = optionList(key, column, rows, numericOptionColumns);
   }));
   return json(result);
+}
+
+function authorizeCleanup(request: Request, env: Env): Response | null {
+  const token = env.DATA_CLEANUP_TOKEN?.trim();
+  if (!token) return new Response(null, { status: 404 });
+  const authorization = request.headers.get('Authorization') || '';
+  if (authorization !== `Bearer ${token}`) return problem(403, 'Forbidden', 'The cleanup token is invalid.');
+  return null;
+}
+
+function parseCleanupMappings(body: Row): { mode: CleanupMode; mappings: CleanupMapping[] } {
+  const mode = body.mode === 'apply' ? 'apply' : body.mode === 'dryRun' || body.mode == null ? 'dryRun' : null;
+  if (!mode) throw new ValidationError('mode must be dryRun or apply');
+  const rawMappings = body.mappings;
+  if (!Array.isArray(rawMappings) || rawMappings.length < 1 || rawMappings.length > 200) throw new ValidationError('mappings must contain between 1 and 200 items');
+  const seen = new Set<string>();
+  const mappings = rawMappings.map((item, index) => {
+    const mapping = item as Record<string, unknown>;
+    const original = String(mapping.original ?? '').trim();
+    const canonical = String(mapping.canonical ?? '').trim();
+    if (!original || !canonical || original.length > 120 || canonical.length > 120) throw new ValidationError(`mapping ${index + 1} is invalid`);
+    const key = original;
+    if (seen.has(key)) throw new ValidationError(`mapping ${index + 1} duplicates '${original}'`);
+    seen.add(key);
+    return { original, canonical };
+  }).filter(mapping => mapping.original !== mapping.canonical);
+  if (!mappings.length) throw new ValidationError('mappings do not contain any changes');
+  return { mode, mappings };
+}
+
+function mappingValuesSql(mappings: CleanupMapping[]): { sql: string; params: string[] } {
+  const params: string[] = [];
+  const tuples = mappings.map(mapping => {
+    params.push(mapping.original, mapping.canonical);
+    return `($${params.length - 1}::text, $${params.length}::text)`;
+  });
+  return { sql: tuples.join(','), params };
+}
+
+async function disciplineCleanup(request: Request, env: Env, db: Db): Promise<Response> {
+  const unauthorized = authorizeCleanup(request, env);
+  if (unauthorized) return unauthorized;
+  const { mode, mappings } = parseCleanupMappings(await request.json() as Row);
+  const values = mappingValuesSql(mappings);
+  const preview = await db.query<{ original: string; canonical: string; count: number }>(
+    `WITH mapping(original, canonical) AS (VALUES ${values.sql})
+     SELECT m.original, m.canonical, count(d.*)::int AS count
+     FROM mapping m
+     LEFT JOIN "SalaryReportDisciplines" d ON d."Value" = m.original
+     GROUP BY m.original, m.canonical
+     ORDER BY count(d.*) DESC, m.original`,
+    values.params
+  );
+  const affectedRows = preview.reduce((sum, row) => sum + Number(row.count ?? 0), 0);
+  if (mode === 'dryRun') return json({ mode, affectedRows, mappings: preview });
+  const suffix = new Date().toISOString().replace(/\D/g, '').slice(0, 14);
+  const backupTable = `SalaryReportDisciplines_Backup_${suffix}`;
+  await db.query(`CREATE TABLE ${sqlIdentifier(backupTable)} AS SELECT * FROM "SalaryReportDisciplines"`);
+  const update = await db.query<{ updated: number }>(
+    `WITH mapping(original, canonical) AS (VALUES ${values.sql}),
+     updated AS (
+       UPDATE "SalaryReportDisciplines" d
+       SET "Value" = m.canonical
+       FROM mapping m
+       WHERE d."Value" = m.original
+       RETURNING d."SalaryReportId"
+     )
+     SELECT count(*)::int AS updated FROM updated`,
+    values.params
+  );
+  return json({ mode, backupTable, affectedRows, updatedRows: Number(update[0]?.updated ?? 0), mappings: preview });
 }
 
 async function filterOptions(request: Request, db: Db): Promise<Response> {
@@ -177,7 +335,24 @@ async function filterOptions(request: Request, db: Db): Promise<Response> {
   let extra = ''; if (optionSearch) { params.push(`%${optionSearch}%`); extra = ` AND ${column}::text ILIKE $${params.length}`; }
   const take = Math.min(500, Math.max(1, Number(url.searchParams.get('take')) || 200)); params.push(take);
   const rows = await db.query<{ value: string }>(`SELECT DISTINCT ${column}::text AS value FROM ${view}${filtered.where || ' WHERE TRUE'}${extra} AND ${column} IS NOT NULL ORDER BY value LIMIT $${params.length}`, params);
-  return json(rows.map(row => row.value));
+  const keyByField: Record<string, string> = {
+    discipline: 'disciplines',
+    city: 'cities',
+    country: 'countries',
+    companytype: 'companyTypes',
+    workmode: 'workModes',
+    currency: 'currencies',
+    housingprovided: 'housingProvided',
+    transportationprovided: 'transportationProvided',
+    annualbonus: 'annualBonuses',
+    salaryfairness: 'salaryFairnessOptions',
+    recommendfield: 'recommendFieldOptions',
+    professionalcertificate: 'professionalCertificates',
+    highesteducation: 'highestEducations',
+    extradayoff: 'extraDaysOff'
+  };
+  const normalized = optionList(keyByField[field] ?? field, field, rows, new Set()).map(String);
+  return json(normalized);
 }
 
 async function aggregates(request: Request, db: Db): Promise<Response> {
@@ -218,6 +393,22 @@ const childTables: Record<string,string> = {
   recommendField:'SalaryReportFieldRecommendations', negotiationAdvice:'SalaryReportNegotiationAdvice', professionalCertificate:'SalaryReportProfessionalCertificates',
   benefits:'SalaryReportBenefits', highestEducation:'SalaryReportEducations', dailyWorkHours:'SalaryReportDailyWorkHours', extraDayOff:'SalaryReportAdditionalDaysOff'
 };
+const cleanupFields: Record<string, CleanupField> = {
+  country:{ key:'countries', table:'SalaryReportCountries', maxLength:100 },
+  city:{ key:'cities', table:'SalaryReportCities', maxLength:100 },
+  discipline:{ key:'disciplines', table:'SalaryReportDisciplines', maxLength:120 },
+  companytype:{ key:'companyTypes', table:'SalaryReportCompanyTypes', maxLength:120 },
+  workmode:{ key:'workModes', table:'SalaryReportWorkModes', maxLength:80 },
+  currency:{ key:'currencies', table:'SalaryReportCurrencies', maxLength:3 },
+  housingprovided:{ key:'housingProvided', table:'SalaryReportHousing', maxLength:80 },
+  transportationprovided:{ key:'transportationProvided', table:'SalaryReportTransportation', maxLength:80 },
+  annualbonus:{ key:'annualBonuses', table:'SalaryReportAnnualBonuses', maxLength:80 },
+  salaryfairness:{ key:'salaryFairnessOptions', table:'SalaryReportSalaryFairness', maxLength:80 },
+  recommendfield:{ key:'recommendFieldOptions', table:'SalaryReportFieldRecommendations', maxLength:80 },
+  professionalcertificate:{ key:'professionalCertificates', table:'SalaryReportProfessionalCertificates', maxLength:120 },
+  highesteducation:{ key:'highestEducations', table:'SalaryReportEducations', maxLength:120 },
+  extradayoff:{ key:'extraDaysOff', table:'SalaryReportAdditionalDaysOff', maxLength:80 }
+};
 function validateCreate(body: Row): void {
   const max: Record<string,number> = { country:100,city:100,discipline:120,companyType:120,workMode:80,benefits:600,housingProvided:80,transportationProvided:80,annualBonus:80,salaryFairness:80,recommendField:80,negotiationAdvice:1000,professionalCertificate:120,highestEducation:120,extraDayOff:80 };
   for (const required of ['country','city','discipline','companyType','workMode','currency']) if (typeof body[required] !== 'string' || !String(body[required]).trim()) throw new ValidationError(`${required} is required`);
@@ -227,6 +418,54 @@ function validateCreate(body: Row): void {
   if (typeof body.monthlyNetSalary !== 'number' || body.monthlyNetSalary<=0 || body.monthlyNetSalary>10_000_000) throw new ValidationError('monthlyNetSalary is invalid');
   if (body.dailyWorkHours != null && (typeof body.dailyWorkHours !== 'number' || body.dailyWorkHours<0 || body.dailyWorkHours>24)) throw new ValidationError('dailyWorkHours is invalid');
 }
+
+function parseTextFieldCleanup(body: Row): { field: CleanupField; mode: CleanupMode; mappings: CleanupMapping[] } {
+  const fieldName = String(body.field ?? '').replace(/[^A-Za-z]/g, '').toLowerCase();
+  const field = cleanupFields[fieldName];
+  if (!field) throw new ValidationError('Unsupported cleanup field');
+  const parsed = parseCleanupMappings(body);
+  for (const mapping of parsed.mappings) {
+    if (mapping.canonical.length > field.maxLength) throw new ValidationError(`canonical value '${mapping.canonical}' is too long for ${fieldName}`);
+    if (field.key === 'currencies' && !/^[A-Z]{3}$/.test(mapping.canonical)) throw new ValidationError('currency cleanup values must be 3-letter ISO codes');
+  }
+  return { field, ...parsed };
+}
+
+async function textFieldCleanup(request: Request, env: Env, db: Db): Promise<Response> {
+  const unauthorized = authorizeCleanup(request, env);
+  if (unauthorized) return unauthorized;
+  const { field, mode, mappings } = parseTextFieldCleanup(await request.json() as Row);
+  const values = mappingValuesSql(mappings);
+  const table = sqlIdentifier(field.table);
+  const preview = await db.query<{ original: string; canonical: string; count: number }>(
+    `WITH mapping(original, canonical) AS (VALUES ${values.sql})
+     SELECT m.original, m.canonical, count(d.*)::int AS count
+     FROM mapping m
+     LEFT JOIN ${table} d ON d."Value" = m.original
+     GROUP BY m.original, m.canonical
+     ORDER BY count(d.*) DESC, m.original`,
+    values.params
+  );
+  const affectedRows = preview.reduce((sum, row) => sum + Number(row.count ?? 0), 0);
+  if (mode === 'dryRun') return json({ mode, field: field.key, table: field.table, affectedRows, mappings: preview });
+  const suffix = new Date().toISOString().replace(/\D/g, '').slice(0, 14);
+  const backupTable = `${field.table}_Backup_${suffix}`;
+  await db.query(`CREATE TABLE ${sqlIdentifier(backupTable)} AS SELECT * FROM ${table}`);
+  const update = await db.query<{ updated: number }>(
+    `WITH mapping(original, canonical) AS (VALUES ${values.sql}),
+     updated AS (
+       UPDATE ${table} d
+       SET "Value" = m.canonical
+       FROM mapping m
+       WHERE d."Value" = m.original
+       RETURNING d."SalaryReportId"
+     )
+     SELECT count(*)::int AS updated FROM updated`,
+    values.params
+  );
+  return json({ mode, field: field.key, table: field.table, backupTable, affectedRows, updatedRows: Number(update[0]?.updated ?? 0), mappings: preview });
+}
+
 async function create(request: Request, db: Db): Promise<Response> {
   const key = request.headers.get('Idempotency-Key')?.trim() || '';
   if (!/^[A-Za-z0-9_.:-]{16,100}$/.test(key)) throw new ValidationError('A valid Idempotency-Key header between 16 and 100 characters is required.');
@@ -275,6 +514,10 @@ export function createApp(dbFactory: (env: Env) => Db = createDb) {
       const prefix='/api/salary-reports'; if (!url.pathname.startsWith(prefix)) return new Response(null,{status:404});
       if (!allowRequest(request)) return withCors(problem(429, 'Too Many Requests', 'Request rate limit exceeded. Please retry shortly.'), origin);
       const path=url.pathname.slice(prefix.length)||'/';
+      if (request.method==='POST' && (path==='/admin/data-cleanup/discipline' || path==='/admin/data-cleanup/text-field')) {
+        const unauthorized = authorizeCleanup(request, env);
+        if (unauthorized) return withCors(applySecurityHeaders(unauthorized), origin);
+      }
       const policy = cachePolicy(path);
       const cached = await readCached(request, policy);
       if (cached) return withCors(applySecurityHeaders(cached), origin);
@@ -284,6 +527,8 @@ export function createApp(dbFactory: (env: Env) => Db = createDb) {
       else if (request.method==='POST' && path==='/read-rows/aggregates') response=await aggregates(request,db);
       else if (request.method==='GET' && path==='/read-rows/filter-options') response=await filterOptions(request,db);
       else if (request.method==='GET' && path==='/options') response=await options(db);
+      else if (request.method==='POST' && path==='/admin/data-cleanup/discipline') response=await disciplineCleanup(request,env,db);
+      else if (request.method==='POST' && path==='/admin/data-cleanup/text-field') response=await textFieldCleanup(request,env,db);
       else if (request.method==='POST' && path==='/') response=await create(request,db);
       else if (request.method==='GET' && /^\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(path)) response=await detail(path.slice(1),db);
       else response=new Response(null,{status:404});

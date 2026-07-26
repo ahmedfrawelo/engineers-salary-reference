@@ -1,0 +1,28 @@
+﻿{
+    "mode":  "dryRun",
+    "field":  "currencies",
+    "table":  "SalaryReportCurrencies",
+    "affectedRows":  4,
+    "mappings":  [
+                     {
+                         "original":  "DINAR",
+                         "canonical":  "KWD",
+                         "count":  1
+                     },
+                     {
+                         "original":  "DRHM",
+                         "canonical":  "AED",
+                         "count":  1
+                     },
+                     {
+                         "original":  "DURHAM",
+                         "canonical":  "AED",
+                         "count":  1
+                     },
+                     {
+                         "original":  "EURO",
+                         "canonical":  "EUR",
+                         "count":  1
+                     }
+                 ]
+}

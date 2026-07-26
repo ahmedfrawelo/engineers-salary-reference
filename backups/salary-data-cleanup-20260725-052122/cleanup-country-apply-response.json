@@ -1,0 +1,25 @@
+﻿{
+    "mode":  "apply",
+    "field":  "countries",
+    "table":  "SalaryReportCountries",
+    "backupTable":  "SalaryReportCountries_Backup_20260725024233",
+    "affectedRows":  1822,
+    "updatedRows":  1822,
+    "mappings":  [
+                     {
+                         "original":  "مصر",
+                         "canonical":  "Egypt",
+                         "count":  1495
+                     },
+                     {
+                         "original":  "السعودية",
+                         "canonical":  "Saudi Arabia",
+                         "count":  326
+                     },
+                     {
+                         "original":  "OMAN",
+                         "canonical":  "Oman",
+                         "count":  1
+                     }
+                 ]
+}

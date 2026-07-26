@@ -1,0 +1,78 @@
+﻿{
+    "mode":  "dryRun",
+    "field":  "country",
+    "mappings":  [
+                     {
+                         "original":  "Back Office Saudi",
+                         "canonical":  "Saudi Arabia"
+                     },
+                     {
+                         "original":  "Syraia",
+                         "canonical":  "Syria"
+                     },
+                     {
+                         "original":  "سورية",
+                         "canonical":  "Syria"
+                     },
+                     {
+                         "original":  "سوريا",
+                         "canonical":  "Syria"
+                     },
+                     {
+                         "original":  "الامارات",
+                         "canonical":  "United Arab Emirates"
+                     },
+                     {
+                         "original":  "الاردن",
+                         "canonical":  "Jordan"
+                     },
+                     {
+                         "original":  "الأردن",
+                         "canonical":  "Jordan"
+                     },
+                     {
+                         "original":  "العراق",
+                         "canonical":  "Iraq"
+                     },
+                     {
+                         "original":  "الكويت",
+                         "canonical":  "Kuwait"
+                     },
+                     {
+                         "original":  "ليبيا",
+                         "canonical":  "Libya"
+                     },
+                     {
+                         "original":  "لبنان",
+                         "canonical":  "Lebanon"
+                     },
+                     {
+                         "original":  "قطر",
+                         "canonical":  "Qatar"
+                     },
+                     {
+                         "original":  "اليمن",
+                         "canonical":  "Yemen"
+                     },
+                     {
+                         "original":  "السودان",
+                         "canonical":  "Sudan"
+                     },
+                     {
+                         "original":  "فلسطين",
+                         "canonical":  "Palestine"
+                     },
+                     {
+                         "original":  "فرنسا",
+                         "canonical":  "France"
+                     },
+                     {
+                         "original":  "موريتانيا",
+                         "canonical":  "Mauritania"
+                     },
+                     {
+                         "original":  "ف مصر. باك اوفيس ل قطر",
+                         "canonical":  "Egypt"
+                     }
+                 ]
+}

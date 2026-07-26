@@ -41,12 +41,16 @@ export class SalaryDashboardApiAdapter extends SalaryDashboardPort {
 
   loadSnapshot(filters: SalaryDashboardFilters): Observable<SalaryDashboardSnapshot> {
     const query = this.toReadQuery(filters);
+    const reportsQuery = {
+      ...query,
+      pageNumber: 1,
+      pageSize: 10
+    };
+
     return forkJoin({
       summary: this.api.get<ReadSummaryDto>('salary-reports/read-rows/summary', query),
       reports: this.api.get<ReadPageDto>('salary-reports/read-rows', {
-        ...query,
-        pageNumber: 1,
-        pageSize: 10,
+        ...reportsQuery,
         sortBy: 'submittedAt',
         sortDirection: 'desc'
       }),
@@ -62,13 +66,7 @@ export class SalaryDashboardApiAdapter extends SalaryDashboardPort {
         byDiscipline: result.summary.byDiscipline.map(this.mapBreakdown),
         bySeniority: result.summary.byExperience.map(this.mapBreakdown)
       },
-      latestReports: result.reports.items.map(report => ({
-        ...report,
-        roleTitle: report.discipline,
-        seniority: `${report.yearsOfExperience} ${report.yearsOfExperience === 1 ? 'year' : 'years'}`,
-        companyName: 'Anonymous company',
-        isAnonymous: true
-      })),
+      latestReports: result.reports.items.map(report => this.mapReport(report)),
       options: {
         disciplines: result.options.disciplines,
         seniorities: result.options.yearsOfExperience.map(value => `${value} ${value === 1 ? 'year' : 'years'}`),
@@ -94,6 +92,17 @@ export class SalaryDashboardApiAdapter extends SalaryDashboardPort {
     count: item.count,
     averageSalary: item.averageMonthlyNetSalary
   });
+
+  private mapReport(report: ReadRowDto): SalaryDashboardSnapshot['latestReports'][number] {
+    return {
+      ...report,
+      submittedAt: report.submittedAt,
+      roleTitle: report.discipline,
+      seniority: `${report.yearsOfExperience} ${report.yearsOfExperience === 1 ? 'year' : 'years'}`,
+      companyName: 'Anonymous company',
+      isAnonymous: true
+    };
+  }
 
   private medianSalary(reports: ReadRowDto[]): number {
     const values = reports

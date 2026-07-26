@@ -1,0 +1,35 @@
+﻿{
+    "mode":  "apply",
+    "field":  "companyTypes",
+    "table":  "SalaryReportCompanyTypes",
+    "backupTable":  "SalaryReportCompanyTypes_Backup_20260725030132",
+    "affectedRows":  5,
+    "updatedRows":  5,
+    "mappings":  [
+                     {
+                         "original":  "بتروكمويات",
+                         "canonical":  "Petrochemical",
+                         "count":  1
+                     },
+                     {
+                         "original":  "ففف",
+                         "canonical":  "Other / Needs Review",
+                         "count":  1
+                     },
+                     {
+                         "original":  "كل",
+                         "canonical":  "Other / Needs Review",
+                         "count":  1
+                     },
+                     {
+                         "original":  "لا اعمل حاليا",
+                         "canonical":  "Other / Needs Review",
+                         "count":  1
+                     },
+                     {
+                         "original":  "ليرز",
+                         "canonical":  "Other / Needs Review",
+                         "count":  1
+                     }
+                 ]
+}

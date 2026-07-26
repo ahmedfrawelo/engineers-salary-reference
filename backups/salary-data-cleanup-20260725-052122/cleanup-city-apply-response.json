@@ -1,0 +1,55 @@
+﻿{
+    "mode":  "apply",
+    "field":  "cities",
+    "table":  "SalaryReportCities",
+    "backupTable":  "SalaryReportCities_Backup_20260725024232",
+    "affectedRows":  1184,
+    "updatedRows":  1184,
+    "mappings":  [
+                     {
+                         "original":  "القاهرة",
+                         "canonical":  "Cairo",
+                         "count":  1120
+                     },
+                     {
+                         "original":  "الاسكندرية",
+                         "canonical":  "Alexandria",
+                         "count":  24
+                     },
+                     {
+                         "original":  "الإسكندرية",
+                         "canonical":  "Alexandria",
+                         "count":  16
+                     },
+                     {
+                         "original":  "العاشر من رمضان",
+                         "canonical":  "10th of Ramadan",
+                         "count":  13
+                     },
+                     {
+                         "original":  "الجيزة",
+                         "canonical":  "Giza",
+                         "count":  4
+                     },
+                     {
+                         "original":  "10th of ramadan",
+                         "canonical":  "10th of Ramadan",
+                         "count":  2
+                     },
+                     {
+                         "original":  "6th october",
+                         "canonical":  "6th of October",
+                         "count":  2
+                     },
+                     {
+                         "original":  "٦ اكتوبر",
+                         "canonical":  "6th of October",
+                         "count":  2
+                     },
+                     {
+                         "original":  "Alexanderia",
+                         "canonical":  "Alexandria",
+                         "count":  1
+                     }
+                 ]
+}

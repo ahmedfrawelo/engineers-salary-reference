@@ -1,0 +1,30 @@
+﻿{
+    "mode":  "apply",
+    "field":  "currencies",
+    "table":  "SalaryReportCurrencies",
+    "backupTable":  "SalaryReportCurrencies_Backup_20260725024234",
+    "affectedRows":  4,
+    "updatedRows":  4,
+    "mappings":  [
+                     {
+                         "original":  "DINAR",
+                         "canonical":  "KWD",
+                         "count":  1
+                     },
+                     {
+                         "original":  "DRHM",
+                         "canonical":  "AED",
+                         "count":  1
+                     },
+                     {
+                         "original":  "DURHAM",
+                         "canonical":  "AED",
+                         "count":  1
+                     },
+                     {
+                         "original":  "EURO",
+                         "canonical":  "EUR",
+                         "count":  1
+                     }
+                 ]
+}

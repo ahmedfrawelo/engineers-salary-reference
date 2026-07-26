@@ -1,0 +1,45 @@
+﻿{
+    "mode":  "apply",
+    "field":  "disciplines",
+    "table":  "SalaryReportDisciplines",
+    "backupTable":  "SalaryReportDisciplines_Backup_20260725025842",
+    "affectedRows":  3,
+    "updatedRows":  3,
+    "mappings":  [
+                     {
+                         "original":  "Project management",
+                         "canonical":  "Project Management",
+                         "count":  1
+                     },
+                     {
+                         "original":  "Thecnical",
+                         "canonical":  "Technical Office",
+                         "count":  1
+                     },
+                     {
+                         "original":  "management",
+                         "canonical":  "Project Management",
+                         "count":  1
+                     },
+                     {
+                         "original":  "?????",
+                         "canonical":  "Other / Needs Review",
+                         "count":  0
+                     },
+                     {
+                         "original":  "????? ???? ?????",
+                         "canonical":  "Quality",
+                         "count":  0
+                     },
+                     {
+                         "original":  "?????? ???? ????????",
+                         "canonical":  "Other / Needs Review",
+                         "count":  0
+                     },
+                     {
+                         "original":  "????????",
+                         "canonical":  "Other / Needs Review",
+                         "count":  0
+                     }
+                 ]
+}

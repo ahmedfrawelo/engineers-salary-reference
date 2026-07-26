@@ -1,0 +1,297 @@
+﻿{
+    "mode":  "dryRun",
+    "mappings":  [
+                     {
+                         "original":  "مساح",
+                         "canonical":  "Surveying"
+                     },
+                     {
+                         "original":  "Agriculture",
+                         "canonical":  "Agricultural Engineering"
+                     },
+                     {
+                         "original":  "bms",
+                         "canonical":  "Electrical"
+                     },
+                     {
+                         "original":  "Chemical engineer",
+                         "canonical":  "Chemical"
+                     },
+                     {
+                         "original":  "It",
+                         "canonical":  "Information Technology"
+                     },
+                     {
+                         "original":  "Communication",
+                         "canonical":  "Electrical"
+                     },
+                     {
+                         "original":  "بنيه تحتيه",
+                         "canonical":  "Civil"
+                     },
+                     {
+                         "original":  "Infrastructure civil engineer",
+                         "canonical":  "Civil"
+                     },
+                     {
+                         "original":  "FLS Engineer",
+                         "canonical":  "Electrical"
+                     },
+                     {
+                         "original":  "Frontend web development",
+                         "canonical":  "Information Technology"
+                     },
+                     {
+                         "original":  "Dev",
+                         "canonical":  "Information Technology"
+                     },
+                     {
+                         "original":  "الصيانة الميكانيكية",
+                         "canonical":  "Mechanical"
+                     },
+                     {
+                         "original":  "مدير مكتب فنى - مهندس مدنى",
+                         "canonical":  "Civil"
+                     },
+                     {
+                         "original":  "Light current",
+                         "canonical":  "Electrical"
+                     },
+                     {
+                         "original":  "عماره داخليه وتصميم داخلي واثاث",
+                         "canonical":  "Architecture"
+                     },
+                     {
+                         "original":  "Agriculture Engineer",
+                         "canonical":  "Agricultural Engineering"
+                     },
+                     {
+                         "original":  "Production chemist",
+                         "canonical":  "Chemical"
+                     },
+                     {
+                         "original":  "safety",
+                         "canonical":  "HSE"
+                     },
+                     {
+                         "original":  "بترول",
+                         "canonical":  "Petroleum"
+                     },
+                     {
+                         "original":  "Highway technical office engineer",
+                         "canonical":  "Civil"
+                     },
+                     {
+                         "original":  "Petrochemical",
+                         "canonical":  "Chemical"
+                     },
+                     {
+                         "original":  "Irrigation",
+                         "canonical":  "Agricultural Engineering"
+                     },
+                     {
+                         "original":  "Process engineer",
+                         "canonical":  "Chemical"
+                     },
+                     {
+                         "original":  "Infra structure",
+                         "canonical":  "Civil"
+                     },
+                     {
+                         "original":  "Traffic engineer",
+                         "canonical":  "Civil"
+                     },
+                     {
+                         "original":  "utilities",
+                         "canonical":  "Mechanical"
+                     },
+                     {
+                         "original":  "Computer science",
+                         "canonical":  "Information Technology"
+                     },
+                     {
+                         "original":  "هندسة زراعية",
+                         "canonical":  "Agricultural Engineering"
+                     },
+                     {
+                         "original":  "اعمال السلامة الانذار والاطفاء",
+                         "canonical":  "Electrical"
+                     },
+                     {
+                         "original":  "Infrastructural engineering",
+                         "canonical":  "Structural"
+                     },
+                     {
+                         "original":  "Interior and furniture design",
+                         "canonical":  "Architecture"
+                     },
+                     {
+                         "original":  "مدنى / سيفتى",
+                         "canonical":  "Civil"
+                     },
+                     {
+                         "original":  "Wet Utilities Engineer",
+                         "canonical":  "Mechanical"
+                     },
+                     {
+                         "original":  "marine construction works",
+                         "canonical":  "Mechanical"
+                     },
+                     {
+                         "original":  "Pluming",
+                         "canonical":  "Mechanical"
+                     },
+                     {
+                         "original":  "Water treatment",
+                         "canonical":  "Mechanical"
+                     },
+                     {
+                         "original":  "Autocad Drawer",
+                         "canonical":  "Drafting / CAD"
+                     },
+                     {
+                         "original":  "Civil Execution Engineer",
+                         "canonical":  "Civil"
+                     },
+                     {
+                         "original":  "Furniture production",
+                         "canonical":  "Architecture"
+                     },
+                     {
+                         "original":  "Land Scap",
+                         "canonical":  "Agricultural Engineering"
+                     },
+                     {
+                         "original":  "agricultural",
+                         "canonical":  "Agricultural Engineering"
+                     },
+                     {
+                         "original":  "مساحه",
+                         "canonical":  "Surveying"
+                     },
+                     {
+                         "original":  "Chemical engineer (Operation)",
+                         "canonical":  "Chemical"
+                     },
+                     {
+                         "original":  "Civil Defense Consultant",
+                         "canonical":  "Civil"
+                     },
+                     {
+                         "original":  "الزراعة",
+                         "canonical":  "Agricultural Engineering"
+                     },
+                     {
+                         "original":  "شبكات",
+                         "canonical":  "Electrical"
+                     },
+                     {
+                         "original":  "Smart home",
+                         "canonical":  "Electrical"
+                     },
+                     {
+                         "original":  "Hvac bim",
+                         "canonical":  "Mechanical"
+                     },
+                     {
+                         "original":  "كيمياء",
+                         "canonical":  "Chemical"
+                     },
+                     {
+                         "original":  "لاندسكيب",
+                         "canonical":  "Agricultural Engineering"
+                     },
+                     {
+                         "original":  "Infrastructure",
+                         "canonical":  "Civil"
+                     },
+                     {
+                         "original":  "تعدين وفلزات",
+                         "canonical":  "Metallurgy"
+                     },
+                     {
+                         "original":  "HVAC ENGINEER",
+                         "canonical":  "Mechanical"
+                     },
+                     {
+                         "original":  "Health and safety",
+                         "canonical":  "HSE"
+                     },
+                     {
+                         "original":  "Chemistry",
+                         "canonical":  "Chemical"
+                     },
+                     {
+                         "original":  "Mechanical Infrastructure",
+                         "canonical":  "Mechanical"
+                     },
+                     {
+                         "original":  "Metallurgical (quality)",
+                         "canonical":  "Metallurgy"
+                     },
+                     {
+                         "original":  "Mechanical, BIM",
+                         "canonical":  "Mechanical"
+                     },
+                     {
+                         "original":  "Business Development",
+                         "canonical":  "Information Technology"
+                     },
+                     {
+                         "original":  "Infrastructure BIM",
+                         "canonical":  "Civil"
+                     },
+                     {
+                         "original":  "Mechanical and electrical",
+                         "canonical":  "Mechanical"
+                     },
+                     {
+                         "original":  "مساحة",
+                         "canonical":  "Surveying"
+                     },
+                     {
+                         "original":  "زراعة",
+                         "canonical":  "Agricultural Engineering"
+                     },
+                     {
+                         "original":  "بنية تحتية",
+                         "canonical":  "Civil"
+                     },
+                     {
+                         "original":  "Chemist",
+                         "canonical":  "Chemical"
+                     },
+                     {
+                         "original":  "مدني تنفيذي",
+                         "canonical":  "Civil"
+                     },
+                     {
+                         "original":  "Survey",
+                         "canonical":  "Surveying"
+                     },
+                     {
+                         "original":  "Plumbing and fire protection",
+                         "canonical":  "Mechanical"
+                     },
+                     {
+                         "original":  "Infrastructure and roads",
+                         "canonical":  "Civil"
+                     },
+                     {
+                         "original":  "Draftsman mep \u0026 arch",
+                         "canonical":  "Mechanical"
+                     },
+                     {
+                         "original":  "FLS",
+                         "canonical":  "Electrical"
+                     },
+                     {
+                         "original":  "لاندسكيب شبكات ري",
+                         "canonical":  "Electrical"
+                     },
+                     {
+                         "original":  "Biomedical",
+                         "canonical":  "Biomedical Engineering"
+                     }
+                 ]
+}
