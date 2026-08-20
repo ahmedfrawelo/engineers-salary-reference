@@ -1,0 +1,9 @@
+# Free AI API Index
+
+Free AI API Index is a bilingual, official-source-first directory of recurring free AI API tiers, trials, conditional programs, limits, models, card requirements, regional restrictions and verification dates.
+
+English is the default language. Arabic RTL is available from the language control.
+
+Public website: https://ahmedfrawelo.github.io/engineers-salary-reference/
+
+The directory excludes leaked, stolen or accidentally published API keys. Visitors should confirm production limits in each provider's official source.
