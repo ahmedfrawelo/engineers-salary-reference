@@ -1,0 +1,37 @@
+name: Deploy Free AI API Index
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/deploy-free-ai-index.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: free-ai-api-index-production
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout static-site branch
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+
+      - name: Prepare deployment directory
+        run: |
+          mkdir -p site/chunks
+          cp index.html site/index.html
+          cp chunks/*.js site/chunks/
+          touch site/.nojekyll
+
+      - name: Deploy permanently to Cloudflare Pages
+        run: npx --yes wrangler@latest pages deploy site --project-name free-ai-api-index --branch main --commit-dirty=true
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
