@@ -17,11 +17,10 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  prepare:
     runs-on: ubuntu-latest
+    outputs:
+      ready: ${{ steps.readiness.outputs.ready }}
     steps:
       - name: Checkout static site
         uses: actions/checkout@v4
@@ -50,13 +49,51 @@ jobs:
         with:
           path: site
 
+      - name: Set readiness
+        id: readiness
+        if: always()
+        run: |
+          if [ "${{ steps.configure.outcome }}" = "success" ] && [ "${{ steps.upload.outcome }}" = "success" ]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+            STATUS="ready"
+          else
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            STATUS="failed"
+          fi
+          {
+            echo "status=$STATUS"
+            echo "url=https://ahmedfrawelo.github.io/engineers-salary-reference/"
+            echo "timestamp=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+            echo "workflow_run=https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            echo "configure=${{ steps.configure.outcome }}"
+            echo "upload=${{ steps.upload.outcome }}"
+            echo "deployment=pending"
+          } > github-pages-status.txt
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add github-pages-status.txt
+          git commit -m "Record GitHub Pages preparation status" || true
+          git push origin HEAD:gh-pages
+
+  deploy:
+    needs: prepare
+    if: needs.prepare.outputs.ready == 'true'
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
       - name: Deploy GitHub Pages
         id: deployment
-        if: steps.upload.outcome == 'success'
-        continue-on-error: true
         uses: actions/deploy-pages@v4
 
-      - name: Record GitHub Pages result
+      - name: Checkout status branch
+        if: always()
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+
+      - name: Record final deployment result
         if: always()
         run: |
           if [ "${{ steps.deployment.outcome }}" = "success" ]; then STATUS="success"; else STATUS="failed"; fi
@@ -65,12 +102,12 @@ jobs:
             echo "url=https://ahmedfrawelo.github.io/engineers-salary-reference/"
             echo "timestamp=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
             echo "workflow_run=https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-            echo "configure=${{ steps.configure.outcome }}"
-            echo "upload=${{ steps.upload.outcome }}"
+            echo "configure=success"
+            echo "upload=success"
             echo "deployment=${{ steps.deployment.outcome }}"
           } > github-pages-status.txt
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add github-pages-status.txt
-          git commit -m "Record GitHub Pages deployment status" || true
+          git commit -m "Record GitHub Pages deployment result" || true
           git push origin HEAD:gh-pages
