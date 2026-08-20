@@ -1,0 +1,54 @@
+name: Configure GitHub Pages branch source
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/configure-pages-source.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+jobs:
+  configure:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout status branch
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+
+      - name: Configure Pages to publish gh-pages root
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set +e
+          BODY=$(mktemp)
+          CODE=$(curl -sS -o "$BODY" -w "%{http_code}" -L \
+            -X PUT \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "X-GitHub-Api-Version: 2026-03-10" \
+            "https://api.github.com/repos/${{ github.repository }}/pages" \
+            -d '{"build_type":"legacy","source":{"branch":"gh-pages","path":"/"},"https_enforced":true}')
+          RESPONSE=$(cat "$BODY")
+          if [ "$CODE" = "204" ] || [ "$CODE" = "200" ]; then STATUS="success"; else STATUS="failed"; fi
+          {
+            echo "status=$STATUS"
+            echo "http_code=$CODE"
+            echo "url=https://ahmedfrawelo.github.io/engineers-salary-reference/"
+            echo "timestamp=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+            echo "workflow_run=https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            echo "response_begin"
+            printf '%s\n' "$RESPONSE"
+            echo "response_end"
+          } > pages-source-status.txt
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add pages-source-status.txt
+          git commit -m "Record GitHub Pages source configuration" || true
+          git push origin HEAD:gh-pages
+          [ "$STATUS" = "success" ]
