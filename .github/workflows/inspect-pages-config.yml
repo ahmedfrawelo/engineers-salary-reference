@@ -20,7 +20,7 @@ jobs:
         with:
           ref: gh-pages
 
-      - name: Fetch Pages configuration and verify assets
+      - name: Fetch Pages configuration and verify production website
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
@@ -31,22 +31,47 @@ jobs:
             -H "Authorization: Bearer $GH_TOKEN" \
             -H "X-GitHub-Api-Version: 2026-03-10" \
             "https://api.github.com/repos/${{ github.repository }}/pages" > pages-config.json
+
           SITE="https://ahmedfrawelo.github.io/engineers-salary-reference/"
-          ROOT_CODE=$(curl -sS -L -o /tmp/root.html -w "%{http_code}" "$SITE")
+          ROOT_CODE=000
+          ROOT_CURRENT=false
+          for attempt in $(seq 1 18); do
+            ROOT_CODE=$(curl -sS -L -o /tmp/root.html -w "%{http_code}" "${SITE}?health=${{ github.run_id }}-$attempt")
+            if [ "$ROOT_CODE" = "200" ] && grep -q "Loading the verified global directory" /tmp/root.html; then
+              ROOT_CURRENT=true
+              break
+            fi
+            sleep 10
+          done
+
           CHUNK_OK=true
           for n in 0 1 2 3; do
-            CODE=$(curl -sS -L -o "/tmp/$n.js" -w "%{http_code}" "${SITE}chunks/$n.js")
+            CODE=$(curl -sS -L -o "/tmp/$n.js" -w "%{http_code}" "${SITE}chunks/$n.js?health=${{ github.run_id }}")
             if [ "$CODE" != "200" ]; then CHUNK_OK=false; fi
           done
+
+          SEO_OK=true
+          for asset in robots.txt sitemap.xml llms.txt favicon.svg site.webmanifest; do
+            CODE=$(curl -sS -L -o "/tmp/${asset//\//_}" -w "%{http_code}" "${SITE}${asset}?health=${{ github.run_id }}")
+            if [ "$CODE" != "200" ]; then SEO_OK=false; fi
+          done
+
           TITLE=$(grep -o '<title>[^<]*' /tmp/root.html | head -n1 | sed 's/<title>//')
+          if [ "$ROOT_CODE" = "200" ] && [ "$ROOT_CURRENT" = "true" ] && [ "$CHUNK_OK" = "true" ] && [ "$SEO_OK" = "true" ]; then STATUS="success"; else STATUS="failed"; fi
           {
+            echo "status=$STATUS"
             echo "root_http=$ROOT_CODE"
+            echo "current_entrypoint=$ROOT_CURRENT"
             echo "chunks_http=$CHUNK_OK"
+            echo "seo_assets_http=$SEO_OK"
             echo "title=$TITLE"
+            echo "url=$SITE"
             echo "timestamp=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+            echo "workflow_run=https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           } > site-health.txt
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add pages-config.json site-health.txt
           git commit -m "Record permanent GitHub Pages configuration and health" || true
           git push origin HEAD:gh-pages
+          [ "$STATUS" = "success" ]
