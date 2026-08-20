@@ -1,4 +1,9 @@
+status=success
 root_http=200
+current_entrypoint=true
 chunks_http=true
-title=Free AI API Index
-timestamp=2026-08-20T04:51:34Z
+seo_assets_http=true
+title=Free AI API Index — Official Free Tiers, Trials and Limits
+url=https://ahmedfrawelo.github.io/engineers-salary-reference/
+timestamp=2026-08-20T04:59:06Z
+workflow_run=https://github.com/ahmedfrawelo/engineers-salary-reference/actions/runs/32333863078
