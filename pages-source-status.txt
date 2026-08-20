@@ -1,0 +1,12 @@
+status=failed
+http_code=403
+url=https://ahmedfrawelo.github.io/engineers-salary-reference/
+timestamp=2026-08-20T04:49:13Z
+workflow_run=https://github.com/ahmedfrawelo/engineers-salary-reference/actions/runs/32333260323
+response_begin
+{
+  "message": "Resource not accessible by integration",
+  "documentation_url": "https://docs.github.com/rest/pages/pages#update-information-about-a-apiname-pages-site",
+  "status": "403"
+}
+response_end
