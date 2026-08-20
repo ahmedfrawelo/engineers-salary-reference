@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://ahmedfrawelo.github.io/engineers-salary-reference/sitemap.xml
