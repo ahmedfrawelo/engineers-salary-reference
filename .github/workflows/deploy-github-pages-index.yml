@@ -1,0 +1,76 @@
+name: Deploy Free AI API Index to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/deploy-github-pages-index.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: free-ai-api-index-github-pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout static site
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+
+      - name: Prepare site artifact
+        run: |
+          mkdir -p site/chunks
+          cp index.html site/index.html
+          cp chunks/*.js site/chunks/
+          touch site/.nojekyll
+
+      - name: Configure GitHub Pages
+        id: configure
+        continue-on-error: true
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - name: Upload Pages artifact
+        id: upload
+        if: steps.configure.outcome == 'success'
+        continue-on-error: true
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: site
+
+      - name: Deploy GitHub Pages
+        id: deployment
+        if: steps.upload.outcome == 'success'
+        continue-on-error: true
+        uses: actions/deploy-pages@v4
+
+      - name: Record GitHub Pages result
+        if: always()
+        run: |
+          if [ "${{ steps.deployment.outcome }}" = "success" ]; then STATUS="success"; else STATUS="failed"; fi
+          {
+            echo "status=$STATUS"
+            echo "url=https://ahmedfrawelo.github.io/engineers-salary-reference/"
+            echo "timestamp=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+            echo "workflow_run=https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            echo "configure=${{ steps.configure.outcome }}"
+            echo "upload=${{ steps.upload.outcome }}"
+            echo "deployment=${{ steps.deployment.outcome }}"
+          } > github-pages-status.txt
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add github-pages-status.txt
+          git commit -m "Record GitHub Pages deployment status" || true
+          git push origin HEAD:gh-pages
