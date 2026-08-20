@@ -1,7 +1,7 @@
-status=ready
+status=failed
 url=https://ahmedfrawelo.github.io/engineers-salary-reference/
-timestamp=2026-08-20T04:41:35Z
-workflow_run=https://github.com/ahmedfrawelo/engineers-salary-reference/actions/runs/32332794145
+timestamp=2026-08-20T04:43:35Z
+workflow_run=https://github.com/ahmedfrawelo/engineers-salary-reference/actions/runs/32332911437
 configure=success
 upload=success
-deployment=pending
+deployment=failure
