@@ -18,6 +18,9 @@ concurrency:
 
 jobs:
   deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout static site
@@ -44,7 +47,6 @@ jobs:
 
       - name: Deploy GitHub Pages
         id: deployment
-        continue-on-error: true
         uses: actions/deploy-pages@v4
 
       - name: Record deployment result
@@ -53,7 +55,7 @@ jobs:
           if [ "${{ steps.deployment.outcome }}" = "success" ]; then STATUS="success"; else STATUS="failed"; fi
           {
             echo "status=$STATUS"
-            echo "url=https://ahmedfrawelo.github.io/engineers-salary-reference/"
+            echo "url=${{ steps.deployment.outputs.page_url }}"
             echo "timestamp=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
             echo "workflow_run=https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
             echo "configure=${{ steps.configure.outcome }}"
@@ -63,9 +65,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add github-pages-status.txt
-          git commit -m "Record GitHub Pages deployment result" || true
+          git commit -m "Record successful GitHub Pages deployment" || true
           git push origin HEAD:gh-pages
-
-      - name: Fail when deployment failed
-        if: steps.deployment.outcome != 'success'
-        run: exit 1
