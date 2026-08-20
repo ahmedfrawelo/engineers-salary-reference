@@ -1,0 +1,16 @@
+{
+  "url": "https://api.github.com/repos/ahmedfrawelo/engineers-salary-reference/pages",
+  "status": "built",
+  "cname": null,
+  "custom_404": false,
+  "html_url": "https://ahmedfrawelo.github.io/engineers-salary-reference/",
+  "build_type": "legacy",
+  "source": {
+    "branch": "gh-pages",
+    "path": "/"
+  },
+  "public": true,
+  "protected_domain_state": null,
+  "pending_domain_unverified_at": null,
+  "https_enforced": true
+}
