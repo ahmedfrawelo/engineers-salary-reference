@@ -1,0 +1,42 @@
+name: Verify Free AI API Index live URL
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/verify-free-ai-index-live.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout status branch
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+
+      - name: Check public website
+        shell: bash
+        run: |
+          set +e
+          URL="https://ahmedfrawelo.github.io/engineers-salary-reference/"
+          CODE=$(curl -L -sS -o /tmp/site.html -w "%{http_code}" --retry 3 --retry-delay 5 "$URL")
+          TITLE=$(grep -o '<title>[^<]*' /tmp/site.html | head -n1 | sed 's/<title>//')
+          if [ "$CODE" = "200" ]; then STATUS="success"; else STATUS="failed"; fi
+          {
+            echo "status=$STATUS"
+            echo "http_code=$CODE"
+            echo "url=$URL"
+            echo "title=$TITLE"
+            echo "timestamp=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+            echo "workflow_run=https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          } > live-check.txt
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add live-check.txt
+          git commit -m "Record Free AI API Index live check" || true
+          git push origin HEAD:gh-pages
