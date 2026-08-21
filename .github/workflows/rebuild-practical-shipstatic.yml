@@ -1,0 +1,51 @@
+name: Rebuild practical Free AI API Index
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/rebuild-practical-shipstatic.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout website branch
+        uses: actions/checkout@v4
+        with:
+          ref: free-ai-api-index
+          fetch-depth: 0
+
+      - name: Replace editorial payload with practical application
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import base64, gzip, math
+
+          source = Path('practical/index.html').read_bytes()
+          payload = base64.b64encode(gzip.compress(source, compresslevel=9)).decode('ascii')
+          names = ['0.txt', '12.txt', '34.txt', '56.txt', '78.txt', '9.txt']
+          part = math.ceil(len(payload) / len(names))
+          out = Path('editorial/chunks')
+          out.mkdir(parents=True, exist_ok=True)
+          for index, name in enumerate(names):
+              chunk = payload[index * part:(index + 1) * part]
+              (out / name).write_text(chunk, encoding='ascii')
+          Path('editorial/practical-build.txt').write_text(
+              f'source=practical/index.html\npayload_bytes={len(payload)}\nparts={len(names)}\n',
+              encoding='utf-8'
+          )
+          PY
+
+      - name: Publish updated payload
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add editorial/chunks editorial/practical-build.txt
+          git commit -m "Publish practical Free AI API Index UI" || true
+          git push origin HEAD:free-ai-api-index
