@@ -2,6 +2,10 @@ name: AI Access Radar scheduled monitor
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/ai-access-radar-schedule.yml"
   schedule:
     - cron: "17 */6 * * *"
 
@@ -60,7 +64,6 @@ jobs:
                       response.read(1024)
                       return {'ok': code < 500, 'status': code}
               except urllib.error.HTTPError as exc:
-                  # 401/403/429 still prove the host and route are alive; 5xx does not.
                   code = int(exc.code)
                   return {'ok': code < 500, 'status': code}
               except Exception as exc:
