@@ -1,0 +1,128 @@
+{
+  "status": "degraded",
+  "checkedAt": "2026-08-27T03:21:05Z",
+  "schedule": "every 6 hours",
+  "site": {
+    "url": "https://smoky-anchor-5950.hosted.pageshare.ai/?health=1",
+    "ok": true,
+    "status": 200
+  },
+  "data": {
+    "manifestOk": true,
+    "manifestError": null,
+    "version": "2026-08-24-1",
+    "updatedAt": "2026-08-24",
+    "ageDays": 3,
+    "stale": true,
+    "providers": 150,
+    "students": 15
+  },
+  "sources": {
+    "totalConfigured": 150,
+    "checkedThisRun": 20,
+    "reachable": 20,
+    "failed": 0,
+    "results": [
+      {
+        "url": "https://chutes.ai/news/community-announcement-february",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://www.requesty.ai/pricing",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://aki.io/",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://www.nscale.com/product/serverless",
+        "ok": true,
+        "status": 404
+      },
+      {
+        "url": "https://www.beam.cloud/pricing",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://kilo.ai/docs/gateway/models-and-providers",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://www.aionlabs.ai/docs/rate-limits/",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://docs.llm7.io/limits",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://opencode.ai/docs/zen",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://septorlabs.com/pricing",
+        "ok": true,
+        "status": 403
+      },
+      {
+        "url": "https://www.cartesia.ai/pricing",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://www.gladia.io/pricing",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://www.infomaniak.com/en/hosting/ai-services/prices",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://www.rev.ai/pricing",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://soniox.com/blog/2025-10-27-free-credits-update-for-soniox-api",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://www.hume.ai/pricing",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://www.speechmatics.com/pricing",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://ai.meta.com/llama/",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/free-tier.html",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://azure.microsoft.com/en-us/pricing/purchase-options/azure-account",
+        "ok": true,
+        "status": 200
+      }
+    ]
+  }
+}
