@@ -1,6 +1,6 @@
 {
   "status": "degraded",
-  "checkedAt": "2026-08-27T17:40:40Z",
+  "checkedAt": "2026-08-28T02:11:58Z",
   "schedule": "every 6 hours",
   "site": {
     "url": "https://smoky-anchor-5950.hosted.pageshare.ai/?health=1",
@@ -12,7 +12,7 @@
     "manifestError": null,
     "version": "2026-08-24-1",
     "updatedAt": "2026-08-24",
-    "ageDays": 3,
+    "ageDays": 4,
     "stale": true,
     "providers": 150,
     "students": 15
@@ -24,102 +24,102 @@
     "failed": 0,
     "results": [
       {
-        "url": "https://bazaarlink.ai/free",
+        "url": "https://www.edenai.co/post/how-to-generate-an-image-with-ai",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://paraloncloud.com/inference",
+        "url": "https://cloud.baidu.com/doc/qianfan/s/Imi2rpirg",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.tera.gw/credits",
+        "url": "https://www.xfyun.cn/doc/spark/HTTP%E8%B0%83%E7%94%A8%E6%96%87%E6%A1%A3.html",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://aetherapi.dev/",
+        "url": "https://mimo.mi.com/docs/en-US/price/pay-as-you-go",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.getmorecredits.com/",
+        "url": "https://www.global-apis.com/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://llm.kiwi/pricing",
-        "ok": true,
-        "status": 403
-      },
-      {
-        "url": "https://www.arliai.com/pricing?lang=en",
+        "url": "https://nexusapilabs.com/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.llamaindex.ai/",
+        "url": "https://ark-labs.cloud/pricing/cloud/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://speechify.com/pricing-api/",
+        "url": "https://www.deployai.dev/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://unstructured.io/pricing",
+        "url": "https://simplellm.eu/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.veryfi.com/pricing/",
+        "url": "https://cloud.infercom.ai/plans",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.mixedbread.com/pricing",
+        "url": "https://aiqu.ai/llm/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://nanonets.com/pricing",
+        "url": "https://regolo.ai/pricing/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.twelvelabs.io/pricing",
+        "url": "https://apiarium.dev/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://ocr.space/ocrapi",
+        "url": "https://mapleflow.io/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.photoroom.com/api/pricing",
+        "url": "https://arcaneapi.com/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.nutrient.io/api/pricing/data-extraction-api/",
+        "url": "https://www.fdq.ai/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://app.unrealspeech.com/pricing",
+        "url": "https://www.agnes-ai.com/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.lmnt.com/pricing",
+        "url": "https://inferx.net/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://lightning.ai/docs/platform/inference/model-apis",
+        "url": "https://literouter.com/pricing",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://fastrouter.ai/pricing",
         "ok": true,
         "status": 200
       }
