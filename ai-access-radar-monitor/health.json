@@ -1,6 +1,6 @@
 {
   "status": "degraded",
-  "checkedAt": "2026-08-28T02:11:58Z",
+  "checkedAt": "2026-08-28T18:47:19Z",
   "schedule": "every 6 hours",
   "site": {
     "url": "https://smoky-anchor-5950.hosted.pageshare.ai/?health=1",
@@ -20,108 +20,109 @@
   "sources": {
     "totalConfigured": 150,
     "checkedThisRun": 20,
-    "reachable": 20,
-    "failed": 0,
+    "reachable": 19,
+    "failed": 1,
     "results": [
       {
-        "url": "https://www.edenai.co/post/how-to-generate-an-image-with-ai",
+        "url": "https://docs.aimlapi.com/faq/free-tier",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://cloud.baidu.com/doc/qianfan/s/Imi2rpirg",
+        "url": "https://ollama.com/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.xfyun.cn/doc/spark/HTTP%E8%B0%83%E7%94%A8%E6%96%87%E6%A1%A3.html",
+        "url": "https://modelscope.cn/docs/model-service/API-Inference/limits",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://mimo.mi.com/docs/en-US/price/pay-as-you-go",
+        "url": "https://friendli.ai/docs/guides/suite/credits",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.global-apis.com/pricing",
+        "url": "https://moondream.ai/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://nexusapilabs.com/pricing",
+        "url": "https://docs.sarvam.ai/api/getting-started/ratelimits",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://ark-labs.cloud/pricing/cloud/",
+        "url": "https://poolside.ai/models",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.deployai.dev/",
+        "url": "https://www.upstage.ai/pricing/api",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://simplellm.eu/",
+        "url": "https://runware.ai/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://cloud.infercom.ai/plans",
+        "url": "https://aihorde.net/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://aiqu.ai/llm/",
+        "url": "https://chutes.ai/news/community-announcement-february",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://regolo.ai/pricing/",
+        "url": "https://www.requesty.ai/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://apiarium.dev/",
+        "url": "https://aki.io/",
+        "ok": false,
+        "status": null,
+        "error": "<urlopen error timed out>"
+      },
+      {
+        "url": "https://www.nscale.com/product/serverless",
+        "ok": true,
+        "status": 404
+      },
+      {
+        "url": "https://www.beam.cloud/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://mapleflow.io/",
+        "url": "https://kilo.ai/docs/gateway/models-and-providers",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://arcaneapi.com/pricing",
+        "url": "https://www.aionlabs.ai/docs/rate-limits/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.fdq.ai/pricing",
+        "url": "https://docs.llm7.io/limits",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.agnes-ai.com/",
+        "url": "https://opencode.ai/docs/zen",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://inferx.net/pricing",
+        "url": "https://septorlabs.com/pricing",
         "ok": true,
-        "status": 200
-      },
-      {
-        "url": "https://literouter.com/pricing",
-        "ok": true,
-        "status": 200
-      },
-      {
-        "url": "https://fastrouter.ai/pricing",
-        "ok": true,
-        "status": 200
+        "status": 403
       }
     ]
   }
