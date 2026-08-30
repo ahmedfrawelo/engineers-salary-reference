@@ -1,6 +1,6 @@
 {
   "status": "degraded",
-  "checkedAt": "2026-08-29T20:58:00Z",
+  "checkedAt": "2026-08-30T05:29:39Z",
   "schedule": "every 6 hours",
   "site": {
     "url": "https://smoky-anchor-5950.hosted.pageshare.ai/?health=1",
@@ -12,7 +12,7 @@
     "manifestError": null,
     "version": "2026-08-24-1",
     "updatedAt": "2026-08-24",
-    "ageDays": 5,
+    "ageDays": 6,
     "stale": true,
     "providers": 150,
     "students": 15
@@ -24,102 +24,102 @@
     "failed": 0,
     "results": [
       {
-        "url": "https://www.routers.io/",
+        "url": "https://aiqu.ai/llm/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://plugsky.com/free-ai-api",
+        "url": "https://regolo.ai/pricing/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.morphllm.com/fast-apply-model",
-        "ok": true,
-        "status": 429
-      },
-      {
-        "url": "https://www.arcee.ai/trinity-builders-program",
+        "url": "https://apiarium.dev/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://relace.ai/pricing",
+        "url": "https://mapleflow.io/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://mancer.tech/models",
+        "url": "https://arcaneapi.com/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.awanllm.com/pricing",
+        "url": "https://www.fdq.ai/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://platform.lingyiwanwu.com/",
+        "url": "https://www.agnes-ai.com/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://support.anthropic.com/en/articles/9125743-what-is-the-external-researcher-access-program",
+        "url": "https://inferx.net/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.anyscale.com/pricing",
+        "url": "https://literouter.com/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.edenai.co/post/how-to-generate-an-image-with-ai",
+        "url": "https://fastrouter.ai/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://cloud.baidu.com/doc/qianfan/s/Imi2rpirg",
+        "url": "https://ai.google.dev/gemini-api/docs/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.xfyun.cn/doc/spark/HTTP%E8%B0%83%E7%94%A8%E6%96%87%E6%A1%A3.html",
+        "url": "https://openrouter.ai/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://mimo.mi.com/docs/en-US/price/pay-as-you-go",
+        "url": "https://huggingface.co/docs/inference-providers/en/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.global-apis.com/pricing",
+        "url": "https://console.groq.com/docs/rate-limits",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://nexusapilabs.com/pricing",
+        "url": "https://docs.mistral.ai/getting-started/quickstarts/studio/activate-and-generate-api-key",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://ark-labs.cloud/pricing/cloud/",
+        "url": "https://inference-docs.cerebras.ai/support/rate-limits",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.deployai.dev/",
+        "url": "https://docs.sambanova.ai/docs/en/models/rate-limits",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://simplellm.eu/",
+        "url": "https://developers.cloudflare.com/workers-ai/platform/pricing/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://cloud.infercom.ai/plans",
+        "url": "https://docs.cohere.com/v2/docs/rate-limits",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://www.ibm.com/docs/en/watsonx/saas?topic=cloud-watsonxai-runtime-plans",
         "ok": true,
         "status": 200
       }
