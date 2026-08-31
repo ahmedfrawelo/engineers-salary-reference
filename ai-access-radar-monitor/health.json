@@ -1,6 +1,6 @@
 {
   "status": "degraded",
-  "checkedAt": "2026-08-30T21:11:35Z",
+  "checkedAt": "2026-08-31T05:43:30Z",
   "schedule": "every 6 hours",
   "site": {
     "url": "https://smoky-anchor-5950.hosted.pageshare.ai/?health=1",
@@ -12,7 +12,7 @@
     "manifestError": null,
     "version": "2026-08-24-1",
     "updatedAt": "2026-08-24",
-    "ageDays": 6,
+    "ageDays": 7,
     "stale": true,
     "providers": 150,
     "students": 15
@@ -20,106 +20,107 @@
   "sources": {
     "totalConfigured": 150,
     "checkedThisRun": 20,
-    "reachable": 20,
-    "failed": 0,
+    "reachable": 19,
+    "failed": 1,
     "results": [
       {
-        "url": "https://chutes.ai/news/community-announcement-february",
+        "url": "https://www.oracle.com/cloud/free/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.requesty.ai/pricing",
+        "url": "https://intl.cloud.tencent.com/zh/document/product/1284/77186?lang=zh",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://aki.io/",
+        "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/start/express-mode/overview",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.nscale.com/product/serverless",
-        "ok": true,
-        "status": 404
-      },
-      {
-        "url": "https://www.beam.cloud/pricing",
+        "url": "https://docs.wandb.ai/inference/usage-limits",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://kilo.ai/docs/gateway/models-and-providers",
+        "url": "https://fal.ai/builder-grant",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.aionlabs.ai/docs/rate-limits/",
+        "url": "https://console.core.today/en",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://docs.llm7.io/limits",
+        "url": "https://sail.systems/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://opencode.ai/docs/zen",
+        "url": "https://inference.net/content/model-inference/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://septorlabs.com/pricing",
+        "url": "https://dos.ai/pricing",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://opentyphoon.ai/model/typhoon2-5",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://www.datalab.to/use-cases/model-training",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://nlpcloud.com/pricing.html",
         "ok": true,
         "status": 403
       },
       {
-        "url": "https://www.cartesia.ai/pricing",
+        "url": "https://contextual.ai/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.gladia.io/pricing",
+        "url": "https://fish.audio/blog/s2-1-pro-free-api/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.infomaniak.com/en/hosting/ai-services/prices",
+        "url": "https://www.camb.ai/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.rev.ai/pricing",
+        "url": "https://speka.me/pricing",
+        "ok": false,
+        "status": null,
+        "error": "<urlopen error timed out>"
+      },
+      {
+        "url": "https://unorouter.com/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://soniox.com/blog/2025-10-27-free-credits-update-for-soniox-api",
+        "url": "https://deapi.ai/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.hume.ai/pricing",
+        "url": "https://inferbase.ai/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.speechmatics.com/pricing",
-        "ok": true,
-        "status": 200
-      },
-      {
-        "url": "https://ai.meta.com/llama/",
-        "ok": true,
-        "status": 200
-      },
-      {
-        "url": "https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/free-tier.html",
-        "ok": true,
-        "status": 200
-      },
-      {
-        "url": "https://azure.microsoft.com/en-us/pricing/purchase-options/azure-account",
+        "url": "https://freeinference.org/",
         "ok": true,
         "status": 200
       }
