@@ -1,6 +1,6 @@
 {
   "status": "degraded",
-  "checkedAt": "2026-08-31T14:00:00Z",
+  "checkedAt": "2026-08-31T22:53:58Z",
   "schedule": "every 6 hours",
   "site": {
     "url": "https://smoky-anchor-5950.hosted.pageshare.ai/?health=1",
@@ -20,108 +20,106 @@
   "sources": {
     "totalConfigured": 150,
     "checkedThisRun": 20,
-    "reachable": 18,
-    "failed": 2,
+    "reachable": 20,
+    "failed": 0,
     "results": [
       {
-        "url": "https://docs.inceptionlabs.ai/get-started/models",
+        "url": "https://www.edenai.co/post/how-to-generate-an-image-with-ai",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://docs.apifree.ai/model-apis/payment-pricing",
-        "ok": false,
-        "status": null,
-        "error": "<urlopen error [Errno -2] Name or service not known>"
-      },
-      {
-        "url": "https://www.quota.cheap/",
+        "url": "https://cloud.baidu.com/doc/qianfan/s/Imi2rpirg",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://cn8.io/",
+        "url": "https://www.xfyun.cn/doc/spark/HTTP%E8%B0%83%E7%94%A8%E6%96%87%E6%A1%A3.html",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://hoonify.com/products/inference/",
+        "url": "https://mimo.mi.com/docs/en-US/price/pay-as-you-go",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.yepapi.com/ai-api",
+        "url": "https://www.global-apis.com/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://llm.resayil.io/",
+        "url": "https://nexusapilabs.com/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://oxyy.ai/",
+        "url": "https://ark-labs.cloud/pricing/cloud/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://api.airforce/pricing/",
+        "url": "https://www.deployai.dev/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://kie.ai/",
-        "ok": true,
-        "status": 403
-      },
-      {
-        "url": "https://www.routers.io/",
+        "url": "https://simplellm.eu/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://plugsky.com/free-ai-api",
+        "url": "https://cloud.infercom.ai/plans",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.morphllm.com/fast-apply-model",
-        "ok": true,
-        "status": 429
-      },
-      {
-        "url": "https://www.arcee.ai/trinity-builders-program",
+        "url": "https://aiqu.ai/llm/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://relace.ai/pricing",
+        "url": "https://regolo.ai/pricing/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://mancer.tech/models",
+        "url": "https://apiarium.dev/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.awanllm.com/pricing",
+        "url": "https://mapleflow.io/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://platform.lingyiwanwu.com/",
-        "ok": false,
-        "status": null,
-        "error": "<urlopen error timed out>"
-      },
-      {
-        "url": "https://support.anthropic.com/en/articles/9125743-what-is-the-external-researcher-access-program",
+        "url": "https://arcaneapi.com/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.anyscale.com/pricing",
+        "url": "https://www.fdq.ai/pricing",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://www.agnes-ai.com/",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://inferx.net/pricing",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://literouter.com/pricing",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://fastrouter.ai/pricing",
         "ok": true,
         "status": 200
       }
