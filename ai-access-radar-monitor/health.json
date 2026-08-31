@@ -1,6 +1,6 @@
 {
   "status": "degraded",
-  "checkedAt": "2026-08-31T05:43:30Z",
+  "checkedAt": "2026-08-31T14:00:00Z",
   "schedule": "every 6 hours",
   "site": {
     "url": "https://smoky-anchor-5950.hosted.pageshare.ai/?health=1",
@@ -20,107 +20,108 @@
   "sources": {
     "totalConfigured": 150,
     "checkedThisRun": 20,
-    "reachable": 19,
-    "failed": 1,
+    "reachable": 18,
+    "failed": 2,
     "results": [
       {
-        "url": "https://www.oracle.com/cloud/free/",
+        "url": "https://docs.inceptionlabs.ai/get-started/models",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://intl.cloud.tencent.com/zh/document/product/1284/77186?lang=zh",
+        "url": "https://docs.apifree.ai/model-apis/payment-pricing",
+        "ok": false,
+        "status": null,
+        "error": "<urlopen error [Errno -2] Name or service not known>"
+      },
+      {
+        "url": "https://www.quota.cheap/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/start/express-mode/overview",
+        "url": "https://cn8.io/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://docs.wandb.ai/inference/usage-limits",
+        "url": "https://hoonify.com/products/inference/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://fal.ai/builder-grant",
+        "url": "https://www.yepapi.com/ai-api",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://console.core.today/en",
+        "url": "https://llm.resayil.io/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://sail.systems/",
+        "url": "https://oxyy.ai/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://inference.net/content/model-inference/",
+        "url": "https://api.airforce/pricing/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://dos.ai/pricing",
-        "ok": true,
-        "status": 200
-      },
-      {
-        "url": "https://opentyphoon.ai/model/typhoon2-5",
-        "ok": true,
-        "status": 200
-      },
-      {
-        "url": "https://www.datalab.to/use-cases/model-training",
-        "ok": true,
-        "status": 200
-      },
-      {
-        "url": "https://nlpcloud.com/pricing.html",
+        "url": "https://kie.ai/",
         "ok": true,
         "status": 403
       },
       {
-        "url": "https://contextual.ai/pricing",
+        "url": "https://www.routers.io/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://fish.audio/blog/s2-1-pro-free-api/",
+        "url": "https://plugsky.com/free-ai-api",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.camb.ai/pricing",
+        "url": "https://www.morphllm.com/fast-apply-model",
+        "ok": true,
+        "status": 429
+      },
+      {
+        "url": "https://www.arcee.ai/trinity-builders-program",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://speka.me/pricing",
+        "url": "https://relace.ai/pricing",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://mancer.tech/models",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://www.awanllm.com/pricing",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://platform.lingyiwanwu.com/",
         "ok": false,
         "status": null,
         "error": "<urlopen error timed out>"
       },
       {
-        "url": "https://unorouter.com/",
+        "url": "https://support.anthropic.com/en/articles/9125743-what-is-the-external-researcher-access-program",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://deapi.ai/",
-        "ok": true,
-        "status": 200
-      },
-      {
-        "url": "https://inferbase.ai/pricing",
-        "ok": true,
-        "status": 200
-      },
-      {
-        "url": "https://freeinference.org/",
+        "url": "https://www.anyscale.com/pricing",
         "ok": true,
         "status": 200
       }
