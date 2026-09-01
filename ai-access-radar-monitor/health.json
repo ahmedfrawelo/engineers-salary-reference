@@ -1,6 +1,6 @@
 {
   "status": "degraded",
-  "checkedAt": "2026-08-31T22:53:58Z",
+  "checkedAt": "2026-09-01T05:16:42Z",
   "schedule": "every 6 hours",
   "site": {
     "url": "https://smoky-anchor-5950.hosted.pageshare.ai/?health=1",
@@ -12,7 +12,7 @@
     "manifestError": null,
     "version": "2026-08-24-1",
     "updatedAt": "2026-08-24",
-    "ageDays": 7,
+    "ageDays": 8,
     "stale": true,
     "providers": 150,
     "students": 15
@@ -24,102 +24,102 @@
     "failed": 0,
     "results": [
       {
-        "url": "https://www.edenai.co/post/how-to-generate-an-image-with-ai",
+        "url": "https://ai.google.dev/gemini-api/docs/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://cloud.baidu.com/doc/qianfan/s/Imi2rpirg",
+        "url": "https://openrouter.ai/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.xfyun.cn/doc/spark/HTTP%E8%B0%83%E7%94%A8%E6%96%87%E6%A1%A3.html",
+        "url": "https://huggingface.co/docs/inference-providers/en/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://mimo.mi.com/docs/en-US/price/pay-as-you-go",
+        "url": "https://console.groq.com/docs/rate-limits",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.global-apis.com/pricing",
+        "url": "https://docs.mistral.ai/getting-started/quickstarts/studio/activate-and-generate-api-key",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://nexusapilabs.com/pricing",
+        "url": "https://inference-docs.cerebras.ai/support/rate-limits",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://ark-labs.cloud/pricing/cloud/",
+        "url": "https://docs.sambanova.ai/docs/en/models/rate-limits",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.deployai.dev/",
+        "url": "https://developers.cloudflare.com/workers-ai/platform/pricing/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://simplellm.eu/",
+        "url": "https://docs.cohere.com/v2/docs/rate-limits",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://cloud.infercom.ai/plans",
+        "url": "https://www.ibm.com/docs/en/watsonx/saas?topic=cloud-watsonxai-runtime-plans",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://aiqu.ai/llm/",
+        "url": "https://docs.siliconflow.com/quickstart/models",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://regolo.ai/pricing/",
+        "url": "https://docs.api.nvidia.com/nim/docs/run-anywhere",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://apiarium.dev/",
+        "url": "https://fireworks.ai/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://mapleflow.io/",
+        "url": "https://support.together.ai/articles/1862638756-changes-to-free-tier-and-billing-july-2025",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://arcaneapi.com/pricing",
+        "url": "https://docs.github.com/en/github-models",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.fdq.ai/pricing",
+        "url": "https://docs.hyperbolic.xyz/docs/hyperbolic-pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.agnes-ai.com/",
+        "url": "https://help.aliyun.com/en/model-studio/model-pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://inferx.net/pricing",
+        "url": "https://nebius.com/token-factory/prices",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://literouter.com/pricing",
+        "url": "https://novita.ai/docs/guides/quickstart",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://fastrouter.ai/pricing",
+        "url": "https://docs.ai21.com/docs/usage-cost",
         "ok": true,
         "status": 200
       }
