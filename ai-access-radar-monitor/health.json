@@ -1,6 +1,6 @@
 {
   "status": "degraded",
-  "checkedAt": "2026-09-03T11:21:42Z",
+  "checkedAt": "2026-09-03T16:30:53Z",
   "schedule": "every 6 hours",
   "site": {
     "url": "https://smoky-anchor-5950.hosted.pageshare.ai/?health=1",
@@ -24,102 +24,102 @@
     "failed": 0,
     "results": [
       {
-        "url": "https://docs.voyageai.com/docs/pricing",
+        "url": "https://chutes.ai/news/community-announcement-february",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://help.openai.com/en/articles/10306912-sharing-feedback-and-api-inputs-and-outputs-with-openai",
+        "url": "https://www.requesty.ai/pricing",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://aki.io/",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://www.nscale.com/product/serverless",
+        "ok": true,
+        "status": 404
+      },
+      {
+        "url": "https://www.beam.cloud/pricing",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://kilo.ai/docs/gateway/models-and-providers",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://www.aionlabs.ai/docs/rate-limits/",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://docs.llm7.io/limits",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://opencode.ai/docs/zen",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://septorlabs.com/pricing",
         "ok": true,
         "status": 403
       },
       {
-        "url": "https://anyapi.ai/pricing",
+        "url": "https://www.cartesia.ai/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://free.ai/developer/",
+        "url": "https://www.gladia.io/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://platform.stability.ai/pricing",
+        "url": "https://www.infomaniak.com/en/hosting/ai-services/prices",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.scaleway.com/en/docs/generative-apis/faq/",
+        "url": "https://www.rev.ai/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://help.ovhcloud.com/csm/asia-public-cloud-ai-endpoints-capabilities?id=kb_article_view&sysparm_article=KB0065413",
-        "ok": true,
-        "status": 307
-      },
-      {
-        "url": "https://docs.z.ai/guides/overview/pricing",
+        "url": "https://soniox.com/blog/2025-10-27-free-credits-update-for-soniox-api",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://docs.byteplus.com/api/docs/ModelArk/1399514",
+        "url": "https://www.hume.ai/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://pollinations.ai/docs",
+        "url": "https://www.speechmatics.com/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://docs.aimlapi.com/faq/free-tier",
+        "url": "https://ai.meta.com/llama/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://ollama.com/pricing",
+        "url": "https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/free-tier.html",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://modelscope.cn/docs/model-service/API-Inference/limits",
-        "ok": true,
-        "status": 200
-      },
-      {
-        "url": "https://friendli.ai/docs/guides/suite/credits",
-        "ok": true,
-        "status": 200
-      },
-      {
-        "url": "https://moondream.ai/pricing",
-        "ok": true,
-        "status": 200
-      },
-      {
-        "url": "https://docs.sarvam.ai/api/getting-started/ratelimits",
-        "ok": true,
-        "status": 200
-      },
-      {
-        "url": "https://poolside.ai/models",
-        "ok": true,
-        "status": 200
-      },
-      {
-        "url": "https://www.upstage.ai/pricing/api",
-        "ok": true,
-        "status": 200
-      },
-      {
-        "url": "https://runware.ai/pricing",
-        "ok": true,
-        "status": 200
-      },
-      {
-        "url": "https://aihorde.net/",
+        "url": "https://azure.microsoft.com/en-us/pricing/purchase-options/azure-account",
         "ok": true,
         "status": 200
       }
