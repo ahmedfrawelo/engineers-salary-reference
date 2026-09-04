@@ -1,6 +1,6 @@
 {
   "status": "degraded",
-  "checkedAt": "2026-09-04T04:40:16Z",
+  "checkedAt": "2026-09-04T11:25:13Z",
   "schedule": "every 6 hours",
   "site": {
     "url": "https://smoky-anchor-5950.hosted.pageshare.ai/?health=1",
@@ -20,106 +20,107 @@
   "sources": {
     "totalConfigured": 150,
     "checkedThisRun": 20,
-    "reachable": 20,
-    "failed": 0,
+    "reachable": 19,
+    "failed": 1,
     "results": [
       {
-        "url": "https://bazaarlink.ai/free",
+        "url": "https://docs.inceptionlabs.ai/get-started/models",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://paraloncloud.com/inference",
+        "url": "https://docs.apifree.ai/model-apis/payment-pricing",
+        "ok": false,
+        "status": null,
+        "error": "<urlopen error [Errno -2] Name or service not known>"
+      },
+      {
+        "url": "https://www.quota.cheap/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.tera.gw/credits",
+        "url": "https://cn8.io/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://aetherapi.dev/",
+        "url": "https://hoonify.com/products/inference/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.getmorecredits.com/",
+        "url": "https://www.yepapi.com/ai-api",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://llm.kiwi/pricing",
+        "url": "https://llm.resayil.io/",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://oxyy.ai/",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://api.airforce/pricing/",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://kie.ai/",
         "ok": true,
         "status": 403
       },
       {
-        "url": "https://www.arliai.com/pricing?lang=en",
+        "url": "https://www.routers.io/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.llamaindex.ai/",
+        "url": "https://plugsky.com/free-ai-api",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://speechify.com/pricing-api/",
+        "url": "https://www.morphllm.com/fast-apply-model",
+        "ok": true,
+        "status": 429
+      },
+      {
+        "url": "https://www.arcee.ai/trinity-builders-program",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://unstructured.io/pricing",
+        "url": "https://relace.ai/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.veryfi.com/pricing/",
+        "url": "https://mancer.tech/models",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.mixedbread.com/pricing",
+        "url": "https://www.awanllm.com/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://nanonets.com/pricing",
+        "url": "https://platform.lingyiwanwu.com/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.twelvelabs.io/pricing",
+        "url": "https://support.anthropic.com/en/articles/9125743-what-is-the-external-researcher-access-program",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://ocr.space/ocrapi",
-        "ok": true,
-        "status": 200
-      },
-      {
-        "url": "https://www.photoroom.com/api/pricing",
-        "ok": true,
-        "status": 200
-      },
-      {
-        "url": "https://www.nutrient.io/api/pricing/data-extraction-api/",
-        "ok": true,
-        "status": 200
-      },
-      {
-        "url": "https://app.unrealspeech.com/pricing",
-        "ok": true,
-        "status": 200
-      },
-      {
-        "url": "https://www.lmnt.com/pricing",
-        "ok": true,
-        "status": 200
-      },
-      {
-        "url": "https://lightning.ai/docs/platform/inference/model-apis",
+        "url": "https://www.anyscale.com/pricing",
         "ok": true,
         "status": 200
       }
