@@ -1,6 +1,6 @@
 {
   "status": "degraded",
-  "checkedAt": "2026-09-05T04:36:14Z",
+  "checkedAt": "2026-09-05T10:41:32Z",
   "schedule": "every 6 hours",
   "site": {
     "url": "https://smoky-anchor-5950.hosted.pageshare.ai/?health=1",
@@ -20,109 +20,108 @@
   "sources": {
     "totalConfigured": 150,
     "checkedThisRun": 20,
-    "reachable": 19,
-    "failed": 1,
+    "reachable": 20,
+    "failed": 0,
     "results": [
       {
-        "url": "https://docs.clarifai.com/control/account-billing/",
-        "ok": false,
-        "status": null,
-        "error": "<urlopen error [Errno -2] Name or service not known>"
-      },
-      {
-        "url": "https://vercel.com/docs/ai-gateway/pricing",
+        "url": "https://docs.aimlapi.com/faq/free-tier",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://replicate.com/collections/try-for-free",
+        "url": "https://ollama.com/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://modal.com/pricing",
+        "url": "https://modelscope.cn/docs/model-service/API-Inference/limits",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.baseten.co/pricing/",
+        "url": "https://friendli.ai/docs/guides/suite/credits",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://elevenlabs.io/pricing",
+        "url": "https://moondream.ai/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.assemblyai.com/pricing",
+        "url": "https://docs.sarvam.ai/api/getting-started/ratelimits",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://deepgram.com/pricing",
+        "url": "https://poolside.ai/models",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://api.jina.ai/docs",
+        "url": "https://www.upstage.ai/pricing/api",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.pinecone.io/pricing/",
+        "url": "https://runware.ai/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://docs.voyageai.com/docs/pricing",
+        "url": "https://aihorde.net/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://help.openai.com/en/articles/10306912-sharing-feedback-and-api-inputs-and-outputs-with-openai",
+        "url": "https://chutes.ai/news/community-announcement-february",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://www.requesty.ai/pricing",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://aki.io/",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://www.nscale.com/product/serverless",
+        "ok": true,
+        "status": 404
+      },
+      {
+        "url": "https://www.beam.cloud/pricing",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://kilo.ai/docs/gateway/models-and-providers",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://www.aionlabs.ai/docs/rate-limits/",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://docs.llm7.io/limits",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://opencode.ai/docs/zen",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://septorlabs.com/pricing",
         "ok": true,
         "status": 403
-      },
-      {
-        "url": "https://anyapi.ai/pricing",
-        "ok": true,
-        "status": 200
-      },
-      {
-        "url": "https://free.ai/developer/",
-        "ok": true,
-        "status": 200
-      },
-      {
-        "url": "https://platform.stability.ai/pricing",
-        "ok": true,
-        "status": 200
-      },
-      {
-        "url": "https://www.scaleway.com/en/docs/generative-apis/faq/",
-        "ok": true,
-        "status": 200
-      },
-      {
-        "url": "https://help.ovhcloud.com/csm/asia-public-cloud-ai-endpoints-capabilities?id=kb_article_view&sysparm_article=KB0065413",
-        "ok": true,
-        "status": 200
-      },
-      {
-        "url": "https://docs.z.ai/guides/overview/pricing",
-        "ok": true,
-        "status": 200
-      },
-      {
-        "url": "https://docs.byteplus.com/api/docs/ModelArk/1399514",
-        "ok": true,
-        "status": 200
-      },
-      {
-        "url": "https://pollinations.ai/docs",
-        "ok": true,
-        "status": 200
       }
     ]
   }
