@@ -1,6 +1,6 @@
 {
   "status": "degraded",
-  "checkedAt": "2026-09-09T16:43:10Z",
+  "checkedAt": "2026-09-09T20:59:06Z",
   "schedule": "every 6 hours",
   "site": {
     "url": "https://smoky-anchor-5950.hosted.pageshare.ai/?health=1",
@@ -24,105 +24,105 @@
     "failed": 1,
     "results": [
       {
-        "url": "https://www.datalab.to/use-cases/model-training",
+        "url": "https://www.veryfi.com/pricing/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://nlpcloud.com/pricing.html",
-        "ok": true,
-        "status": 403
-      },
-      {
-        "url": "https://contextual.ai/pricing",
+        "url": "https://www.mixedbread.com/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://fish.audio/blog/s2-1-pro-free-api/",
+        "url": "https://nanonets.com/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.camb.ai/pricing",
+        "url": "https://www.twelvelabs.io/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://speka.me/pricing",
+        "url": "https://ocr.space/ocrapi",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://unorouter.com/",
-        "ok": true,
-        "status": 403
-      },
-      {
-        "url": "https://deapi.ai/",
+        "url": "https://www.photoroom.com/api/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://inferbase.ai/pricing",
+        "url": "https://www.nutrient.io/api/pricing/data-extraction-api/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://freeinference.org/",
+        "url": "https://app.unrealspeech.com/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://bazaarlink.ai/free",
+        "url": "https://www.lmnt.com/pricing",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://lightning.ai/docs/platform/inference/model-apis",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://docs.inceptionlabs.ai/get-started/models",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://docs.apifree.ai/model-apis/payment-pricing",
         "ok": false,
         "status": null,
-        "error": "The read operation timed out"
+        "error": "<urlopen error [Errno -2] Name or service not known>"
       },
       {
-        "url": "https://paraloncloud.com/inference",
+        "url": "https://www.quota.cheap/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.tera.gw/credits",
+        "url": "https://cn8.io/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://aetherapi.dev/",
+        "url": "https://hoonify.com/products/inference/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.getmorecredits.com/",
+        "url": "https://www.yepapi.com/ai-api",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://llm.kiwi/pricing",
+        "url": "https://llm.resayil.io/",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://oxyy.ai/",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://api.airforce/pricing/",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://kie.ai/",
         "ok": true,
         "status": 403
-      },
-      {
-        "url": "https://www.arliai.com/pricing?lang=en",
-        "ok": true,
-        "status": 200
-      },
-      {
-        "url": "https://www.llamaindex.ai/",
-        "ok": true,
-        "status": 200
-      },
-      {
-        "url": "https://speechify.com/pricing-api/",
-        "ok": true,
-        "status": 200
-      },
-      {
-        "url": "https://unstructured.io/pricing",
-        "ok": true,
-        "status": 200
       }
     ]
   }
