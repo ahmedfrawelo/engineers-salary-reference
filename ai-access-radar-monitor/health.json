@@ -1,6 +1,6 @@
 {
   "status": "degraded",
-  "checkedAt": "2026-09-27T12:09:13Z",
+  "checkedAt": "2026-09-27T17:01:43Z",
   "schedule": "every 6 hours",
   "site": {
     "url": "https://smoky-anchor-5950.hosted.pageshare.ai/?health=1",
