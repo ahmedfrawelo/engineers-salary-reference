@@ -1,6 +1,6 @@
 {
   "status": "degraded",
-  "checkedAt": "2026-10-05T14:50:54Z",
+  "checkedAt": "2026-10-06T00:07:01Z",
   "schedule": "every 6 hours",
   "site": {
     "url": "https://smoky-anchor-5950.hosted.pageshare.ai/?health=1",
@@ -12,7 +12,7 @@
     "manifestError": null,
     "version": "2026-08-24-1",
     "updatedAt": "2026-08-24",
-    "ageDays": 42,
+    "ageDays": 43,
     "stale": true,
     "providers": 150,
     "students": 15
@@ -20,108 +20,109 @@
   "sources": {
     "totalConfigured": 150,
     "checkedThisRun": 20,
-    "reachable": 20,
-    "failed": 0,
+    "reachable": 19,
+    "failed": 1,
     "results": [
       {
-        "url": "https://www.cartesia.ai/pricing",
+        "url": "https://www.veryfi.com/pricing/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.gladia.io/pricing",
+        "url": "https://www.mixedbread.com/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.infomaniak.com/en/hosting/ai-services/prices",
+        "url": "https://nanonets.com/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.rev.ai/pricing",
+        "url": "https://www.twelvelabs.io/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://soniox.com/blog/2025-10-27-free-credits-update-for-soniox-api",
+        "url": "https://ocr.space/ocrapi",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.hume.ai/pricing",
+        "url": "https://www.photoroom.com/api/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.speechmatics.com/pricing",
+        "url": "https://www.nutrient.io/api/pricing/data-extraction-api/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://ai.meta.com/llama/",
+        "url": "https://app.unrealspeech.com/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/free-tier.html",
+        "url": "https://www.lmnt.com/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://azure.microsoft.com/en-us/pricing/purchase-options/azure-account",
+        "url": "https://lightning.ai/docs/platform/inference/model-apis",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.oracle.com/cloud/free/",
+        "url": "https://docs.inceptionlabs.ai/get-started/models",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://intl.cloud.tencent.com/zh/document/product/1284/77186?lang=zh",
+        "url": "https://docs.apifree.ai/model-apis/payment-pricing",
+        "ok": false,
+        "status": null,
+        "error": "<urlopen error [Errno -2] Name or service not known>"
+      },
+      {
+        "url": "https://www.quota.cheap/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/start/express-mode/overview",
+        "url": "https://cn8.io/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://docs.wandb.ai/inference/usage-limits",
+        "url": "https://hoonify.com/products/inference/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://fal.ai/builder-grant",
+        "url": "https://www.yepapi.com/ai-api",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://console.core.today/en",
+        "url": "https://llm.resayil.io/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://sail.systems/",
+        "url": "https://oxyy.ai/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://inference.net/content/model-inference/",
+        "url": "https://api.airforce/pricing/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://dos.ai/pricing",
+        "url": "https://kie.ai/",
         "ok": true,
-        "status": 200
-      },
-      {
-        "url": "https://opentyphoon.ai/model/typhoon2-5",
-        "ok": true,
-        "status": 200
+        "status": 403
       }
     ]
   }
