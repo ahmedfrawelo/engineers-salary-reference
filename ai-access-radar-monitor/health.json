@@ -1,6 +1,6 @@
 {
   "status": "degraded",
-  "checkedAt": "2026-10-06T06:28:26Z",
+  "checkedAt": "2026-10-06T18:26:27Z",
   "schedule": "every 6 hours",
   "site": {
     "url": "https://smoky-anchor-5950.hosted.pageshare.ai/?health=1",
@@ -20,106 +20,107 @@
   "sources": {
     "totalConfigured": 150,
     "checkedThisRun": 20,
-    "reachable": 20,
-    "failed": 0,
+    "reachable": 19,
+    "failed": 1,
     "results": [
       {
-        "url": "https://www.routers.io/",
+        "url": "https://docs.siliconflow.com/quickstart/models",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://plugsky.com/free-ai-api",
+        "url": "https://docs.api.nvidia.com/nim/docs/run-anywhere",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.morphllm.com/fast-apply-model",
-        "ok": true,
-        "status": 429
-      },
-      {
-        "url": "https://www.arcee.ai/trinity-builders-program",
-        "ok": true,
-        "status": 404
-      },
-      {
-        "url": "https://relace.ai/pricing",
+        "url": "https://fireworks.ai/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://mancer.tech/models",
+        "url": "https://support.together.ai/articles/1862638756-changes-to-free-tier-and-billing-july-2025",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.awanllm.com/pricing",
+        "url": "https://docs.github.com/en/github-models",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://platform.lingyiwanwu.com/",
+        "url": "https://docs.hyperbolic.xyz/docs/hyperbolic-pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://support.anthropic.com/en/articles/9125743-what-is-the-external-researcher-access-program",
+        "url": "https://help.aliyun.com/en/model-studio/model-pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.anyscale.com/pricing",
+        "url": "https://nebius.com/token-factory/prices",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.edenai.co/post/how-to-generate-an-image-with-ai",
+        "url": "https://novita.ai/docs/guides/quickstart",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://cloud.baidu.com/doc/qianfan/s/Imi2rpirg",
+        "url": "https://docs.ai21.com/docs/usage-cost",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.xfyun.cn/doc/spark/HTTP%E8%B0%83%E7%94%A8%E6%96%87%E6%A1%A3.html",
+        "url": "https://docs.clarifai.com/control/account-billing/",
+        "ok": false,
+        "status": null,
+        "error": "<urlopen error [Errno -2] Name or service not known>"
+      },
+      {
+        "url": "https://vercel.com/docs/ai-gateway/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://mimo.mi.com/docs/en-US/price/pay-as-you-go",
+        "url": "https://replicate.com/collections/try-for-free",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.global-apis.com/pricing",
+        "url": "https://modal.com/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://nexusapilabs.com/pricing",
+        "url": "https://www.baseten.co/pricing/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://ark-labs.cloud/pricing/cloud/",
+        "url": "https://elevenlabs.io/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.deployai.dev/",
+        "url": "https://www.assemblyai.com/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://simplellm.eu/",
+        "url": "https://deepgram.com/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://cloud.infercom.ai/plans",
+        "url": "https://api.jina.ai/docs",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://www.pinecone.io/pricing/",
         "ok": true,
         "status": 200
       }
