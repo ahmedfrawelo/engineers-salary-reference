@@ -1,6 +1,6 @@
 {
   "status": "degraded",
-  "checkedAt": "2026-10-06T18:26:27Z",
+  "checkedAt": "2026-10-07T06:07:35Z",
   "schedule": "every 6 hours",
   "site": {
     "url": "https://smoky-anchor-5950.hosted.pageshare.ai/?health=1",
@@ -12,7 +12,7 @@
     "manifestError": null,
     "version": "2026-08-24-1",
     "updatedAt": "2026-08-24",
-    "ageDays": 43,
+    "ageDays": 44,
     "stale": true,
     "providers": 150,
     "students": 15
@@ -20,107 +20,106 @@
   "sources": {
     "totalConfigured": 150,
     "checkedThisRun": 20,
-    "reachable": 19,
-    "failed": 1,
+    "reachable": 20,
+    "failed": 0,
     "results": [
       {
-        "url": "https://docs.siliconflow.com/quickstart/models",
+        "url": "https://chutes.ai/news/community-announcement-february",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://docs.api.nvidia.com/nim/docs/run-anywhere",
+        "url": "https://www.requesty.ai/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://fireworks.ai/pricing",
+        "url": "https://aki.io/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://support.together.ai/articles/1862638756-changes-to-free-tier-and-billing-july-2025",
+        "url": "https://www.nscale.com/product/serverless",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://docs.github.com/en/github-models",
+        "url": "https://www.beam.cloud/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://docs.hyperbolic.xyz/docs/hyperbolic-pricing",
+        "url": "https://kilo.ai/docs/gateway/models-and-providers",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://help.aliyun.com/en/model-studio/model-pricing",
+        "url": "https://www.aionlabs.ai/docs/rate-limits/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://nebius.com/token-factory/prices",
+        "url": "https://docs.llm7.io/limits",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://novita.ai/docs/guides/quickstart",
+        "url": "https://opencode.ai/docs/zen",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://docs.ai21.com/docs/usage-cost",
+        "url": "https://septorlabs.com/pricing",
+        "ok": true,
+        "status": 403
+      },
+      {
+        "url": "https://www.cartesia.ai/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://docs.clarifai.com/control/account-billing/",
-        "ok": false,
-        "status": null,
-        "error": "<urlopen error [Errno -2] Name or service not known>"
-      },
-      {
-        "url": "https://vercel.com/docs/ai-gateway/pricing",
+        "url": "https://www.gladia.io/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://replicate.com/collections/try-for-free",
+        "url": "https://www.infomaniak.com/en/hosting/ai-services/prices",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://modal.com/pricing",
+        "url": "https://www.rev.ai/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.baseten.co/pricing/",
+        "url": "https://soniox.com/blog/2025-10-27-free-credits-update-for-soniox-api",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://elevenlabs.io/pricing",
+        "url": "https://www.hume.ai/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.assemblyai.com/pricing",
+        "url": "https://www.speechmatics.com/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://deepgram.com/pricing",
+        "url": "https://ai.meta.com/llama/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://api.jina.ai/docs",
+        "url": "https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/free-tier.html",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.pinecone.io/pricing/",
+        "url": "https://azure.microsoft.com/en-us/pricing/purchase-options/azure-account",
         "ok": true,
         "status": 200
       }
