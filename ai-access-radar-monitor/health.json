@@ -1,6 +1,6 @@
 {
   "status": "degraded",
-  "checkedAt": "2026-10-27T05:12:59Z",
+  "checkedAt": "2026-10-27T12:20:59Z",
   "schedule": "every 6 hours",
   "site": {
     "url": "https://smoky-anchor-5950.hosted.pageshare.ai/?health=1",
@@ -24,103 +24,103 @@
     "failed": 1,
     "results": [
       {
-        "url": "https://www.edenai.co/post/how-to-generate-an-image-with-ai",
-        "ok": true,
-        "status": 200
-      },
-      {
-        "url": "https://cloud.baidu.com/doc/qianfan/s/Imi2rpirg",
-        "ok": true,
-        "status": 200
-      },
-      {
-        "url": "https://www.xfyun.cn/doc/spark/HTTP%E8%B0%83%E7%94%A8%E6%96%87%E6%A1%A3.html",
-        "ok": true,
-        "status": 200
-      },
-      {
-        "url": "https://mimo.mi.com/docs/en-US/price/pay-as-you-go",
-        "ok": true,
-        "status": 200
-      },
-      {
-        "url": "https://www.global-apis.com/pricing",
-        "ok": true,
-        "status": 200
-      },
-      {
-        "url": "https://nexusapilabs.com/pricing",
-        "ok": true,
-        "status": 200
-      },
-      {
-        "url": "https://ark-labs.cloud/pricing/cloud/",
-        "ok": true,
-        "status": 200
-      },
-      {
-        "url": "https://www.deployai.dev/",
-        "ok": true,
-        "status": 200
-      },
-      {
-        "url": "https://simplellm.eu/",
-        "ok": true,
-        "status": 200
-      },
-      {
-        "url": "https://cloud.infercom.ai/plans",
-        "ok": true,
-        "status": 200
-      },
-      {
-        "url": "https://aiqu.ai/llm/",
-        "ok": true,
-        "status": 200
-      },
-      {
-        "url": "https://regolo.ai/pricing/",
-        "ok": true,
-        "status": 200
-      },
-      {
-        "url": "https://apiarium.dev/",
-        "ok": true,
-        "status": 404
-      },
-      {
-        "url": "https://mapleflow.io/",
-        "ok": true,
-        "status": 200
-      },
-      {
-        "url": "https://arcaneapi.com/pricing",
+        "url": "https://docs.clarifai.com/control/account-billing/",
         "ok": false,
         "status": null,
-        "error": "<urlopen error [Errno -3] Temporary failure in name resolution>"
+        "error": "<urlopen error [Errno -2] Name or service not known>"
       },
       {
-        "url": "https://www.fdq.ai/pricing",
+        "url": "https://vercel.com/docs/ai-gateway/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://www.agnes-ai.com/",
+        "url": "https://replicate.com/collections/try-for-free",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://inferx.net/pricing",
+        "url": "https://modal.com/pricing",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://literouter.com/pricing",
+        "url": "https://www.baseten.co/pricing/",
         "ok": true,
         "status": 200
       },
       {
-        "url": "https://fastrouter.ai/pricing",
+        "url": "https://elevenlabs.io/pricing",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://www.assemblyai.com/pricing",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://deepgram.com/pricing",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://api.jina.ai/docs",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://www.pinecone.io/pricing/",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://docs.voyageai.com/docs/pricing",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://help.openai.com/en/articles/10306912-sharing-feedback-and-api-inputs-and-outputs-with-openai",
+        "ok": true,
+        "status": 403
+      },
+      {
+        "url": "https://anyapi.ai/pricing",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://free.ai/developer/",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://platform.stability.ai/pricing",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://www.scaleway.com/en/docs/generative-apis/faq/",
+        "ok": true,
+        "status": 403
+      },
+      {
+        "url": "https://help.ovhcloud.com/csm/asia-public-cloud-ai-endpoints-capabilities?id=kb_article_view&sysparm_article=KB0065413",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://docs.z.ai/guides/overview/pricing",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://docs.byteplus.com/api/docs/ModelArk/1399514",
+        "ok": true,
+        "status": 200
+      },
+      {
+        "url": "https://pollinations.ai/docs",
         "ok": true,
         "status": 200
       }
